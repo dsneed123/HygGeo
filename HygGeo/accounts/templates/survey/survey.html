@@ -1,0 +1,385 @@
+{% extends 'base.html' %}
+
+{% block title %}Travel Survey - HygGeo{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+            <!-- Header -->
+            <div class="text-center mb-5">
+                <i class="fas fa-compass text-primary" style="font-size: 4rem;"></i>
+                <h1 class="h2 fw-bold mt-3" style="color: var(--hygge-green);">
+                    {% if is_update %}Update Your Travel Survey{% else %}Tell Us About Your Travel Style{% endif %}
+                </h1>
+                <p class="lead text-muted">
+                    Help us understand your travel preferences so we can recommend the most suitable 
+                    sustainable options that align with your hygge travel philosophy.
+                </p>
+                <div class="mt-3">
+                    <span class="badge bg-primary px-3 py-2">
+                        <i class="fas fa-clock me-1"></i>Takes about 5 minutes
+                    </span>
+                </div>
+            </div>
+
+            <form method="post" id="surveyForm">
+                {% csrf_token %}
+                
+                <!-- Progress indicator -->
+                <div class="mb-4">
+                    <div class="progress" style="height: 8px;">
+                        <div class="progress-bar" role="progressbar" style="width: 0%; background-color: var(--hygge-green);" id="progressBar"></div>
+                    </div>
+                    <small class="text-muted mt-1 d-block">Complete all sections to get personalized recommendations</small>
+                </div>
+
+                <!-- Section 1: Travel Styles -->
+                <div class="card card-hygge mb-4" data-section="1">
+                    <div class="card-body p-4">
+                        <h4 class="fw-bold mb-3" style="color: var(--hygge-green);">
+                            <i class="fas fa-heart me-2"></i>What Type of Travel Experiences Do You Enjoy?
+                        </h4>
+                        <p class="text-muted mb-4">Select all that apply to your travel interests</p>
+                        
+                        <div class="row">
+                            {% for choice_value, choice_label in form.travel_styles.field.choices %}
+                            <div class="col-md-6 col-lg-4 mb-3">
+                                <div class="form-check custom-checkbox">
+                                    <input class="form-check-input" type="checkbox" 
+                                           name="travel_styles" value="{{ choice_value }}" 
+                                           id="travel_style_{{ choice_value }}"
+                                           {% if choice_value in form.travel_styles.value %}checked{% endif %}>
+                                    <label class="form-check-label w-100 p-3 rounded border" for="travel_style_{{ choice_value }}">
+                                        <strong>{{ choice_label }}</strong>
+                                    </label>
+                                </div>
+                            </div>
+                            {% endfor %}
+                        </div>
+                        {% if form.travel_styles.errors %}
+                            <div class="text-danger small mt-2">{{ form.travel_styles.errors.0 }}</div>
+                        {% endif %}
+                    </div>
+                </div>
+
+                <!-- Section 2: Accommodation -->
+                <div class="card card-hygge mb-4" data-section="2">
+                    <div class="card-body p-4">
+                        <h4 class="fw-bold mb-3" style="color: var(--hygge-green);">
+                            <i class="fas fa-bed me-2"></i>Preferred Sustainable Accommodations
+                        </h4>
+                        <p class="text-muted mb-4">Choose your preferred eco-friendly accommodation types</p>
+                        
+                        <div class="row">
+                            {% for choice_value, choice_label in form.accommodation_preferences.field.choices %}
+                            <div class="col-md-6 mb-3">
+                                <div class="form-check custom-checkbox">
+                                    <input class="form-check-input" type="checkbox" 
+                                           name="accommodation_preferences" value="{{ choice_value }}" 
+                                           id="accommodation_{{ choice_value }}"
+                                           {% if choice_value in form.accommodation_preferences.value %}checked{% endif %}>
+                                    <label class="form-check-label w-100 p-3 rounded border" for="accommodation_{{ choice_value }}">
+                                        <strong>{{ choice_label }}</strong>
+                                    </label>
+                                </div>
+                            </div>
+                            {% endfor %}
+                        </div>
+                        {% if form.accommodation_preferences.errors %}
+                            <div class="text-danger small mt-2">{{ form.accommodation_preferences.errors.0 }}</div>
+                        {% endif %}
+                    </div>
+                </div>
+
+                <!-- Section 3: Transportation -->
+                <div class="card card-hygge mb-4" data-section="3">
+                    <div class="card-body p-4">
+                        <h4 class="fw-bold mb-3" style="color: var(--hygge-green);">
+                            <i class="fas fa-route me-2"></i>Eco-Friendly Transportation Preferences
+                        </h4>
+                        <p class="text-muted mb-4">Select your preferred sustainable transportation methods</p>
+                        
+                        <div class="row">
+                            {% for choice_value, choice_label in form.transport_preferences.field.choices %}
+                            <div class="col-md-6 col-lg-4 mb-3">
+                                <div class="form-check custom-checkbox">
+                                    <input class="form-check-input" type="checkbox" 
+                                           name="transport_preferences" value="{{ choice_value }}" 
+                                           id="transport_{{ choice_value }}"
+                                           {% if choice_value in form.transport_preferences.value %}checked{% endif %}>
+                                    <label class="form-check-label w-100 p-3 rounded border" for="transport_{{ choice_value }}">
+                                        <strong>{{ choice_label }}</strong>
+                                    </label>
+                                </div>
+                            </div>
+                            {% endfor %}
+                        </div>
+                        {% if form.transport_preferences.errors %}
+                            <div class="text-danger small mt-2">{{ form.transport_preferences.errors.0 }}</div>
+                        {% endif %}
+                    </div>
+                </div>
+
+                <!-- Section 4: Trip Details -->
+                <div class="card card-hygge mb-4" data-section="4">
+                    <div class="card-body p-4">
+                        <h4 class="fw-bold mb-3" style="color: var(--hygge-green);">
+                            <i class="fas fa-suitcase me-2"></i>Trip Details & Preferences
+                        </h4>
+                        
+                        <div class="row">
+                            <div class="col-md-6 mb-4">
+                                <label class="form-label fw-bold">Budget Range per Day</label>
+                                {% for choice_value, choice_label in form.budget_range.field.choices %}
+                                <div class="form-check">
+                                    <input class="form-check-input" type="radio" 
+                                           name="budget_range" value="{{ choice_value }}" 
+                                           id="budget_{{ choice_value }}"
+                                           {% if form.budget_range.value == choice_value %}checked{% endif %}>
+                                    <label class="form-check-label" for="budget_{{ choice_value }}">
+                                        {{ choice_label }}
+                                    </label>
+                                </div>
+                                {% endfor %}
+                            </div>
+                            
+                            <div class="col-md-6 mb-4">
+                                <label class="form-label fw-bold">Travel Frequency</label>
+                                {% for choice_value, choice_label in form.travel_frequency.field.choices %}
+                                <div class="form-check">
+                                    <input class="form-check-input" type="radio" 
+                                           name="travel_frequency" value="{{ choice_value }}" 
+                                           id="frequency_{{ choice_value }}"
+                                           {% if form.travel_frequency.value == choice_value %}checked{% endif %}>
+                                    <label class="form-check-label" for="frequency_{{ choice_value }}">
+                                        {{ choice_label }}
+                                    </label>
+                                </div>
+                                {% endfor %}
+                            </div>
+                            
+                            <div class="col-md-6 mb-4">
+                                <label class="form-label fw-bold">Group Size Preference</label>
+                                {% for choice_value, choice_label in form.group_size_preference.field.choices %}
+                                <div class="form-check">
+                                    <input class="form-check-input" type="radio" 
+                                           name="group_size_preference" value="{{ choice_value }}" 
+                                           id="group_{{ choice_value }}"
+                                           {% if form.group_size_preference.value == choice_value %}checked{% endif %}>
+                                    <label class="form-check-label" for="group_{{ choice_value }}">
+                                        {{ choice_label }}
+                                    </label>
+                                </div>
+                                {% endfor %}
+                            </div>
+                            
+                            <div class="col-md-6 mb-4">
+                                <label class="form-label fw-bold">Trip Duration Preference</label>
+                                {% for choice_value, choice_label in form.trip_duration_preference.field.choices %}
+                                <div class="form-check">
+                                    <input class="form-check-input" type="radio" 
+                                           name="trip_duration_preference" value="{{ choice_value }}" 
+                                           id="duration_{{ choice_value }}"
+                                           {% if form.trip_duration_preference.value == choice_value %}checked{% endif %}>
+                                    <label class="form-check-label" for="duration_{{ choice_value }}">
+                                        {{ choice_label }}
+                                    </label>
+                                </div>
+                                {% endfor %}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Section 5: Sustainability Factors -->
+                <div class="card card-hygge mb-4" data-section="5">
+                    <div class="card-body p-4">
+                        <h4 class="fw-bold mb-3" style="color: var(--hygge-green);">
+                            <i class="fas fa-leaf me-2"></i>Important Sustainability Factors
+                        </h4>
+                        <p class="text-muted mb-4">Which sustainability factors are most important to you when traveling?</p>
+                        
+                        <div class="row">
+                            {% for choice_value, choice_label in form.sustainability_factors.field.choices %}
+                            <div class="col-md-6 mb-3">
+                                <div class="form-check custom-checkbox">
+                                    <input class="form-check-input" type="checkbox" 
+                                           name="sustainability_factors" value="{{ choice_value }}" 
+                                           id="sustainability_{{ choice_value }}"
+                                           {% if choice_value in form.sustainability_factors.value %}checked{% endif %}>
+                                    <label class="form-check-label w-100 p-3 rounded border" for="sustainability_{{ choice_value }}">
+                                        <strong>{{ choice_label }}</strong>
+                                    </label>
+                                </div>
+                            </div>
+                            {% endfor %}
+                        </div>
+                        {% if form.sustainability_factors.errors %}
+                            <div class="text-danger small mt-2">{{ form.sustainability_factors.errors.0 }}</div>
+                        {% endif %}
+                    </div>
+                </div>
+
+                <!-- Section 6: Personal Goals -->
+                <div class="card card-hygge mb-4" data-section="6">
+                    <div class="card-body p-4">
+                        <h4 class="fw-bold mb-3" style="color: var(--hygge-green);">
+                            <i class="fas fa-star me-2"></i>Your Travel Dreams & Goals
+                        </h4>
+                        
+                        <div class="mb-4">
+                            <label for="{{ form.dream_destination.id_for_label }}" class="form-label fw-bold">
+                                Dream Destination
+                            </label>
+                            {{ form.dream_destination }}
+                            <div class="form-text">Where would you love to travel sustainably?</div>
+                        </div>
+                        
+                        <div class="mb-4">
+                            <label for="{{ form.sustainability_goals.id_for_label }}" class="form-label fw-bold">
+                                Personal Sustainability Goals
+                            </label>
+                            {{ form.sustainability_goals }}
+                            <div class="form-text">Share your personal sustainability goals and values when traveling</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Submit Button -->
+                <div class="text-center mt-5">
+                    <button type="submit" class="btn btn-hygge btn-lg px-5 py-3">
+                        <i class="fas fa-paper-plane me-2"></i>
+                        {% if is_update %}Update My Survey{% else %}Complete Survey{% endif %}
+                    </button>
+                    <p class="text-muted mt-3 mb-0">
+                        <i class="fas fa-lock me-1"></i>Your information is private and secure
+                    </p>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<style>
+.custom-checkbox .form-check-input:checked + .form-check-label {
+    background-color: var(--hygge-green);
+    color: white;
+    border-color: var(--hygge-green);
+}
+
+.custom-checkbox .form-check-label {
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.custom-checkbox .form-check-label:hover {
+    border-color: var(--hygge-light-green);
+    background-color: rgba(74, 124, 89, 0.1);
+}
+
+.form-check-input:focus {
+    border-color: var(--hygge-light-green);
+    box-shadow: 0 0 0 0.2rem rgba(74, 124, 89, 0.25);
+}
+
+.form-control:focus {
+    border-color: var(--hygge-light-green);
+    box-shadow: 0 0 0 0.2rem rgba(74, 124, 89, 0.25);
+}
+
+.card-hygge {
+    opacity: 0;
+    transform: translateY(30px);
+    transition: all 0.6s ease;
+}
+
+.card-hygge.visible {
+    opacity: 1;
+    transform: translateY(0);
+}
+</style>
+
+<script>
+// Progress tracking
+function updateProgress() {
+    const sections = document.querySelectorAll('[data-section]');
+    const progressBar = document.getElementById('progressBar');
+    let completedSections = 0;
+    
+    sections.forEach(section => {
+        const inputs = section.querySelectorAll('input[type="checkbox"]:checked, input[type="radio"]:checked, input[type="text"], textarea');
+        let hasValue = false;
+        
+        inputs.forEach(input => {
+            if (input.type === 'checkbox' || input.type === 'radio') {
+                if (input.checked) hasValue = true;
+            } else if (input.value.trim() !== '') {
+                hasValue = true;
+            }
+        });
+        
+        if (hasValue) completedSections++;
+    });
+    
+    const progress = (completedSections / sections.length) * 100;
+    progressBar.style.width = progress + '%';
+}
+
+// Add event listeners to all form inputs
+document.addEventListener('DOMContentLoaded', function() {
+    const inputs = document.querySelectorAll('#surveyForm input, #surveyForm textarea');
+    inputs.forEach(input => {
+        input.addEventListener('change', updateProgress);
+        input.addEventListener('input', updateProgress);
+    });
+    
+    // Initial progress calculation
+    updateProgress();
+    
+    // Animate sections into view
+    const observerOptions = {
+        threshold: 0.1,
+        rootMargin: '0px 0px -50px 0px'
+    };
+    
+    const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                entry.target.classList.add('visible');
+            }
+        });
+    }, observerOptions);
+    
+    document.querySelectorAll('.card-hygge').forEach(card => {
+        observer.observe(card);
+    });
+});
+
+// Form validation before submit
+document.getElementById('surveyForm').addEventListener('submit', function(e) {
+    const requiredSections = ['travel_styles', 'accommodation_preferences', 'transport_preferences', 'sustainability_factors'];
+    let isValid = true;
+    
+    requiredSections.forEach(name => {
+        const checked = document.querySelectorAll(`input[name="${name}"]:checked`);
+        if (checked.length === 0) {
+            isValid = false;
+            const section = document.querySelector(`input[name="${name}"]`).closest('.card');
+            section.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            
+            // Add error styling
+            section.style.borderColor = '#dc3545';
+            setTimeout(() => {
+                section.style.borderColor = '';
+            }, 3000);
+        }
+    });
+    
+    if (!isValid) {
+        e.preventDefault();
+        alert('Please complete all required sections before submitting.');
+    }
+});
+</script>
+{% endblock %}

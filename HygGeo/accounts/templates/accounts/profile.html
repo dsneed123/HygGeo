@@ -1,0 +1,347 @@
+{% extends 'base.html' %}
+
+{% block title %}My Profile - HygGeo{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <div class="row">
+        <!-- Profile Header -->
+        <div class="col-12 mb-4">
+            <div class="card card-hygge">
+                <div class="card-body p-4">
+                    <div class="row align-items-center">
+                        <div class="col-md-2 text-center mb-3 mb-md-0">
+                            {% if profile.avatar %}
+                                <img src="{{ profile.avatar.url }}" alt="Profile Picture" 
+                                     class="rounded-circle img-fluid" style="width: 100px; height: 100px; object-fit: cover;">
+                            {% else %}
+                                <div class="rounded-circle bg-secondary d-flex align-items-center justify-content-center mx-auto" 
+                                     style="width: 100px; height: 100px;">
+                                    <i class="fas fa-user text-white" style="font-size: 2.5rem;"></i>
+                                </div>
+                            {% endif %}
+                        </div>
+                        <div class="col-md-7">
+                            <h2 class="h3 fw-bold mb-2" style="color: var(--hygge-green);">
+                                {{ user.first_name }} {{ user.last_name }}
+                                {% if user.first_name and user.last_name %}{% else %}{{ user.username }}{% endif %}
+                            </h2>
+                            <p class="text-muted mb-2">
+                                <i class="fas fa-envelope me-2"></i>{{ user.email }}
+                            </p>
+                            {% if profile.location %}
+                            <p class="text-muted mb-2">
+                                <i class="fas fa-map-marker-alt me-2"></i>{{ profile.location }}
+                            </p>
+                            {% endif %}
+                            <p class="text-muted mb-0">
+                                <i class="fas fa-calendar me-2"></i>Member since {{ user.date_joined|date:"F Y" }}
+                            </p>
+                            {% if profile.bio %}
+                            <p class="mt-3 mb-0">{{ profile.bio }}</p>
+                            {% endif %}
+                        </div>
+                        <div class="col-md-3 text-md-end">
+                            <a href="{% url 'edit_profile' %}" class="btn btn-hygge mb-2">
+                                <i class="fas fa-edit me-2"></i>Edit Profile
+                            </a>
+                            <div class="mt-2">
+                                <span class="badge bg-success px-3 py-2">
+                                    <i class="fas fa-leaf me-1"></i>
+                                    Sustainability Priority: 
+                                    {% if profile.sustainability_priority == 1 %}Low{% elif profile.sustainability_priority == 2 %}Medium{% elif profile.sustainability_priority == 3 %}High{% elif profile.sustainability_priority == 4 %}Very High{% else %}Essential{% endif %}
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <!-- Survey Status -->
+        <div class="col-lg-8 mb-4">
+            <div class="card card-hygge">
+                <div class="card-header" style="background-color: var(--hygge-cream); border-bottom: none;">
+                    <h4 class="mb-0 fw-bold" style="color: var(--hygge-green);">
+                        <i class="fas fa-clipboard-list me-2"></i>Travel Survey Status
+                    </h4>
+                </div>
+                <div class="card-body p-4">
+                    {% if survey_count > 0 %}
+                        <div class="d-flex align-items-center justify-content-between mb-3">
+                            <div>
+                                <h5 class="fw-bold text-success mb-1">
+                                    <i class="fas fa-check-circle me-2"></i>Survey Completed
+                                </h5>
+                                <p class="text-muted mb-0">
+                                    You've completed {{ survey_count }} survey{{ survey_count|pluralize }}.
+                                    Last updated: {{ surveys.0.updated_at|date:"F j, Y" }}
+                                </p>
+                            </div>
+                            <a href="{% url 'survey' %}" class="btn btn-outline-hygge">
+                                <i class="fas fa-edit me-2"></i>Update Survey
+                            </a>
+                        </div>
+                        
+                        <!-- Latest Survey Summary -->
+                        {% if surveys %}
+                        <div class="mt-4 p-3 rounded" style="background-color: var(--hygge-cream);">
+                            <h6 class="fw-bold mb-3" style="color: var(--hygge-green);">Latest Survey Summary</h6>
+                            <div class="row">
+                                <div class="col-md-6 mb-3">
+                                    <strong>Budget Range:</strong>
+                                    <span class="ms-2">{{ surveys.0.get_budget_range_display }}</span>
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <strong>Travel Frequency:</strong>
+                                    <span class="ms-2">{{ surveys.0.get_travel_frequency_display }}</span>
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <strong>Group Size:</strong>
+                                    <span class="ms-2">{{ surveys.0.get_group_size_preference_display }}</span>
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <strong>Trip Duration:</strong>
+                                    <span class="ms-2">{{ surveys.0.get_trip_duration_preference_display }}</span>
+                                </div>
+                                {% if surveys.0.dream_destination %}
+                                <div class="col-12 mb-3">
+                                    <strong>Dream Destination:</strong>
+                                    <span class="ms-2">{{ surveys.0.dream_destination }}</span>
+                                </div>
+                                {% endif %}
+                            </div>
+                            
+                            <!-- Travel Styles -->
+                            {% if surveys.0.travel_styles %}
+                            <div class="mb-3">
+                                <strong>Travel Interests:</strong>
+                                <div class="mt-2">
+                                    {% for style in surveys.0.travel_styles %}
+                                        <span class="badge bg-primary me-2 mb-1">{{ style|capfirst }}</span>
+                                    {% endfor %}
+                                </div>
+                            </div>
+                            {% endif %}
+                            
+                            <!-- Sustainability Factors -->
+                            {% if surveys.0.sustainability_factors %}
+                            <div class="mb-0">
+                                <strong>Key Sustainability Factors:</strong>
+                                <div class="mt-2">
+                                    {% for factor in surveys.0.sustainability_factors %}
+                                        <span class="badge bg-success me-2 mb-1">{{ factor|capfirst }}</span>
+                                    {% endfor %}
+                                </div>
+                            </div>
+                            {% endif %}
+                        </div>
+                        {% endif %}
+                    {% else %}
+                        <div class="text-center py-4">
+                            <i class="fas fa-clipboard-list text-muted mb-3" style="font-size: 3rem;"></i>
+                            <h5 class="fw-bold text-muted mb-3">No Survey Completed Yet</h5>
+                            <p class="text-muted mb-4">
+                                Complete our travel survey to get personalized sustainable travel recommendations 
+                                that match your hygge travel philosophy.
+                            </p>
+                            <a href="{% url 'survey' %}" class="btn btn-hygge btn-lg">
+                                <i class="fas fa-clipboard-list me-2"></i>Take Travel Survey
+                            </a>
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+
+        <!-- Quick Stats & Actions -->
+        <div class="col-lg-4 mb-4">
+            <div class="card card-hygge">
+                <div class="card-header" style="background-color: var(--hygge-cream); border-bottom: none;">
+                    <h5 class="mb-0 fw-bold" style="color: var(--hygge-green);">
+                        <i class="fas fa-chart-line me-2"></i>Your HygGeo Journey
+                    </h5>
+                </div>
+                <div class="card-body p-4">
+                    <div class="mb-4">
+                        <div class="d-flex justify-content-between align-items-center mb-2">
+                            <span class="text-muted">Profile Completion</span>
+                            <span class="fw-bold">
+                                {% if profile.bio and profile.location and profile.avatar %}100%{% elif profile.bio and profile.location %}80%{% elif profile.bio or profile.location %}60%{% else %}40%{% endif %}
+                            </span>
+                        </div>
+                        <div class="progress" style="height: 8px;">
+                            <div class="progress-bar" style="width: {% if profile.bio and profile.location and profile.avatar %}100%{% elif profile.bio and profile.location %}80%{% elif profile.bio or profile.location %}60%{% else %}40%{% endif %}; background-color: var(--hygge-green);"></div>
+                        </div>
+                    </div>
+                    
+                    <div class="mb-4">
+                        <div class="row text-center">
+                            <div class="col-6">
+                                <div class="p-3 rounded" style="background-color: var(--hygge-cream);">
+                                    <div class="h4 fw-bold mb-1" style="color: var(--hygge-green);">{{ survey_count }}</div>
+                                    <small class="text-muted">Survey{{ survey_count|pluralize }}</small>
+                                </div>
+                            </div>
+                            <div class="col-6">
+                                <div class="p-3 rounded" style="background-color: var(--hygge-cream);">
+                                    <div class="h4 fw-bold mb-1" style="color: var(--hygge-green);">
+                                        {{ user.date_joined|timesince|slice:":2" }}
+                                    </div>
+                                    <small class="text-muted">Days Active</small>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="d-grid gap-2">
+                        {% if survey_count > 0 %}
+                        <a href="{% url 'survey' %}" class="btn btn-outline-hygge">
+                            <i class="fas fa-sync-alt me-2"></i>Update Survey
+                        </a>
+                        {% else %}
+                        <a href="{% url 'survey' %}" class="btn btn-hygge">
+                            <i class="fas fa-clipboard-list me-2"></i>Take Survey
+                        </a>
+                        {% endif %}
+                        <a href="{% url 'user_list' %}" class="btn btn-outline-primary">
+                            <i class="fas fa-users me-2"></i>Explore Community
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Survey History -->
+    {% if surveys %}
+    <div class="row">
+        <div class="col-12">
+            <div class="card card-hygge">
+                <div class="card-header" style="background-color: var(--hygge-cream); border-bottom: none;">
+                    <h5 class="mb-0 fw-bold" style="color: var(--hygge-green);">
+                        <i class="fas fa-history me-2"></i>Survey History
+                    </h5>
+                </div>
+                <div class="card-body p-4">
+                    {% for survey in surveys %}
+                    <div class="border-bottom pb-3 mb-3 {% if not forloop.last %}{% else %}border-bottom-0 mb-0 pb-0{% endif %}">
+                        <div class="d-flex justify-content-between align-items-start">
+                            <div>
+                                <h6 class="fw-bold mb-1">Survey #{{ forloop.counter }}</h6>
+                                <p class="text-muted mb-2">
+                                    <i class="fas fa-calendar me-1"></i>
+                                    Completed on {{ survey.completed_at|date:"F j, Y" }}
+                                    {% if survey.updated_at != survey.completed_at %}
+                                        (Updated {{ survey.updated_at|date:"F j, Y" }})
+                                    {% endif %}
+                                </p>
+                                {% if survey.dream_destination %}
+                                <p class="mb-1">
+                                    <strong>Dream Destination:</strong> {{ survey.dream_destination }}
+                                </p>
+                                {% endif %}
+                                <div>
+                                    <small class="text-muted">
+                                        {{ survey.budget_range|capfirst }} budget • 
+                                        {{ survey.get_travel_frequency_display }} • 
+                                        {{ survey.get_group_size_preference_display }}
+                                    </small>
+                                </div>
+                            </div>
+                            <span class="badge bg-primary">
+                                {{ survey.travel_styles|length }} interest{{ survey.travel_styles|length|pluralize }}
+                            </span>
+                        </div>
+                    </div>
+                    {% endfor %}
+                    
+                    <!-- Pagination -->
+                    {% if surveys.has_other_pages %}
+                    <nav aria-label="Survey history pagination" class="mt-4">
+                        <ul class="pagination justify-content-center">
+                            {% if surveys.has_previous %}
+                                <li class="page-item">
+                                    <a class="page-link" href="?page={{ surveys.previous_page_number }}">Previous</a>
+                                </li>
+                            {% endif %}
+                            
+                            {% for num in surveys.paginator.page_range %}
+                                {% if surveys.number == num %}
+                                    <li class="page-item active">
+                                        <span class="page-link">{{ num }}</span>
+                                    </li>
+                                {% else %}
+                                    <li class="page-item">
+                                        <a class="page-link" href="?page={{ num }}">{{ num }}</a>
+                                    </li>
+                                {% endif %}
+                            {% endfor %}
+                            
+                            {% if surveys.has_next %}
+                                <li class="page-item">
+                                    <a class="page-link" href="?page={{ surveys.next_page_number }}">Next</a>
+                                </li>
+                            {% endif %}
+                        </ul>
+                    </nav>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+    {% endif %}
+</div>
+
+<style>
+.page-link {
+    color: var(--hygge-green);
+    border-color: #dee2e6;
+}
+
+.page-item.active .page-link {
+    background-color: var(--hygge-green);
+    border-color: var(--hygge-green);
+}
+
+.page-link:hover {
+    color: var(--hygge-light-green);
+    background-color: rgba(74, 124, 89, 0.1);
+    border-color: var(--hygge-light-green);
+}
+
+.badge {
+    font-size: 0.8rem;
+}
+
+@media (max-width: 768px) {
+    .col-md-2 {
+        text-align: center !important;
+    }
+    
+    .col-md-3 {
+        text-align: center !important;
+        margin-top: 1rem;
+    }
+}
+</style>
+
+<script>
+// Add animation to cards
+document.addEventListener('DOMContentLoaded', function() {
+    const cards = document.querySelectorAll('.card-hygge');
+    cards.forEach((card, index) => {
+        card.style.opacity = '0';
+        card.style.transform = 'translateY(30px)';
+        
+        setTimeout(() => {
+            card.style.transition = 'all 0.6s ease';
+            card.style.opacity = '1';
+            card.style.transform = 'translateY(0)';
+        }, index * 100);
+    });
+});
+</script>
+{% endblock %}

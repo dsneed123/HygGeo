@@ -1,0 +1,144 @@
+{% extends 'base.html' %}
+
+{% block title %}Sign Up - HygGeo{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-md-8 col-lg-6">
+            <div class="card card-hygge p-4">
+                <div class="text-center mb-4">
+                    <i class="fas fa-user-plus text-success" style="font-size: 3rem;"></i>
+                    <h2 class="h3 fw-bold mt-3" style="color: var(--hygge-green);">Join HygGeo</h2>
+                    <p class="text-muted">Start your sustainable travel journey with us</p>
+                </div>
+                
+                <form method="post">
+                    {% csrf_token %}
+                    
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label for="{{ form.first_name.id_for_label }}" class="form-label fw-bold">First Name</label>
+                            <input type="text" name="first_name" class="form-control" id="{{ form.first_name.id_for_label }}" value="{{ form.first_name.value|default:'' }}" required>
+                            {% if form.first_name.errors %}
+                                <div class="text-danger small">{{ form.first_name.errors.0 }}</div>
+                            {% endif %}
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label for="{{ form.last_name.id_for_label }}" class="form-label fw-bold">Last Name</label>
+                            <input type="text" name="last_name" class="form-control" id="{{ form.last_name.id_for_label }}" value="{{ form.last_name.value|default:'' }}" required>
+                            {% if form.last_name.errors %}
+                                <div class="text-danger small">{{ form.last_name.errors.0 }}</div>
+                            {% endif %}
+                        </div>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label for="{{ form.username.id_for_label }}" class="form-label fw-bold">Username</label>
+                        <input type="text" name="username" class="form-control" id="{{ form.username.id_for_label }}" value="{{ form.username.value|default:'' }}" required>
+                        {% if form.username.errors %}
+                            <div class="text-danger small">{{ form.username.errors.0 }}</div>
+                        {% endif %}
+                        <div class="form-text">
+                            <small><i class="fas fa-info-circle me-1"></i>150 characters or fewer. Letters, digits and @/./+/-/_ only.</small>
+                        </div>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label for="{{ form.email.id_for_label }}" class="form-label fw-bold">Email Address</label>
+                        <input type="email" name="email" class="form-control" id="{{ form.email.id_for_label }}" value="{{ form.email.value|default:'' }}" required>
+                        {% if form.email.errors %}
+                            <div class="text-danger small">{{ form.email.errors.0 }}</div>
+                        {% endif %}
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label for="{{ form.password1.id_for_label }}" class="form-label fw-bold">Password</label>
+                        <input type="password" name="password1" class="form-control" id="{{ form.password1.id_for_label }}" required>
+                        {% if form.password1.errors %}
+                            <div class="text-danger small">{{ form.password1.errors.0 }}</div>
+                        {% endif %}
+                        <div class="form-text">
+                            <small>
+                                <i class="fas fa-shield-alt me-1"></i>
+                                Your password must contain at least 8 characters and shouldn't be too common.
+                            </small>
+                        </div>
+                    </div>
+                    
+                    <div class="mb-4">
+                        <label for="{{ form.password2.id_for_label }}" class="form-label fw-bold">Confirm Password</label>
+                        <input type="password" name="password2" class="form-control" id="{{ form.password2.id_for_label }}" required>
+                        {% if form.password2.errors %}
+                            <div class="text-danger small">{{ form.password2.errors.0 }}</div>
+                        {% endif %}
+                    </div>
+                    
+                    <div class="mb-4">
+                        <div class="p-3 rounded" style="background-color: var(--hygge-cream);">
+                            <h6 class="fw-bold mb-2" style="color: var(--hygge-green);">
+                                <i class="fas fa-heart me-2"></i>Welcome to the HygGeo Community!
+                            </h6>
+                            <p class="small text-muted mb-0">
+                                By joining, you'll get access to our travel survey, sustainable travel recommendations, 
+                                and a community of like-minded travelers who care about mindful, responsible tourism.
+                            </p>
+                        </div>
+                    </div>
+                    
+                    <button type="submit" class="btn btn-hygge w-100 py-3 fw-bold">
+                        <i class="fas fa-user-plus me-2"></i>Create My Account
+                    </button>
+                </form>
+                
+                <div class="text-center mt-4">
+                    <p class="text-muted">
+                        Already have an account? 
+                        <a href="{% url 'login' %}" style="color: var(--hygge-green);" class="fw-bold text-decoration-none">
+                            <i class="fas fa-sign-in-alt me-1"></i>Sign in here
+                        </a>
+                    </p>
+                </div>
+                
+                <!-- Next Steps Preview -->
+                <div class="mt-4 pt-4 border-top">
+                    <h6 class="fw-bold text-center mb-3" style="color: var(--hygge-green);">What's Next?</h6>
+                    <div class="row text-center">
+                        <div class="col-4">
+                            <i class="fas fa-clipboard-list text-primary mb-2" style="font-size: 1.5rem;"></i>
+                            <p class="small text-muted mb-0">Complete Travel Survey</p>
+                        </div>
+                        <div class="col-4">
+                            <i class="fas fa-compass text-warning mb-2" style="font-size: 1.5rem;"></i>
+                            <p class="small text-muted mb-0">Get Recommendations</p>
+                        </div>
+                        <div class="col-4">
+                            <i class="fas fa-plane text-success mb-2" style="font-size: 1.5rem;"></i>
+                            <p class="small text-muted mb-0">Plan Sustainable Trips</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+.form-control:focus {
+    border-color: var(--hygge-light-green);
+    box-shadow: 0 0 0 0.2rem rgba(74, 124, 89, 0.25);
+}
+
+.card-hygge {
+    transition: transform 0.3s ease;
+}
+
+.card-hygge:hover {
+    transform: translateY(-5px);
+}
+
+.btn-hygge:focus {
+    box-shadow: 0 0 0 0.2rem rgba(45, 90, 61, 0.25);
+}
+</style>
+{% endblock %}

@@ -1,0 +1,132 @@
+{% extends 'base.html' %}
+
+{% block title %}Survey Complete - HygGeo{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+            <div class="text-center mb-5">
+                <i class="fas fa-check-circle text-success" style="font-size: 5rem;"></i>
+                <h1 class="h2 fw-bold mt-4" style="color: var(--hygge-green);">
+                    Thank You for Completing Your Travel Survey!
+                </h1>
+                <p class="lead text-muted">
+                    Your responses help us curate the perfect sustainable travel experiences that align with your hygge philosophy.
+                </p>
+            </div>
+
+            {% if survey %}
+            <div class="card card-hygge mb-4">
+                <div class="card-body p-4">
+                    <h4 class="fw-bold mb-3" style="color: var(--hygge-green);">
+                        <i class="fas fa-summary me-2"></i>Your Survey Summary
+                    </h4>
+                    
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <strong>Budget Range:</strong>
+                            <span class="ms-2">{{ survey.get_budget_range_display }}</span>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <strong>Travel Frequency:</strong>
+                            <span class="ms-2">{{ survey.get_travel_frequency_display }}</span>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <strong>Group Size:</strong>
+                            <span class="ms-2">{{ survey.get_group_size_preference_display }}</span>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <strong>Trip Duration:</strong>
+                            <span class="ms-2">{{ survey.get_trip_duration_preference_display }}</span>
+                        </div>
+                        {% if survey.dream_destination %}
+                        <div class="col-12 mb-3">
+                            <strong>Dream Destination:</strong>
+                            <span class="ms-2">{{ survey.dream_destination }}</span>
+                        </div>
+                        {% endif %}
+                    </div>
+                    
+                    {% if survey.travel_styles %}
+                    <div class="mb-3">
+                        <strong>Travel Interests:</strong>
+                        <div class="mt-2">
+                            {% for style in survey.travel_styles %}
+                                <span class="badge bg-primary me-2 mb-1">{{ style|capfirst }}</span>
+                            {% endfor %}
+                        </div>
+                    </div>
+                    {% endif %}
+                    
+                    {% if survey.sustainability_factors %}
+                    <div class="mb-0">
+                        <strong>Sustainability Priorities:</strong>
+                        <div class="mt-2">
+                            {% for factor in survey.sustainability_factors %}
+                                <span class="badge bg-success me-2 mb-1">{{ factor|capfirst }}</span>
+                            {% endfor %}
+                        </div>
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+            {% endif %}
+
+            <div class="card card-hygge">
+                <div class="card-body p-4 text-center">
+                    <h5 class="fw-bold mb-3" style="color: var(--hygge-green);">
+                        <i class="fas fa-sparkles me-2"></i>What's Next?
+                    </h5>
+                    <p class="text-muted mb-4">
+                        We're currently building our recommendation engine to match you with sustainable travel options 
+                        that embrace the hygge philosophy. Stay tuned for personalized suggestions!
+                    </p>
+                    
+                    <div class="d-flex flex-wrap justify-content-center gap-3">
+                        <a href="{% url 'profile' %}" class="btn btn-hygge">
+                            <i class="fas fa-user me-2"></i>View Your Profile
+                        </a>
+                        <a href="{% url 'survey' %}" class="btn btn-outline-hygge">
+                            <i class="fas fa-edit me-2"></i>Update Survey
+                        </a>
+                        <a href="{% url 'index' %}" class="btn btn-outline-primary">
+                            <i class="fas fa-home me-2"></i>Back to Home
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Coming Soon Features -->
+            <div class="mt-5">
+                <h4 class="text-center fw-bold mb-4" style="color: var(--hygge-green);">
+                    Coming Soon
+                </h4>
+                <div class="row g-4">
+                    <div class="col-md-4">
+                        <div class="text-center">
+                            <i class="fas fa-map-marked-alt text-primary mb-3" style="font-size: 2.5rem;"></i>
+                            <h6 class="fw-bold">Personalized Recommendations</h6>
+                            <p class="text-muted small">Curated sustainable travel options based on your preferences</p>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="text-center">
+                            <i class="fas fa-users text-success mb-3" style="font-size: 2.5rem;"></i>
+                            <h6 class="fw-bold">Travel Community</h6>
+                            <p class="text-muted small">Connect with like-minded sustainable travelers</p>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="text-center">
+                            <i class="fas fa-chart-line text-warning mb-3" style="font-size: 2.5rem;"></i>
+                            <h6 class="fw-bold">Impact Tracking</h6>
+                            <p class="text-muted small">See your positive environmental and social impact</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
