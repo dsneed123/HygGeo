@@ -1,0 +1,209 @@
+{% extends 'base.html' %}
+{% block title %}Add Experience - HygGeo{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+  <div class="row justify-content-center">
+    <div class="col-lg-10">
+      <div class="text-center mb-5">
+        <i class="fas fa-plus-circle text-primary" style="font-size: 4rem;"></i>
+        <h1 class="h2 fw-bold mt-3" style="color: var(--hygge-green);">Add a New Experience</h1>
+        <p class="lead text-muted">Create a new sustainable travel experience for users to explore.</p>
+      </div>
+
+      <!-- Messages -->
+      {% if messages %}
+        <div class="mb-4">
+          {% for message in messages %}
+            <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+              {{ message }}
+              <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+            </div>
+          {% endfor %}
+        </div>
+      {% endif %}
+
+      <!-- Form Errors (for debugging) -->
+      {% if form.errors %}
+        <div class="alert alert-danger mb-4">
+          <h5>Please fix the following errors:</h5>
+          <ul class="mb-0">
+            {% for field, errors in form.errors.items %}
+              {% for error in errors %}
+                <li><strong>{{ field|title }}:</strong> {{ error }}</li>
+              {% endfor %}
+            {% endfor %}
+          </ul>
+        </div>
+      {% endif %}
+
+      <form method="post" enctype="multipart/form-data" id="experienceForm">
+        {% csrf_token %}
+
+        <!-- Section 1: Basic Info -->
+        <div class="card card-hygge mb-4" data-section="1">
+          <div class="card-body p-4">
+            <h4 class="fw-bold mb-3" style="color: var(--hygge-green);">
+              <i class="fas fa-info-circle me-2"></i>Basic Details
+            </h4>
+            <div class="mb-3">
+              {{ form.title.label_tag }} 
+              {{ form.title }}
+              {% if form.title.errors %}
+                <div class="text-danger small">{{ form.title.errors.0 }}</div>
+              {% endif %}
+            </div>
+            <div class="mb-3">
+              {{ form.short_description.label_tag }}
+              {{ form.short_description }}
+              {% if form.short_description.errors %}
+                <div class="text-danger small">{{ form.short_description.errors.0 }}</div>
+              {% endif %}
+            </div>
+            <div class="mb-3">
+              {{ form.description.label_tag }}
+              {{ form.description }}
+              {% if form.description.errors %}
+                <div class="text-danger small">{{ form.description.errors.0 }}</div>
+              {% endif %}
+            </div>
+            <div class="mb-3">
+              {{ form.main_image.label_tag }}
+              {{ form.main_image }}
+              {% if form.main_image.errors %}
+                <div class="text-danger small">{{ form.main_image.errors.0 }}</div>
+              {% endif %}
+              <div class="form-text">Upload a high-quality image representing this experience</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Section 2: Categorization -->
+        <div class="card card-hygge mb-4" data-section="2">
+          <div class="card-body p-4">
+            <h4 class="fw-bold mb-3" style="color: var(--hygge-green);">
+              <i class="fas fa-tags me-2"></i>Categorization
+            </h4>
+            <div class="row">
+              <div class="col-md-6 mb-3">
+                {{ form.destination.label_tag }}
+                {{ form.destination }}
+                {% if form.destination.errors %}
+                  <div class="text-danger small">{{ form.destination.errors.0 }}</div>
+                {% endif %}
+                <a href="{% url 'experiences:add_destination' %}" class="small text-primary">+ Add new destination</a>
+              </div>
+              <div class="col-md-6 mb-3">
+                {{ form.provider.label_tag }}
+                {{ form.provider }}
+                {% if form.provider.errors %}
+                  <div class="text-danger small">{{ form.provider.errors.0 }}</div>
+                {% endif %}
+                <a href="{% url 'experiences:add_provider' %}" class="small text-primary">+ Add new provider</a>
+              </div>
+              <div class="col-md-6 mb-3">
+                {{ form.experience_type.label_tag }}
+                {{ form.experience_type }}
+                {% if form.experience_type.errors %}
+                  <div class="text-danger small">{{ form.experience_type.errors.0 }}</div>
+                {% endif %}
+                <a href="{% url 'experiences:add_experience_type' %}" class="small text-primary">+ Add new experience type</a>
+              </div>
+              <div class="col-md-6 mb-3">
+                {{ form.categories.label_tag }}
+                {{ form.categories }}
+                {% if form.categories.errors %}
+                  <div class="text-danger small">{{ form.categories.errors.0 }}</div>
+                {% endif %}
+                <a href="{% url 'experiences:add_category' %}" class="small text-primary">+ Add new category</a>
+                <div class="form-text">Hold Ctrl/Cmd to select multiple categories</div>
+              </div>
+              <div class="col-md-6 mb-3">
+                {{ form.budget_range.label_tag }}
+                {{ form.budget_range }}
+                {% if form.budget_range.errors %}
+                  <div class="text-danger small">{{ form.budget_range.errors.0 }}</div>
+                {% endif %}
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Section 3: Trip Details -->
+        <div class="card card-hygge mb-4" data-section="3">
+          <div class="card-body p-4">
+            <h4 class="fw-bold mb-3" style="color: var(--hygge-green);">
+              <i class="fas fa-suitcase me-2"></i>Trip Details
+            </h4>
+            <div class="row">
+              <div class="col-md-6 mb-3">
+                {{ form.group_size.label_tag }} 
+                {{ form.group_size }}
+                {% if form.group_size.errors %}
+                  <div class="text-danger small">{{ form.group_size.errors.0 }}</div>
+                {% endif %}
+              </div>
+              <div class="col-md-6 mb-3">
+                {{ form.duration.label_tag }} 
+                {{ form.duration }}
+                {% if form.duration.errors %}
+                  <div class="text-danger small">{{ form.duration.errors.0 }}</div>
+                {% endif %}
+              </div>
+              <div class="col-md-6 mb-3">
+                <div class="form-check">
+                  {{ form.is_featured }}
+                  {{ form.is_featured.label_tag }}
+                </div>
+                {% if form.is_featured.errors %}
+                  <div class="text-danger small">{{ form.is_featured.errors.0 }}</div>
+                {% endif %}
+              </div>
+              <div class="col-md-6 mb-3">
+                <div class="form-check">
+                  {{ form.is_active }}
+                  {{ form.is_active.label_tag }}
+                </div>
+                {% if form.is_active.errors %}
+                  <div class="text-danger small">{{ form.is_active.errors.0 }}</div>
+                {% endif %}
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Submit -->
+        <div class="text-center mt-5">
+          <a href="{% url 'experiences:experience_list' %}" class="btn btn-outline-secondary me-3">
+            <i class="fas fa-arrow-left me-2"></i>Cancel
+          </a>
+          <button type="submit" class="btn btn-hygge btn-lg px-5 py-3">
+            <i class="fas fa-save me-2"></i>Save Experience
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<style>
+  .card-hygge {
+    opacity: 0;
+    transform: translateY(30px);
+    transition: all 0.6s ease;
+  }
+  .card-hygge.visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+</style>
+
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    const observer = new IntersectionObserver(entries => {
+      entries.forEach(entry => { if (entry.isIntersecting) entry.target.classList.add('visible'); });
+    }, { threshold: 0.1 });
+    document.querySelectorAll('.card-hygge').forEach(card => observer.observe(card));
+  });
+</script>
+{% endblock %}

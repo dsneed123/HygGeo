@@ -1,0 +1,394 @@
+{% extends 'base.html' %}
+
+{% block title %}Sustainable Destinations - HygGeo{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <!-- Header -->
+    <div class="row mb-5">
+        <div class="col-12 text-center">
+            <i class="fas fa-globe-americas text-primary" style="font-size: 4rem;"></i>
+            <h1 class="h2 fw-bold mt-3" style="color: var(--hygge-green);">
+                Sustainable Travel Destinations
+            </h1>
+            <p class="lead text-muted">
+                Discover mindful destinations that embrace sustainability and the hygge way of life
+            </p>
+        </div>
+    </div>
+
+    <!-- Navigation Links -->
+    <div class="row mb-4">
+        <div class="col-12 text-center">
+            <div class="d-flex flex-wrap justify-content-center gap-3 mb-4">
+                <a href="{% url 'experiences:experience_list' %}" class="btn btn-outline-hygge">
+                    <i class="fas fa-list me-2"></i>All Experiences
+                </a>
+                <a href="{% url 'experiences:recommendations' %}" class="btn btn-outline-primary">
+                    <i class="fas fa-compass me-2"></i>My Recommendations
+                </a>
+                <a href="{% url 'experiences:my_bookmarks' %}" class="btn btn-outline-secondary">
+                    <i class="fas fa-bookmark me-2"></i>My Bookmarks
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Destinations by Country -->
+    {% if destinations_by_country %}
+        {% for country, dest_list in destinations_by_country.items %}
+        <div class="destination-country-section mb-5">
+            <div class="row mb-4">
+                <div class="col-12">
+                    <h3 class="h4 fw-bold d-flex align-items-center" style="color: var(--hygge-green);">
+                        <i class="fas fa-flag me-3"></i>{{ country }}
+                        <span class="badge bg-secondary ms-3">{{ dest_list|length }} destination{{ dest_list|length|pluralize }}</span>
+                    </h3>
+                    <hr class="mt-2" style="border-color: var(--hygge-green); opacity: 0.3;">
+                </div>
+            </div>
+            
+            <div class="row g-4 mb-5">
+                {% for dest in dest_list %}
+                <div class="col-lg-3 col-md-4 col-sm-6">
+                    <div class="destination-card">
+                        <a href="{% url 'experiences:destination_detail' dest.slug %}" class="text-decoration-none">
+                            <div class="card card-hygge h-100 destination-card-inner">
+                                <!-- Image Section -->
+                                <div class="destination-image-container">
+                                    {% if dest.image %}
+                                        <img src="{{ dest.image.url }}" alt="{{ dest.name }}" class="card-img-top destination-image">
+                                    {% else %}
+                                        <div class="card-img-top destination-placeholder">
+                                            <i class="fas fa-mountain text-white"></i>
+                                        </div>
+                                    {% endif %}
+                                    
+                                    <!-- Overlay with sustainability score -->
+                                    <div class="destination-overlay">
+                                        <div class="destination-scores">
+                                            <span class="score-badge sustainability-score">
+                                                <i class="fas fa-leaf me-1"></i>{{ dest.sustainability_score }}/10
+                                            </span>
+                                            <span class="score-badge hygge-score">
+                                                <i class="fas fa-heart me-1"></i>{{ dest.hygge_factor }}/10
+                                            </span>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <!-- Content Section -->
+                                <div class="card-body p-3">
+                                    <h5 class="destination-title">{{ dest.name }}</h5>
+                                    <p class="destination-location">
+                                        <i class="fas fa-map-marker-alt me-1"></i>
+                                        {{ dest.country }}{% if dest.region %}, {{ dest.region }}{% endif %}
+                                    </p>
+                                    
+                                    {% if dest.description %}
+                                    <p class="destination-description">
+                                        {{ dest.description|truncatewords:15 }}
+                                    </p>
+                                    {% endif %}
+                                    
+                                    <!-- Travel Info -->
+                                    <div class="destination-info">
+                                        {% if dest.best_time_to_visit %}
+                                        <div class="info-item">
+                                            <i class="fas fa-calendar-alt text-primary me-2"></i>
+                                            <span class="small text-muted">Best: {{ dest.best_time_to_visit }}</span>
+                                        </div>
+                                        {% endif %}
+                                        
+                                        {% if dest.climate %}
+                                        <div class="info-item">
+                                            <i class="fas fa-thermometer-half text-info me-2"></i>
+                                            <span class="small text-muted">{{ dest.climate }}</span>
+                                        </div>
+                                        {% endif %}
+                                        
+                                        <div class="info-item">
+                                            <i class="fas fa-list text-success me-2"></i>
+                                            <span class="small text-muted">{{ dest.experience_count }} experience{{ dest.experience_count|pluralize }}</span>
+                                        </div>
+                                    </div>
+                                    
+                                    <!-- Action Button -->
+                                    <div class="mt-3">
+                                        <div class="btn btn-hygge btn-sm w-100">
+                                            <i class="fas fa-eye me-2"></i>Explore Destination
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </a>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+        {% endfor %}
+    {% else %}
+        <!-- Empty State -->
+        <div class="row">
+            <div class="col-12 text-center py-5">
+                <i class="fas fa-globe text-muted" style="font-size: 5rem;"></i>
+                <h4 class="text-muted mt-4">No Destinations Available</h4>
+                <p class="text-muted">We're working on adding amazing sustainable destinations. Check back soon!</p>
+                <a href="{% url 'index' %}" class="btn btn-hygge mt-3">
+                    <i class="fas fa-home me-2"></i>Back to Home
+                </a>
+            </div>
+        </div>
+    {% endif %}
+
+    <!-- Call to Action -->
+    <div class="row mt-5">
+        <div class="col-lg-8 mx-auto">
+            <div class="card card-hygge text-center">
+                <div class="card-body p-4">
+                    <h5 class="fw-bold mb-3" style="color: var(--hygge-green);">
+                        <i class="fas fa-compass me-2"></i>Can't Find Your Dream Destination?
+                    </h5>
+                    <p class="text-muted mb-4">
+                        We're constantly adding new sustainable destinations. Complete your travel survey 
+                        to get personalized recommendations and be the first to know about new locations.
+                    </p>
+                    <div class="d-flex flex-wrap justify-content-center gap-3">
+                        <a href="{% url 'survey' %}" class="btn btn-hygge">
+                            <i class="fas fa-clipboard-list me-2"></i>Complete Travel Survey
+                        </a>
+                        <a href="{% url 'experiences:experience_list' %}" class="btn btn-outline-hygge">
+                            <i class="fas fa-search me-2"></i>Browse All Experiences
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+/* Destination Card Styles */
+.destination-card {
+    transition: transform 0.3s ease;
+}
+
+.destination-card:hover {
+    transform: translateY(-8px);
+}
+
+.destination-card-inner {
+    overflow: hidden;
+    transition: all 0.3s ease;
+    border: none;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+}
+
+.destination-card:hover .destination-card-inner {
+    box-shadow: 0 8px 30px rgba(45, 90, 61, 0.2);
+}
+
+.destination-image-container {
+    position: relative;
+    overflow: hidden;
+}
+
+.destination-image {
+    height: 200px;
+    object-fit: cover;
+    transition: transform 0.3s ease;
+}
+
+.destination-placeholder {
+    height: 200px;
+    background: linear-gradient(135deg, var(--hygge-green), var(--hygge-light-green));
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 3rem;
+}
+
+.destination-card:hover .destination-image {
+    transform: scale(1.05);
+}
+
+.destination-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(to bottom, rgba(0,0,0,0.3) 0%, transparent 50%, rgba(0,0,0,0.3) 100%);
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    padding: 15px;
+}
+
+.destination-card:hover .destination-overlay {
+    opacity: 1;
+}
+
+.destination-scores {
+    display: flex;
+    gap: 8px;
+    align-self: flex-end;
+}
+
+.score-badge {
+    background: rgba(255, 255, 255, 0.9);
+    color: var(--hygge-green);
+    padding: 4px 8px;
+    border-radius: 20px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    backdrop-filter: blur(10px);
+}
+
+.sustainability-score {
+    background: rgba(40, 167, 69, 0.9);
+    color: white;
+}
+
+.hygge-score {
+    background: rgba(220, 53, 69, 0.9);
+    color: white;
+}
+
+.destination-title {
+    font-weight: 700;
+    color: var(--hygge-green);
+    margin-bottom: 8px;
+    font-size: 1.1rem;
+}
+
+.destination-location {
+    color: #6c757d;
+    font-size: 0.9rem;
+    margin-bottom: 12px;
+}
+
+.destination-description {
+    font-size: 0.85rem;
+    color: #495057;
+    line-height: 1.4;
+    margin-bottom: 15px;
+}
+
+.destination-info {
+    border-top: 1px solid rgba(45, 90, 61, 0.1);
+    padding-top: 12px;
+    margin-bottom: 0;
+}
+
+.info-item {
+    display: flex;
+    align-items: center;
+    margin-bottom: 6px;
+}
+
+.info-item:last-child {
+    margin-bottom: 0;
+}
+
+/* Country Section Styling */
+.destination-country-section {
+    margin-bottom: 3rem;
+}
+
+.destination-country-section h3 {
+    position: relative;
+    padding-bottom: 10px;
+}
+
+/* Responsive Adjustments */
+@media (max-width: 768px) {
+    .destination-image,
+    .destination-placeholder {
+        height: 160px;
+    }
+    
+    .destination-title {
+        font-size: 1rem;
+    }
+    
+    .destination-location {
+        font-size: 0.8rem;
+    }
+    
+    .destination-description {
+        font-size: 0.8rem;
+    }
+}
+
+/* Animation for cards appearing */
+.destination-card {
+    opacity: 0;
+    transform: translateY(30px);
+    animation: fadeInUp 0.6s ease forwards;
+}
+
+.destination-card:nth-child(1) { animation-delay: 0.1s; }
+.destination-card:nth-child(2) { animation-delay: 0.2s; }
+.destination-card:nth-child(3) { animation-delay: 0.3s; }
+.destination-card:nth-child(4) { animation-delay: 0.4s; }
+.destination-card:nth-child(n+5) { animation-delay: 0.5s; }
+
+@keyframes fadeInUp {
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Link styling */
+.destination-card a {
+    color: inherit;
+    text-decoration: none;
+}
+
+.destination-card a:hover {
+    color: inherit;
+    text-decoration: none;
+}
+</style>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Add smooth scroll for internal links
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        anchor.addEventListener('click', function (e) {
+            e.preventDefault();
+            const target = document.querySelector(this.getAttribute('href'));
+            if (target) {
+                target.scrollIntoView({
+                    behavior: 'smooth',
+                    block: 'start'
+                });
+            }
+        });
+    });
+    
+    // Add loading state for destination links
+    document.querySelectorAll('.destination-card a').forEach(link => {
+        link.addEventListener('click', function() {
+            const btn = this.querySelector('.btn');
+            if (btn) {
+                const originalText = btn.innerHTML;
+                btn.innerHTML = '<i class="fas fa-spinner fa-spin me-2"></i>Loading...';
+                btn.classList.add('disabled');
+                
+                // Fallback to restore button if page doesn't load
+                setTimeout(() => {
+                    btn.innerHTML = originalText;
+                    btn.classList.remove('disabled');
+                }, 3000);
+            }
+        });
+    });
+});
+</script>
+{% endblock %}

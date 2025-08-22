@@ -10,6 +10,12 @@ from .forms import CustomUserCreationForm, UserProfileForm, TravelSurveyForm, Us
 from .models import UserProfile, TravelSurvey
 import random
 
+from django.contrib.auth.decorators import user_passes_test
+
+from django.db.models import Count
+from experiences.models import Experience, Destination, Provider, Category, ExperienceType
+
+
 def index(request):
     """Homepage with hygge concept, sustainability facts, and survey CTA"""
     
@@ -206,3 +212,42 @@ def public_profile_view(request, username):
     }
     
     return render(request, 'accounts/public_profile.html', context)
+
+
+# In your accounts/views.py - Replace your existing admin_dashboard function with this:
+
+@user_passes_test(lambda u: u.is_staff, login_url='/accounts/login/')
+def admin_dashboard(request):
+    """
+    Admin dashboard view - only accessible to staff users
+    """
+    # Gather statistics
+    stats = {
+        'experiences_count': Experience.objects.count(),
+        'destinations_count': Destination.objects.count(),
+        'providers_count': Provider.objects.count(),
+        'users_count': User.objects.count(),
+        'categories_count': Category.objects.count(),
+        'experience_types_count': ExperienceType.objects.count(),
+    }
+    
+    # Get recent activity (last 6 experiences)
+    recent_experiences = Experience.objects.select_related('destination').order_by('-created_at')[:6]
+    
+    # Get recent destinations
+    recent_destinations = Destination.objects.order_by('-created_at')[:5]
+    
+    # Get active/featured counts
+    featured_experiences = Experience.objects.filter(is_featured=True).count()
+    active_experiences = Experience.objects.filter(is_active=True).count()
+    
+    context = {
+        'stats': stats,
+        'recent_experiences': recent_experiences,
+        'recent_destinations': recent_destinations,
+        'featured_count': featured_experiences,
+        'active_count': active_experiences,
+    }
+    
+    # Updated template path to match your file location
+    return render(request, 'admin-dashboard.html', context)

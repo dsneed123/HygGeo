@@ -126,7 +126,29 @@
                             <i class="fas fa-home me-1"></i>Home
                         </a>
                     </li>
+                    
+                    <!-- Experiences Menu -->
                     {% if user.is_authenticated %}
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="experiencesDropdown" role="button" data-bs-toggle="dropdown">
+                            <i class="fas fa-map-marked-alt me-1"></i>Experiences
+                        </a>
+                        <ul class="dropdown-menu">
+                            <li><a class="dropdown-item" href="{% url 'experiences:experience_list' %}">
+                                <i class="fas fa-list me-2"></i>Browse Experiences
+                            </a></li>
+                            <li><a class="dropdown-item" href="{% url 'experiences:destination_list' %}">
+                                <i class="fas fa-globe-americas me-2"></i>Destinations
+                            </a></li>
+                            <li><a class="dropdown-item" href="{% url 'experiences:recommendations' %}">
+                                <i class="fas fa-star me-2"></i>My Recommendations
+                            </a></li>
+                            <li><a class="dropdown-item" href="{% url 'experiences:my_bookmarks' %}">
+                                <i class="fas fa-bookmark me-2"></i>My Bookmarks
+                            </a></li>
+                        </ul>
+                    </li>
+                    
                     <li class="nav-item">
                         <a class="nav-link" href="{% url 'survey' %}">
                             <i class="fas fa-clipboard-list me-1"></i>Travel Survey
@@ -135,6 +157,15 @@
                     <li class="nav-item">
                         <a class="nav-link" href="{% url 'user_list' %}">
                             <i class="fas fa-users me-1"></i>Community
+                        </a>
+                    </li>
+                    {% endif %}
+                    
+                    <!-- Admin Dashboard - Only for Staff -->
+                    {% if user.is_staff %}
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'admin_dashboard' %}" style="color: var(--hygge-gold) !important;">
+                            <i class="fas fa-cogs me-1"></i>Admin Dashboard
                         </a>
                     </li>
                     {% endif %}
@@ -153,6 +184,15 @@
                             <li><a class="dropdown-item" href="{% url 'edit_profile' %}">
                                 <i class="fas fa-edit me-2"></i>Edit Profile
                             </a></li>
+                            {% if user.is_staff %}
+                            <li><hr class="dropdown-divider"></li>
+                            <li><a class="dropdown-item" href="{% url 'admin_dashboard' %}">
+                                <i class="fas fa-cogs me-2"></i>Admin Dashboard
+                            </a></li>
+                            <li><a class="dropdown-item" href="/admin/">
+                                <i class="fas fa-tools me-2"></i>Django Admin
+                            </a></li>
+                            {% endif %}
                             <li><hr class="dropdown-divider"></li>
                             <li><a class="dropdown-item" href="{% url 'logout' %}">
                                 <i class="fas fa-sign-out-alt me-2"></i>Logout

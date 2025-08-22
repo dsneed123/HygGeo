@@ -1,0 +1,338 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Admin Dashboard - {{ block.super }}{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <!-- Header Section -->
+    <div class="row mb-5">
+        <div class="col-12">
+            <div class="text-center">
+                <i class="fas fa-cogs text-primary mb-3" style="font-size: 4rem; color: var(--hygge-green) !important;"></i>
+                <h1 class="h2 fw-bold" style="color: var(--hygge-green);">HygGeo Admin Dashboard</h1>
+                <p class="lead text-muted">Manage experiences, destinations, and content</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Quick Stats Row -->
+    <div class="row mb-5">
+        <div class="col-md-3 mb-3">
+            <div class="card card-hygge h-100">
+                <div class="card-body text-center">
+                    <i class="fas fa-map-marked-alt text-primary mb-3" style="font-size: 2.5rem; color: var(--hygge-green) !important;"></i>
+                    <h4 class="fw-bold">{{ stats.experiences_count }}</h4>
+                    <p class="text-muted mb-0">Total Experiences</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3 mb-3">
+            <div class="card card-hygge h-100">
+                <div class="card-body text-center">
+                    <i class="fas fa-globe-americas text-info mb-3" style="font-size: 2.5rem; color: var(--hygge-soft-blue) !important;"></i>
+                    <h4 class="fw-bold">{{ stats.destinations_count }}</h4>
+                    <p class="text-muted mb-0">Destinations</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3 mb-3">
+            <div class="card card-hygge h-100">
+                <div class="card-body text-center">
+                    <i class="fas fa-building text-warning mb-3" style="font-size: 2.5rem; color: var(--hygge-gold) !important;"></i>
+                    <h4 class="fw-bold">{{ stats.providers_count }}</h4>
+                    <p class="text-muted mb-0">Providers</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3 mb-3">
+            <div class="card card-hygge h-100">
+                <div class="card-body text-center">
+                    <i class="fas fa-users text-success mb-3" style="font-size: 2.5rem; color: var(--hygge-light-green) !important;"></i>
+                    <h4 class="fw-bold">{{ stats.users_count }}</h4>
+                    <p class="text-muted mb-0">Registered Users</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Actions Section -->
+    <div class="row mb-5">
+        <div class="col-12">
+            <h3 class="fw-bold mb-4" style="color: var(--hygge-green);">
+                <i class="fas fa-plus-circle me-2"></i>Add New Content
+            </h3>
+        </div>
+    </div>
+
+    <!-- Add Content Cards -->
+    <div class="row mb-5">
+        <!-- Add Experience -->
+        <div class="col-lg-6 col-xl-4 mb-4">
+            <div class="card card-hygge h-100 admin-action-card">
+                <div class="card-body text-center p-4">
+                    <div class="action-icon mb-3">
+                        <i class="fas fa-star" style="font-size: 3rem; color: var(--hygge-green);"></i>
+                    </div>
+                    <h5 class="fw-bold mb-3">Add Experience</h5>
+                    <p class="text-muted mb-4">Create a new travel experience with full details, pricing, and categorization.</p>
+                    <a href="{% url 'experiences:add_experience' %}" class="btn btn-hygge btn-lg w-100">
+                        <i class="fas fa-plus me-2"></i>Add Experience
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Add Destination -->
+        <div class="col-lg-6 col-xl-4 mb-4">
+            <div class="card card-hygge h-100 admin-action-card">
+                <div class="card-body text-center p-4">
+                    <div class="action-icon mb-3">
+                        <i class="fas fa-map-marker-alt" style="font-size: 3rem; color: var(--hygge-soft-blue);"></i>
+                    </div>
+                    <h5 class="fw-bold mb-3">Add Destination</h5>
+                    <p class="text-muted mb-4">Add a new travel destination with location details and sustainability information.</p>
+                    <a href="{% url 'experiences:add_destination' %}" class="btn btn-outline-hygge btn-lg w-100">
+                        <i class="fas fa-plus me-2"></i>Add Destination
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Add Provider -->
+        <div class="col-lg-6 col-xl-4 mb-4">
+            <div class="card card-hygge h-100 admin-action-card">
+                <div class="card-body text-center p-4">
+                    <div class="action-icon mb-3">
+                        <i class="fas fa-handshake" style="font-size: 3rem; color: var(--hygge-gold);"></i>
+                    </div>
+                    <h5 class="fw-bold mb-3">Add Provider</h5>
+                    <p class="text-muted mb-4">Register a new service provider with contact details and certifications.</p>
+                    <a href="{% url 'experiences:add_provider' %}" class="btn btn-outline-hygge btn-lg w-100">
+                        <i class="fas fa-plus me-2"></i>Add Provider
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Add Category -->
+        <div class="col-lg-6 col-xl-4 mb-4">
+            <div class="card card-hygge h-100 admin-action-card">
+                <div class="card-body text-center p-4">
+                    <div class="action-icon mb-3">
+                        <i class="fas fa-tags" style="font-size: 3rem; color: var(--hygge-light-green);"></i>
+                    </div>
+                    <h5 class="fw-bold mb-3">Add Category</h5>
+                    <p class="text-muted mb-4">Create a new experience category with custom icons and descriptions.</p>
+                    <a href="{% url 'experiences:add_category' %}" class="btn btn-outline-hygge btn-lg w-100">
+                        <i class="fas fa-plus me-2"></i>Add Category
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Add Experience Type -->
+        <div class="col-lg-6 col-xl-4 mb-4">
+            <div class="card card-hygge h-100 admin-action-card">
+                <div class="card-body text-center p-4">
+                    <div class="action-icon mb-3">
+                        <i class="fas fa-list-ul" style="font-size: 3rem; color: #e74c3c;"></i>
+                    </div>
+                    <h5 class="fw-bold mb-3">Add Experience Type</h5>
+                    <p class="text-muted mb-4">Define a new type of travel experience for better categorization.</p>
+                    <a href="{% url 'experiences:add_experience_type' %}" class="btn btn-outline-hygge btn-lg w-100">
+                        <i class="fas fa-plus me-2"></i>Add Type
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Django Admin -->
+        <div class="col-lg-6 col-xl-4 mb-4">
+            <div class="card card-hygge h-100 admin-action-card">
+                <div class="card-body text-center p-4">
+                    <div class="action-icon mb-3">
+                        <i class="fas fa-cog" style="font-size: 3rem; color: #6f42c1;"></i>
+                    </div>
+                    <h5 class="fw-bold mb-3">Django Admin</h5>
+                    <p class="text-muted mb-4">Access the full Django admin interface for advanced management.</p>
+                    <a href="/admin/" class="btn btn-outline-hygge btn-lg w-100" target="_blank">
+                        <i class="fas fa-external-link-alt me-2"></i>Open Admin
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Management Section -->
+    <div class="row mb-5">
+        <div class="col-12">
+            <h3 class="fw-bold mb-4" style="color: var(--hygge-green);">
+                <i class="fas fa-list me-2"></i>Manage Existing Content
+            </h3>
+        </div>
+    </div>
+
+    <!-- Management Cards -->
+    <div class="row mb-5">
+        <!-- View All Experiences -->
+        <div class="col-lg-6 col-xl-3 mb-4">
+            <div class="card card-hygge h-100">
+                <div class="card-body text-center p-4">
+                    <i class="fas fa-eye mb-3" style="font-size: 2.5rem; color: var(--hygge-green);"></i>
+                    <h6 class="fw-bold mb-3">View Experiences</h6>
+                    <a href="{% url 'experiences:experience_list' %}" class="btn btn-sm btn-outline-hygge">
+                        <i class="fas fa-arrow-right me-1"></i>View All
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <!-- View All Destinations -->
+        <div class="col-lg-6 col-xl-3 mb-4">
+            <div class="card card-hygge h-100">
+                <div class="card-body text-center p-4">
+                    <i class="fas fa-globe mb-3" style="font-size: 2.5rem; color: var(--hygge-soft-blue);"></i>
+                    <h6 class="fw-bold mb-3">View Destinations</h6>
+                    <a href="{% url 'experiences:destination_list' %}" class="btn btn-sm btn-outline-hygge">
+                        <i class="fas fa-arrow-right me-1"></i>View All
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <!-- User Management -->
+        <div class="col-lg-6 col-xl-3 mb-4">
+            <div class="card card-hygge h-100">
+                <div class="card-body text-center p-4">
+                    <i class="fas fa-users-cog mb-3" style="font-size: 2.5rem; color: var(--hygge-gold);"></i>
+                    <h6 class="fw-bold mb-3">User Management</h6>
+                    <a href="{% url 'user_list' %}" class="btn btn-sm btn-outline-hygge">
+                        <i class="fas fa-arrow-right me-1"></i>Manage Users
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Analytics -->
+        <div class="col-lg-6 col-xl-3 mb-4">
+            <div class="card card-hygge h-100">
+                <div class="card-body text-center p-4">
+                    <i class="fas fa-chart-bar mb-3" style="font-size: 2.5rem; color: var(--hygge-light-green);"></i>
+                    <h6 class="fw-bold mb-3">Analytics</h6>
+                    <a href="#" class="btn btn-sm btn-outline-hygge">
+                        <i class="fas fa-arrow-right me-1"></i>View Stats
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Recent Activity Section -->
+    {% if recent_experiences %}
+    <div class="row">
+        <div class="col-12">
+            <h3 class="fw-bold mb-4" style="color: var(--hygge-green);">
+                <i class="fas fa-clock me-2"></i>Recent Activity
+            </h3>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-12">
+            <div class="card card-hygge">
+                <div class="card-body">
+                    <h5 class="fw-bold mb-3">Recently Added Experiences</h5>
+                    <div class="row">
+                        {% for experience in recent_experiences %}
+                        <div class="col-md-6 col-lg-4 mb-3">
+                            <div class="border rounded p-3 h-100" style="background: var(--hygge-warm-white);">
+                                <h6 class="fw-bold mb-2">{{ experience.title }}</h6>
+                                <p class="text-muted small mb-2">{{ experience.destination.name }}</p>
+                                <p class="text-muted small mb-0">
+                                    <i class="fas fa-calendar me-1"></i>{{ experience.created_at|date:"M d, Y" }}
+                                </p>
+                            </div>
+                        </div>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% endif %}
+
+    <!-- Quick Links Footer -->
+    <div class="row mt-5">
+        <div class="col-12">
+            <div class="text-center py-4">
+                <p class="text-muted">
+                    <i class="fas fa-info-circle me-2"></i>
+                    Need help? Check the <a href="#" class="text-decoration-none">Admin Documentation</a> or 
+                    <a href="mailto:admin@hyggeo.com" class="text-decoration-none">contact support</a>.
+                </p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    .admin-action-card {
+        transition: all 0.3s ease;
+        cursor: pointer;
+    }
+    
+    .admin-action-card:hover {
+        transform: translateY(-10px);
+        box-shadow: 0 15px 35px rgba(0,0,0,0.1);
+    }
+    
+    .action-icon {
+        transition: transform 0.3s ease;
+    }
+    
+    .admin-action-card:hover .action-icon {
+        transform: scale(1.1);
+    }
+    
+    .card-hygge .btn {
+        transition: all 0.3s ease;
+    }
+    
+    .stats-card {
+        background: linear-gradient(135deg, var(--hygge-cream), var(--hygge-warm-white));
+    }
+</style>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Add click handlers to make entire cards clickable
+    document.querySelectorAll('.admin-action-card').forEach(card => {
+        card.addEventListener('click', function(e) {
+            if (e.target.tagName !== 'A' && e.target.tagName !== 'BUTTON') {
+                const link = this.querySelector('a');
+                if (link) {
+                    link.click();
+                }
+            }
+        });
+    });
+    
+    // Add loading states to buttons
+    document.querySelectorAll('.btn').forEach(btn => {
+        btn.addEventListener('click', function() {
+            if (this.href) {
+                this.innerHTML = '<i class="fas fa-spinner fa-spin me-2"></i>Loading...';
+            }
+        });
+    });
+});
+</script>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+// Add any additional JavaScript for the admin dashboard here
+console.log('HygGeo Admin Dashboard loaded successfully');
+</script>
+{% endblock %}

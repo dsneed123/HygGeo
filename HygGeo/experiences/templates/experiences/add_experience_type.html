@@ -1,0 +1,297 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Add Experience Type - {{ block.super }}{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-8 col-xl-6">
+            <!-- Header Section -->
+            <div class="text-center mb-5">
+                <i class="fas fa-list-ul text-primary mb-3" style="font-size: 3.5rem; color: var(--hygge-green) !important;"></i>
+                <h1 class="h2 fw-bold" style="color: var(--hygge-green);">Add Experience Type</h1>
+                <p class="lead text-muted">Create a new category type for travel experiences</p>
+            </div>
+
+            <!-- Messages -->
+            {% if messages %}
+                <div class="mb-4">
+                    {% for message in messages %}
+                        <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+                            <i class="fas fa-info-circle me-2"></i>{{ message }}
+                            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                        </div>
+                    {% endfor %}
+                </div>
+            {% endif %}
+
+            <!-- Form Card -->
+            <div class="card card-hygge shadow-lg">
+                <div class="card-body p-5">
+                    <form method="post" id="experienceTypeForm">
+                        {% csrf_token %}
+                        
+                        <!-- Form Fields -->
+                        <div class="mb-4">
+                            <label for="id_name" class="form-label fw-semibold">
+                                <i class="fas fa-tag me-2 text-muted"></i>Experience Type Name
+                                <span class="text-danger">*</span>
+                            </label>
+                            {{ form.name }}
+                            {% if form.name.errors %}
+                                <div class="text-danger small mt-1">
+                                    <i class="fas fa-exclamation-circle me-1"></i>{{ form.name.errors.0 }}
+                                </div>
+                            {% endif %}
+                            <div class="form-text">
+                                <i class="fas fa-info-circle me-1"></i>
+                                Examples: Adventure, Cultural, Wellness, Food & Dining, etc.
+                            </div>
+                        </div>
+
+                        {% if form.slug %}
+                        <div class="mb-4">
+                            <label for="id_slug" class="form-label fw-semibold">
+                                <i class="fas fa-link me-2 text-muted"></i>URL Slug
+                            </label>
+                            {{ form.slug }}
+                            {% if form.slug.errors %}
+                                <div class="text-danger small mt-1">
+                                    <i class="fas fa-exclamation-circle me-1"></i>{{ form.slug.errors.0 }}
+                                </div>
+                            {% endif %}
+                            <div class="form-text">
+                                <i class="fas fa-info-circle me-1"></i>
+                                Leave blank to auto-generate from name
+                            </div>
+                        </div>
+                        {% endif %}
+
+                        {% if form.description %}
+                        <div class="mb-4">
+                            <label for="id_description" class="form-label fw-semibold">
+                                <i class="fas fa-align-left me-2 text-muted"></i>Description
+                            </label>
+                            {{ form.description }}
+                            {% if form.description.errors %}
+                                <div class="text-danger small mt-1">
+                                    <i class="fas fa-exclamation-circle me-1"></i>{{ form.description.errors.0 }}
+                                </div>
+                            {% endif %}
+                            <div class="form-text">
+                                <i class="fas fa-info-circle me-1"></i>
+                                Brief description of this experience type (optional)
+                            </div>
+                        </div>
+                        {% endif %}
+
+                        <!-- Action Buttons -->
+                        <div class="d-flex justify-content-between align-items-center mt-5 pt-4 border-top">
+                            <a href="{% url 'admin_dashboard' %}" class="btn btn-outline-hygge">
+                                <i class="fas fa-arrow-left me-2"></i>Back to Dashboard
+                            </a>
+                            <button type="submit" class="btn btn-hygge btn-lg px-4">
+                                <i class="fas fa-plus-circle me-2"></i>Add Experience Type
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+            <!-- Info Section -->
+            <div class="row mt-5">
+                <div class="col-12">
+                    <div class="card border-0" style="background: var(--hygge-warm-white);">
+                        <div class="card-body text-center p-4">
+                            <h5 class="fw-bold mb-3" style="color: var(--hygge-green);">
+                                <i class="fas fa-lightbulb me-2"></i>Experience Type Examples
+                            </h5>
+                            <div class="row text-center">
+                                <div class="col-md-4 mb-3">
+                                    <div class="p-3 rounded" style="background: var(--hygge-cream);">
+                                        <i class="fas fa-mountain text-primary mb-2" style="font-size: 1.5rem; color: var(--hygge-green) !important;"></i>
+                                        <h6 class="fw-bold">Adventure</h6>
+                                        <small class="text-muted">Hiking, climbing, extreme sports</small>
+                                    </div>
+                                </div>
+                                <div class="col-md-4 mb-3">
+                                    <div class="p-3 rounded" style="background: var(--hygge-cream);">
+                                        <i class="fas fa-landmark text-primary mb-2" style="font-size: 1.5rem; color: var(--hygge-soft-blue) !important;"></i>
+                                        <h6 class="fw-bold">Cultural</h6>
+                                        <small class="text-muted">Museums, heritage sites, local traditions</small>
+                                    </div>
+                                </div>
+                                <div class="col-md-4 mb-3">
+                                    <div class="p-3 rounded" style="background: var(--hygge-cream);">
+                                        <i class="fas fa-spa text-primary mb-2" style="font-size: 1.5rem; color: var(--hygge-gold) !important;"></i>
+                                        <h6 class="fw-bold">Wellness</h6>
+                                        <small class="text-muted">Spas, yoga retreats, meditation</small>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    .form-control, .form-select {
+        border: 2px solid #e9ecef;
+        border-radius: 10px;
+        padding: 12px 16px;
+        font-size: 1rem;
+        transition: all 0.2s ease;
+    }
+
+    .form-control:focus, .form-select:focus {
+        border-color: var(--hygge-green);
+        box-shadow: 0 0 0 0.2rem rgba(45, 90, 61, 0.15);
+    }
+
+    .form-label {
+        color: #495057;
+        margin-bottom: 8px;
+    }
+
+    .form-text {
+        color: #6c757d;
+        font-size: 0.875rem;
+    }
+
+    .card-hygge {
+        border: none;
+        border-radius: 20px;
+        background: var(--hygge-cream);
+    }
+
+    .btn-hygge {
+        background: linear-gradient(135deg, var(--hygge-green), var(--hygge-light-green));
+        border: none;
+        color: white;
+        font-weight: 500;
+        padding: 12px 24px;
+        border-radius: 25px;
+        transition: all 0.3s ease;
+    }
+
+    .btn-hygge:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 8px 25px rgba(45, 90, 61, 0.3);
+        color: white;
+    }
+
+    .btn-outline-hygge {
+        border: 2px solid var(--hygge-green);
+        color: var(--hygge-green);
+        background: transparent;
+        font-weight: 500;
+        padding: 10px 20px;
+        border-radius: 25px;
+        transition: all 0.3s ease;
+    }
+
+    .btn-outline-hygge:hover {
+        background: var(--hygge-green);
+        color: white;
+        transform: translateY(-1px);
+    }
+
+    .alert {
+        border-radius: 12px;
+        border: none;
+    }
+
+    .text-primary {
+        color: var(--hygge-green) !important;
+    }
+
+    /* Form validation styles */
+    .form-control.is-invalid {
+        border-color: #dc3545;
+    }
+
+    .form-control.is-valid {
+        border-color: var(--hygge-green);
+    }
+</style>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const form = document.getElementById('experienceTypeForm');
+    const nameField = document.getElementById('id_name');
+    const slugField = document.getElementById('id_slug');
+
+    // Auto-generate slug from name
+    if (nameField && slugField) {
+        nameField.addEventListener('input', function() {
+            if (!slugField.value || slugField.dataset.autoGenerated) {
+                const slug = this.value
+                    .toLowerCase()
+                    .replace(/[^a-z0-9]+/g, '-')
+                    .replace(/^-+|-+$/g, '');
+                slugField.value = slug;
+                slugField.dataset.autoGenerated = 'true';
+            }
+        });
+
+        // If user manually changes slug, stop auto-generation
+        slugField.addEventListener('input', function() {
+            if (this.value !== nameField.value.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '')) {
+                delete this.dataset.autoGenerated;
+            }
+        });
+    }
+
+    // Form validation
+    form.addEventListener('submit', function(e) {
+        const requiredFields = form.querySelectorAll('input[required], textarea[required], select[required]');
+        let isValid = true;
+
+        requiredFields.forEach(field => {
+            if (!field.value.trim()) {
+                field.classList.add('is-invalid');
+                isValid = false;
+            } else {
+                field.classList.remove('is-invalid');
+                field.classList.add('is-valid');
+            }
+        });
+
+        if (!isValid) {
+            e.preventDefault();
+            
+            // Show error message
+            const alertHTML = `
+                <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                    <i class="fas fa-exclamation-triangle me-2"></i>
+                    Please fill in all required fields.
+                    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                </div>
+            `;
+            
+            const existingAlert = document.querySelector('.alert-danger');
+            if (existingAlert) {
+                existingAlert.remove();
+            }
+            
+            form.insertAdjacentHTML('beforebegin', alertHTML);
+            
+            // Scroll to top to show the error
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+    });
+
+    // Remove validation classes on input
+    const formFields = form.querySelectorAll('input, textarea, select');
+    formFields.forEach(field => {
+        field.addEventListener('input', function() {
+            this.classList.remove('is-invalid', 'is-valid');
+        });
+    });
+});
+</script>
+{% endblock %}

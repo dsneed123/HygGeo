@@ -1,0 +1,1059 @@
+{% extends 'base.html' %}
+
+{% block title %}{{ destination.name }}, {{ destination.country }} - Sustainable Travel - HygGeo{% endblock %}
+
+{% block content %}
+<div class="destination-detail-container">
+<div class="container py-5">
+    <!-- Breadcrumb -->
+    <nav aria-label="breadcrumb" class="mb-4">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="{% url 'index' %}">Home</a></li>
+            <li class="breadcrumb-item"><a href="{% url 'experiences:destination_list' %}">Destinations</a></li>
+            <li class="breadcrumb-item active" aria-current="page">{{ destination.name }}</li>
+        </ol>
+    </nav>
+
+    <!-- Hero Section -->
+    <div class="destination-hero mb-5">
+        {% if destination.image %}
+        <div class="hero-image-container">
+            <img src="{{ destination.image.url }}" alt="{{ destination.name|escape }}" class="hero-image">
+            <div class="hero-overlay">
+                <div class="hero-content">
+                    <div class="destination-badges">
+                        <span class="badge badge-enhanced badge-sustainability">
+                            <i class="fas fa-leaf me-1"></i>{{ destination.sustainability_score }}/10 Sustainability
+                        </span>
+                        <span class="badge badge-enhanced badge-hygge">
+                            <i class="fas fa-heart me-1"></i>{{ destination.hygge_factor }}/10 Hygge
+                        </span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% else %}
+        <div class="hero-placeholder">
+            <i class="fas fa-mountain"></i>
+        </div>
+        {% endif %}
+        
+        <div class="hero-info">
+            <div class="row align-items-center">
+                <div class="col-lg-8">
+                    <h1 class="destination-title">{{ destination.name }}</h1>
+                    <p class="destination-location">
+                        <i class="fas fa-map-marker-alt"></i>
+                        {{ destination.country }}{% if destination.region %}, {{ destination.region }}{% endif %}
+                    </p>
+                    <p class="destination-description">{{ destination.description }}</p>
+                </div>
+                <div class="col-lg-4 text-lg-end">
+                    <div class="destination-stats">
+                        <div class="stat-card">
+                            <div class="stat-number">{{ total_experiences }}</div>
+                            <div class="stat-label">Experience{{ total_experiences|pluralize }}</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Travel Information -->
+    <div class="row mb-5">
+        <div class="col-lg-8">
+            <!-- Destination Info Cards -->
+            <div class="row g-4 mb-5">
+                {% if destination.climate %}
+                <div class="col-md-6">
+                    <div class="info-card climate-card">
+                        <div class="info-icon">
+                            <i class="fas fa-thermometer-half"></i>
+                        </div>
+                        <div class="info-content">
+                            <h5>Climate</h5>
+                            <p>{{ destination.climate }}</p>
+                        </div>
+                    </div>
+                </div>
+                {% endif %}
+                
+                {% if destination.best_time_to_visit %}
+                <div class="col-md-6">
+                    <div class="info-card time-card">
+                        <div class="info-icon">
+                            <i class="fas fa-calendar-alt"></i>
+                        </div>
+                        <div class="info-content">
+                            <h5>Best Time to Visit</h5>
+                            <p>{{ destination.best_time_to_visit }}</p>
+                        </div>
+                    </div>
+                </div>
+                {% endif %}
+                
+                <div class="col-md-6">
+                    <div class="info-card sustainability-card">
+                        <div class="info-icon">
+                            <i class="fas fa-leaf"></i>
+                        </div>
+                        <div class="info-content">
+                            <h5>Sustainability Score</h5>
+                            <div class="score-display">
+                                <span class="score-number">{{ destination.sustainability_score }}</span>
+                                <span class="score-max">/10</span>
+                            </div>
+                            <div class="score-bar">
+                                <div class="score-fill" style="width: {{ destination.sustainability_score }}0%;"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="col-md-6">
+                    <div class="info-card hygge-card">
+                        <div class="info-icon">
+                            <i class="fas fa-heart"></i>
+                        </div>
+                        <div class="info-content">
+                            <h5>Hygge Factor</h5>
+                            <div class="score-display">
+                                <span class="score-number">{{ destination.hygge_factor }}</span>
+                                <span class="score-max">/10</span>
+                            </div>
+                            <div class="score-bar hygge-bar">
+                                <div class="score-fill" style="width: {{ destination.hygge_factor }}0%;"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Experiences by Type -->
+            {% if experiences_by_type %}
+            <div class="experiences-section">
+                <h3 class="section-title">
+                    <i class="fas fa-compass me-3"></i>Experiences in {{ destination.name }}
+                </h3>
+                
+                {% for exp_type, type_experiences in experiences_by_type.items %}
+                <div class="experience-type-section mb-5">
+                    <h4 class="experience-type-title">
+                        <span class="type-icon">
+                            {% if 'accommodation' in exp_type|lower %}
+                                <i class="fas fa-bed"></i>
+                            {% elif 'activity' in exp_type|lower %}
+                                <i class="fas fa-running"></i>
+                            {% elif 'tour' in exp_type|lower %}
+                                <i class="fas fa-route"></i>
+                            {% elif 'transport' in exp_type|lower %}
+                                <i class="fas fa-car"></i>
+                            {% elif 'food' in exp_type|lower %}
+                                <i class="fas fa-utensils"></i>
+                            {% elif 'wellness' in exp_type|lower %}
+                                <i class="fas fa-spa"></i>
+                            {% elif 'cultural' in exp_type|lower %}
+                                <i class="fas fa-landmark"></i>
+                            {% elif 'adventure' in exp_type|lower %}
+                                <i class="fas fa-mountain"></i>
+                            {% else %}
+                                <i class="fas fa-star"></i>
+                            {% endif %}
+                        </span>
+                        {{ exp_type }}
+                        <span class="type-count">({{ type_experiences|length }})</span>
+                    </h4>
+                    
+                    <div class="row g-4">
+                        {% for experience in type_experiences|slice:":6" %}
+                        <div class="col-lg-6">
+                            <div class="experience-card">
+                                <div class="experience-image-container">
+                                    {% if experience.main_image %}
+                                    <img src="{{ experience.main_image.url }}" alt="{{ experience.title|escape }}" class="experience-image">
+                                    {% else %}
+                                    <div class="experience-placeholder">
+                                        <i class="fas fa-image"></i>
+                                    </div>
+                                    {% endif %}
+                                    
+                                    <div class="experience-overlay">
+                                        <div class="experience-badges">
+                                            {% if experience.is_featured %}
+                                            <span class="badge badge-featured">Featured</span>
+                                            {% endif %}
+                                            {% with badge=experience.get_sustainability_badge %}
+                                            <span class="badge badge-sustainability">{{ badge.text }}</span>
+                                            {% endwith %}
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <div class="experience-content">
+                                    <h6 class="experience-title">
+                                        <a href="{% url 'experiences:experience_detail' experience.slug %}">
+                                            {{ experience.title }}
+                                        </a>
+                                    </h6>
+                                    <p class="experience-description">{{ experience.short_description|truncatewords:15 }}</p>
+                                    
+                                    <div class="experience-meta">
+                                        <div class="experience-price">{{ experience.get_price_display }}</div>
+                                        <div class="experience-duration">{{ experience.get_duration_display }}</div>
+                                    </div>
+                                    
+                                    <div class="experience-scores">
+                                        <div class="score-item">
+                                            <i class="fas fa-leaf text-success"></i>
+                                            <span>{{ experience.sustainability_score }}/10</span>
+                                        </div>
+                                        <div class="score-item">
+                                            <i class="fas fa-heart text-danger"></i>
+                                            <span>{{ experience.hygge_factor }}/10</span>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="experience-actions">
+                                        <a href="{% url 'experiences:experience_detail' experience.slug %}" class="btn btn-primary btn-sm">
+                                            <i class="fas fa-eye me-1"></i>View Details
+                                        </a>
+                                        {% if user.is_authenticated %}
+                                        <button class="btn btn-outline-secondary btn-sm bookmark-btn" data-experience-id="{{ experience.id }}">
+                                            <i class="far fa-bookmark"></i>
+                                        </button>
+                                        {% endif %}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        {% endfor %}
+                    </div>
+                    
+                    {% if type_experiences|length > 6 %}
+                    <div class="text-center mt-4">
+                        <a href="{% url 'experiences:experience_list' %}?destination={{ destination.slug }}&type={{ exp_type|lower }}" class="btn btn-outline-hygge">
+                            <i class="fas fa-eye me-2"></i>View All {{ exp_type }} ({{ type_experiences|length }})
+                        </a>
+                    </div>
+                    {% endif %}
+                </div>
+                {% endfor %}
+            </div>
+            {% else %}
+            <!-- No Experiences -->
+            <div class="no-experiences-section">
+                <div class="text-center py-5">
+                    <i class="fas fa-compass text-muted" style="font-size: 4rem;"></i>
+                    <h4 class="text-muted mt-3">No Experiences Available Yet</h4>
+                    <p class="text-muted">We're working on adding amazing sustainable experiences to {{ destination.name }}. Check back soon!</p>
+                    <a href="{% url 'experiences:experience_list' %}" class="btn btn-hygge mt-3">
+                        <i class="fas fa-search me-2"></i>Explore Other Destinations
+                    </a>
+                </div>
+            </div>
+            {% endif %}
+        </div>
+        
+        <!-- Sidebar -->
+        <div class="col-lg-4">
+            <div class="destination-sidebar">
+                <!-- Quick Stats -->
+                <div class="stats-card mb-4">
+                    <h5 class="stats-title">
+                        <i class="fas fa-chart-bar me-2"></i>Quick Stats
+                    </h5>
+                    <div class="stats-grid">
+                        <div class="stat-item">
+                            <div class="stat-icon">
+                                <i class="fas fa-list"></i>
+                            </div>
+                            <div class="stat-info">
+                                <div class="stat-number">{{ total_experiences }}</div>
+                                <div class="stat-label">Experience{{ total_experiences|pluralize }}</div>
+                            </div>
+                        </div>
+                        
+                        <div class="stat-item">
+                            <div class="stat-icon sustainability">
+                                <i class="fas fa-leaf"></i>
+                            </div>
+                            <div class="stat-info">
+                                <div class="stat-number">{{ destination.sustainability_score }}/10</div>
+                                <div class="stat-label">Sustainability</div>
+                            </div>
+                        </div>
+                        
+                        <div class="stat-item">
+                            <div class="stat-icon hygge">
+                                <i class="fas fa-heart"></i>
+                            </div>
+                            <div class="stat-info">
+                                <div class="stat-number">{{ destination.hygge_factor }}/10</div>
+                                <div class="stat-label">Hygge Factor</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Action Buttons -->
+                <div class="action-buttons mb-4">
+                    <a href="{% url 'experiences:experience_list' %}?destination={{ destination.slug }}" class="btn btn-hygge w-100 mb-3">
+                        <i class="fas fa-search me-2"></i>Browse All Experiences
+                    </a>
+                    {% if user.is_authenticated %}
+                    <a href="{% url 'experiences:recommendations' %}" class="btn btn-outline-hygge w-100">
+                        <i class="fas fa-compass me-2"></i>Get Recommendations
+                    </a>
+                    {% else %}
+                    <a href="{% url 'signup' %}" class="btn btn-outline-hygge w-100">
+                        <i class="fas fa-user-plus me-2"></i>Sign Up for Recommendations
+                    </a>
+                    {% endif %}
+                </div>
+                
+                <!-- Travel Tips -->
+                <div class="tips-card">
+                    <h5 class="tips-title">
+                        <i class="fas fa-lightbulb me-2"></i>Sustainable Travel Tips
+                    </h5>
+                    <div class="tips-list">
+                        <div class="tip-item">
+                            <i class="fas fa-leaf text-success"></i>
+                            <span>Choose local accommodations and restaurants</span>
+                        </div>
+                        <div class="tip-item">
+                            <i class="fas fa-recycle text-primary"></i>
+                            <span>Minimize waste and recycle when possible</span>
+                        </div>
+                        <div class="tip-item">
+                            <i class="fas fa-walking text-warning"></i>
+                            <span>Walk, bike, or use public transportation</span>
+                        </div>
+                        <div class="tip-item">
+                            <i class="fas fa-hands-helping text-info"></i>
+                            <span>Support local communities and cultures</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</div>
+
+<style>
+/* Destination Detail Styles */
+.destination-detail-container {
+    background: linear-gradient(135deg, var(--hygge-warm-white) 0%, var(--hygge-cream) 100%);
+    min-height: 100vh;
+}
+
+/* Breadcrumb Enhancement */
+.breadcrumb {
+    background: rgba(255, 255, 255, 0.8);
+    backdrop-filter: blur(10px);
+    border-radius: var(--border-radius-md);
+    padding: var(--spacing-md) var(--spacing-lg);
+    border: 1px solid rgba(45, 90, 61, 0.1);
+}
+
+.breadcrumb-item a {
+    color: var(--hygge-green);
+    text-decoration: none;
+    font-weight: var(--font-weight-medium);
+    transition: all var(--transition-normal);
+}
+
+.breadcrumb-item a:hover {
+    color: var(--hygge-light-green);
+    text-decoration: underline;
+}
+
+/* Hero Section */
+.destination-hero {
+    position: relative;
+    border-radius: var(--border-radius-xl);
+    overflow: hidden;
+    box-shadow: var(--shadow-lg);
+    background: white;
+}
+
+.hero-image-container {
+    position: relative;
+    height: 400px;
+    overflow: hidden;
+}
+
+.hero-image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.6s ease;
+}
+
+.hero-placeholder {
+    height: 400px;
+    background: linear-gradient(135deg, var(--hygge-green), var(--hygge-light-green));
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-size: 6rem;
+}
+
+.hero-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(135deg, rgba(45, 90, 61, 0.2) 0%, transparent 50%, rgba(45, 90, 61, 0.3) 100%);
+    display: flex;
+    align-items: flex-end;
+    padding: var(--spacing-xl);
+}
+
+.hero-content {
+    width: 100%;
+}
+
+.destination-badges {
+    display: flex;
+    gap: var(--spacing-md);
+    flex-wrap: wrap;
+}
+
+.hero-info {
+    padding: var(--spacing-xl);
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(10px);
+}
+
+.destination-title {
+    background: linear-gradient(135deg, var(--hygge-green), var(--hygge-light-green));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    font-weight: var(--font-weight-bold);
+    font-size: 2.5rem;
+    line-height: 1.2;
+    margin-bottom: var(--spacing-md);
+}
+
+.destination-location {
+    color: var(--hygge-slate);
+    font-weight: var(--font-weight-medium);
+    font-size: 1.1rem;
+    display: flex;
+    align-items: center;
+    margin-bottom: var(--spacing-lg);
+}
+
+.destination-location i {
+    color: var(--hygge-green);
+    margin-right: var(--spacing-sm);
+}
+
+.destination-description {
+    font-size: 1.1rem;
+    line-height: 1.7;
+    color: var(--hygge-slate);
+    margin-bottom: 0;
+}
+
+.destination-stats {
+    display: flex;
+    justify-content: flex-end;
+}
+
+.stat-card {
+    background: rgba(45, 90, 61, 0.1);
+    padding: var(--spacing-lg);
+    border-radius: var(--border-radius-lg);
+    text-align: center;
+    border: 2px solid var(--hygge-green);
+}
+
+.stat-number {
+    font-size: 2rem;
+    font-weight: var(--font-weight-bold);
+    color: var(--hygge-green);
+    margin-bottom: var(--spacing-xs);
+}
+
+.stat-label {
+    font-size: 0.9rem;
+    color: var(--hygge-slate);
+    font-weight: var(--font-weight-medium);
+}
+
+/* Enhanced Badges */
+.badge-enhanced {
+    padding: var(--spacing-sm) var(--spacing-md);
+    border-radius: var(--border-radius-pill);
+    font-weight: var(--font-weight-medium);
+    font-size: 0.875rem;
+    letter-spacing: 0.5px;
+    box-shadow: var(--shadow-sm);
+    transition: all var(--transition-normal);
+    border: 1px solid transparent;
+}
+
+.badge-sustainability {
+    background: linear-gradient(135deg, #28a745, #20c997);
+    color: white;
+}
+
+.badge-hygge {
+    background: linear-gradient(135deg, #dc3545, #fd7e14);
+    color: white;
+}
+
+/* Info Cards */
+.info-card {
+    background: rgba(255, 255, 255, 0.9);
+    border-radius: var(--border-radius-lg);
+    padding: var(--spacing-xl);
+    height: 100%;
+    box-shadow: var(--shadow-sm);
+    transition: all var(--transition-normal);
+    border-left: 4px solid transparent;
+}
+
+.info-card:hover {
+    transform: translateY(-4px);
+    box-shadow: var(--shadow-lg);
+}
+
+.climate-card {
+    border-left-color: #17a2b8;
+}
+
+.time-card {
+    border-left-color: #ffc107;
+}
+
+.sustainability-card {
+    border-left-color: #28a745;
+}
+
+.hygge-card {
+    border-left-color: #dc3545;
+}
+
+.info-icon {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: var(--spacing-md);
+    font-size: 1.5rem;
+    color: white;
+}
+
+.climate-card .info-icon {
+    background: #17a2b8;
+}
+
+.time-card .info-icon {
+    background: #ffc107;
+}
+
+.sustainability-card .info-icon {
+    background: #28a745;
+}
+
+.hygge-card .info-icon {
+    background: #dc3545;
+}
+
+.info-content h5 {
+    color: var(--hygge-green);
+    font-weight: var(--font-weight-bold);
+    margin-bottom: var(--spacing-md);
+}
+
+.score-display {
+    display: flex;
+    align-items: baseline;
+    margin-bottom: var(--spacing-md);
+}
+
+.score-number {
+    font-size: 2rem;
+    font-weight: var(--font-weight-bold);
+    color: var(--hygge-green);
+}
+
+.score-max {
+    font-size: 1.2rem;
+    color: var(--hygge-slate);
+    margin-left: var(--spacing-xs);
+}
+
+.score-bar {
+    height: 8px;
+    background: rgba(45, 90, 61, 0.1);
+    border-radius: var(--border-radius-sm);
+    overflow: hidden;
+}
+
+.score-fill {
+    height: 100%;
+    background: linear-gradient(90deg, var(--hygge-green), var(--hygge-light-green));
+    transition: width 1s ease;
+}
+
+.hygge-bar .score-fill {
+    background: linear-gradient(90deg, #dc3545, #fd7e14);
+}
+
+/* Section Titles */
+.section-title {
+    color: var(--hygge-green);
+    font-weight: var(--font-weight-bold);
+    margin-bottom: var(--spacing-xl);
+    padding-bottom: var(--spacing-md);
+    border-bottom: 2px solid rgba(45, 90, 61, 0.1);
+}
+
+/* Experience Type Sections */
+.experience-type-title {
+    color: var(--hygge-green);
+    font-weight: var(--font-weight-semibold);
+    margin-bottom: var(--spacing-lg);
+    display: flex;
+    align-items: center;
+}
+
+.type-icon {
+    margin-right: var(--spacing-md);
+    padding: var(--spacing-sm);
+    background: var(--hygge-green);
+    color: white;
+    border-radius: 50%;
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.1rem;
+}
+
+.type-count {
+    color: var(--hygge-slate);
+    font-weight: var(--font-weight-regular);
+    margin-left: var(--spacing-sm);
+}
+
+/* Experience Cards */
+.experience-card {
+    background: white;
+    border-radius: var(--border-radius-lg);
+    overflow: hidden;
+    box-shadow: var(--shadow-sm);
+    transition: all var(--transition-normal);
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+}
+
+.experience-card:hover {
+    transform: translateY(-5px);
+    box-shadow: var(--shadow-lg);
+}
+
+.experience-image-container {
+    position: relative;
+    height: 180px;
+    overflow: hidden;
+}
+
+.experience-image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.6s ease;
+}
+
+.experience-placeholder {
+    width: 100%;
+    height: 100%;
+    background: var(--hygge-cream);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--hygge-slate);
+    font-size: 2rem;
+}
+
+.experience-card:hover .experience-image {
+    transform: scale(1.05);
+}
+
+.experience-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(to bottom, rgba(0,0,0,0.3) 0%, transparent 50%, rgba(0,0,0,0.3) 100%);
+    opacity: 0;
+    transition: opacity var(--transition-normal);
+    display: flex;
+    align-items: flex-start;
+    justify-content: flex-end;
+    padding: var(--spacing-md);
+}
+
+.experience-card:hover .experience-overlay {
+    opacity: 1;
+}
+
+.experience-badges {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-sm);
+}
+
+.experience-badges .badge {
+    font-size: 0.75rem;
+    padding: var(--spacing-xs) var(--spacing-sm);
+}
+
+.badge-featured {
+    background: linear-gradient(135deg, var(--hygge-gold), #f4c430);
+    color: white;
+}
+
+.experience-content {
+    padding: var(--spacing-lg);
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+}
+
+.experience-title {
+    font-weight: var(--font-weight-bold);
+    margin-bottom: var(--spacing-md);
+}
+
+.experience-title a {
+    color: var(--hygge-green);
+    text-decoration: none;
+    transition: color var(--transition-normal);
+}
+
+.experience-title a:hover {
+    color: var(--hygge-light-green);
+}
+
+.experience-description {
+    color: var(--hygge-slate);
+    font-size: 0.9rem;
+    line-height: 1.5;
+    margin-bottom: var(--spacing-md);
+    flex-grow: 1;
+}
+
+.experience-meta {
+    display: flex;
+    justify-content: between;
+    align-items: center;
+    margin-bottom: var(--spacing-md);
+}
+
+.experience-price {
+    font-weight: var(--font-weight-bold);
+    color: #007bff;
+}
+
+.experience-duration {
+    color: var(--hygge-slate);
+    font-size: 0.9rem;
+}
+
+.experience-scores {
+    display: flex;
+    gap: var(--spacing-md);
+    margin-bottom: var(--spacing-md);
+}
+
+.score-item {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-xs);
+    font-size: 0.85rem;
+    font-weight: var(--font-weight-medium);
+}
+
+.experience-actions {
+    display: flex;
+    gap: var(--spacing-sm);
+    align-items: center;
+}
+
+.experience-actions .btn {
+    border-radius: var(--border-radius-pill);
+}
+
+.bookmark-btn {
+    width: 38px;
+    height: 31px;
+    padding: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* Sidebar */
+.destination-sidebar {
+    position: sticky;
+    top: 20px;
+}
+
+.stats-card,
+.tips-card {
+    background: rgba(255, 255, 255, 0.9);
+    border-radius: var(--border-radius-xl);
+    padding: var(--spacing-xl);
+    box-shadow: var(--shadow-lg);
+    backdrop-filter: blur(10px);
+}
+
+.stats-title,
+.tips-title {
+    color: var(--hygge-green);
+    font-weight: var(--font-weight-bold);
+    margin-bottom: var(--spacing-lg);
+}
+
+.stats-grid {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-lg);
+}
+
+.stats-grid .stat-item {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-md);
+    padding: var(--spacing-md);
+    background: rgba(248, 245, 240, 0.5);
+    border-radius: var(--border-radius-md);
+    transition: all var(--transition-normal);
+}
+
+.stats-grid .stat-item:hover {
+    transform: translateX(8px);
+    background: rgba(248, 245, 240, 0.8);
+}
+
+.stats-grid .stat-icon {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--hygge-green);
+    color: white;
+    font-size: 1.1rem;
+}
+
+.stat-icon.sustainability {
+    background: #28a745;
+}
+
+.stat-icon.hygge {
+    background: #dc3545;
+}
+
+.stat-info .stat-number {
+    font-size: 1.2rem;
+    font-weight: var(--font-weight-bold);
+    color: var(--hygge-green);
+    margin-bottom: var(--spacing-xs);
+}
+
+.stat-info .stat-label {
+    font-size: 0.85rem;
+    color: var(--hygge-slate);
+}
+
+.action-buttons {
+    background: rgba(255, 255, 255, 0.9);
+    border-radius: var(--border-radius-xl);
+    padding: var(--spacing-xl);
+    box-shadow: var(--shadow-lg);
+}
+
+.tips-list {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-md);
+}
+
+.tip-item {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-md);
+    padding: var(--spacing-md);
+    background: rgba(248, 245, 240, 0.3);
+    border-radius: var(--border-radius-md);
+    transition: all var(--transition-normal);
+}
+
+.tip-item:hover {
+    background: rgba(248, 245, 240, 0.6);
+    transform: translateX(4px);
+}
+
+.tip-item i {
+    font-size: 1.1rem;
+}
+
+.tip-item span {
+    font-size: 0.9rem;
+    color: var(--hygge-slate);
+    font-weight: var(--font-weight-medium);
+}
+
+/* Responsive Design */
+@media (max-width: 992px) {
+    .destination-sidebar {
+        position: static;
+        margin-top: var(--spacing-xl);
+    }
+    
+    .destination-title {
+        font-size: 2rem;
+    }
+    
+    .hero-info {
+        padding: var(--spacing-lg);
+    }
+}
+
+@media (max-width: 768px) {
+    .destination-title {
+        font-size: 1.75rem;
+    }
+    
+    .destination-stats {
+        justify-content: center;
+        margin-top: var(--spacing-lg);
+    }
+    
+    .hero-image-container {
+        height: 250px;
+    }
+    
+    .experience-card {
+        margin-bottom: var(--spacing-lg);
+    }
+    
+    .experience-meta {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: var(--spacing-sm);
+    }
+    
+    .stats-grid {
+        gap: var(--spacing-md);
+    }
+}
+
+/* Animation */
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.experience-card,
+.info-card,
+.stats-card,
+.tips-card {
+    animation: fadeInUp 0.6s ease forwards;
+}
+
+.experience-card:nth-child(1) { animation-delay: 0.1s; }
+.experience-card:nth-child(2) { animation-delay: 0.2s; }
+.experience-card:nth-child(3) { animation-delay: 0.3s; }
+.experience-card:nth-child(4) { animation-delay: 0.4s; }
+.experience-card:nth-child(5) { animation-delay: 0.5s; }
+.experience-card:nth-child(6) { animation-delay: 0.6s; }
+</style>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Animate score bars
+    const scoreBars = document.querySelectorAll('.score-fill');
+    scoreBars.forEach((bar, index) => {
+        setTimeout(() => {
+            bar.style.width = bar.style.width;
+        }, index * 200);
+    });
+    
+    // Bookmark functionality
+    const bookmarkButtons = document.querySelectorAll('.bookmark-btn');
+    bookmarkButtons.forEach(button => {
+        button.addEventListener('click', async function(e) {
+            e.preventDefault();
+            
+            const experienceId = this.dataset.experienceId;
+            const icon = this.querySelector('i');
+            
+            try {
+                const response = await fetch(`{% url 'experiences:bookmark_experience' '00000000-0000-0000-0000-000000000000' %}`.replace('00000000-0000-0000-0000-000000000000', experienceId), {
+                    method: 'POST',
+                    headers: {
+                        'X-CSRFToken': document.querySelector('[name=csrfmiddlewaretoken]').value,
+                        'Content-Type': 'application/json',
+                    },
+                });
+                
+                const data = await response.json();
+                
+                if (data.success) {
+                    if (data.bookmarked) {
+                        icon.className = 'fas fa-bookmark';
+                        this.classList.add('bookmarked');
+                    } else {
+                        icon.className = 'far fa-bookmark';
+                        this.classList.remove('bookmarked');
+                    }
+                }
+            } catch (error) {
+                console.error('Error bookmarking experience:', error);
+            }
+        });
+    });
+    
+    // Smooth scroll for internal links
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        anchor.addEventListener('click', function (e) {
+            e.preventDefault();
+            const target = document.querySelector(this.getAttribute('href'));
+            if (target) {
+                target.scrollIntoView({
+                    behavior: 'smooth',
+                    block: 'start'
+                });
+            }
+        });
+    });
+});
+</script>
+
+{% csrf_token %}
+{% endblock %}

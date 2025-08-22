@@ -1,0 +1,59 @@
+Software Lease / Licensing Agreement
+
+This Software Lease Agreement (“Agreement”) is entered into as of [Date], by and between:
+
+Owner/Developer: Davis Sneed (“Owner”), with a principal address at [Address]
+Licensee: HygGeo LLC, a limited liability company (“Licensee”), with a principal address at [Address]
+
+Recitals:
+A. Owner is the sole creator and legal owner of the software currently used by HygGeo (“Software”), including all source code, documentation, and related intellectual property.
+B. Owner and Licensee’s members have agreed that Owner may retain personal ownership of the Software while Licensee uses it in its business operations.
+
+Agreement:
+
+Ownership
+Owner retains exclusive ownership of the Software. Ownership includes all intellectual property rights, source code, updates, and related materials. Nothing in this Agreement or any equity interest in Licensee transfers ownership of the Software to the Licensee or its members.
+
+License Grant
+Owner grants Licensee a non-exclusive, non-transferable, revocable license to use the Software solely for HygGeo LLC business operations. Licensee may not sublicense, sell, or distribute the Software.
+
+Term
+This Agreement is effective as of the date above and continues indefinitely unless terminated by Owner. Termination requires [30/60] days written notice.
+
+Restrictions
+Licensee may not:
+
+Copy, modify, distribute, sell, sublicense, or create derivative works of the Software except as expressly permitted by Owner.
+
+Reverse engineer, decompile, or attempt to derive the source code.
+
+Claim ownership of the Software in any form.
+
+Maintenance and Updates
+Owner may provide maintenance, updates, or enhancements at their discretion. Licensee acknowledges that Owner is not obligated to provide ongoing updates unless agreed in writing.
+
+Fees / Compensation
+[Optional: Insert leasing fee or state “No fee unless agreed in writing.”]
+
+Termination
+Upon termination, Licensee shall immediately cease use of the Software and return or destroy all copies, including backups.
+
+Relationship to Equity
+Owner’s equity in the company does not affect their ownership rights in the Software. Licensee acknowledges that even as a 51% owner, other members do not have rights to the Software except under this license.
+
+Indemnification
+Licensee shall indemnify Owner for claims arising from Licensee’s use of the Software.
+
+Miscellaneous
+
+Governing Law: Washington
+
+Entire Agreement: This document constitutes the complete agreement regarding the Software.
+
+Amendments: Must be in writing and signed by Owner.
+
+Signatures:
+
+Davis Sneed (Owner)
+
+[Co-founder Name] on behalf of HygGeo LLC

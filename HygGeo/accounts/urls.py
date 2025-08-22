@@ -32,7 +32,7 @@ urlpatterns = [
     path('survey/', views.survey_view, name='survey'),
     path('survey/success/', views.survey_success_view, name='survey_success'),
     
-    # Community features (optional)
+    # Community features
     path('users/', views.user_list_view, name='user_list'),
     path('users/<str:username>/', views.public_profile_view, name='public_profile'),
 ]
