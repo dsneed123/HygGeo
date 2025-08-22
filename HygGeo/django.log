@@ -6936,3 +6936,60 @@ INFO 2025-08-21 20:17:23,794 basehttp 39828 6232 "GET /experiences/add/ HTTP/1.1
 WARNING 2025-08-21 20:17:23,820 basehttp 39828 6232 "GET /static/css/style.css HTTP/1.1" 404 1966
 INFO 2025-08-21 20:18:00,442 basehttp 39828 35180 "GET / HTTP/1.1" 200 22843
 WARNING 2025-08-21 20:18:00,479 basehttp 39828 35180 "GET /static/css/style.css HTTP/1.1" 404 1966
+INFO 2025-08-21 20:22:49,575 basehttp 46560 3736 "GET /admin/dashboard/ HTTP/1.1" 200 23048
+WARNING 2025-08-21 20:22:49,595 basehttp 46560 3736 "GET /static/css/style.css HTTP/1.1" 404 1966
+INFO 2025-08-21 20:22:52,015 basehttp 46560 45280 "GET /experiences/ HTTP/1.1" 200 25064
+WARNING 2025-08-21 20:22:52,035 basehttp 46560 45280 "GET /static/css/style.css HTTP/1.1" 404 1966
+INFO 2025-08-21 20:22:52,049 basehttp 46560 41492 "GET /media/experiences/images.webp HTTP/1.1" 304 0
+INFO 2025-08-21 20:22:59,040 basehttp 46560 41492 "GET /accounts/users/ HTTP/1.1" 200 14366
+WARNING 2025-08-21 20:22:59,091 basehttp 46560 41492 "GET /static/css/style.css HTTP/1.1" 404 1966
+INFO 2025-08-21 20:23:03,747 basehttp 46560 48536 "GET /experiences/destinations/ HTTP/1.1" 200 21774
+WARNING 2025-08-21 20:23:03,768 basehttp 46560 48536 "GET /static/css/style.css HTTP/1.1" 404 1966
+ERROR 2025-08-21 20:23:08,367 log 46560 50116 Internal Server Error: /experiences/destinations/Seattle/
+Traceback (most recent call last):
+  File "C:\Users\DLSne\AppData\Local\Packages\PythonSoftwareFoundation.Python.3.12_qbz5n2kfra8p0\LocalCache\local-packages\Python312\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+               ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\DLSne\AppData\Local\Packages\PythonSoftwareFoundation.Python.3.12_qbz5n2kfra8p0\LocalCache\local-packages\Python312\site-packages\django\core\handlers\base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\DLSne\OneDrive\Desktop\Code\webdev\HygGeo\HygGeo\experiences\views.py", line 306, in destination_detail_view
+    exp_type = experience.get_experience_type_display()
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AttributeError: 'Experience' object has no attribute 'get_experience_type_display'
+ERROR 2025-08-21 20:23:08,375 basehttp 46560 50116 "GET /experiences/destinations/Seattle/ HTTP/1.1" 500 68908
+INFO 2025-08-21 20:23:15,142 basehttp 46560 50116 "GET /experiences/ HTTP/1.1" 200 25064
+WARNING 2025-08-21 20:23:15,167 basehttp 46560 50116 "GET /static/css/style.css HTTP/1.1" 404 1966
+INFO 2025-08-21 20:23:22,362 basehttp 46560 23636 "GET /experiences/?search=None&category=&destination=Seattle&type=&budget=&sustainability_min=&sort=newest HTTP/1.1" 200 21999
+WARNING 2025-08-21 20:23:22,390 basehttp 46560 23636 "GET /static/css/style.css HTTP/1.1" 404 1966
+INFO 2025-08-21 20:23:27,634 basehttp 46560 49924 "GET /experiences/?search=None&category=&destination=&type=&budget=&sustainability_min=&sort=newest HTTP/1.1" 200 21991
+WARNING 2025-08-21 20:23:27,657 basehttp 46560 49924 "GET /static/css/style.css HTTP/1.1" 404 1966
+INFO 2025-08-21 20:23:29,689 basehttp 46560 39436 "GET /experiences/ HTTP/1.1" 200 25064
+WARNING 2025-08-21 20:23:29,714 basehttp 46560 39436 "GET /static/css/style.css HTTP/1.1" 404 1966
+INFO 2025-08-21 20:23:33,126 basehttp 46560 48028 "GET /experiences/experience/seattle-coffee-culture-tour/ HTTP/1.1" 200 20468
+WARNING 2025-08-21 20:23:33,155 basehttp 46560 48028 "GET /static/css/style.css HTTP/1.1" 404 1966
+INFO 2025-08-21 20:23:33,518 basehttp 46560 49972 "GET /media/providers/download.png HTTP/1.1" 200 2388
+INFO 2025-08-21 20:23:44,492 basehttp 46560 49972 "GET /accounts/profile/ HTTP/1.1" 200 22279
+WARNING 2025-08-21 20:23:44,531 basehttp 46560 49972 "GET /static/css/style.css HTTP/1.1" 404 1966
+INFO 2025-08-21 20:23:47,606 basehttp 46560 23020 "GET /admin/ HTTP/1.1" 200 13099
+INFO 2025-08-21 20:23:47,640 basehttp 46560 23020 "GET /static/admin/css/base.css HTTP/1.1" 200 22154
+INFO 2025-08-21 20:23:47,651 basehttp 46560 23020 "GET /static/admin/css/dark_mode.css HTTP/1.1" 200 2808
+INFO 2025-08-21 20:23:47,655 basehttp 46560 23020 "GET /static/admin/css/nav_sidebar.css HTTP/1.1" 200 2810
+INFO 2025-08-21 20:23:47,664 basehttp 46560 23020 "GET /static/admin/css/dashboard.css HTTP/1.1" 200 441
+INFO 2025-08-21 20:23:47,673 basehttp 46560 23020 "GET /static/admin/css/responsive.css HTTP/1.1" 200 16632
+INFO 2025-08-21 20:23:47,679 basehttp 46560 23020 "GET /static/admin/js/theme.js HTTP/1.1" 200 1653
+INFO 2025-08-21 20:23:47,704 basehttp 46560 23020 "GET /static/admin/js/nav_sidebar.js HTTP/1.1" 200 3063
+INFO 2025-08-21 20:23:47,729 basehttp 46560 23020 "GET /static/admin/img/icon-addlink.svg HTTP/1.1" 200 331
+INFO 2025-08-21 20:23:47,734 basehttp 46560 23020 "GET /static/admin/img/icon-changelink.svg HTTP/1.1" 200 380
+INFO 2025-08-21 20:23:57,542 basehttp 46560 23020 "GET /accounts/users/ HTTP/1.1" 200 14366
+WARNING 2025-08-21 20:23:57,573 basehttp 46560 23020 "GET /static/css/style.css HTTP/1.1" 404 1966
+INFO 2025-08-21 20:23:59,898 basehttp 46560 4504 "GET /experiences/ HTTP/1.1" 200 25064
+WARNING 2025-08-21 20:23:59,919 basehttp 46560 4504 "GET /static/css/style.css HTTP/1.1" 404 1966
+INFO 2025-08-21 20:24:11,090 basehttp 46560 32772 "GET /experiences/experience/seattle-coffee-culture-tour/ HTTP/1.1" 200 20468
+WARNING 2025-08-21 20:24:11,117 basehttp 46560 32772 "GET /static/css/style.css HTTP/1.1" 404 1966
+INFO 2025-08-21 20:25:07,417 basehttp 46560 29256 "GET / HTTP/1.1" 200 22833
+WARNING 2025-08-21 20:25:07,443 basehttp 46560 29256 "GET /static/css/style.css HTTP/1.1" 404 1966
+INFO 2025-08-21 20:25:12,095 basehttp 46560 24972 "GET /experiences/ HTTP/1.1" 200 25064
+WARNING 2025-08-21 20:25:12,122 basehttp 46560 24972 "GET /static/css/style.css HTTP/1.1" 404 1966
+INFO 2025-08-21 20:25:14,230 basehttp 46560 50128 "GET /experiences/experience/seattle-coffee-culture-tour/ HTTP/1.1" 200 20468
+WARNING 2025-08-21 20:25:14,264 basehttp 46560 50128 "GET /static/css/style.css HTTP/1.1" 404 1966
