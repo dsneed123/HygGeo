@@ -1,1 +1,1 @@
-web: gunicorn hyggo.wsgi:application --bind 0.0.0.0:$PORT
+web: gunicorn hyggeo.wsgi:application --bind 0.0.0.0:$PORT
