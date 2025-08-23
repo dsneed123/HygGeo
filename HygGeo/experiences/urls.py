@@ -5,19 +5,20 @@ from . import views
 app_name = 'experiences'
 
 urlpatterns = [
-    # Recommendations
+    # Recommendations and Bookmarks
     path('recommendations/', views.recommendations_view, name='recommendations'),
     path('bookmarks/', views.my_bookmarks_view, name='my_bookmarks'),
+    path('bookmark/remove/<uuid:experience_id>/', views.remove_bookmark_view, name='remove_bookmark'),
     
     # Experiences
     path('', views.experience_list_view, name='experience_list'),
-    path('add/', views.add_experience, name='add_experience'),  # Moved before detail view
+    path('add/', views.add_experience, name='add_experience'),
     path('experience/<slug:slug>/', views.experience_detail_view, name='experience_detail'),
     
     # Destinations - SPECIFIC PATHS FIRST, THEN GENERAL ONES
     path('destinations/', views.destination_list_view, name='destination_list'),
-    path('destinations/add/', views.add_destination, name='add_destination'),  # MOVED BEFORE <slug:slug>
-    path('destinations/<slug:slug>/', views.destination_detail_view, name='destination_detail'),  # MOVED AFTER add/
+    path('destinations/add/', views.add_destination, name='add_destination'),
+    path('destinations/<slug:slug>/', views.destination_detail_view, name='destination_detail'),
     
     # Providers, Experience Types, Categories - specific before general
     path('providers/add/', views.add_provider, name='add_provider'),
@@ -30,4 +31,5 @@ urlpatterns = [
     # AJAX endpoints
     path('api/track-click/<uuid:experience_id>/', views.track_affiliate_click, name='track_affiliate_click'),
     path('api/bookmark/<uuid:experience_id>/', views.bookmark_experience, name='bookmark_experience'),
+    path('track-booking/<uuid:experience_id>/', views.track_booking_view, name='track_booking'),
 ]

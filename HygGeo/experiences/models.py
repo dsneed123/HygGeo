@@ -214,7 +214,7 @@ class Experience(models.Model):
         return f"{self.title} - {self.destination.name}"
     
     def get_absolute_url(self):
-        return reverse('experience_detail', kwargs={'slug': self.slug})
+     return reverse('experiences:experience_detail', kwargs={'slug': self.slug})
     
     def get_price_display(self):
         """Return formatted price range"""

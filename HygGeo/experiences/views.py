@@ -503,5 +503,52 @@ def add_category(request):
     else:
         form = CategoryForm()
     return render(request, 'experiences/add_category.html', {'form': form})
+@login_required
+@require_POST
+def remove_bookmark_view(request, experience_id):
+    try:
+        recommendation = UserRecommendation.objects.get(
+            user=request.user,
+            experience_id=experience_id,
+            bookmarked=True
+        )
+        recommendation.bookmarked = False
+        recommendation.save()
+        return JsonResponse({'success': True})
+    except UserRecommendation.DoesNotExist:
+        return JsonResponse({'success': False, 'error': 'Bookmark not found'})
+
+@require_POST
+def track_booking_view(request, experience_id):
+    experience = get_object_or_404(Experience, id=experience_id)
+    
+    # Create booking tracking record
+    BookingTracking.objects.create(
+        user=request.user if request.user.is_authenticated else None,
+        experience=experience,
+        session_id=request.session.session_key or 'anonymous',
+        ip_address=request.META.get('REMOTE_ADDR'),
+        user_agent=request.META.get('HTTP_USER_AGENT', '')
+    )
+    
+    return JsonResponse({'success': True})
+@login_required
+def my_bookmarks_view(request):
+    bookmarked_experiences = UserRecommendation.objects.filter(
+        user=request.user,
+        bookmarked=True
+    ).select_related('experience', 'experience__destination', 'experience__provider')
+    
+    # Optional pagination
+    paginator = Paginator(bookmarked_experiences, 12)  # 12 per page
+    page_number = request.GET.get('page')
+    page_obj = paginator.get_page(page_number)
+    
+    context = {
+        'bookmarked_experiences': page_obj,
+        'is_paginated': paginator.num_pages > 1,
+        'page_obj': page_obj,
+    }
+    return render(request, 'experiences/my_bookmarks.html', context)
 
 

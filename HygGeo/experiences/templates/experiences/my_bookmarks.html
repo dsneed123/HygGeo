@@ -1,0 +1,231 @@
+{% extends 'base.html' %}
+
+{% block title %}My Bookmarks - HygGeo{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <!-- Header -->
+    <div class="row mb-4">
+        <div class="col-12">
+            <h1 class="h2 fw-bold" style="color: var(--hygge-green);">
+                <i class="fas fa-bookmark me-2"></i>My Bookmarks
+            </h1>
+            <p class="lead text-muted">Your saved sustainable travel experiences</p>
+        </div>
+    </div>
+
+    {% if bookmarked_experiences %}
+        <!-- Results Header -->
+        <div class="row mb-4">
+            <div class="col-12">
+                <div class="d-flex justify-content-between align-items-center">
+                    <h5 class="fw-bold mb-0">
+                        Found {{ bookmarked_experiences.count }} experience{{ bookmarked_experiences.count|pluralize }}
+                    </h5>
+                    <div class="d-flex gap-2">
+                        <a href="{% url 'experiences:recommendations' %}" class="btn btn-outline-hygge btn-sm">
+                            <i class="fas fa-compass me-1"></i>My Recommendations
+                        </a>
+                        <a href="{% url 'experiences:experience_list' %}" class="btn btn-outline-primary btn-sm">
+                            <i class="fas fa-search me-1"></i>Browse All
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Experience Grid -->
+        <div class="row g-4 mb-5">
+            {% for recommendation in bookmarked_experiences %}
+            {% with experience=recommendation.experience %}
+            <div class="col-lg-4 col-md-6">
+                <div class="card card-hygge h-100">
+                    {% if experience.main_image %}
+                    <img src="{{ experience.main_image.url }}" class="card-img-top" alt="{{ experience.title }}" style="height: 200px; object-fit: cover;">
+                    {% else %}
+                    <div class="card-img-top bg-light d-flex align-items-center justify-content-center" style="height: 200px;">
+                        <i class="fas fa-image text-muted" style="font-size: 3rem;"></i>
+                    </div>
+                    {% endif %}
+                    
+                    <div class="card-body p-3 d-flex flex-column">
+                        <!-- Header -->
+                        <div class="d-flex justify-content-between align-items-start mb-2">
+                            <h6 class="fw-bold mb-0" style="color: var(--hygge-green);">{{ experience.title }}</h6>
+                            <div class="d-flex align-items-center ms-2">
+                                {% if experience.is_featured %}
+                                <span class="badge bg-warning me-1" style="font-size: 0.7rem;">Featured</span>
+                                {% endif %}
+                                {% with badge=experience.get_sustainability_badge %}
+                                <span class="badge" style="background-color: {{ badge.color }}; font-size: 0.7rem;">
+                                    {{ badge.text }}
+                                </span>
+                                {% endwith %}
+                            </div>
+                        </div>
+                        
+                        <!-- Location & Type -->
+                        <div class="mb-2">
+                            <p class="text-muted small mb-1">
+                                <i class="fas fa-map-marker-alt me-1"></i>{{ experience.destination.name }}, {{ experience.destination.country }}
+                            </p>
+                            <span class="badge bg-secondary small">{{ experience.get_experience_type_display }}</span>
+                            <span class="badge bg-info small ms-1">{{ experience.get_group_size_display }}</span>
+                        </div>
+                        
+                        <!-- Description -->
+                        <p class="small mb-3 flex-grow-1">{{ experience.short_description|truncatewords:20 }}</p>
+                        
+                        <!-- Features -->
+                        <div class="mb-3">
+                            <div class="d-flex justify-content-between align-items-center small">
+                                <div class="text-warning">
+                                    <i class="fas fa-leaf me-1"></i>
+                                    <span>{{ experience.sustainability_score }}/10</span>
+                                </div>
+                                <div class="text-danger">
+                                    <i class="fas fa-heart me-1"></i>
+                                    <span>{{ experience.hygge_factor }}/10</span>
+                                </div>
+                                {% if experience.carbon_neutral %}
+                                <div class="text-success">
+                                    <i class="fas fa-check-circle me-1"></i>
+                                    <span>Carbon Neutral</span>
+                                </div>
+                                {% endif %}
+                            </div>
+                        </div>
+                        
+                        <!-- Price & Actions -->
+                        <div class="mt-auto">
+                            <div class="d-flex justify-content-between align-items-center mb-2">
+                                <span class="fw-bold text-primary">{{ experience.get_price_display }}</span>
+                                <small class="text-muted">{{ experience.get_duration_display }}</small>
+                            </div>
+                            
+                            <div class="d-flex gap-2">
+                                <a href="{% url 'experiences:experience_detail' experience.slug %}" class="btn btn-hygge btn-sm flex-grow-1">
+                                    <i class="fas fa-eye me-1"></i>View Details
+                                </a>
+                                <a href="{% url 'experiences:remove_bookmark' experience.id %}" class="btn btn-outline-danger btn-sm remove-bookmark-btn" data-experience-id="{{ experience.id }}" onclick="return confirm('Remove from bookmarks?')">
+                                    <i class="fas fa-bookmark"></i>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% endwith %}
+            {% endfor %}
+        </div>
+
+        <!-- Pagination -->
+        {% if is_paginated %}
+        <nav aria-label="Bookmarks pagination" class="mt-5">
+            <ul class="pagination justify-content-center">
+                {% if page_obj.has_previous %}
+                    <li class="page-item">
+                        <a class="page-link" href="?page={{ page_obj.previous_page_number }}">Previous</a>
+                    </li>
+                {% endif %}
+                
+                {% for num in page_obj.paginator.page_range %}
+                    {% if page_obj.number == num %}
+                        <li class="page-item active">
+                            <span class="page-link">{{ num }}</span>
+                        </li>
+                    {% else %}
+                        <li class="page-item">
+                            <a class="page-link" href="?page={{ num }}">{{ num }}</a>
+                        </li>
+                    {% endif %}
+                {% endfor %}
+                
+                {% if page_obj.has_next %}
+                    <li class="page-item">
+                        <a class="page-link" href="?page={{ page_obj.next_page_number }}">Next</a>
+                    </li>
+                {% endif %}
+            </ul>
+        </nav>
+        {% endif %}
+
+    {% else %}
+        <div class="col-12">
+            <div class="text-center py-5">
+                <i class="fas fa-bookmark text-muted" style="font-size: 4rem;"></i>
+                <h4 class="text-muted mt-3">No bookmarks yet</h4>
+                <p class="text-muted">Start exploring and bookmark experiences you'd like to try!</p>
+                <a href="{% url 'experiences:experience_list' %}" class="btn btn-hygge">
+                    <i class="fas fa-search me-2"></i>Discover Experiences
+                </a>
+            </div>
+        </div>
+    {% endif %}
+</div>
+
+<style>
+.remove-bookmark-btn {
+    width: 40px;
+    padding: 0.375rem 0;
+}
+
+.card-hygge {
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.card-hygge:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 25px rgba(0,0,0,0.15);
+}
+
+.page-link {
+    color: var(--hygge-green);
+    border-color: #dee2e6;
+}
+
+.page-item.active .page-link {
+    background-color: var(--hygge-green);
+    border-color: var(--hygge-green);
+}
+
+.page-link:hover {
+    color: var(--hygge-light-green);
+    background-color: rgba(74, 124, 89, 0.1);
+    border-color: var(--hygge-light-green);
+}
+</style>
+
+<script>
+// Auto-submit form when filters change
+document.addEventListener('DOMContentLoaded', function() {
+    // Remove bookmark functionality with animation
+    const removeButtons = document.querySelectorAll('.remove-bookmark-btn');
+    
+    removeButtons.forEach(button => {
+        button.addEventListener('click', function(e) {
+            if (confirm('Remove this experience from your bookmarks?')) {
+                const card = this.closest('.card-hygge');
+                card.style.opacity = '0.5';
+                card.style.transform = 'scale(0.95)';
+            }
+        });
+    });
+    
+    // Add animation to cards
+    const cards = document.querySelectorAll('.card-hygge');
+    cards.forEach((card, index) => {
+        card.style.opacity = '0';
+        card.style.transform = 'translateY(30px)';
+        
+        setTimeout(() => {
+            card.style.transition = 'all 0.6s ease';
+            card.style.opacity = '1';
+            card.style.transform = 'translateY(0)';
+        }, index * 50);
+    });
+});
+</script>
+
+{% csrf_token %}
+{% endblock %}
