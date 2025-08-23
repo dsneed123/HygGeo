@@ -8153,3 +8153,123 @@ WARNING 2025-08-23 15:37:40,466 log 42216 22440 Method Not Allowed (GET): /exper
 WARNING 2025-08-23 15:37:40,478 basehttp 42216 22440 "GET /experiences/bookmark/remove/5d983d22-1f87-4ad1-9b01-14cc0570b28d/ HTTP/1.1" 405 0
 INFO 2025-08-23 15:37:44,606 basehttp 42216 22440 "GET /experiences/bookmarks/ HTTP/1.1" 200 16416
 WARNING 2025-08-23 15:37:44,627 basehttp 42216 22440 "GET /static/css/style.css HTTP/1.1" 404 1966
+INFO 2025-08-23 15:38:21,025 basehttp 42216 26288 "GET /experiences/ HTTP/1.1" 200 25064
+WARNING 2025-08-23 15:38:21,068 basehttp 42216 26288 "GET /static/css/style.css HTTP/1.1" 404 1966
+INFO 2025-08-23 15:45:59,995 autoreload 42216 30140 C:\Users\DLSne\OneDrive\Desktop\Code\webdev\HygGeo\HygGeo\experiences\urls.py changed, reloading.
+INFO 2025-08-23 15:46:05,080 autoreload 50804 39108 Watching for file changes with StatReloader
+INFO 2025-08-23 15:46:15,714 autoreload 50804 39108 C:\Users\DLSne\OneDrive\Desktop\Code\webdev\HygGeo\HygGeo\experiences\views.py changed, reloading.
+INFO 2025-08-23 15:46:16,380 autoreload 38152 9828 Watching for file changes with StatReloader
+INFO 2025-08-23 15:47:48,153 autoreload 35620 51176 Watching for file changes with StatReloader
+INFO 2025-08-23 15:47:56,367 basehttp 38152 42920 "GET / HTTP/1.1" 200 23123
+WARNING 2025-08-23 15:47:56,461 basehttp 38152 42920 "GET /static/css/style.css HTTP/1.1" 404 1966
+INFO 2025-08-23 15:47:59,719 basehttp 38152 13624 "GET /experiences/about/ HTTP/1.1" 200 30249
+WARNING 2025-08-23 15:47:59,747 basehttp 38152 13624 "GET /static/css/style.css HTTP/1.1" 404 1966
+INFO 2025-08-23 15:48:17,031 basehttp 38152 9208 "GET / HTTP/1.1" 200 23166
+WARNING 2025-08-23 15:48:17,059 basehttp 38152 9208 "GET /static/css/style.css HTTP/1.1" 404 1966
+INFO 2025-08-23 15:48:19,004 basehttp 38152 32896 "GET /experiences/about/ HTTP/1.1" 200 30249
+WARNING 2025-08-23 15:48:19,031 basehttp 38152 32896 "GET /static/css/style.css HTTP/1.1" 404 1966
+INFO 2025-08-23 15:49:12,223 basehttp 38152 22456 "GET /experiences/about/ HTTP/1.1" 200 29808
+WARNING 2025-08-23 15:49:12,246 basehttp 38152 22456 "GET /static/css/style.css HTTP/1.1" 404 1966
+INFO 2025-08-23 15:49:12,332 basehttp 38152 41676 "GET /static/js/main.js HTTP/1.1" 200 20115
+WARNING 2025-08-23 15:49:12,518 log 38152 41676 Not Found: /favicon.ico
+WARNING 2025-08-23 15:49:12,519 basehttp 38152 41676 "GET /favicon.ico HTTP/1.1" 404 3346
+INFO 2025-08-23 15:50:57,383 basehttp 38152 26828 "GET /admin/dashboard/ HTTP/1.1" 200 23351
+WARNING 2025-08-23 15:50:57,417 basehttp 38152 26828 "GET /static/css/style.css HTTP/1.1" 404 1966
+INFO 2025-08-23 15:51:01,061 basehttp 38152 46032 "GET /experiences/add/ HTTP/1.1" 200 17909
+WARNING 2025-08-23 15:51:01,090 basehttp 38152 46032 "GET /static/css/style.css HTTP/1.1" 404 1966
+INFO 2025-08-23 15:53:54,283 basehttp 38152 13920 "GET /experiences/add/ HTTP/1.1" 200 23315
+WARNING 2025-08-23 15:53:54,309 basehttp 38152 13920 "GET /static/css/style.css HTTP/1.1" 404 1966
+INFO 2025-08-23 15:53:54,309 basehttp 38152 22620 "GET /static/js/main.js HTTP/1.1" 200 20115
+WARNING 2025-08-23 15:54:02,226 log 38152 22620 Not Found: /favicon.ico
+WARNING 2025-08-23 15:54:02,226 basehttp 38152 22620 "GET /favicon.ico HTTP/1.1" 404 3346
+INFO 2025-08-23 15:54:18,381 basehttp 38152 12084 "GET /experiences/about/ HTTP/1.1" 200 29808
+WARNING 2025-08-23 15:54:18,408 basehttp 38152 12084 "GET /static/css/style.css HTTP/1.1" 404 1966
+INFO 2025-08-23 15:54:46,553 basehttp 38152 42536 "GET /accounts/users/ HTTP/1.1" 200 14669
+WARNING 2025-08-23 15:54:46,579 basehttp 38152 42536 "GET /static/css/style.css HTTP/1.1" 404 1966
+INFO 2025-08-23 15:54:47,919 basehttp 38152 32300 "GET /accounts/survey/ HTTP/1.1" 200 56460
+WARNING 2025-08-23 15:54:47,950 basehttp 38152 32300 "GET /static/css/style.css HTTP/1.1" 404 1966
+INFO 2025-08-23 15:54:50,979 basehttp 38152 1904 "GET /experiences/bookmarks/ HTTP/1.1" 200 16719
+WARNING 2025-08-23 15:54:51,004 basehttp 38152 1904 "GET /static/css/style.css HTTP/1.1" 404 1966
+INFO 2025-08-23 15:54:55,160 basehttp 38152 53036 "GET /admin/dashboard/ HTTP/1.1" 200 23351
+WARNING 2025-08-23 15:54:55,186 basehttp 38152 53036 "GET /static/css/style.css HTTP/1.1" 404 1966
+INFO 2025-08-23 15:54:57,168 basehttp 38152 14632 "GET /experiences/destinations/add/ HTTP/1.1" 200 12127
+WARNING 2025-08-23 15:54:57,197 basehttp 38152 14632 "GET /static/css/style.css HTTP/1.1" 404 1966
+INFO 2025-08-23 15:55:01,903 basehttp 38152 35336 "GET /experiences/add/ HTTP/1.1" 200 23315
+WARNING 2025-08-23 15:55:01,932 basehttp 38152 35336 "GET /static/css/style.css HTTP/1.1" 404 1966
+INFO 2025-08-23 15:55:12,526 basehttp 38152 22740 "GET /experiences/about/ HTTP/1.1" 200 29808
+WARNING 2025-08-23 15:55:12,553 basehttp 38152 22740 "GET /static/css/style.css HTTP/1.1" 404 1966
+INFO 2025-08-23 15:57:46,527 basehttp 38152 30124 "GET /experiences/bookmarks/?page=2 HTTP/1.1" 200 16719
+WARNING 2025-08-23 15:57:46,560 basehttp 38152 30124 "GET /static/css/style.css HTTP/1.1" 404 1966
+INFO 2025-08-23 15:57:46,561 basehttp 38152 46060 "GET /static/js/main.js HTTP/1.1" 200 20115
+INFO 2025-08-23 15:57:46,566 basehttp 38152 29396 "GET /media/experiences/images.webp HTTP/1.1" 200 22100
+WARNING 2025-08-23 15:57:47,126 log 38152 29396 Not Found: /favicon.ico
+WARNING 2025-08-23 15:57:47,127 basehttp 38152 29396 "GET /favicon.ico HTTP/1.1" 404 3346
+INFO 2025-08-23 15:57:48,809 basehttp 38152 29396 "GET /experiences/about/ HTTP/1.1" 200 38524
+WARNING 2025-08-23 15:57:48,842 basehttp 38152 29396 "GET /static/css/style.css HTTP/1.1" 404 1966
+INFO 2025-08-23 15:58:15,023 basehttp 38152 39304 "GET /experiences/about/ HTTP/1.1" 200 39472
+WARNING 2025-08-23 15:58:15,047 basehttp 38152 39304 "GET /static/css/style.css HTTP/1.1" 404 1966
+INFO 2025-08-23 15:58:15,048 basehttp 38152 13040 "GET /static/js/main.js HTTP/1.1" 200 20115
+WARNING 2025-08-23 15:58:15,393 log 38152 13040 Not Found: /favicon.ico
+WARNING 2025-08-23 15:58:15,393 basehttp 38152 13040 "GET /favicon.ico HTTP/1.1" 404 3346
+INFO 2025-08-23 15:59:02,509 basehttp 38152 52644 "GET /experiences/about/ HTTP/1.1" 200 39172
+WARNING 2025-08-23 15:59:02,536 basehttp 38152 52644 "GET /static/css/style.css HTTP/1.1" 404 1966
+INFO 2025-08-23 15:59:02,537 basehttp 38152 33256 "GET /static/js/main.js HTTP/1.1" 200 20115
+WARNING 2025-08-23 15:59:02,875 log 38152 33256 Not Found: /favicon.ico
+WARNING 2025-08-23 15:59:02,876 basehttp 38152 33256 "GET /favicon.ico HTTP/1.1" 404 3346
+INFO 2025-08-23 15:59:07,468 basehttp 38152 3872 "GET /experiences/about/ HTTP/1.1" 200 39172
+WARNING 2025-08-23 15:59:07,497 basehttp 38152 3872 "GET /static/css/style.css HTTP/1.1" 404 1966
+INFO 2025-08-23 15:59:07,497 basehttp 38152 42368 "GET /static/js/main.js HTTP/1.1" 200 20115
+WARNING 2025-08-23 15:59:07,767 log 38152 42368 Not Found: /favicon.ico
+WARNING 2025-08-23 15:59:07,768 basehttp 38152 42368 "GET /favicon.ico HTTP/1.1" 404 3346
+INFO 2025-08-23 15:59:42,234 basehttp 38152 7940 "GET /experiences/about/ HTTP/1.1" 200 38731
+WARNING 2025-08-23 15:59:42,263 basehttp 38152 7940 "GET /static/css/style.css HTTP/1.1" 404 1966
+INFO 2025-08-23 15:59:42,264 basehttp 38152 28036 "GET /static/js/main.js HTTP/1.1" 200 20115
+WARNING 2025-08-23 15:59:42,613 log 38152 28036 Not Found: /favicon.ico
+WARNING 2025-08-23 15:59:42,614 basehttp 38152 28036 "GET /favicon.ico HTTP/1.1" 404 3346
+INFO 2025-08-23 16:00:09,812 basehttp 38152 12800 "GET /experiences/about/ HTTP/1.1" 200 37707
+WARNING 2025-08-23 16:00:09,837 basehttp 38152 12800 "GET /static/css/style.css HTTP/1.1" 404 1966
+INFO 2025-08-23 16:00:09,838 basehttp 38152 34604 "GET /static/js/main.js HTTP/1.1" 200 20115
+WARNING 2025-08-23 16:00:10,206 log 38152 34604 Not Found: /favicon.ico
+WARNING 2025-08-23 16:00:10,207 basehttp 38152 34604 "GET /favicon.ico HTTP/1.1" 404 3346
+INFO 2025-08-23 16:00:23,267 basehttp 38152 17232 "GET /experiences/about/ HTTP/1.1" 200 37430
+WARNING 2025-08-23 16:00:23,291 basehttp 38152 17232 "GET /static/css/style.css HTTP/1.1" 404 1966
+INFO 2025-08-23 16:00:23,291 basehttp 38152 50600 "GET /static/js/main.js HTTP/1.1" 200 20115
+WARNING 2025-08-23 16:00:24,252 log 38152 50600 Not Found: /favicon.ico
+WARNING 2025-08-23 16:00:24,252 basehttp 38152 50600 "GET /favicon.ico HTTP/1.1" 404 3346
+INFO 2025-08-23 16:01:07,065 basehttp 38152 12804 "GET /accounts/users/ HTTP/1.1" 200 14669
+WARNING 2025-08-23 16:01:07,096 basehttp 38152 12804 "GET /static/css/style.css HTTP/1.1" 404 1966
+INFO 2025-08-23 16:01:09,044 basehttp 38152 52844 "GET /accounts/users/dsneedy1/ HTTP/1.1" 200 12080
+WARNING 2025-08-23 16:01:09,073 basehttp 38152 52844 "GET /static/css/style.css HTTP/1.1" 404 1966
+INFO 2025-08-23 16:01:41,332 basehttp 38152 47164 "GET /accounts/users/ HTTP/1.1" 200 14669
+WARNING 2025-08-23 16:01:41,353 basehttp 38152 47164 "GET /static/css/style.css HTTP/1.1" 404 1966
+INFO 2025-08-23 16:01:41,353 basehttp 38152 52192 "GET /static/js/main.js HTTP/1.1" 200 20115
+WARNING 2025-08-23 16:01:41,702 log 38152 52192 Not Found: /favicon.ico
+WARNING 2025-08-23 16:01:41,703 basehttp 38152 52192 "GET /favicon.ico HTTP/1.1" 404 3346
+INFO 2025-08-23 16:01:42,963 basehttp 38152 52192 "GET /accounts/users/ HTTP/1.1" 200 14669
+WARNING 2025-08-23 16:01:42,989 basehttp 38152 52192 "GET /static/css/style.css HTTP/1.1" 404 1966
+INFO 2025-08-23 16:01:42,990 basehttp 38152 34392 "GET /static/js/main.js HTTP/1.1" 200 20115
+WARNING 2025-08-23 16:01:43,197 log 38152 34392 Not Found: /favicon.ico
+WARNING 2025-08-23 16:01:43,198 basehttp 38152 34392 "GET /favicon.ico HTTP/1.1" 404 3346
+INFO 2025-08-23 16:01:50,049 basehttp 38152 34392 "GET /accounts/users/ HTTP/1.1" 200 14660
+WARNING 2025-08-23 16:01:50,073 basehttp 38152 34392 "GET /static/css/style.css HTTP/1.1" 404 1966
+INFO 2025-08-23 16:01:50,073 basehttp 38152 42124 "GET /static/js/main.js HTTP/1.1" 200 20115
+WARNING 2025-08-23 16:01:50,316 log 38152 42124 Not Found: /favicon.ico
+WARNING 2025-08-23 16:01:50,317 basehttp 38152 42124 "GET /favicon.ico HTTP/1.1" 404 3346
+INFO 2025-08-23 16:02:03,552 basehttp 38152 3660 "GET /accounts/users/ HTTP/1.1" 200 14659
+WARNING 2025-08-23 16:02:03,576 basehttp 38152 3660 "GET /static/css/style.css HTTP/1.1" 404 1966
+INFO 2025-08-23 16:02:03,577 basehttp 38152 34856 "GET /static/js/main.js HTTP/1.1" 200 20115
+INFO 2025-08-23 16:02:04,858 basehttp 38152 34856 "GET /accounts/users/ HTTP/1.1" 200 14659
+WARNING 2025-08-23 16:02:04,879 basehttp 38152 34856 "GET /static/css/style.css HTTP/1.1" 404 1966
+INFO 2025-08-23 16:02:04,879 basehttp 38152 16004 "GET /static/js/main.js HTTP/1.1" 200 20115
+WARNING 2025-08-23 16:02:08,676 log 38152 16004 Not Found: /favicon.ico
+WARNING 2025-08-23 16:02:08,676 basehttp 38152 16004 "GET /favicon.ico HTTP/1.1" 404 3346
+INFO 2025-08-23 16:02:16,741 basehttp 38152 3172 "GET / HTTP/1.1" 200 23162
+WARNING 2025-08-23 16:02:16,781 basehttp 38152 3172 "GET /static/css/style.css HTTP/1.1" 404 1966
+INFO 2025-08-23 16:02:24,899 basehttp 38152 32268 "GET /experiences/about/ HTTP/1.1" 200 37420
+WARNING 2025-08-23 16:02:24,927 basehttp 38152 32268 "GET /static/css/style.css HTTP/1.1" 404 1966
+INFO 2025-08-23 16:02:30,039 basehttp 38152 20324 "GET / HTTP/1.1" 200 23113
+WARNING 2025-08-23 16:02:30,074 basehttp 38152 20324 "GET /static/css/style.css HTTP/1.1" 404 1966
+INFO 2025-08-23 16:02:31,354 basehttp 38152 8000 "GET /experiences/about/ HTTP/1.1" 200 37420
+WARNING 2025-08-23 16:02:31,383 basehttp 38152 8000 "GET /static/css/style.css HTTP/1.1" 404 1966
+INFO 2025-08-23 16:03:03,875 basehttp 38152 46608 "GET / HTTP/1.1" 200 23148
+WARNING 2025-08-23 16:03:03,911 basehttp 38152 46608 "GET /static/css/style.css HTTP/1.1" 404 1966

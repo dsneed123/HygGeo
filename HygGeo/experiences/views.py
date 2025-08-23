@@ -550,5 +550,7 @@ def my_bookmarks_view(request):
         'page_obj': page_obj,
     }
     return render(request, 'experiences/my_bookmarks.html', context)
+def about_view(request):
+    return render(request, 'experiences/about.html')
 
 

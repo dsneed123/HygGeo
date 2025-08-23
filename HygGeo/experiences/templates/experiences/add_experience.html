@@ -1,209 +1,238 @@
 {% extends 'base.html' %}
-{% block title %}Add Experience - HygGeo{% endblock %}
+
+{% block title %}Add New Experience - HygGeo{% endblock %}
 
 {% block content %}
 <div class="container py-5">
-  <div class="row justify-content-center">
-    <div class="col-lg-10">
-      <div class="text-center mb-5">
-        <i class="fas fa-plus-circle text-primary" style="font-size: 4rem;"></i>
-        <h1 class="h2 fw-bold mt-3" style="color: var(--hygge-green);">Add a New Experience</h1>
-        <p class="lead text-muted">Create a new sustainable travel experience for users to explore.</p>
-      </div>
-
-      <!-- Messages -->
-      {% if messages %}
-        <div class="mb-4">
-          {% for message in messages %}
-            <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
-              {{ message }}
-              <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-            </div>
-          {% endfor %}
-        </div>
-      {% endif %}
-
-      <!-- Form Errors (for debugging) -->
-      {% if form.errors %}
-        <div class="alert alert-danger mb-4">
-          <h5>Please fix the following errors:</h5>
-          <ul class="mb-0">
-            {% for field, errors in form.errors.items %}
-              {% for error in errors %}
-                <li><strong>{{ field|title }}:</strong> {{ error }}</li>
-              {% endfor %}
-            {% endfor %}
-          </ul>
-        </div>
-      {% endif %}
-
-      <form method="post" enctype="multipart/form-data" id="experienceForm">
-        {% csrf_token %}
-
-        <!-- Section 1: Basic Info -->
-        <div class="card card-hygge mb-4" data-section="1">
-          <div class="card-body p-4">
-            <h4 class="fw-bold mb-3" style="color: var(--hygge-green);">
-              <i class="fas fa-info-circle me-2"></i>Basic Details
-            </h4>
-            <div class="mb-3">
-              {{ form.title.label_tag }} 
-              {{ form.title }}
-              {% if form.title.errors %}
-                <div class="text-danger small">{{ form.title.errors.0 }}</div>
-              {% endif %}
-            </div>
-            <div class="mb-3">
-              {{ form.short_description.label_tag }}
-              {{ form.short_description }}
-              {% if form.short_description.errors %}
-                <div class="text-danger small">{{ form.short_description.errors.0 }}</div>
-              {% endif %}
-            </div>
-            <div class="mb-3">
-              {{ form.description.label_tag }}
-              {{ form.description }}
-              {% if form.description.errors %}
-                <div class="text-danger small">{{ form.description.errors.0 }}</div>
-              {% endif %}
-            </div>
-            <div class="mb-3">
-              {{ form.main_image.label_tag }}
-              {{ form.main_image }}
-              {% if form.main_image.errors %}
-                <div class="text-danger small">{{ form.main_image.errors.0 }}</div>
-              {% endif %}
-              <div class="form-text">Upload a high-quality image representing this experience</div>
-            </div>
-          </div>
-        </div>
-
-        <!-- Section 2: Categorization -->
-        <div class="card card-hygge mb-4" data-section="2">
-          <div class="card-body p-4">
-            <h4 class="fw-bold mb-3" style="color: var(--hygge-green);">
-              <i class="fas fa-tags me-2"></i>Categorization
-            </h4>
-            <div class="row">
-              <div class="col-md-6 mb-3">
-                {{ form.destination.label_tag }}
-                {{ form.destination }}
-                {% if form.destination.errors %}
-                  <div class="text-danger small">{{ form.destination.errors.0 }}</div>
-                {% endif %}
-                <a href="{% url 'experiences:add_destination' %}" class="small text-primary">+ Add new destination</a>
-              </div>
-              <div class="col-md-6 mb-3">
-                {{ form.provider.label_tag }}
-                {{ form.provider }}
-                {% if form.provider.errors %}
-                  <div class="text-danger small">{{ form.provider.errors.0 }}</div>
-                {% endif %}
-                <a href="{% url 'experiences:add_provider' %}" class="small text-primary">+ Add new provider</a>
-              </div>
-              <div class="col-md-6 mb-3">
-                {{ form.experience_type.label_tag }}
-                {{ form.experience_type }}
-                {% if form.experience_type.errors %}
-                  <div class="text-danger small">{{ form.experience_type.errors.0 }}</div>
-                {% endif %}
-                <a href="{% url 'experiences:add_experience_type' %}" class="small text-primary">+ Add new experience type</a>
-              </div>
-              <div class="col-md-6 mb-3">
-                {{ form.categories.label_tag }}
-                {{ form.categories }}
-                {% if form.categories.errors %}
-                  <div class="text-danger small">{{ form.categories.errors.0 }}</div>
-                {% endif %}
-                <a href="{% url 'experiences:add_category' %}" class="small text-primary">+ Add new category</a>
-                <div class="form-text">Hold Ctrl/Cmd to select multiple categories</div>
-              </div>
-              <div class="col-md-6 mb-3">
-                {{ form.budget_range.label_tag }}
-                {{ form.budget_range }}
-                {% if form.budget_range.errors %}
-                  <div class="text-danger small">{{ form.budget_range.errors.0 }}</div>
-                {% endif %}
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <!-- Section 3: Trip Details -->
-        <div class="card card-hygge mb-4" data-section="3">
-          <div class="card-body p-4">
-            <h4 class="fw-bold mb-3" style="color: var(--hygge-green);">
-              <i class="fas fa-suitcase me-2"></i>Trip Details
-            </h4>
-            <div class="row">
-              <div class="col-md-6 mb-3">
-                {{ form.group_size.label_tag }} 
-                {{ form.group_size }}
-                {% if form.group_size.errors %}
-                  <div class="text-danger small">{{ form.group_size.errors.0 }}</div>
-                {% endif %}
-              </div>
-              <div class="col-md-6 mb-3">
-                {{ form.duration.label_tag }} 
-                {{ form.duration }}
-                {% if form.duration.errors %}
-                  <div class="text-danger small">{{ form.duration.errors.0 }}</div>
-                {% endif %}
-              </div>
-              <div class="col-md-6 mb-3">
-                <div class="form-check">
-                  {{ form.is_featured }}
-                  {{ form.is_featured.label_tag }}
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+            <div class="card card-hygge">
+                <div class="card-body p-4">
+                    <h2 class="card-title fw-bold text-center mb-4" style="color: var(--hygge-green);">
+                        <i class="fas fa-plus-circle me-2"></i>Add New Experience
+                    </h2>
+                    
+                    <form method="post" enctype="multipart/form-data">
+                        {% csrf_token %}
+                        
+                        <!-- Basic Details -->
+                        <div class="row mb-4">
+                            <div class="col-12">
+                                <h4 class="fw-bold mb-3">Basic Details</h4>
+                            </div>
+                            
+                            <div class="col-12 mb-3">
+                                <label for="title" class="form-label fw-bold">Title:</label>
+                                <input type="text" class="form-control" id="title" name="title" required>
+                            </div>
+                            
+                            <div class="col-12 mb-3">
+                                <label for="short_description" class="form-label fw-bold">Short description:</label>
+                                <textarea class="form-control" id="short_description" name="short_description" rows="2" maxlength="300" required></textarea>
+                                <div class="form-text">Brief description for cards (max 300 characters)</div>
+                            </div>
+                            
+                            <div class="col-12 mb-3">
+                                <label for="description" class="form-label fw-bold">Description:</label>
+                                <textarea class="form-control" id="description" name="description" rows="5" required></textarea>
+                            </div>
+                            
+                            <div class="col-12 mb-3">
+                                <label for="main_image" class="form-label fw-bold">Main image:</label>
+                                <input type="file" class="form-control" id="main_image" name="main_image" accept="image/*">
+                                <div class="form-text">Upload a high-quality image representing this experience</div>
+                            </div>
+                        </div>
+                        
+                        <!-- Categorization -->
+                        <div class="row mb-4">
+                            <div class="col-12">
+                                <h4 class="fw-bold mb-3">Categorization</h4>
+                            </div>
+                            
+                            <div class="col-md-6 mb-3">
+                                <label for="destination" class="form-label fw-bold">Destination:</label>
+                                <select class="form-select" id="destination" name="destination" required>
+                                    <option value="">---------</option>
+                                    <option value="seattle">Seattle, United States</option>
+                                </select>
+                                <small class="text-muted">+ Add new destination</small>
+                            </div>
+                            
+                            <div class="col-md-6 mb-3">
+                                <label for="provider" class="form-label fw-bold">Provider:</label>
+                                <select class="form-select" id="provider" name="provider" required>
+                                    <option value="">---------</option>
+                                    <option value="seattle-coffee-co">Seattle Coffee Co</option>
+                                </select>
+                                <small class="text-muted">+ Add new provider</small>
+                            </div>
+                            
+                            <div class="col-md-6 mb-3">
+                                <label for="experience_type" class="form-label fw-bold">Experience type:</label>
+                                <select class="form-select" id="experience_type" name="experience_type">
+                                    <option value="">---------</option>
+                                    <option value="tour">Guided-tour</option>
+                                </select>
+                                <small class="text-muted">+ Add new experience type</small>
+                            </div>
+                            
+                            <div class="col-md-6 mb-3">
+                                <label for="categories" class="form-label fw-bold">Categories:</label>
+                                <select class="form-select" id="categories" name="categories" multiple>
+                                    <option value="coffee-culture">Coffee Culture</option>
+                                </select>
+                                <div class="form-text">+ Add new category<br>Hold Ctrl/Cmd to select multiple categories</div>
+                            </div>
+                            
+                            <div class="col-12 mb-3">
+                                <label for="budget_range" class="form-label fw-bold">Budget range:</label>
+                                <select class="form-select" id="budget_range" name="budget_range" required>
+                                    <option value="">---------</option>
+                                    <option value="budget">Budget ($0-50/day)</option>
+                                    <option value="mid_range">Mid-range ($50-150/day)</option>
+                                    <option value="luxury">Luxury ($150+/day)</option>
+                                </select>
+                            </div>
+                        </div>
+                        
+                        <!-- Trip Details -->
+                        <div class="row mb-4">
+                            <div class="col-12">
+                                <h4 class="fw-bold mb-3">Trip Details</h4>
+                            </div>
+                            
+                            <div class="col-md-6 mb-3">
+                                <label for="group_size" class="form-label fw-bold">Group size:</label>
+                                <select class="form-select" id="group_size" name="group_size" required>
+                                    <option value="">---------</option>
+                                    <option value="solo">Solo Friendly</option>
+                                    <option value="couple">Perfect for Couples</option>
+                                    <option value="small_group">Small Groups (3-5)</option>
+                                    <option value="large_group">Large Groups (6+)</option>
+                                    <option value="family">Family Friendly</option>
+                                </select>
+                            </div>
+                            
+                            <div class="col-md-6 mb-3">
+                                <label for="duration" class="form-label fw-bold">Duration:</label>
+                                <select class="form-select" id="duration" name="duration" required>
+                                    <option value="">---------</option>
+                                    <option value="half_day">Half Day</option>
+                                    <option value="full_day">Full Day</option>
+                                    <option value="weekend">Weekend (2-3 days)</option>
+                                    <option value="short_trip">Short Trip (4-7 days)</option>
+                                    <option value="long_trip">Extended Trip (1+ weeks)</option>
+                                </select>
+                            </div>
+                        </div>
+                        
+                        <!-- Sustainability & Hygge -->
+                        <div class="row mb-4">
+                            <div class="col-12">
+                                <h4 class="fw-bold mb-3" style="color: var(--hygge-green);">
+                                    <i class="fas fa-leaf me-2"></i>Sustainability & Hygge
+                                </h4>
+                            </div>
+                            
+                            <div class="col-md-6 mb-3">
+                                <label for="sustainability_score" class="form-label fw-bold">
+                                    <i class="fas fa-seedling text-success me-1"></i>Sustainability Score:
+                                </label>
+                                <select class="form-select" id="sustainability_score" name="sustainability_score" required>
+                                    <option value="">Select rating...</option>
+                                    <option value="1">1 - Very Poor</option>
+                                    <option value="2">2 - Poor</option>
+                                    <option value="3">3 - Below Average</option>
+                                    <option value="4">4 - Fair</option>
+                                    <option value="5" selected>5 - Average</option>
+                                    <option value="6">6 - Good</option>
+                                    <option value="7">7 - Very Good</option>
+                                    <option value="8">8 - Excellent</option>
+                                    <option value="9">9 - Outstanding</option>
+                                    <option value="10">10 - Perfect</option>
+                                </select>
+                                <div class="form-text">Rate environmental sustainability (1-10)</div>
+                            </div>
+                            
+                            <div class="col-md-6 mb-3">
+                                <label for="hygge_factor" class="form-label fw-bold">
+                                    <i class="fas fa-heart text-danger me-1"></i>Hygge Factor:
+                                </label>
+                                <select class="form-select" id="hygge_factor" name="hygge_factor" required>
+                                    <option value="">Select rating...</option>
+                                    <option value="1">1 - Very Low</option>
+                                    <option value="2">2 - Low</option>
+                                    <option value="3">3 - Below Average</option>
+                                    <option value="4">4 - Fair</option>
+                                    <option value="5" selected>5 - Average</option>
+                                    <option value="6">6 - Good</option>
+                                    <option value="7">7 - Very Good</option>
+                                    <option value="8">8 - Excellent</option>
+                                    <option value="9">9 - Outstanding</option>
+                                    <option value="10">10 - Perfect</option>
+                                </select>
+                                <div class="form-text">Rate coziness and comfort (1-10)</div>
+                            </div>
+                        </div>
+                        
+                        <!-- Status Options -->
+                        <div class="row mb-4">
+                            <div class="col-md-6">
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" id="is_featured" name="is_featured">
+                                    <label class="form-check-label fw-bold" for="is_featured">
+                                        Is featured
+                                    </label>
+                                </div>
+                            </div>
+                            
+                            <div class="col-md-6">
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" id="is_active" name="is_active" checked>
+                                    <label class="form-check-label fw-bold" for="is_active">
+                                        Is active
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Submit Button -->
+                        <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+                            <a href="{% url 'experiences:experience_list' %}" class="btn btn-outline-secondary me-md-2">
+                                <i class="fas fa-times me-1"></i>Cancel
+                            </a>
+                            <button type="submit" class="btn btn-hygge">
+                                <i class="fas fa-save me-1"></i>Save Experience
+                            </button>
+                        </div>
+                    </form>
                 </div>
-                {% if form.is_featured.errors %}
-                  <div class="text-danger small">{{ form.is_featured.errors.0 }}</div>
-                {% endif %}
-              </div>
-              <div class="col-md-6 mb-3">
-                <div class="form-check">
-                  {{ form.is_active }}
-                  {{ form.is_active.label_tag }}
-                </div>
-                {% if form.is_active.errors %}
-                  <div class="text-danger small">{{ form.is_active.errors.0 }}</div>
-                {% endif %}
-              </div>
             </div>
-          </div>
         </div>
-
-        <!-- Submit -->
-        <div class="text-center mt-5">
-          <a href="{% url 'experiences:experience_list' %}" class="btn btn-outline-secondary me-3">
-            <i class="fas fa-arrow-left me-2"></i>Cancel
-          </a>
-          <button type="submit" class="btn btn-hygge btn-lg px-5 py-3">
-            <i class="fas fa-save me-2"></i>Save Experience
-          </button>
-        </div>
-      </form>
     </div>
-  </div>
 </div>
 
 <style>
-  .card-hygge {
-    opacity: 0;
-    transform: translateY(30px);
-    transition: all 0.6s ease;
-  }
-  .card-hygge.visible {
-    opacity: 1;
-    transform: translateY(0);
-  }
-</style>
+.form-label.fw-bold {
+    color: var(--hygge-green);
+}
 
-<script>
-  document.addEventListener('DOMContentLoaded', function() {
-    const observer = new IntersectionObserver(entries => {
-      entries.forEach(entry => { if (entry.isIntersecting) entry.target.classList.add('visible'); });
-    }, { threshold: 0.1 });
-    document.querySelectorAll('.card-hygge').forEach(card => observer.observe(card));
-  });
-</script>
+.form-select:focus,
+.form-control:focus {
+    border-color: var(--hygge-light-green);
+    box-shadow: 0 0 0 0.2rem rgba(45, 90, 61, 0.25);
+}
+
+h4 {
+    border-bottom: 2px solid #e9ecef;
+    padding-bottom: 0.5rem;
+    margin-bottom: 1rem;
+}
+
+.form-text {
+    color: #6c757d;
+    font-size: 0.875rem;
+}
+</style>
 {% endblock %}

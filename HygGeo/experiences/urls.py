@@ -32,4 +32,5 @@ urlpatterns = [
     path('api/track-click/<uuid:experience_id>/', views.track_affiliate_click, name='track_affiliate_click'),
     path('api/bookmark/<uuid:experience_id>/', views.bookmark_experience, name='bookmark_experience'),
     path('track-booking/<uuid:experience_id>/', views.track_booking_view, name='track_booking'),
+    path('about/', views.about_view, name='about'),
 ]

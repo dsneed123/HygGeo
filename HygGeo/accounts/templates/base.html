@@ -127,6 +127,13 @@
                         </a>
                     </li>
                     
+                    <!-- About link -->
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'experiences:about' %}">
+                            <i class="fas fa-info-circle me-1"></i>About
+                        </a>
+                    </li>
+                    
                     <!-- Experiences Menu -->
                     {% if user.is_authenticated %}
                     <li class="nav-item dropdown">
@@ -248,7 +255,7 @@
                         <a href="#" class="text-white me-3"><i class="fab fa-facebook"></i></a>
                         <a href="#" class="text-white"><i class="fab fa-twitter"></i></a>
                     </div>
-                    <p class="mb-0 mt-2">&copy; 2025 HygGeo. Launched in Seattle with love.</p>
+                    <p class="mb-0 mt-2">&copy; 2025 HygGeo. Launched in Seattle.</p>
                 </div>
             </div>
         </div>
