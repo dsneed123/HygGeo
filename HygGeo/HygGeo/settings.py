@@ -19,24 +19,35 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = config('SECRET_KEY', default='django-insecure-your-secret-key-here-change-in-production')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = config('DEBUG', default=True, cast=bool)
+DEBUG = True  # Hardcoded for development
+logging.info(f"DEBUG is set to: {DEBUG}")
 
-# Updated ALLOWED_HOSTS for production
-if DEBUG:
-    ALLOWED_HOSTS = ['*']
-else:
-    allowed_hosts = config('ALLOWED_HOSTS', default='localhost,127.0.0.1,hyggeo.com,www.hyggeo.com')
-    ALLOWED_HOSTS = [host.strip() for host in allowed_hosts.split(',')]
-    logging.info(f"ALLOWED_HOSTS: {ALLOWED_HOSTS}")  # Debug logging
+# ALLOWED_HOSTS for debug mode
+ALLOWED_HOSTS = ['*']
+logging.info(f"ALLOWED_HOSTS: {ALLOWED_HOSTS}")
 
-# CSRF Trusted Origins for production
-if not DEBUG:
-    CSRF_TRUSTED_ORIGINS = [
-        'https://*.ondigitalocean.app',
-        'https://starfish-app-jmri5.ondigitalocean.app',
-        'https://*.hyggeo.com',  # Covers hyggeo.com and www.hyggeo.com
-    ]
-    logging.info(f"CSRF_TRUSTED_ORIGINS: {CSRF_TRUSTED_ORIGINS}")  # Debug logging
+# CSRF Trusted Origins for development
+CSRF_TRUSTED_ORIGINS = [
+    'http://localhost:8000',
+    'http://127.0.0.1:8000',
+    'https://hyggeo.com',
+    'https://www.hyggeo.com',
+]
+logging.info(f"CSRF_TRUSTED_ORIGINS: {CSRF_TRUSTED_ORIGINS}")
+
+# Temporary debugging middleware
+logger = logging.getLogger(__name__)
+
+class DebugCSRFMiddleware:
+    def __init__(self, get_response):
+        self.get_response = get_response
+
+    def __call__(self, request):
+        logger.info(f"Request Origin: {request.META.get('HTTP_ORIGIN')}")
+        logger.info(f"Request Host: {request.META.get('HTTP_HOST')}")
+        logger.info(f"CSRF Trusted Origins: {CSRF_TRUSTED_ORIGINS}")
+        logger.info(f"Allowed Hosts: {ALLOWED_HOSTS}")
+        return self.get_response(request)
 
 # Application definition
 INSTALLED_APPS = [
@@ -58,6 +69,7 @@ INSTALLED_APPS = [
 ]
 
 MIDDLEWARE = [
+    'HygGeo.settings.DebugCSRFMiddleware',  # Temporary for debugging
     'django.middleware.security.SecurityMiddleware',
     'whitenoise.middleware.WhiteNoiseMiddleware',  # Add for static files in production
     'django.contrib.sessions.middleware.SessionMiddleware',
@@ -88,20 +100,13 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'HygGeo.wsgi.application'
 
-# Database configuration
-if config('DATABASE_URL', default=None) and dj_database_url:
-    # Production database (PostgreSQL on DigitalOcean)
-    DATABASES = {
-        'default': dj_database_url.parse(config('DATABASE_URL'))
+# Database configuration (SQLite for development)
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': BASE_DIR / 'db.sqlite3',
     }
-else:
-    # Development database (SQLite)
-    DATABASES = {
-        'default': {
-            'ENGINE': 'django.db.backends.sqlite3',
-            'NAME': BASE_DIR / 'db.sqlite3',
-        }
-    }
+}
 
 # Password validation
 AUTH_PASSWORD_VALIDATORS = [
@@ -153,16 +158,7 @@ LOGIN_REDIRECT_URL = '/'
 LOGOUT_REDIRECT_URL = '/'
 
 # Email configuration
-if DEBUG:
-    EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
-else:
-    # For production, use a real email backend:
-    EMAIL_BACKEND = config('EMAIL_BACKEND', default='django.core.mail.backends.console.EmailBackend')
-    EMAIL_HOST = config('EMAIL_HOST', default='')
-    EMAIL_PORT = config('EMAIL_PORT', default=587, cast=int)
-    EMAIL_USE_TLS = config('EMAIL_USE_TLS', default=True, cast=bool)
-    EMAIL_HOST_USER = config('EMAIL_HOST_USER', default='')
-    EMAIL_HOST_PASSWORD = config('EMAIL_HOST_PASSWORD', default='')
+EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 
 # Messages framework configuration
 from django.contrib.messages import constants as messages
@@ -175,19 +171,6 @@ MESSAGE_TAGS = {
     messages.ERROR: 'danger',
 }
 
-# Security settings for production
-if not DEBUG:
-    SECURE_BROWSER_XSS_FILTER = True
-    SECURE_CONTENT_TYPE_NOSNIFF = True
-    SECURE_HSTS_INCLUDE_SUBDOMAINS = True
-    SECURE_HSTS_SECONDS = 31536000
-    SECURE_REDIRECT_EXEMPT = []
-    SECURE_SSL_REDIRECT = True
-    SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
-    SESSION_COOKIE_SECURE = True
-    CSRF_COOKIE_SECURE = True
-    X_FRAME_OPTIONS = 'DENY'
-
 # File upload settings
 FILE_UPLOAD_MAX_MEMORY_SIZE = 5242880  # 5MB
 DATA_UPLOAD_MAX_MEMORY_SIZE = 5242880  # 5MB
@@ -198,7 +181,7 @@ SESSION_COOKIE_AGE = 86400  # 24 hours
 SESSION_SAVE_EVERY_REQUEST = True
 SESSION_EXPIRE_AT_BROWSER_CLOSE = False
 
-# Cache configuration (for production, consider Redis)
+# Cache configuration
 CACHES = {
     'default': {
         'BACKEND': 'django.core.cache.backends.locmem.LocMemCache',
