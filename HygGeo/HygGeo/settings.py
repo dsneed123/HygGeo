@@ -37,8 +37,8 @@ if not DEBUG:
     CSRF_TRUSTED_ORIGINS = [
         'https://*.ondigitalocean.app',
         'https://starfish-app-jmri5.ondigitalocean.app',
-        'https://hyggue.com',
-        'https://www.hyggue.com',
+        'https://hyggeo.com',  # Corrected domain name
+        'https://www.hyggeo.com',
     ]
 
 # Application definition
