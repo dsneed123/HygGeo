@@ -32,14 +32,13 @@ else:
     allowed_hosts = config('ALLOWED_HOSTS', default='localhost,127.0.0.1')
     ALLOWED_HOSTS = [host.strip() for host in allowed_hosts.split(',')]
 
-# CSRF Trusted Origins for production
-if not DEBUG:
-    CSRF_TRUSTED_ORIGINS = [
-        'https://*.ondigitalocean.app',
-        'https://starfish-app-jmri5.ondigitalocean.app',
-        'https://hyggue.com',
-        'https://www.hyggue.com',
-    ]
+
+CSRF_TRUSTED_ORIGINS = [
+    'https://*.ondigitalocean.app',
+    'https://starfish-app-jmri5.ondigitalocean.app',
+    'https://hyggue.com',
+    'https://www.hyggue.com',
+]
 
 # Application definition
 INSTALLED_APPS = [
