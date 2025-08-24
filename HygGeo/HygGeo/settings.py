@@ -32,13 +32,19 @@ else:
     allowed_hosts = config('ALLOWED_HOSTS', default='localhost,127.0.0.1')
     ALLOWED_HOSTS = [host.strip() for host in allowed_hosts.split(',')]
 
-
-CSRF_TRUSTED_ORIGINS = [
-    'https://*.ondigitalocean.app',
-    'https://starfish-app-jmri5.ondigitalocean.app',
-    'https://hyggeo.com',
-    'https://www.hyggeo.com',
-]
+# CSRF Trusted Origins - conditional for development
+if DEBUG:
+    CSRF_TRUSTED_ORIGINS = [
+        'http://localhost:8000',
+        'http://127.0.0.1:8000',
+    ]
+else:
+    CSRF_TRUSTED_ORIGINS = [
+        'https://*.ondigitalocean.app',
+        'https://starfish-app-jmri5.ondigitalocean.app',
+        'https://hyggeo.com',
+        'https://www.hyggeo.com',
+    ]
 
 # Application definition
 INSTALLED_APPS = [
@@ -177,18 +183,33 @@ MESSAGE_TAGS = {
     messages.ERROR: 'danger',
 }
 
-# Security settings for production
-
-SECURE_BROWSER_XSS_FILTER = True
-SECURE_CONTENT_TYPE_NOSNIFF = True
-SECURE_HSTS_INCLUDE_SUBDOMAINS = True
-SECURE_HSTS_SECONDS = 31536000
-SECURE_REDIRECT_EXEMPT = []
-SECURE_SSL_REDIRECT = True
-SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
-SESSION_COOKIE_SECURE = True
-CSRF_COOKIE_SECURE = True
-X_FRAME_OPTIONS = 'DENY'
+# Security settings - conditional based on environment
+if DEBUG:
+    # Development security settings (relaxed for local development)
+    SECURE_BROWSER_XSS_FILTER = False
+    SECURE_CONTENT_TYPE_NOSNIFF = False
+    SECURE_HSTS_INCLUDE_SUBDOMAINS = False
+    SECURE_HSTS_SECONDS = 0
+    SECURE_SSL_REDIRECT = False
+    SECURE_PROXY_SSL_HEADER = None
+    SESSION_COOKIE_SECURE = False
+    CSRF_COOKIE_SECURE = False
+    X_FRAME_OPTIONS = 'SAMEORIGIN'
+    # Don't set cookie domains for development
+else:
+    # Production security settings
+    SECURE_BROWSER_XSS_FILTER = True
+    SECURE_CONTENT_TYPE_NOSNIFF = True
+    SECURE_HSTS_INCLUDE_SUBDOMAINS = True
+    SECURE_HSTS_SECONDS = 31536000
+    SECURE_REDIRECT_EXEMPT = []
+    SECURE_SSL_REDIRECT = True
+    SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
+    SESSION_COOKIE_SECURE = True
+    CSRF_COOKIE_SECURE = True
+    X_FRAME_OPTIONS = 'DENY'
+    CSRF_COOKIE_DOMAIN = ".hyggeo.com"
+    SESSION_COOKIE_DOMAIN = ".hyggeo.com"
 
 # File upload settings
 FILE_UPLOAD_MAX_MEMORY_SIZE = 5242880  # 5MB
@@ -199,8 +220,6 @@ DATA_UPLOAD_MAX_NUMBER_FIELDS = 1000
 SESSION_COOKIE_AGE = 86400  # 24 hours
 SESSION_SAVE_EVERY_REQUEST = True
 SESSION_EXPIRE_AT_BROWSER_CLOSE = False
-SESSION_COOKIE_DOMAIN = ".hyggeo.com"
-SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
 
 # Cache configuration (for production, consider Redis)
 CACHES = {
