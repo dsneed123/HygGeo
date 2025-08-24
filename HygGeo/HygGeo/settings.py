@@ -91,11 +91,41 @@ TEMPLATES = [
 WSGI_APPLICATION = 'HygGeo.wsgi.application'
 
 # Database configuration
-if config('DATABASE_URL', default=None) and dj_database_url:
-    # Production database (PostgreSQL on DigitalOcean)
-    DATABASES = {
-        'default': dj_database_url.parse(config('DATABASE_URL'))
-    }
+database_url = config('DATABASE_URL', default=None)
+if database_url:
+    if dj_database_url:
+        # Use dj_database_url if available
+        DATABASES = {
+            'default': dj_database_url.parse(database_url)
+        }
+    else:
+        # Manual PostgreSQL configuration as fallback
+        import os
+        db_url = os.environ.get('DATABASE_URL', '')
+        if 'postgresql' in db_url:
+            # Extract components from DATABASE_URL manually
+            # Format: postgresql://user:password@host:port/database?sslmode=require
+            print(f"Manually parsing DATABASE_URL: {db_url}")
+            DATABASES = {
+                'default': {
+                    'ENGINE': 'django.db.backends.postgresql',
+                    'NAME': 'defaultdb',  # You'll need to check your actual DB name
+                    'USER': 'doadmin',    # Default DigitalOcean user
+                    'HOST': db_url.split('@')[1].split(':')[0],
+                    'PORT': '25060',
+                    'OPTIONS': {
+                        'sslmode': 'require',
+                    },
+                }
+            }
+        else:
+            # Fallback to SQLite
+            DATABASES = {
+                'default': {
+                    'ENGINE': 'django.db.backends.sqlite3',
+                    'NAME': BASE_DIR / 'db.sqlite3',
+                }
+            }
 else:
     # Development database (SQLite)
     DATABASES = {
@@ -221,7 +251,7 @@ FILE_UPLOAD_MAX_MEMORY_SIZE = 5242880  # 5MB
 DATA_UPLOAD_MAX_MEMORY_SIZE = 5242880  # 5MB
 DATA_UPLOAD_MAX_NUMBER_FIELDS = 1000
 
-# Session configuration - explicit database backend
+# Session configuration - back to database sessions (now PostgreSQL)
 SESSION_ENGINE = 'django.contrib.sessions.backends.db'  # Database sessions
 SESSION_COOKIE_NAME = 'sessionid'
 SESSION_COOKIE_PATH = '/'
