@@ -36,9 +36,9 @@ else:
 if not DEBUG:
     CSRF_TRUSTED_ORIGINS = [
         'https://*.ondigitalocean.app',
-        'https://starfish-app-jmri5.ondigitalocean.app',  # Your DigitalOcean app URL
-        'https://hyggue.com',  # Your custom domain
-        'https://www.hyggue.com',  # www version
+        'https://starfish-app-jmri5.ondigitalocean.app',
+        'https://hyggue.com',
+        'https://www.hyggue.com',
     ]
 
 # Application definition
