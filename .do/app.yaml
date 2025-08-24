@@ -3,7 +3,7 @@ services:
 - name: web
   source_dir: /
   github:
-    repo: your-username/HygGeo  # Update with your GitHub repo
+    repo: dsneed123/HygGeo  # Update with your GitHub repo
     branch: main
   run_command: |
     python manage.py collectstatic --noinput
