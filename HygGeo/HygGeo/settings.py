@@ -32,21 +32,13 @@ else:
     allowed_hosts = config('ALLOWED_HOSTS', default='localhost,127.0.0.1')
     ALLOWED_HOSTS = [host.strip() for host in allowed_hosts.split(',')]
 
-# CSRF Trusted Origins - conditional for development
-if DEBUG:
-    CSRF_TRUSTED_ORIGINS = [
-        'http://localhost:8000',
-        'http://127.0.0.1:8000',
-        'https://hyggeo.com',
-        'https://www.hyggeo.com',
-    ]
-else:
-    CSRF_TRUSTED_ORIGINS = [
-        'https://*.ondigitalocean.app',
-        'https://starfish-app-jmri5.ondigitalocean.app',
-        'https://hyggeo.com',
-        'https://www.hyggeo.com',
-    ]
+# CSRF Trusted Origins
+CSRF_TRUSTED_ORIGINS = [
+    'https://*.ondigitalocean.app',
+    'https://starfish-app-jmri5.ondigitalocean.app',
+    'https://hyggeo.com',
+    'https://www.hyggeo.com',
+]
 
 # Application definition
 INSTALLED_APPS = [
@@ -197,7 +189,9 @@ if DEBUG:
     SESSION_COOKIE_SECURE = False
     CSRF_COOKIE_SECURE = False
     X_FRAME_OPTIONS = 'SAMEORIGIN'
-    # Don't set cookie domains for development
+    # Explicitly disable secure cookies for development
+    SESSION_COOKIE_HTTPONLY = True
+    CSRF_COOKIE_HTTPONLY = False
 else:
     # Production security settings
     SECURE_BROWSER_XSS_FILTER = True
@@ -210,8 +204,9 @@ else:
     SESSION_COOKIE_SECURE = True
     CSRF_COOKIE_SECURE = True
     X_FRAME_OPTIONS = 'DENY'
-    CSRF_COOKIE_DOMAIN = ".hyggeo.com"
-    SESSION_COOKIE_DOMAIN = ".hyggeo.com"
+    # Temporarily comment out cookie domains for debugging
+    # CSRF_COOKIE_DOMAIN = ".hyggeo.com"
+    # SESSION_COOKIE_DOMAIN = ".hyggeo.com"
 
 # File upload settings
 FILE_UPLOAD_MAX_MEMORY_SIZE = 5242880  # 5MB
@@ -222,6 +217,9 @@ DATA_UPLOAD_MAX_NUMBER_FIELDS = 1000
 SESSION_COOKIE_AGE = 86400  # 24 hours
 SESSION_SAVE_EVERY_REQUEST = True
 SESSION_EXPIRE_AT_BROWSER_CLOSE = False
+SESSION_COOKIE_NAME = 'sessionid'
+SESSION_COOKIE_PATH = '/'
+SESSION_COOKIE_SAMESITE = 'Lax'
 
 # Cache configuration (for production, consider Redis)
 CACHES = {
