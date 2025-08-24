@@ -1,0 +1,22 @@
+name: hyggeo
+services:
+- name: web
+  source_dir: /
+  github:
+    repo: your-username/HygGeo  # Update with your GitHub repo
+    branch: main
+  run_command: |
+    python manage.py collectstatic --noinput
+    gunicorn --worker-tmp-dir /dev/shm --bind 0.0.0.0:8080 HygGeo.wsgi:application
+  environment_slug: python
+  instance_count: 1
+  instance_size_slug: basic-xxs
+  http_port: 8080
+  envs:
+  - key: DEBUG
+    value: "False"
+  - key: SECRET_KEY
+    value: "your-secret-key-here"
+    type: SECRET
+  - key: ALLOWED_HOSTS
+    value: "*.ondigitalocean.app,hyggeo.com"

@@ -1,4 +1,3 @@
-# HygGeo/settings.py
 """
 Django settings for HygGeo project.
 Combining Danish hygge with sustainable travel.
@@ -7,16 +6,31 @@ Combining Danish hygge with sustainable travel.
 import os
 from pathlib import Path
 
+# For environment variables and database URL
+try:
+    from decouple import config
+    import dj_database_url
+except ImportError:
+    # Fallback for development without these packages
+    def config(key, default=None, cast=str):
+        return os.environ.get(key, default)
+    dj_database_url = None
+
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-your-secret-key-here-change-in-production'
+SECRET_KEY = config('SECRET_KEY', default='django-insecure-your-secret-key-here-change-in-production')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = config('DEBUG', default=True, cast=bool)
 
-ALLOWED_HOSTS = ['localhost', '127.0.0.1', '0.0.0.0']
+# Updated ALLOWED_HOSTS for production
+if DEBUG:
+    ALLOWED_HOSTS = ['*']
+else:
+    allowed_hosts = config('ALLOWED_HOSTS', default='localhost,127.0.0.1')
+    ALLOWED_HOSTS = [host.strip() for host in allowed_hosts.split(',')]
 
 # Application definition
 INSTALLED_APPS = [
@@ -39,6 +53,7 @@ INSTALLED_APPS = [
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
+    'whitenoise.middleware.WhiteNoiseMiddleware',  # Add for static files in production
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -67,13 +82,20 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'HygGeo.wsgi.application'
 
-# Database
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+# Database configuration
+if config('DATABASE_URL', default=None) and dj_database_url:
+    # Production database (PostgreSQL on DigitalOcean)
+    DATABASES = {
+        'default': dj_database_url.parse(config('DATABASE_URL'))
     }
-}
+else:
+    # Development database (SQLite)
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.sqlite3',
+            'NAME': BASE_DIR / 'db.sqlite3',
+        }
+    }
 
 # Password validation
 AUTH_PASSWORD_VALIDATORS = [
@@ -105,6 +127,9 @@ STATICFILES_DIRS = [
     BASE_DIR / 'HygGeo' / 'static',
 ]
 
+# Static file storage with WhiteNoise compression
+STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
+
 # Media files (User uploads)
 MEDIA_URL = '/media/'
 MEDIA_ROOT = BASE_DIR / 'media'
@@ -121,16 +146,17 @@ LOGIN_URL = 'login'
 LOGIN_REDIRECT_URL = '/'
 LOGOUT_REDIRECT_URL = '/'
 
-# Email configuration (for development - uses console backend)
-EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
-
-# For production, use a real email backend:
-# EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
-# EMAIL_HOST = 'smtp.gmail.com'
-# EMAIL_PORT = 587
-# EMAIL_USE_TLS = True
-# EMAIL_HOST_USER = 'your-email@gmail.com'
-# EMAIL_HOST_PASSWORD = 'your-app-password'
+# Email configuration
+if DEBUG:
+    EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+else:
+    # For production, use a real email backend:
+    EMAIL_BACKEND = config('EMAIL_BACKEND', default='django.core.mail.backends.console.EmailBackend')
+    EMAIL_HOST = config('EMAIL_HOST', default='')
+    EMAIL_PORT = config('EMAIL_PORT', default=587, cast=int)
+    EMAIL_USE_TLS = config('EMAIL_USE_TLS', default=True, cast=bool)
+    EMAIL_HOST_USER = config('EMAIL_HOST_USER', default='')
+    EMAIL_HOST_PASSWORD = config('EMAIL_HOST_PASSWORD', default='')
 
 # Messages framework configuration
 from django.contrib.messages import constants as messages
@@ -230,9 +256,9 @@ HYGGEO_SETTINGS = {
 }
 
 # Third-party integrations (for future use)
-# GOOGLE_MAPS_API_KEY = 'your-google-maps-api-key'
-# STRIPE_PUBLIC_KEY = 'your-stripe-public-key'
-# STRIPE_SECRET_KEY = 'your-stripe-secret-key'
+# GOOGLE_MAPS_API_KEY = config('GOOGLE_MAPS_API_KEY', default='')
+# STRIPE_PUBLIC_KEY = config('STRIPE_PUBLIC_KEY', default='')
+# STRIPE_SECRET_KEY = config('STRIPE_SECRET_KEY', default='')
 
 # Internationalization support for future expansion
 LANGUAGES = [
@@ -241,9 +267,6 @@ LANGUAGES = [
     ('es', 'Spanish'),
     ('fr', 'French'),
 ]
-
-# Custom user model (if you want to extend in the future)
-# AUTH_USER_MODEL = 'accounts.CustomUser'
 
 # Django Debug Toolbar (for development)
 if DEBUG:
@@ -254,14 +277,3 @@ if DEBUG:
         INTERNAL_IPS = ['127.0.0.1']
     except ImportError:
         pass
-
-# Development-specific settings
-if DEBUG:
-    # Allow all hosts in development
-    ALLOWED_HOSTS = ['*']
-    
-    # Use console email backend in development
-    EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
-    
-    # Additional debugging
-    LOGGING['loggers']['django']['level'] = 'DEBUG'
