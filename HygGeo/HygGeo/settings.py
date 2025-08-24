@@ -20,7 +20,7 @@ except ImportError:
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = config('SECRET_KEY', default="9+=@w$wb%i+o4cj4a0a92%ja6^i0t)c!vj93a=+c6c&4__p8-2")
+SECRET_KEY = "9+=@w$wb%i+o4cj4a0a92%ja6^i0t)c!vj93a=+c6c&4__p8-2"
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = config('DEBUG', default=True, cast=bool)
@@ -33,12 +33,12 @@ else:
     ALLOWED_HOSTS = [host.strip() for host in allowed_hosts.split(',')]
 
 # CSRF Trusted Origins for production
-
-CSRF_TRUSTED_ORIGINS = [
+if not DEBUG:
+    CSRF_TRUSTED_ORIGINS = [
         'https://*.ondigitalocean.app',
         'https://starfish-app-jmri5.ondigitalocean.app',
-        'https://hyggeo.com',  # Corrected domain name
-        'https://www.hyggeo.com',
+        'https://hyggue.com',
+        'https://www.hyggue.com',
     ]
 
 # Application definition
@@ -178,17 +178,18 @@ MESSAGE_TAGS = {
     messages.ERROR: 'danger',
 }
 
-
-SECURE_BROWSER_XSS_FILTER = True
-SECURE_CONTENT_TYPE_NOSNIFF = True
-SECURE_HSTS_INCLUDE_SUBDOMAINS = True
-SECURE_HSTS_SECONDS = 31536000
-SECURE_REDIRECT_EXEMPT = []
-SECURE_SSL_REDIRECT = True
-SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
-SESSION_COOKIE_SECURE = True
-CSRF_COOKIE_SECURE = True
-X_FRAME_OPTIONS = 'DENY'
+# Security settings for production
+if not DEBUG:
+    SECURE_BROWSER_XSS_FILTER = True
+    SECURE_CONTENT_TYPE_NOSNIFF = True
+    SECURE_HSTS_INCLUDE_SUBDOMAINS = True
+    SECURE_HSTS_SECONDS = 31536000
+    SECURE_REDIRECT_EXEMPT = []
+    SECURE_SSL_REDIRECT = True
+    SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
+    SESSION_COOKIE_SECURE = True
+    CSRF_COOKIE_SECURE = True
+    X_FRAME_OPTIONS = 'DENY'
 
 # File upload settings
 FILE_UPLOAD_MAX_MEMORY_SIZE = 5242880  # 5MB
