@@ -3,27 +3,20 @@ services:
 - name: web
   source_dir: /HygGeo
   github:
-    repo: dsneed123/HygGeo  # UPDATE THIS with your actual GitHub username/repo
+    repo: dsneed123/HygGeo  # ⚠️ REPLACE WITH YOUR USERNAME
     branch: main
-  run_command: |
-    python manage.py collectstatic --noinput
-    python manage.py migrate
-    gunicorn --worker-tmp-dir /dev/shm --workers 2 --bind 0.0.0.0:8080 HygGeo.wsgi:application
-  environment_slug: python
+  dockerfile_path: Dockerfile
+  http_port: 8080
   instance_count: 1
   instance_size_slug: basic-xxs
-  http_port: 8080
   envs:
   - key: DEBUG
     value: "False"
   - key: SECRET_KEY
-    value: "CHANGE-THIS-TO-A-SECURE-RANDOM-STRING"  # Generate a new one!
+    value: "4567890876543456789087434567890"  # ⚠️ REPLACE THIS
     type: SECRET
   - key: ALLOWED_HOSTS
-    value: "*.ondigitalocean.app,hyggeo.com"  # Update with your domain if you have one
-  - key: DATABASE_URL
-    scope: RUN_AND_BUILD_TIME
-    type: SECRET
+    value: "*.ondigitalocean.app"
 
 databases:
 - name: hyggeo-db
@@ -31,9 +24,3 @@ databases:
   version: "15"
   size: basic
   num_nodes: 1
-
-static_sites:
-- name: static
-  source_dir: staticfiles
-  build_command: python manage.py collectstatic --noinput
-  output_dir: /
