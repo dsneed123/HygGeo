@@ -20,7 +20,8 @@ except ImportError:
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY=4567890876543456789087434567890
+SECRET_KEY = config('SECRET_KEY', default='django-insecure-your-secret-key-here-change-in-production')
+
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = config('DEBUG', default=True, cast=bool)
 
@@ -35,7 +36,9 @@ else:
 if not DEBUG:
     CSRF_TRUSTED_ORIGINS = [
         'https://*.ondigitalocean.app',
-        'https://starfish-app-jmri5.ondigitalocean.app',  # Your specific app URL
+        'https://starfish-app-jmri5.ondigitalocean.app',  # Your DigitalOcean app URL
+        'https://hyggue.com',  # Your custom domain
+        'https://www.hyggue.com',  # www version
     ]
 
 # Application definition
