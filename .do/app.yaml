@@ -13,7 +13,7 @@ services:
   - key: DEBUG
     value: "False"
   - key: SECRET_KEY
-    value: "4567890876543456789087434567890"  # ⚠️ REPLACE THIS
+    value: "9+=@w$wb%i+o4cj4a0a92%ja6^i0t)c!vj93a=+c6c&4__p8-2"  # ⚠️ REPLACE THIS
     type: SECRET
   - key: ALLOWED_HOSTS
     value: "*.ondigitalocean.app"
