@@ -209,21 +209,20 @@ else:
     SESSION_COOKIE_SAMESITE = 'Lax'
     SESSION_COOKIE_PATH = '/'
     
-    # CSRF cookies - back to normal secure settings
+    # CSRF cookies - stable working configuration
     CSRF_COOKIE_SECURE = True
-    CSRF_COOKIE_HTTPONLY = False
+    CSRF_COOKIE_HTTPONLY = False  # Must be False for forms to read
     CSRF_COOKIE_SAMESITE = 'Lax'
     CSRF_COOKIE_PATH = '/'
-    CSRF_USE_SESSIONS = False
+    CSRF_USE_SESSIONS = False     # Use cookies for CSRF
 
 # File upload settings
 FILE_UPLOAD_MAX_MEMORY_SIZE = 5242880  # 5MB
 DATA_UPLOAD_MAX_MEMORY_SIZE = 5242880  # 5MB
 DATA_UPLOAD_MAX_NUMBER_FIELDS = 1000
 
-# Session configuration - try cache sessions as fallback
-SESSION_ENGINE = 'django.contrib.sessions.backends.cache'  # Try cache instead of DB
-SESSION_CACHE_ALIAS = 'default'
+# Session configuration - explicit database backend
+SESSION_ENGINE = 'django.contrib.sessions.backends.db'  # Database sessions
 SESSION_COOKIE_NAME = 'sessionid'
 SESSION_COOKIE_PATH = '/'
 SESSION_COOKIE_SAMESITE = 'Lax'
