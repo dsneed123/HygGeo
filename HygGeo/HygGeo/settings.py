@@ -20,7 +20,7 @@ except ImportError:
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = "9+=@w$wb%i+o4cj4a0a92%ja6^i0t)c!vj93a=+c6c&4__p8-2"
+SECRET_KEY = config('SECRET_KEY', default="9+=@w$wb%i+o4cj4a0a92%ja6^i0t)c!vj93a=+c6c&4__p8-2")
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = config('DEBUG', default=True, cast=bool)
@@ -201,29 +201,29 @@ else:
     SECURE_REDIRECT_EXEMPT = []
     SECURE_SSL_REDIRECT = True
     SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
-    SESSION_COOKIE_SECURE = True
     X_FRAME_OPTIONS = 'DENY'
     
-    # CSRF settings - more permissive for debugging
+    # Session cookies - secure since cookies work now
+    SESSION_COOKIE_SECURE = True
+    SESSION_COOKIE_HTTPONLY = True
+    SESSION_COOKIE_SAMESITE = 'Lax'
+    SESSION_COOKIE_PATH = '/'
+    
+    # CSRF cookies - back to normal secure settings
     CSRF_COOKIE_SECURE = True
     CSRF_COOKIE_HTTPONLY = False
     CSRF_COOKIE_SAMESITE = 'Lax'
-    CSRF_USE_SESSIONS = True  # Store CSRF tokens in sessions instead of cookies
-    CSRF_COOKIE_AGE = 31449600  # 1 year
-    
-    # Temporarily comment out cookie domains for debugging
-    # CSRF_COOKIE_DOMAIN = ".hyggeo.com"
-    # SESSION_COOKIE_DOMAIN = ".hyggeo.com"
+    CSRF_COOKIE_PATH = '/'
+    CSRF_USE_SESSIONS = False
 
 # File upload settings
 FILE_UPLOAD_MAX_MEMORY_SIZE = 5242880  # 5MB
 DATA_UPLOAD_MAX_MEMORY_SIZE = 5242880  # 5MB
 DATA_UPLOAD_MAX_NUMBER_FIELDS = 1000
 
-# Session configuration
-SESSION_COOKIE_AGE = 86400  # 24 hours
-SESSION_SAVE_EVERY_REQUEST = True
-SESSION_EXPIRE_AT_BROWSER_CLOSE = False
+# Session configuration - try cache sessions as fallback
+SESSION_ENGINE = 'django.contrib.sessions.backends.cache'  # Try cache instead of DB
+SESSION_CACHE_ALIAS = 'default'
 SESSION_COOKIE_NAME = 'sessionid'
 SESSION_COOKIE_PATH = '/'
 SESSION_COOKIE_SAMESITE = 'Lax'
@@ -274,6 +274,11 @@ LOGGING = {
             'propagate': False,
         },
         'accounts': {
+            'handlers': ['file', 'console'],
+            'level': 'DEBUG',
+            'propagate': False,
+        },
+        'django.security.csrf': {
             'handlers': ['file', 'console'],
             'level': 'DEBUG',
             'propagate': False,
