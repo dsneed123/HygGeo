@@ -47,6 +47,8 @@ class DebugCSRFMiddleware:
         logger.info(f"Request Host: {request.META.get('HTTP_HOST')}")
         logger.info(f"CSRF Trusted Origins: {CSRF_TRUSTED_ORIGINS}")
         logger.info(f"Allowed Hosts: {ALLOWED_HOSTS}")
+        logger.info(f"Session ID: {request.session.session_key}")
+        logger.info(f"User: {request.user}")
         return self.get_response(request)
 
 # Application definition
@@ -71,7 +73,7 @@ INSTALLED_APPS = [
 MIDDLEWARE = [
     'HygGeo.settings.DebugCSRFMiddleware',  # Temporary for debugging
     'django.middleware.security.SecurityMiddleware',
-    'whitenoise.middleware.WhiteNoiseMiddleware',  # Add for static files in production
+    'whitenoise.middleware.WhiteNoiseMiddleware',  # Add for static files
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -171,15 +173,18 @@ MESSAGE_TAGS = {
     messages.ERROR: 'danger',
 }
 
+# Session and CSRF settings
+SESSION_COOKIE_AGE = 86400  # 24 hours
+SESSION_SAVE_EVERY_REQUEST = True
+SESSION_EXPIRE_AT_BROWSER_CLOSE = False
+SESSION_COOKIE_DOMAIN = None  # Allow cookies for all subdomains
+SESSION_COOKIE_SECURE = False  # Allow cookies over HTTP in debug mode
+CSRF_COOKIE_SECURE = False  # Allow CSRF cookies over HTTP in debug mode
+
 # File upload settings
 FILE_UPLOAD_MAX_MEMORY_SIZE = 5242880  # 5MB
 DATA_UPLOAD_MAX_MEMORY_SIZE = 5242880  # 5MB
 DATA_UPLOAD_MAX_NUMBER_FIELDS = 1000
-
-# Session configuration
-SESSION_COOKIE_AGE = 86400  # 24 hours
-SESSION_SAVE_EVERY_REQUEST = True
-SESSION_EXPIRE_AT_BROWSER_CLOSE = False
 
 # Cache configuration
 CACHES = {
