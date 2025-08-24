@@ -1,6 +1,10 @@
+"""
+Django settings for HygGeo project.
+Combining Danish hygge with sustainable travel.
+"""
+
 import os
 from pathlib import Path
-import logging
 
 # For environment variables and database URL
 try:
@@ -25,17 +29,17 @@ DEBUG = config('DEBUG', default=True, cast=bool)
 if DEBUG:
     ALLOWED_HOSTS = ['*']
 else:
-    allowed_hosts = config('ALLOWED_HOSTS', default='localhost,127.0.0.1,hyggeo.com,www.hyggeo.com')
+    allowed_hosts = config('ALLOWED_HOSTS', default='localhost,127.0.0.1')
     ALLOWED_HOSTS = [host.strip() for host in allowed_hosts.split(',')]
-    logging.info(f"ALLOWED_HOSTS: {ALLOWED_HOSTS}")  # Debug logging
 
 # CSRF Trusted Origins for production
+
 CSRF_TRUSTED_ORIGINS = [
         'https://*.ondigitalocean.app',
         'https://starfish-app-jmri5.ondigitalocean.app',
-        'https://*.hyggeo.com',  # Covers hyggeo.com and www.hyggeo.com
+        'https://hyggeo.com',  # Corrected domain name
+        'https://www.hyggeo.com',
     ]
-   
 
 # Application definition
 INSTALLED_APPS = [
