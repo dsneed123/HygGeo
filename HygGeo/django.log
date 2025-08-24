@@ -8336,3 +8336,115 @@ WARNING 2025-08-24 14:17:50,634 basehttp 53528 31856 "GET /favicon.ico HTTP/1.1"
 INFO 2025-08-24 14:17:54,698 basehttp 53528 31856 "GET /experiences/ HTTP/1.1" 200 31439
 WARNING 2025-08-24 14:17:54,740 log 53528 31856 Not Found: /.well-known/appspecific/com.chrome.devtools.json
 WARNING 2025-08-24 14:17:54,741 basehttp 53528 31856 "GET /.well-known/appspecific/com.chrome.devtools.json HTTP/1.1" 404 3457
+INFO 2025-08-24 14:26:59,052 autoreload 33084 32452 Watching for file changes with StatReloader
+INFO 2025-08-24 14:27:29,212 basehttp 33084 33940 "GET / HTTP/1.1" 200 26660
+WARNING 2025-08-24 14:27:30,640 log 33084 33940 Not Found: /favicon.ico
+WARNING 2025-08-24 14:27:30,640 basehttp 33084 33940 "GET /favicon.ico HTTP/1.1" 404 3346
+INFO 2025-08-24 14:27:32,277 basehttp 33084 33940 "GET /accounts/login/ HTTP/1.1" 200 19128
+INFO 2025-08-24 14:27:37,252 basehttp 33084 33940 "GET /accounts/password_reset/ HTTP/1.1" 200 4084
+INFO 2025-08-24 14:27:37,472 basehttp 33084 48012 "GET /static/admin/css/dark_mode.css HTTP/1.1" 200 2808
+INFO 2025-08-24 14:27:37,481 basehttp 33084 33940 "GET /static/admin/css/base.css HTTP/1.1" 200 22154
+INFO 2025-08-24 14:27:37,482 basehttp 33084 48012 "GET /static/admin/css/forms.css HTTP/1.1" 200 8525
+INFO 2025-08-24 14:27:37,492 basehttp 33084 33940 "GET /static/admin/css/responsive.css HTTP/1.1" 200 16632
+INFO 2025-08-24 14:27:37,496 basehttp 33084 48012 "GET /static/admin/js/theme.js HTTP/1.1" 200 1653
+INFO 2025-08-24 14:27:37,510 basehttp 33084 48012 "GET /static/admin/css/widgets.css HTTP/1.1" 200 11991
+INFO 2025-08-24 14:27:45,300 basehttp 33084 48012 "POST /accounts/password_reset/ HTTP/1.1" 302 0
+INFO 2025-08-24 14:27:45,316 basehttp 33084 48012 "GET /accounts/password_reset/done/ HTTP/1.1" 200 3654
+INFO 2025-08-24 14:34:07,206 basehttp 33084 37224 "GET /accounts/password_reset/ HTTP/1.1" 200 4084
+INFO 2025-08-24 14:34:07,859 basehttp 33084 37224 "GET /accounts/login/ HTTP/1.1" 200 18246
+INFO 2025-08-24 14:34:08,740 basehttp 33084 37224 "GET /accounts/login/ HTTP/1.1" 200 18246
+INFO 2025-08-24 14:34:14,391 basehttp 33084 37224 "POST /accounts/login/ HTTP/1.1" 200 18477
+INFO 2025-08-24 14:34:47,314 basehttp 33084 37224 "POST /accounts/login/ HTTP/1.1" 200 19196
+INFO 2025-08-24 14:34:54,702 basehttp 33084 37224 "POST /accounts/login/ HTTP/1.1" 302 0
+INFO 2025-08-24 14:34:54,715 basehttp 33084 37224 "GET / HTTP/1.1" 200 32694
+INFO 2025-08-24 14:34:59,052 basehttp 33084 37224 "GET /accounts/profile/ HTTP/1.1" 200 26632
+INFO 2025-08-24 14:35:01,365 basehttp 33084 37224 "GET /accounts/profile/edit/ HTTP/1.1" 200 26847
+INFO 2025-08-24 14:36:08,352 basehttp 33084 56180 "GET / HTTP/1.1" 200 32699
+INFO 2025-08-24 14:36:11,773 basehttp 33084 56180 "GET /accounts/profile/ HTTP/1.1" 200 26632
+INFO 2025-08-24 14:36:17,980 basehttp 33084 56180 "GET /accounts/password_reset HTTP/1.1" 301 0
+INFO 2025-08-24 14:36:18,001 basehttp 33084 33664 "GET /accounts/password_reset/ HTTP/1.1" 200 3446
+INFO 2025-08-24 14:36:18,032 basehttp 33084 33664 "GET /static/admin/css/base.css HTTP/1.1" 200 22154
+INFO 2025-08-24 14:36:18,036 basehttp 33084 33664 "GET /static/admin/css/dark_mode.css HTTP/1.1" 200 2808
+INFO 2025-08-24 14:36:18,039 basehttp 33084 33664 "GET /static/admin/css/forms.css HTTP/1.1" 200 8525
+INFO 2025-08-24 14:36:18,040 basehttp 33084 33664 "GET /static/admin/css/responsive.css HTTP/1.1" 200 16632
+INFO 2025-08-24 14:36:18,042 basehttp 33084 33664 "GET /static/admin/js/theme.js HTTP/1.1" 200 1653
+INFO 2025-08-24 14:36:18,047 basehttp 33084 33664 "GET /static/admin/css/widgets.css HTTP/1.1" 200 11991
+INFO 2025-08-24 14:39:24,302 basehttp 33084 35892 "GET /accounts/profile/edit/ HTTP/1.1" 200 26847
+WARNING 2025-08-24 14:39:24,638 log 33084 35892 Not Found: /favicon.ico
+WARNING 2025-08-24 14:39:24,638 basehttp 33084 35892 "GET /favicon.ico HTTP/1.1" 404 3346
+INFO 2025-08-24 14:39:27,137 basehttp 33084 35892 "GET /accounts/profile/edit/ HTTP/1.1" 200 26847
+ERROR 2025-08-24 14:39:31,004 log 33084 35892 Internal Server Error: /accounts/profile/
+Traceback (most recent call last):
+  File "C:\Users\DLSne\AppData\Local\Packages\PythonSoftwareFoundation.Python.3.12_qbz5n2kfra8p0\LocalCache\local-packages\Python312\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+               ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\DLSne\AppData\Local\Packages\PythonSoftwareFoundation.Python.3.12_qbz5n2kfra8p0\LocalCache\local-packages\Python312\site-packages\django\core\handlers\base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\DLSne\AppData\Local\Packages\PythonSoftwareFoundation.Python.3.12_qbz5n2kfra8p0\LocalCache\local-packages\Python312\site-packages\django\contrib\auth\decorators.py", line 59, in _view_wrapper
+    return view_func(request, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\DLSne\OneDrive\Desktop\Code\webdev\HygGeo\HygGeo\accounts\views.py", line 100, in profile_view
+    return render(request, 'accounts/profile.html', context)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\DLSne\AppData\Local\Packages\PythonSoftwareFoundation.Python.3.12_qbz5n2kfra8p0\LocalCache\local-packages\Python312\site-packages\django\shortcuts.py", line 25, in render
+    content = loader.render_to_string(template_name, context, request, using=using)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\DLSne\AppData\Local\Packages\PythonSoftwareFoundation.Python.3.12_qbz5n2kfra8p0\LocalCache\local-packages\Python312\site-packages\django\template\loader.py", line 62, in render_to_string
+    return template.render(context, request)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\DLSne\AppData\Local\Packages\PythonSoftwareFoundation.Python.3.12_qbz5n2kfra8p0\LocalCache\local-packages\Python312\site-packages\django\template\backends\django.py", line 107, in render
+    return self.template.render(context)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\DLSne\AppData\Local\Packages\PythonSoftwareFoundation.Python.3.12_qbz5n2kfra8p0\LocalCache\local-packages\Python312\site-packages\django\template\base.py", line 171, in render
+    return self._render(context)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\DLSne\AppData\Local\Packages\PythonSoftwareFoundation.Python.3.12_qbz5n2kfra8p0\LocalCache\local-packages\Python312\site-packages\django\template\base.py", line 163, in _render
+    return self.nodelist.render(context)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\DLSne\AppData\Local\Packages\PythonSoftwareFoundation.Python.3.12_qbz5n2kfra8p0\LocalCache\local-packages\Python312\site-packages\django\template\base.py", line 1016, in render
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+                               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\DLSne\AppData\Local\Packages\PythonSoftwareFoundation.Python.3.12_qbz5n2kfra8p0\LocalCache\local-packages\Python312\site-packages\django\template\base.py", line 977, in render_annotated
+    return self.render(context)
+           ^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\DLSne\AppData\Local\Packages\PythonSoftwareFoundation.Python.3.12_qbz5n2kfra8p0\LocalCache\local-packages\Python312\site-packages\django\template\loader_tags.py", line 159, in render
+    return compiled_parent._render(context)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\DLSne\AppData\Local\Packages\PythonSoftwareFoundation.Python.3.12_qbz5n2kfra8p0\LocalCache\local-packages\Python312\site-packages\django\template\base.py", line 163, in _render
+    return self.nodelist.render(context)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\DLSne\AppData\Local\Packages\PythonSoftwareFoundation.Python.3.12_qbz5n2kfra8p0\LocalCache\local-packages\Python312\site-packages\django\template\base.py", line 1016, in render
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+                               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\DLSne\AppData\Local\Packages\PythonSoftwareFoundation.Python.3.12_qbz5n2kfra8p0\LocalCache\local-packages\Python312\site-packages\django\template\base.py", line 977, in render_annotated
+    return self.render(context)
+           ^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\DLSne\AppData\Local\Packages\PythonSoftwareFoundation.Python.3.12_qbz5n2kfra8p0\LocalCache\local-packages\Python312\site-packages\django\template\loader_tags.py", line 65, in render
+    result = block.nodelist.render(context)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\DLSne\AppData\Local\Packages\PythonSoftwareFoundation.Python.3.12_qbz5n2kfra8p0\LocalCache\local-packages\Python312\site-packages\django\template\base.py", line 1016, in render
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+                               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\DLSne\AppData\Local\Packages\PythonSoftwareFoundation.Python.3.12_qbz5n2kfra8p0\LocalCache\local-packages\Python312\site-packages\django\template\base.py", line 977, in render_annotated
+    return self.render(context)
+           ^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\DLSne\AppData\Local\Packages\PythonSoftwareFoundation.Python.3.12_qbz5n2kfra8p0\LocalCache\local-packages\Python312\site-packages\django\template\defaulttags.py", line 480, in render
+    url = reverse(view_name, args=args, kwargs=kwargs, current_app=current_app)
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\DLSne\AppData\Local\Packages\PythonSoftwareFoundation.Python.3.12_qbz5n2kfra8p0\LocalCache\local-packages\Python312\site-packages\django\urls\base.py", line 98, in reverse
+    resolved_url = resolver._reverse_with_prefix(view, prefix, *args, **kwargs)
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\DLSne\AppData\Local\Packages\PythonSoftwareFoundation.Python.3.12_qbz5n2kfra8p0\LocalCache\local-packages\Python312\site-packages\django\urls\resolvers.py", line 831, in _reverse_with_prefix
+    raise NoReverseMatch(msg)
+django.urls.exceptions.NoReverseMatch: Reverse for 'change_password' not found. 'change_password' is not a valid view function or pattern name.
+ERROR 2025-08-24 14:39:31,009 basehttp 33084 35892 "GET /accounts/profile/ HTTP/1.1" 500 168565
+INFO 2025-08-24 14:43:01,106 autoreload 33084 32452 C:\Users\DLSne\OneDrive\Desktop\Code\webdev\HygGeo\HygGeo\accounts\views.py changed, reloading.
+INFO 2025-08-24 14:43:01,609 autoreload 46200 57924 Watching for file changes with StatReloader
+INFO 2025-08-24 14:43:16,420 basehttp 46200 52260 "GET /experiences/bookmarks/ HTTP/1.1" 200 21828
+WARNING 2025-08-24 14:43:16,664 log 46200 52260 Not Found: /favicon.ico
+WARNING 2025-08-24 14:43:16,664 basehttp 46200 52260 "GET /favicon.ico HTTP/1.1" 404 3346
+INFO 2025-08-24 14:43:21,025 basehttp 46200 52260 "GET /accounts/profile/edit/ HTTP/1.1" 200 39136
+INFO 2025-08-24 14:43:46,049 basehttp 46200 52260 "POST /accounts/profile/edit/ HTTP/1.1" 302 0
+INFO 2025-08-24 14:43:46,126 basehttp 46200 52260 "GET /accounts/profile/ HTTP/1.1" 200 27005
+INFO 2025-08-24 14:43:52,284 basehttp 46200 52260 "GET /accounts/profile/ HTTP/1.1" 200 26632

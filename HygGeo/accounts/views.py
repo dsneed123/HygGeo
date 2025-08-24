@@ -10,6 +10,9 @@ from .forms import CustomUserCreationForm, UserProfileForm, TravelSurveyForm, Us
 from .models import UserProfile, TravelSurvey
 import random
 
+from django.contrib.auth import authenticate, update_session_auth_hash
+from django.contrib.auth.forms import PasswordChangeForm
+
 from django.contrib.auth.decorators import user_passes_test
 
 from django.db.models import Count
@@ -99,6 +102,7 @@ def profile_view(request):
     
     return render(request, 'accounts/profile.html', context)
 
+
 @login_required
 def edit_profile_view(request):
     """Edit user profile and basic information"""
@@ -108,11 +112,48 @@ def edit_profile_view(request):
         user_form = UserUpdateForm(request.POST, instance=request.user)
         profile_form = UserProfileForm(request.POST, request.FILES, instance=user_profile)
         
-        if user_form.is_valid() and profile_form.is_valid():
+        # Handle password change
+        current_password = request.POST.get('current_password')
+        new_password1 = request.POST.get('new_password1')
+        new_password2 = request.POST.get('new_password2')
+        
+        password_valid = True
+        
+        # If any password field is filled, validate password change
+        if current_password or new_password1 or new_password2:
+            if not current_password:
+                messages.error(request, 'Current password is required when changing password.')
+                password_valid = False
+            elif not authenticate(username=request.user.username, password=current_password):
+                messages.error(request, 'Current password is incorrect.')
+                password_valid = False
+            elif not new_password1 or not new_password2:
+                messages.error(request, 'Please fill in both new password fields.')
+                password_valid = False
+            elif new_password1 != new_password2:
+                messages.error(request, 'New passwords do not match.')
+                password_valid = False
+            elif len(new_password1) < 8:
+                messages.error(request, 'New password must be at least 8 characters long.')
+                password_valid = False
+        
+        if user_form.is_valid() and profile_form.is_valid() and password_valid:
             user_form.save()
             profile_form.save()
-            messages.success(request, 'Your profile has been updated successfully!')
+            
+            # Change password if provided
+            if current_password and new_password1 and password_valid:
+                request.user.set_password(new_password1)
+                request.user.save()
+                update_session_auth_hash(request, request.user)  # Keep user logged in
+                messages.success(request, 'Your profile and password have been updated successfully!')
+            else:
+                messages.success(request, 'Your profile has been updated successfully!')
+                
             return redirect('profile')
+        else:
+            if not password_valid:
+                messages.error(request, 'Please correct the password errors and try again.')
     else:
         user_form = UserUpdateForm(instance=request.user)
         profile_form = UserProfileForm(instance=user_profile)
