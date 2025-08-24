@@ -30,13 +30,12 @@ else:
     logging.info(f"ALLOWED_HOSTS: {ALLOWED_HOSTS}")  # Debug logging
 
 # CSRF Trusted Origins for production
-if not DEBUG:
-    CSRF_TRUSTED_ORIGINS = [
+ CSRF_TRUSTED_ORIGINS = [
         'https://*.ondigitalocean.app',
         'https://starfish-app-jmri5.ondigitalocean.app',
         'https://*.hyggeo.com',  # Covers hyggeo.com and www.hyggeo.com
     ]
-    logging.info(f"CSRF_TRUSTED_ORIGINS: {CSRF_TRUSTED_ORIGINS}")  # Debug logging
+   
 
 # Application definition
 INSTALLED_APPS = [
