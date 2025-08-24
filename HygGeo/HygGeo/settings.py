@@ -202,8 +202,15 @@ else:
     SECURE_SSL_REDIRECT = True
     SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
     SESSION_COOKIE_SECURE = True
-    CSRF_COOKIE_SECURE = True
     X_FRAME_OPTIONS = 'DENY'
+    
+    # CSRF settings - more permissive for debugging
+    CSRF_COOKIE_SECURE = True
+    CSRF_COOKIE_HTTPONLY = False
+    CSRF_COOKIE_SAMESITE = 'Lax'
+    CSRF_USE_SESSIONS = True  # Store CSRF tokens in sessions instead of cookies
+    CSRF_COOKIE_AGE = 31449600  # 1 year
+    
     # Temporarily comment out cookie domains for debugging
     # CSRF_COOKIE_DOMAIN = ".hyggeo.com"
     # SESSION_COOKIE_DOMAIN = ".hyggeo.com"
