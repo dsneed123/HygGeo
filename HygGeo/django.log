@@ -8273,3 +8273,66 @@ INFO 2025-08-23 16:02:31,354 basehttp 38152 8000 "GET /experiences/about/ HTTP/1
 WARNING 2025-08-23 16:02:31,383 basehttp 38152 8000 "GET /static/css/style.css HTTP/1.1" 404 1966
 INFO 2025-08-23 16:03:03,875 basehttp 38152 46608 "GET / HTTP/1.1" 200 23148
 WARNING 2025-08-23 16:03:03,911 basehttp 38152 46608 "GET /static/css/style.css HTTP/1.1" 404 1966
+INFO 2025-08-24 00:36:32,151 autoreload 54592 32448 Watching for file changes with StatReloader
+INFO 2025-08-24 00:38:01,933 autoreload 53528 45204 Watching for file changes with StatReloader
+INFO 2025-08-24 00:38:25,008 basehttp 53528 48484 "GET / HTTP/1.1" 200 21109
+INFO 2025-08-24 00:38:25,061 basehttp 53528 53812 "GET /static/js/main.js HTTP/1.1" 304 0
+WARNING 2025-08-24 00:38:25,078 basehttp 53528 48484 "GET /static/css/style.css HTTP/1.1" 404 1966
+WARNING 2025-08-24 00:38:25,414 log 53528 53812 Not Found: /favicon.ico
+WARNING 2025-08-24 00:38:25,414 basehttp 53528 53812 "GET /favicon.ico HTTP/1.1" 404 3346
+INFO 2025-08-24 00:39:03,350 basehttp 53528 54008 "GET / HTTP/1.1" 200 21118
+WARNING 2025-08-24 00:39:03,564 basehttp 53528 54008 "GET /static/css/style.css HTTP/1.1" 404 1966
+INFO 2025-08-24 00:39:03,732 basehttp 53528 50296 "GET /static/js/main.js HTTP/1.1" 200 20115
+WARNING 2025-08-24 00:39:04,162 log 53528 50296 Not Found: /favicon.ico
+WARNING 2025-08-24 00:39:04,162 basehttp 53528 50296 "GET /favicon.ico HTTP/1.1" 404 3346
+INFO 2025-08-24 00:39:05,731 basehttp 53528 50296 "GET /accounts/login/ HTTP/1.1" 200 12485
+WARNING 2025-08-24 00:39:05,771 basehttp 53528 50296 "GET /static/css/style.css HTTP/1.1" 404 1966
+INFO 2025-08-24 00:39:12,977 basehttp 53528 28216 "POST /accounts/login/ HTTP/1.1" 302 0
+INFO 2025-08-24 00:39:12,990 basehttp 53528 28216 "GET / HTTP/1.1" 200 24245
+WARNING 2025-08-24 00:39:13,043 basehttp 53528 28216 "GET /static/css/style.css HTTP/1.1" 404 1966
+INFO 2025-08-24 00:39:15,154 basehttp 53528 40404 "GET /admin/dashboard/ HTTP/1.1" 200 22115
+WARNING 2025-08-24 00:39:15,223 basehttp 53528 40404 "GET /static/css/style.css HTTP/1.1" 404 1966
+INFO 2025-08-24 00:59:20,999 basehttp 53528 36168 "GET / HTTP/1.1" 200 26886
+WARNING 2025-08-24 00:59:21,519 log 53528 36168 Not Found: /favicon.ico
+WARNING 2025-08-24 00:59:21,519 basehttp 53528 36168 "GET /favicon.ico HTTP/1.1" 404 3346
+WARNING 2025-08-24 00:59:33,904 log 53528 36168 Not Found: /.well-known/appspecific/com.chrome.devtools.json
+WARNING 2025-08-24 00:59:33,904 basehttp 53528 36168 "GET /.well-known/appspecific/com.chrome.devtools.json HTTP/1.1" 404 3457
+INFO 2025-08-24 14:11:06,138 basehttp 53528 58056 "GET / HTTP/1.1" 200 23891
+INFO 2025-08-24 14:11:08,503 basehttp 53528 53876 "GET /static/js/main.js HTTP/1.1" 304 0
+INFO 2025-08-24 14:11:08,657 basehttp 53528 53876 "GET /accounts/login/ HTTP/1.1" 200 15250
+INFO 2025-08-24 14:11:15,416 basehttp 53528 53876 "POST /accounts/login/ HTTP/1.1" 302 0
+INFO 2025-08-24 14:11:15,428 basehttp 53528 53876 "GET / HTTP/1.1" 200 27113
+WARNING 2025-08-24 14:11:19,722 log 53528 53876 Not Found: /.well-known/appspecific/com.chrome.devtools.json
+WARNING 2025-08-24 14:11:19,723 basehttp 53528 53876 "GET /.well-known/appspecific/com.chrome.devtools.json HTTP/1.1" 404 3457
+INFO 2025-08-24 14:13:16,682 basehttp 53528 53876 "GET / HTTP/1.1" 200 28766
+WARNING 2025-08-24 14:13:16,704 log 53528 53876 Not Found: /.well-known/appspecific/com.chrome.devtools.json
+WARNING 2025-08-24 14:13:16,704 basehttp 53528 53876 "GET /.well-known/appspecific/com.chrome.devtools.json HTTP/1.1" 404 3457
+INFO 2025-08-24 14:13:16,708 basehttp 53528 53876 "GET /static/js/main.js HTTP/1.1" 200 20115
+WARNING 2025-08-24 14:13:17,030 log 53528 53876 Not Found: /favicon.ico
+WARNING 2025-08-24 14:13:17,030 basehttp 53528 53876 "GET /favicon.ico HTTP/1.1" 404 3346
+INFO 2025-08-24 14:13:21,429 basehttp 53528 53876 "GET / HTTP/1.1" 200 28774
+WARNING 2025-08-24 14:13:21,451 log 53528 53876 Not Found: /.well-known/appspecific/com.chrome.devtools.json
+WARNING 2025-08-24 14:13:21,451 basehttp 53528 53876 "GET /.well-known/appspecific/com.chrome.devtools.json HTTP/1.1" 404 3457
+INFO 2025-08-24 14:13:21,455 basehttp 53528 31856 "GET /static/js/main.js HTTP/1.1" 200 20115
+WARNING 2025-08-24 14:13:21,724 log 53528 31856 Not Found: /favicon.ico
+WARNING 2025-08-24 14:13:21,724 basehttp 53528 31856 "GET /favicon.ico HTTP/1.1" 404 3346
+INFO 2025-08-24 14:15:08,120 basehttp 53528 31856 "GET / HTTP/1.1" 200 33577
+WARNING 2025-08-24 14:15:08,145 log 53528 31856 Not Found: /.well-known/appspecific/com.chrome.devtools.json
+WARNING 2025-08-24 14:15:08,145 basehttp 53528 31856 "GET /.well-known/appspecific/com.chrome.devtools.json HTTP/1.1" 404 3457
+INFO 2025-08-24 14:15:08,150 basehttp 53528 53876 "GET /static/js/main.js HTTP/1.1" 200 20115
+WARNING 2025-08-24 14:15:08,448 log 53528 53876 Not Found: /favicon.ico
+WARNING 2025-08-24 14:15:08,448 basehttp 53528 53876 "GET /favicon.ico HTTP/1.1" 404 3346
+INFO 2025-08-24 14:15:18,797 basehttp 53528 53876 "GET / HTTP/1.1" 200 33565
+WARNING 2025-08-24 14:15:18,835 log 53528 53876 Not Found: /.well-known/appspecific/com.chrome.devtools.json
+WARNING 2025-08-24 14:15:18,836 basehttp 53528 53876 "GET /.well-known/appspecific/com.chrome.devtools.json HTTP/1.1" 404 3457
+INFO 2025-08-24 14:15:18,838 basehttp 53528 31856 "GET /static/js/main.js HTTP/1.1" 200 20115
+WARNING 2025-08-24 14:15:19,122 log 53528 31856 Not Found: /favicon.ico
+WARNING 2025-08-24 14:15:19,122 basehttp 53528 31856 "GET /favicon.ico HTTP/1.1" 404 3346
+INFO 2025-08-24 14:17:50,254 basehttp 53528 31856 "GET / HTTP/1.1" 200 32712
+WARNING 2025-08-24 14:17:50,282 log 53528 31856 Not Found: /.well-known/appspecific/com.chrome.devtools.json
+WARNING 2025-08-24 14:17:50,282 basehttp 53528 31856 "GET /.well-known/appspecific/com.chrome.devtools.json HTTP/1.1" 404 3457
+WARNING 2025-08-24 14:17:50,633 log 53528 31856 Not Found: /favicon.ico
+WARNING 2025-08-24 14:17:50,634 basehttp 53528 31856 "GET /favicon.ico HTTP/1.1" 404 3346
+INFO 2025-08-24 14:17:54,698 basehttp 53528 31856 "GET /experiences/ HTTP/1.1" 200 31439
+WARNING 2025-08-24 14:17:54,740 log 53528 31856 Not Found: /.well-known/appspecific/com.chrome.devtools.json
+WARNING 2025-08-24 14:17:54,741 basehttp 53528 31856 "GET /.well-known/appspecific/com.chrome.devtools.json HTTP/1.1" 404 3457
