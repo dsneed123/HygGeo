@@ -36,8 +36,8 @@ else:
 CSRF_TRUSTED_ORIGINS = [
     'https://*.ondigitalocean.app',
     'https://starfish-app-jmri5.ondigitalocean.app',
-    'https://hyggoe.com',
-    'https://www.hyggoe.com',
+    'https://hyggeo.com',
+    'https://www.hyggeo.com',
 ]
 
 # Application definition
