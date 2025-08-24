@@ -3,7 +3,7 @@ services:
 - name: web
   source_dir: /HygGeo
   github:
-    repo: dsneed123/HygGeo  # ⚠️ REPLACE WITH YOUR USERNAME
+    repo: dsneed123/HygGeo
     branch: main
   dockerfile_path: Dockerfile
   http_port: 8080
@@ -12,11 +12,11 @@ services:
   envs:
   - key: DEBUG
     value: "False"
-  - key: SECRET_KEY
-    value: "9+=@w$wb%i+o4cj4a0a92%ja6^i0t)c!vj93a=+c6c&4__p8-2"  # ⚠️ REPLACE THIS
+  - key: DATABASE_URL
+    value: "${hyggeo-db.DATABASE_URL}"
     type: SECRET
   - key: ALLOWED_HOSTS
-    value: "*.ondigitalocean.app"
+    value: "hyggeo.com,www.hyggeo.com,*.ondigitalocean.app"
 
 databases:
 - name: hyggeo-db
