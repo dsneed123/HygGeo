@@ -20,8 +20,7 @@ except ImportError:
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = config('SECRET_KEY', default='django-insecure-your-secret-key-here-change-in-production')
-
+SECRET_KEY=4567890876543456789087434567890
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = config('DEBUG', default=True, cast=bool)
 
@@ -31,6 +30,13 @@ if DEBUG:
 else:
     allowed_hosts = config('ALLOWED_HOSTS', default='localhost,127.0.0.1')
     ALLOWED_HOSTS = [host.strip() for host in allowed_hosts.split(',')]
+
+# CSRF Trusted Origins for production
+if not DEBUG:
+    CSRF_TRUSTED_ORIGINS = [
+        'https://*.ondigitalocean.app',
+        'https://starfish-app-jmri5.ondigitalocean.app',  # Your specific app URL
+    ]
 
 # Application definition
 INSTALLED_APPS = [
