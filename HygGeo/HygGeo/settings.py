@@ -50,6 +50,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     
     # Third-party apps
+    'storages',  # ADD THIS LINE - Required for DigitalOcean Spaces
     'crispy_forms',
     'crispy_bootstrap4',
     
