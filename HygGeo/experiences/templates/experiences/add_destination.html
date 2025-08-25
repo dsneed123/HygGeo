@@ -3,7 +3,7 @@
 
 {% block content %}
 <h2>Add a New Destination</h2>
-<form method="post" class="form-card">
+<form method="post" enctype="multipart/form-data" class="form-card">
     {% csrf_token %}
     {{ form.as_p }}
     <button type="submit" class="btn btn-primary">Add Destination</button>
