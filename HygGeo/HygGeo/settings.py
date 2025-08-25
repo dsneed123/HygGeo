@@ -398,3 +398,18 @@ else:
 # Debug output
 print(f"Django DEBUG mode: {DEBUG}")
 print(f"Storage backend: {'DigitalOcean Spaces' if not DEBUG else 'Local filesystem'}")
+# Force Django to use the correct storage backend
+if not DEBUG:
+    from django.core.files.storage import default_storage
+    from storages.backends.s3boto3 import S3Boto3Storage
+    
+    # Clear any cached storage
+    if hasattr(default_storage, '_wrapped'):
+        default_storage._wrapped = None
+    
+    # Force reload of default_storage with correct backend
+    import importlib
+    import django.core.files.storage
+    importlib.reload(django.core.files.storage)
+    
+    print("🔧 FORCING Django to use S3 storage backend")
