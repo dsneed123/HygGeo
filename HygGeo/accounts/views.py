@@ -679,3 +679,20 @@ def user_trips_view(request, username):
     }
     
     return render(request, 'accounts/user_trips.html', context)
+
+def debug_spaces(request):
+    from django.conf import settings
+    from django.http import JsonResponse
+    import os
+    
+    return JsonResponse({
+        'DEBUG': settings.DEBUG,
+        'INSTALLED_APPS_has_storages': 'storages' in settings.INSTALLED_APPS,
+        'AWS_ACCESS_KEY_ID': getattr(settings, 'AWS_ACCESS_KEY_ID', 'NOT_SET')[:8] + '...' if getattr(settings, 'AWS_ACCESS_KEY_ID', None) else 'NOT_SET',
+        'AWS_STORAGE_BUCKET_NAME': getattr(settings, 'AWS_STORAGE_BUCKET_NAME', 'NOT_SET'),
+        'AWS_S3_ENDPOINT_URL': getattr(settings, 'AWS_S3_ENDPOINT_URL', 'NOT_SET'),
+        'DEFAULT_FILE_STORAGE': getattr(settings, 'DEFAULT_FILE_STORAGE', 'NOT_SET'),
+        'MEDIA_URL': settings.MEDIA_URL,
+        'env_SPACES_ACCESS_KEY': 'EXISTS' if os.environ.get('SPACES_ACCESS_KEY') else 'MISSING',
+        'env_SPACES_BUCKET_NAME': os.environ.get('SPACES_BUCKET_NAME', 'MISSING'),
+    })
