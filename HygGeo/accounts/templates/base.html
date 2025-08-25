@@ -298,8 +298,10 @@
 
                     <!-- Trips Menu - Dual System -->
                     {% if user.is_authenticated %}
+                    
+                    <!--
                     <li class="nav-item dropdown d-none d-lg-block">
-                        <!-- Desktop dropdown -->
+                       
                         <a class="nav-link dropdown-toggle" href="#" id="tripsDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                             <i class="fas fa-route me-1"></i>Trips
                         </a>
@@ -314,10 +316,9 @@
                                 <i class="fas fa-plus me-2"></i>Create New Trip
                             </a></li>
                             <li><hr class="dropdown-divider"></li>
-                            
-                          
                         </ul>
                     </li>
+                    -->
 
                     <!-- Mobile accordion -->
                     <li class="nav-item d-lg-none">
@@ -334,11 +335,10 @@
                             <li><a href="{% url 'create_trip' %}">
                                 <i class="fas fa-plus me-2"></i>Create New Trip
                             </a></li>
-   
-      >
                         </ul>
                     </li>
                     {% endif %}
+                    
                     
                     <!-- Admin Dashboard - Only for Staff -->
                     {% if user.is_staff %}
