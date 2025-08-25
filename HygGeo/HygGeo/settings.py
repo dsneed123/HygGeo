@@ -375,3 +375,7 @@ else:
     # Development: Use local media files (keep existing settings)
     MEDIA_URL = '/media/'
     MEDIA_ROOT = BASE_DIR / 'media'
+    # TEMPORARY: Force S3 storage for debugging
+if not DEBUG:
+    DEFAULT_FILE_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
+    print(f"DEBUG: Setting DEFAULT_FILE_STORAGE to S3, DEBUG={DEBUG}")

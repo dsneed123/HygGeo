@@ -750,3 +750,23 @@ def test_upload(request):
             'error_type': str(type(e)),
             'storage_class': str(type(default_storage)),
         })
+    
+def debug_storage(request):
+    from django.conf import settings
+    from django.core.files.storage import default_storage
+    from django.http import JsonResponse
+    import os
+    
+    return JsonResponse({
+        'DEBUG': settings.DEBUG,
+        'DEFAULT_FILE_STORAGE_in_settings': getattr(settings, 'DEFAULT_FILE_STORAGE', 'NOT_SET'),
+        'actual_storage_class': str(type(default_storage)),
+        'all_installed_apps': settings.INSTALLED_APPS,
+        'storages_in_installed_apps': 'storages' in settings.INSTALLED_APPS,
+        'AWS_settings_exist': {
+            'AWS_ACCESS_KEY_ID': bool(getattr(settings, 'AWS_ACCESS_KEY_ID', None)),
+            'AWS_SECRET_ACCESS_KEY': bool(getattr(settings, 'AWS_SECRET_ACCESS_KEY', None)),
+            'AWS_STORAGE_BUCKET_NAME': bool(getattr(settings, 'AWS_STORAGE_BUCKET_NAME', None)),
+        },
+        'if_not_debug_condition': not settings.DEBUG,  # This should be True in production
+    })

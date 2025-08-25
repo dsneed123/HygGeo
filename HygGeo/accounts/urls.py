@@ -56,4 +56,5 @@ urlpatterns = [
     path("messages/send/<str:username>/", views.send_message_view, name="send_message"),
     path('debug-spaces/', views.debug_spaces, name='debug_spaces'),
     path('test-upload/', views.test_upload, name='test_upload'),
+    path('debug-storage/', views.debug_storage, name='debug_storage'),
 ]
