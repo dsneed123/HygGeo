@@ -50,7 +50,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     
     # Third-party apps
-    'storages',  # ADD THIS LINE - Required for DigitalOcean Spaces
+    'storages',  # Required for DigitalOcean Spaces
     'crispy_forms',
     'crispy_bootstrap4',
     
@@ -169,10 +169,6 @@ STATICFILES_DIRS = [
 # Static file storage with WhiteNoise compression
 STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
-# Media files (User uploads)
-MEDIA_URL = '/media/'
-MEDIA_ROOT = BASE_DIR / 'media'
-
 # Default primary key field type
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
@@ -248,7 +244,6 @@ else:
     CSRF_USE_SESSIONS = False     # Use cookies for CSRF
 
 # File upload settings
-# File upload settings
 FILE_UPLOAD_MAX_MEMORY_SIZE = 10485760  # 10MB
 DATA_UPLOAD_MAX_MEMORY_SIZE = 10485760  # 10MB
 DATA_UPLOAD_MAX_NUMBER_FIELDS = 1000
@@ -323,7 +318,7 @@ HYGGEO_SETTINGS = {
     'SURVEY_PAGINATION_SIZE': 5,  # Surveys per page in profile
     'USER_LIST_PAGINATION_SIZE': 12,  # Users per page in community
     'ENABLE_PROFILE_AVATARS': True,
-    'MAX_AVATAR_SIZE': 10 * 1024 * 1024,
+    'MAX_AVATAR_SIZE': 10 * 1024 * 1024,  # 10MB
     'ALLOWED_AVATAR_TYPES': ['image/jpeg', 'image/png', 'image/gif'],
 }
 
@@ -350,32 +345,56 @@ if DEBUG:
     except ImportError:
         pass
 
+# =============================================================================
+# MEDIA FILES CONFIGURATION - CONDITIONAL BASED ON ENVIRONMENT
+# =============================================================================
+
 if not DEBUG:
-    # Production: Use DigitalOcean Spaces for media files
+    # PRODUCTION: Use DigitalOcean Spaces for media files
+    print("PRODUCTION MODE: Configuring DigitalOcean Spaces for media files")
+    
+    # DigitalOcean Spaces configuration
     AWS_ACCESS_KEY_ID = config('SPACES_ACCESS_KEY', default='')
     AWS_SECRET_ACCESS_KEY = config('SPACES_SECRET_KEY', default='')
-    AWS_STORAGE_BUCKET_NAME = config('SPACES_BUCKET_NAME', default='hyggeo-media')
-    AWS_S3_ENDPOINT_URL = config('SPACES_ENDPOINT_URL', default='https://nyc3.digitaloceanspaces.com')
+    AWS_STORAGE_BUCKET_NAME = config('SPACES_BUCKET_NAME', default='hygoe-images')
+    AWS_S3_ENDPOINT_URL = config('SPACES_ENDPOINT_URL', default='https://sfo3.digitaloceanspaces.com')
+    
+    # Spaces file settings
     AWS_S3_OBJECT_PARAMETERS = {
         'CacheControl': 'max-age=86400',
-        'ACL': 'public-read',  # Ensure files are publicly readable
+        'ACL': 'public-read',  # Make files publicly accessible
     }
-    AWS_LOCATION = 'media'  # Optional: subfolder in your Space
+    AWS_LOCATION = 'media'  # Subfolder in your Space
     AWS_DEFAULT_ACL = 'public-read'
     AWS_S3_FILE_OVERWRITE = False  # Don't overwrite files with same name
-    # CDN URL (if enabled) - update this after enabling CDN
-    AWS_S3_CUSTOM_DOMAIN = config('SPACES_CDN_ENDPOINT', default=f'{AWS_STORAGE_BUCKET_NAME}.{AWS_S3_ENDPOINT_URL.replace("https://", "")}')
     
-    # Use Spaces for media files only
+    # CDN configuration
+    AWS_S3_CUSTOM_DOMAIN = config('SPACES_CDN_ENDPOINT', 
+                                  default=f'{AWS_STORAGE_BUCKET_NAME}.{AWS_S3_ENDPOINT_URL.replace("https://", "")}')
+    
+    # Use DigitalOcean Spaces for media file storage
     DEFAULT_FILE_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
     
     # Media files will be served from CDN
     MEDIA_URL = f'https://{AWS_S3_CUSTOM_DOMAIN}/{AWS_LOCATION}/'
+    
+    print(f"✅ DigitalOcean Spaces configured:")
+    print(f"   - Bucket: {AWS_STORAGE_BUCKET_NAME}")
+    print(f"   - Endpoint: {AWS_S3_ENDPOINT_URL}")
+    print(f"   - CDN: {AWS_S3_CUSTOM_DOMAIN}")
+    print(f"   - Media URL: {MEDIA_URL}")
+    
 else:
-    # Development: Use local media files (keep existing settings)
+    # DEVELOPMENT: Use local media files
+    print("DEVELOPMENT MODE: Using local file storage for media files")
+    
     MEDIA_URL = '/media/'
     MEDIA_ROOT = BASE_DIR / 'media'
-    # TEMPORARY: Force S3 storage for debugging
-if not DEBUG:
-    DEFAULT_FILE_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
-    print(f"DEBUG: Setting DEFAULT_FILE_STORAGE to S3, DEBUG={DEBUG}")
+    
+    print(f"✅ Local media storage configured:")
+    print(f"   - Media URL: {MEDIA_URL}")
+    print(f"   - Media Root: {MEDIA_ROOT}")
+
+# Debug output
+print(f"Django DEBUG mode: {DEBUG}")
+print(f"Storage backend: {'DigitalOcean Spaces' if not DEBUG else 'Local filesystem'}")
