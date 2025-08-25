@@ -321,7 +321,7 @@ def destination_detail_view(request, slug):
     # Group experiences by type
     experiences_by_type = {}
     for experience in experiences:
-        exp_type = experience.get_experience_type_display()
+        exp_type = experience.experience_type.name if experience.experience_type else "Unspecified"
         if exp_type not in experiences_by_type:
             experiences_by_type[exp_type] = []
         experiences_by_type[exp_type].append(experience)
