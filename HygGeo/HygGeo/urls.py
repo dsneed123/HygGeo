@@ -20,6 +20,8 @@ urlpatterns = [
     path('accounts/', include('django.contrib.auth.urls')),  # Built-in auth views
     path('experiences/', include('experiences.urls')),
 ]
+
+# Serve media files during development
 # FIXED: Serve media files in production AND development
 urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 
