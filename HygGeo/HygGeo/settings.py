@@ -248,8 +248,9 @@ else:
     CSRF_USE_SESSIONS = False     # Use cookies for CSRF
 
 # File upload settings
-FILE_UPLOAD_MAX_MEMORY_SIZE = 5242880  # 5MB
-DATA_UPLOAD_MAX_MEMORY_SIZE = 5242880  # 5MB
+# File upload settings
+FILE_UPLOAD_MAX_MEMORY_SIZE = 10485760  # 10MB
+DATA_UPLOAD_MAX_MEMORY_SIZE = 10485760  # 10MB
 DATA_UPLOAD_MAX_NUMBER_FIELDS = 1000
 
 # Session configuration - back to database sessions (now PostgreSQL)
