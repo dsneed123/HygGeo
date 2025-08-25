@@ -347,3 +347,27 @@ if DEBUG:
         INTERNAL_IPS = ['127.0.0.1']
     except ImportError:
         pass
+
+if not DEBUG:
+    # Production: Use DigitalOcean Spaces for media files
+    AWS_ACCESS_KEY_ID = config('SPACES_ACCESS_KEY', default='')
+    AWS_SECRET_ACCESS_KEY = config('SPACES_SECRET_KEY', default='')
+    AWS_STORAGE_BUCKET_NAME = config('SPACES_BUCKET_NAME', default='hyggeo-media')
+    AWS_S3_ENDPOINT_URL = config('SPACES_ENDPOINT_URL', default='https://nyc3.digitaloceanspaces.com')
+    AWS_S3_OBJECT_PARAMETERS = {
+        'CacheControl': 'max-age=86400',
+    }
+    AWS_LOCATION = 'media'  # Optional: subfolder in your Space
+    AWS_DEFAULT_ACL = 'public-read'
+    # CDN URL (if enabled) - update this after enabling CDN
+    AWS_S3_CUSTOM_DOMAIN = config('SPACES_CDN_ENDPOINT', default=f'{AWS_STORAGE_BUCKET_NAME}.{AWS_S3_ENDPOINT_URL.replace("https://", "")}')
+    
+    # Use Spaces for media files only
+    DEFAULT_FILE_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
+    
+    # Media files will be served from CDN
+    MEDIA_URL = f'https://{AWS_S3_CUSTOM_DOMAIN}/{AWS_LOCATION}/'
+else:
+    # Development: Use local media files (keep existing settings)
+    MEDIA_URL = '/media/'
+    MEDIA_ROOT = BASE_DIR / 'media'
