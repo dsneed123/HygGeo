@@ -362,54 +362,45 @@ if not DEBUG:
     # Spaces file settings
     AWS_S3_OBJECT_PARAMETERS = {
         'CacheControl': 'max-age=86400',
-        'ACL': 'public-read',  # Make files publicly accessible
+        'ACL': 'public-read',
     }
-    AWS_LOCATION = 'media'  # Subfolder in your Space
+    AWS_LOCATION = 'media'
     AWS_DEFAULT_ACL = 'public-read'
-    AWS_S3_FILE_OVERWRITE = False  # Don't overwrite files with same name
+    AWS_S3_FILE_OVERWRITE = False
     
     # CDN configuration
     AWS_S3_CUSTOM_DOMAIN = config('SPACES_CDN_ENDPOINT', 
                                   default=f'{AWS_STORAGE_BUCKET_NAME}.{AWS_S3_ENDPOINT_URL.replace("https://", "")}')
     
-    # Use DigitalOcean Spaces for media file storage
-    DEFAULT_FILE_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
-    
-    # Media files will be served from CDN
+    # Media files served from CDN
     MEDIA_URL = f'https://{AWS_S3_CUSTOM_DOMAIN}/{AWS_LOCATION}/'
     
     print(f"✅ DigitalOcean Spaces configured:")
     print(f"   - Bucket: {AWS_STORAGE_BUCKET_NAME}")
-    print(f"   - Endpoint: {AWS_S3_ENDPOINT_URL}")
-    print(f"   - CDN: {AWS_S3_CUSTOM_DOMAIN}")
-    print(f"   - Media URL: {MEDIA_URL}")
     
 else:
     # DEVELOPMENT: Use local media files
-    print("DEVELOPMENT MODE: Using local file storage for media files")
-    
+    print("DEVELOPMENT MODE: Using local file storage")
     MEDIA_URL = '/media/'
     MEDIA_ROOT = BASE_DIR / 'media'
-    
-    print(f"✅ Local media storage configured:")
-    print(f"   - Media URL: {MEDIA_URL}")
-    print(f"   - Media Root: {MEDIA_ROOT}")
 
-# Debug output
-print(f"Django DEBUG mode: {DEBUG}")
-print(f"Storage backend: {'DigitalOcean Spaces' if not DEBUG else 'Local filesystem'}")
-# Force Django to use the correct storage backend
+print(f"Django DEBUG: {DEBUG}, Storage: {'Spaces' if not DEBUG else 'Local'}")
+
+# CRITICAL: Set storage backend AFTER all other settings
 if not DEBUG:
-    from django.core.files.storage import default_storage
-    from storages.backends.s3boto3 import S3Boto3Storage
+    DEFAULT_FILE_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
+    print(f"🔧 Set DEFAULT_FILE_STORAGE = {DEFAULT_FILE_STORAGE}")
     
-    # Clear any cached storage
-    if hasattr(default_storage, '_wrapped'):
-        default_storage._wrapped = None
+    # Also set as environment variable to force Django to use it
+    import os
+    os.environ.setdefault('DEFAULT_FILE_STORAGE', DEFAULT_FILE_STORAGE)
     
-    # Force reload of default_storage with correct backend
-    import importlib
-    import django.core.files.storage
-    importlib.reload(django.core.files.storage)
-    
-    print("🔧 FORCING Django to use S3 storage backend")
+    # Force Django to reload default storage
+    try:
+        from django.core.files.storage import default_storage, get_storage_class
+        # Clear any cached storage
+        if hasattr(default_storage, '_wrapped') and default_storage._wrapped:
+            default_storage._wrapped = None
+        print("🔄 Cleared Django storage cache")
+    except Exception as e:
+        print(f"⚠️  Storage cache clear failed (this is OK): {e}")
