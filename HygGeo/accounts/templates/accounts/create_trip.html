@@ -12,15 +12,21 @@
                 <p class="text-muted">Create a mindful travel experience and find like-minded travel companions</p>
             </div>
 
-            <!-- DEBUG: Remove this after testing -->
-            <div style="background: #f8f9fa; padding: 10px; margin: 10px 0; border: 1px solid #ddd;">
-                <strong>Debug Info:</strong><br>
-                Form fields: {{ form.fields.keys }}<br>
-                Form errors: {{ form.errors }}<br>
-                Non-field errors: {{ form.non_field_errors }}
-            </div>
+            <!-- Display form errors -->
+            {% if form.errors %}
+                <div class="alert alert-danger">
+                    <strong>Please correct the following errors:</strong>
+                    <ul class="mb-0 mt-2">
+                        {% for field, errors in form.errors.items %}
+                            {% for error in errors %}
+                                <li>{{ field|title }}: {{ error }}</li>
+                            {% endfor %}
+                        {% endfor %}
+                    </ul>
+                </div>
+            {% endif %}
 
-            <!-- Add message display -->
+            <!-- Display messages -->
             {% if messages %}
                 {% for message in messages %}
                     <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
@@ -44,34 +50,44 @@
                         <div class="row">
                             <div class="col-md-8 mb-3">
                                 <label for="trip_name" class="form-label fw-bold">Trip Title</label>
-                                <input type="text" class="form-control" id="trip_name" name="trip_name" required placeholder="e.g., Nordic Hygge Adventure in Copenhagen">
+                                <input type="text" class="form-control" id="trip_name" name="trip_name" 
+                                       value="{{ form.trip_name.value|default:'' }}" required 
+                                       placeholder="e.g., Nordic Hygge Adventure in Copenhagen">
                                 <div class="form-text">Give your journey a meaningful name that captures its essence</div>
+                                {% if form.trip_name.errors %}
+                                    <div class="text-danger">{{ form.trip_name.errors.0 }}</div>
+                                {% endif %}
                             </div>
                             <div class="col-md-4 mb-3">
                                 <label for="trip_status" class="form-label fw-bold">Trip Status</label>
                                 <select class="form-control" id="trip_status" name="trip_status" required>
-                                    <option value="planning">Planning</option>
-                                    <option value="seeking_buddies">Seeking Travel Buddies</option>
-                                    <option value="confirmed">Confirmed</option>
-                                    <option value="completed">Completed</option>
+                                    <option value="planning" {% if form.trip_status.value == 'planning' %}selected{% endif %}>Planning</option>
+                                    <option value="seeking_buddies" {% if form.trip_status.value == 'seeking_buddies' %}selected{% endif %}>Seeking Travel Buddies</option>
+                                    <option value="confirmed" {% if form.trip_status.value == 'confirmed' %}selected{% endif %}>Confirmed</option>
+                                    <option value="completed" {% if form.trip_status.value == 'completed' %}selected{% endif %}>Completed</option>
                                 </select>
+                                {% if form.trip_status.errors %}
+                                    <div class="text-danger">{{ form.trip_status.errors.0 }}</div>
+                                {% endif %}
                             </div>
                         </div>
                         
-                        <!-- Replace the destination input section with: -->
                         <div class="mb-3">
                             <label for="id_destination" class="form-label fw-bold">Destination</label>
                             {{ form.destination }}
                             <div class="form-text">Choose from our curated sustainable destinations</div>
                             {% if form.destination.errors %}
-                                <div class="text-danger">{{ form.destination.errors }}</div>
+                                <div class="text-danger">{{ form.destination.errors.0 }}</div>
                             {% endif %}
                         </div>
-
                         
                         <div class="mb-3">
                             <label for="description" class="form-label fw-bold">Trip Description</label>
-                            <textarea class="form-control" id="description" name="description" rows="4" placeholder="Describe your vision for this trip. What experiences are you seeking? What makes this journey special?"></textarea>
+                            <textarea class="form-control" id="description" name="description" rows="4" 
+                                      placeholder="Describe your vision for this trip. What experiences are you seeking? What makes this journey special?">{{ form.description.value|default:'' }}</textarea>
+                            {% if form.description.errors %}
+                                <div class="text-danger">{{ form.description.errors.0 }}</div>
+                            {% endif %}
                         </div>
                     </div>
                 </div>
@@ -87,11 +103,19 @@
                         <div class="row">
                             <div class="col-md-6 mb-3">
                                 <label for="start_date" class="form-label fw-bold">Start Date</label>
-                                <input type="date" class="form-control" id="start_date" name="start_date">
+                                <input type="date" class="form-control" id="start_date" name="start_date" 
+                                       value="{{ form.start_date.value|default:'' }}">
+                                {% if form.start_date.errors %}
+                                    <div class="text-danger">{{ form.start_date.errors.0 }}</div>
+                                {% endif %}
                             </div>
                             <div class="col-md-6 mb-3">
                                 <label for="end_date" class="form-label fw-bold">End Date</label>
-                                <input type="date" class="form-control" id="end_date" name="end_date">
+                                <input type="date" class="form-control" id="end_date" name="end_date" 
+                                       value="{{ form.end_date.value|default:'' }}">
+                                {% if form.end_date.errors %}
+                                    <div class="text-danger">{{ form.end_date.errors.0 }}</div>
+                                {% endif %}
                             </div>
                         </div>
                         
@@ -99,11 +123,14 @@
                             <div class="col-md-6 mb-3">
                                 <label for="trip_duration_preference" class="form-label fw-bold">Duration Type</label>
                                 <select class="form-control" id="trip_duration_preference" name="trip_duration_preference">
-                                    <option value="short">Short Trip (1-7 days)</option>
-                                    <option value="medium">Medium Trip (1-2 weeks)</option>
-                                    <option value="long">Long Trip (2-4 weeks)</option>
-                                    <option value="extended">Extended Journey (1+ months)</option>
+                                    <option value="short" {% if form.trip_duration_preference.value == 'short' %}selected{% endif %}>Short Trip (1-7 days)</option>
+                                    <option value="medium" {% if form.trip_duration_preference.value == 'medium' %}selected{% endif %}>Medium Trip (1-2 weeks)</option>
+                                    <option value="long" {% if form.trip_duration_preference.value == 'long' %}selected{% endif %}>Long Trip (2-4 weeks)</option>
+                                    <option value="extended" {% if form.trip_duration_preference.value == 'extended' %}selected{% endif %}>Extended Journey (1+ months)</option>
                                 </select>
+                                {% if form.trip_duration_preference.errors %}
+                                    <div class="text-danger">{{ form.trip_duration_preference.errors.0 }}</div>
+                                {% endif %}
                             </div>
                             <div class="col-md-6 mb-3">
                                 <div class="p-3 rounded" style="background-color: var(--hygge-cream);">
@@ -131,19 +158,19 @@
                             <div class="col-md-6 mb-3">
                                 <label for="group_size_preference" class="form-label fw-bold">Preferred Group Size</label>
                                 <select class="form-control" id="group_size_preference" name="group_size_preference">
-                                    <option value="solo">Solo Adventure</option>
-                                    <option value="small">Small Group (2-4 people)</option>
-                                    <option value="medium">Medium Group (5-8 people)</option>
-                                    <option value="large">Large Group (9+ people)</option>
+                                    <option value="solo" {% if form.group_size_preference.value == 'solo' %}selected{% endif %}>Solo Adventure</option>
+                                    <option value="small" {% if form.group_size_preference.value == 'small' %}selected{% endif %}>Small Group (2-4 people)</option>
+                                    <option value="medium" {% if form.group_size_preference.value == 'medium' %}selected{% endif %}>Medium Group (5-8 people)</option>
+                                    <option value="large" {% if form.group_size_preference.value == 'large' %}selected{% endif %}>Large Group (9+ people)</option>
                                 </select>
                             </div>
                             <div class="col-md-6 mb-3">
                                 <label for="budget_range" class="form-label fw-bold">Budget Range (per person)</label>
                                 <select class="form-control" id="budget_range" name="budget_range">
-                                    <option value="budget">Budget ($0-1,000)</option>
-                                    <option value="moderate">Moderate ($1,000-3,000)</option>
-                                    <option value="comfortable">Comfortable ($3,000-5,000)</option>
-                                    <option value="luxury">Luxury ($5,000+)</option>
+                                    <option value="budget" {% if form.budget_range.value == 'budget' %}selected{% endif %}>Budget ($0-1,000)</option>
+                                    <option value="moderate" {% if form.budget_range.value == 'moderate' %}selected{% endif %}>Moderate ($1,000-3,000)</option>
+                                    <option value="comfortable" {% if form.budget_range.value == 'comfortable' %}selected{% endif %}>Comfortable ($3,000-5,000)</option>
+                                    <option value="luxury" {% if form.budget_range.value == 'luxury' %}selected{% endif %}>Luxury ($5,000+)</option>
                                 </select>
                             </div>
                         </div>
@@ -152,25 +179,25 @@
                             <div class="col-md-6 mb-3">
                                 <label for="travel_frequency" class="form-label fw-bold">Travel Style</label>
                                 <select class="form-control" id="travel_frequency" name="travel_frequency">
-                                    <option value="slow">Slow & Mindful Travel</option>
-                                    <option value="moderate">Balanced Exploration</option>
-                                    <option value="frequent">Active Adventure</option>
-                                    <option value="intensive">Intensive Experience</option>
+                                    <option value="slow" {% if form.travel_frequency.value == 'slow' %}selected{% endif %}>Slow & Mindful Travel</option>
+                                    <option value="moderate" {% if form.travel_frequency.value == 'moderate' %}selected{% endif %}>Balanced Exploration</option>
+                                    <option value="frequent" {% if form.travel_frequency.value == 'frequent' %}selected{% endif %}>Active Adventure</option>
+                                    <option value="intensive" {% if form.travel_frequency.value == 'intensive' %}selected{% endif %}>Intensive Experience</option>
                                 </select>
                             </div>
                             <div class="col-md-6 mb-3">
                                 <label for="seeking_buddies" class="form-label fw-bold">Looking for Travel Companions?</label>
                                 <select class="form-control" id="seeking_buddies" name="seeking_buddies">
-                                    <option value="yes">Yes, seeking travel buddies</option>
-                                    <option value="maybe">Open to meeting fellow travelers</option>
-                                    <option value="no">Planning solo/with existing group</option>
+                                    <option value="yes" {% if form.seeking_buddies.value == 'yes' %}selected{% endif %}>Yes, seeking travel buddies</option>
+                                    <option value="maybe" {% if form.seeking_buddies.value == 'maybe' %}selected{% endif %}>Open to meeting fellow travelers</option>
+                                    <option value="no" {% if form.seeking_buddies.value == 'no' %}selected{% endif %}>Planning solo/with existing group</option>
                                 </select>
                             </div>
                         </div>
                     </div>
                 </div>
 
-                <!-- Travel Interests -->
+                <!-- Travel Interests - Use hidden input with JavaScript conversion -->
                 <div class="card card-hygge mb-4">
                     <div class="card-header" style="background-color: var(--hygge-cream); border-bottom: none;">
                         <h5 class="mb-0 fw-bold" style="color: var(--hygge-green);">
@@ -180,10 +207,11 @@
                     <div class="card-body p-4">
                         <div class="mb-3">
                             <label class="form-label fw-bold">What are you excited to experience? (Select all that apply)</label>
+                            <input type="hidden" id="travel_styles_json" name="travel_styles" value='[]'>
                             <div class="row">
                                 <div class="col-md-4 mb-2">
                                     <div class="form-check">
-                                        <input class="form-check-input" type="checkbox" id="nature" name="travel_styles" value="nature">
+                                        <input class="form-check-input travel-style-checkbox" type="checkbox" id="nature" value="nature">
                                         <label class="form-check-label" for="nature">
                                             <i class="fas fa-tree me-2"></i>Nature & Outdoors
                                         </label>
@@ -191,7 +219,7 @@
                                 </div>
                                 <div class="col-md-4 mb-2">
                                     <div class="form-check">
-                                        <input class="form-check-input" type="checkbox" id="culture" name="travel_styles" value="culture">
+                                        <input class="form-check-input travel-style-checkbox" type="checkbox" id="culture" value="culture">
                                         <label class="form-check-label" for="culture">
                                             <i class="fas fa-landmark me-2"></i>Culture & History
                                         </label>
@@ -199,7 +227,7 @@
                                 </div>
                                 <div class="col-md-4 mb-2">
                                     <div class="form-check">
-                                        <input class="form-check-input" type="checkbox" id="food" name="travel_styles" value="food">
+                                        <input class="form-check-input travel-style-checkbox" type="checkbox" id="food" value="food">
                                         <label class="form-check-label" for="food">
                                             <i class="fas fa-utensils me-2"></i>Local Cuisine
                                         </label>
@@ -207,7 +235,7 @@
                                 </div>
                                 <div class="col-md-4 mb-2">
                                     <div class="form-check">
-                                        <input class="form-check-input" type="checkbox" id="wellness" name="travel_styles" value="wellness">
+                                        <input class="form-check-input travel-style-checkbox" type="checkbox" id="wellness" value="wellness">
                                         <label class="form-check-label" for="wellness">
                                             <i class="fas fa-spa me-2"></i>Wellness & Relaxation
                                         </label>
@@ -215,7 +243,7 @@
                                 </div>
                                 <div class="col-md-4 mb-2">
                                     <div class="form-check">
-                                        <input class="form-check-input" type="checkbox" id="adventure" name="travel_styles" value="adventure">
+                                        <input class="form-check-input travel-style-checkbox" type="checkbox" id="adventure" value="adventure">
                                         <label class="form-check-label" for="adventure">
                                             <i class="fas fa-mountain me-2"></i>Adventure Sports
                                         </label>
@@ -223,7 +251,7 @@
                                 </div>
                                 <div class="col-md-4 mb-2">
                                     <div class="form-check">
-                                        <input class="form-check-input" type="checkbox" id="photography" name="travel_styles" value="photography">
+                                        <input class="form-check-input travel-style-checkbox" type="checkbox" id="photography" value="photography">
                                         <label class="form-check-label" for="photography">
                                             <i class="fas fa-camera me-2"></i>Photography
                                         </label>
@@ -231,7 +259,7 @@
                                 </div>
                                 <div class="col-md-4 mb-2">
                                     <div class="form-check">
-                                        <input class="form-check-input" type="checkbox" id="luxury" name="travel_styles" value="luxury">
+                                        <input class="form-check-input travel-style-checkbox" type="checkbox" id="luxury" value="luxury">
                                         <label class="form-check-label" for="luxury">
                                             <i class="fas fa-gem me-2"></i>Luxury Experiences
                                         </label>
@@ -239,51 +267,45 @@
                                 </div>
                                 <div class="col-md-4 mb-2">
                                     <div class="form-check">
-                                        <input class="form-check-input" type="checkbox" id="budget" name="travel_styles" value="budget">
-                                        <label class="form-check-label" for="budget">
+                                        <input class="form-check-input travel-style-checkbox" type="checkbox" id="budget_travel" value="budget">
+                                        <label class="form-check-label" for="budget_travel">
                                             <i class="fas fa-piggy-bank me-2"></i>Budget Travel
                                         </label>
                                     </div>
                                 </div>
                                 <div class="col-md-4 mb-2">
                                     <div class="form-check">
-                                        <input class="form-check-input" type="checkbox" id="comfort" name="travel_styles" value="comfort">
+                                        <input class="form-check-input travel-style-checkbox" type="checkbox" id="comfort" value="comfort">
                                         <label class="form-check-label" for="comfort">
                                             <i class="fas fa-couch me-2"></i>Comfort Travel
                                         </label>
                                     </div>
                                 </div>
                             </div>
+                            {% if form.travel_styles.errors %}
+                                <div class="text-danger">{{ form.travel_styles.errors.0 }}</div>
+                            {% endif %}
                         </div>
                     </div>
                 </div>
+
+                <!-- Experiences -->
                 <div class="card card-hygge mb-4">
-                <div class="card-header" style="background-color: var(--hygge-cream); border-bottom: none;">
-                    <h5 class="mb-0 fw-bold" style="color: var(--hygge-green);">
-                        <i class="fas fa-star me-2"></i>Add Experiences (Optional)
-                    </h5>
-                </div>
-                <div class="card-body p-4">
-                    <div class="mb-3">
-                        <label class="form-label fw-bold">Select experiences you'd like to include in this trip:</label>
-                        <div class="row">
-                            {% for experience in form.experiences %}
-                                <div class="col-md-6 mb-2">
-                                    <div class="form-check">
-                                        {{ experience.tag }}
-                                        <label class="form-check-label" for="{{ experience.id_for_label }}">
-                                            <i class="fas fa-map-marker-alt me-2"></i>{{ experience.choice_label }}
-                                        </label>
-                                    </div>
-                                </div>
-                            {% endfor %}
+                    <div class="card-header" style="background-color: var(--hygge-cream); border-bottom: none;">
+                        <h5 class="mb-0 fw-bold" style="color: var(--hygge-green);">
+                            <i class="fas fa-star me-2"></i>Add Experiences (Optional)
+                        </h5>
+                    </div>
+                    <div class="card-body p-4">
+                        <div class="mb-3">
+                            <label class="form-label fw-bold">Select experiences you'd like to include in this trip:</label>
+                            {{ form.experiences }}
+                            {% if form.experiences.errors %}
+                                <div class="text-danger mt-2">{{ form.experiences.errors.0 }}</div>
+                            {% endif %}
                         </div>
-                        {% if form.experiences.errors %}
-                            <div class="text-danger mt-2">{{ form.experiences.errors }}</div>
-                        {% endif %}
                     </div>
                 </div>
-            </div>
 
                 <!-- Sustainability Focus -->
                 <div class="card card-hygge mb-4">
@@ -297,12 +319,15 @@
                             <div class="col-md-6 mb-3">
                                 <label for="sustainability_priority" class="form-label fw-bold">How important is sustainability for this trip?</label>
                                 <select class="form-control" id="sustainability_priority" name="sustainability_priority" required>
-                                    <option value="1">Low Priority</option>
-                                    <option value="2">Medium Priority</option>
-                                    <option value="3" selected>High Priority</option>
-                                    <option value="4">Very High Priority</option>
-                                    <option value="5">Essential - Top Priority</option>
+                                    <option value="1" {% if form.sustainability_priority.value == 1 %}selected{% endif %}>Low Priority</option>
+                                    <option value="2" {% if form.sustainability_priority.value == 2 %}selected{% endif %}>Medium Priority</option>
+                                    <option value="3" {% if form.sustainability_priority.value == 3 or not form.sustainability_priority.value %}selected{% endif %}>High Priority</option>
+                                    <option value="4" {% if form.sustainability_priority.value == 4 %}selected{% endif %}>Very High Priority</option>
+                                    <option value="5" {% if form.sustainability_priority.value == 5 %}selected{% endif %}>Essential - Top Priority</option>
                                 </select>
+                                {% if form.sustainability_priority.errors %}
+                                    <div class="text-danger">{{ form.sustainability_priority.errors.0 }}</div>
+                                {% endif %}
                             </div>
                             <div class="col-md-6 mb-3">
                                 <div class="p-3 rounded" style="background-color: var(--hygge-cream);">
@@ -318,10 +343,11 @@
                         
                         <div class="mb-3">
                             <label class="form-label fw-bold">Key Sustainability Factors (Select what matters most)</label>
+                            <input type="hidden" id="sustainability_factors_json" name="sustainability_factors" value='[]'>
                             <div class="row">
                                 <div class="col-md-6 mb-2">
                                     <div class="form-check">
-                                        <input class="form-check-input" type="checkbox" id="transport" name="sustainability_factors" value="sustainable_transport">
+                                        <input class="form-check-input sustainability-factor-checkbox" type="checkbox" id="transport" value="sustainable_transport">
                                         <label class="form-check-label" for="transport">
                                             <i class="fas fa-train me-2"></i>Sustainable Transportation
                                         </label>
@@ -329,7 +355,7 @@
                                 </div>
                                 <div class="col-md-6 mb-2">
                                     <div class="form-check">
-                                        <input class="form-check-input" type="checkbox" id="accommodation" name="sustainability_factors" value="eco_accommodation">
+                                        <input class="form-check-input sustainability-factor-checkbox" type="checkbox" id="accommodation" value="eco_accommodation">
                                         <label class="form-check-label" for="accommodation">
                                             <i class="fas fa-bed me-2"></i>Eco-Friendly Accommodation
                                         </label>
@@ -337,7 +363,7 @@
                                 </div>
                                 <div class="col-md-6 mb-2">
                                     <div class="form-check">
-                                        <input class="form-check-input" type="checkbox" id="local_economy" name="sustainability_factors" value="local_economy">
+                                        <input class="form-check-input sustainability-factor-checkbox" type="checkbox" id="local_economy" value="local_economy">
                                         <label class="form-check-label" for="local_economy">
                                             <i class="fas fa-handshake me-2"></i>Supporting Local Economy
                                         </label>
@@ -345,7 +371,7 @@
                                 </div>
                                 <div class="col-md-6 mb-2">
                                     <div class="form-check">
-                                        <input class="form-check-input" type="checkbox" id="waste_reduction" name="sustainability_factors" value="waste_reduction">
+                                        <input class="form-check-input sustainability-factor-checkbox" type="checkbox" id="waste_reduction" value="waste_reduction">
                                         <label class="form-check-label" for="waste_reduction">
                                             <i class="fas fa-recycle me-2"></i>Waste Reduction
                                         </label>
@@ -353,7 +379,7 @@
                                 </div>
                                 <div class="col-md-6 mb-2">
                                     <div class="form-check">
-                                        <input class="form-check-input" type="checkbox" id="carbon_offset" name="sustainability_factors" value="carbon_offset">
+                                        <input class="form-check-input sustainability-factor-checkbox" type="checkbox" id="carbon_offset" value="carbon_offset">
                                         <label class="form-check-label" for="carbon_offset">
                                             <i class="fas fa-cloud me-2"></i>Carbon Offsetting
                                         </label>
@@ -361,13 +387,16 @@
                                 </div>
                                 <div class="col-md-6 mb-2">
                                     <div class="form-check">
-                                        <input class="form-check-input" type="checkbox" id="wildlife_protection" name="sustainability_factors" value="wildlife_protection">
+                                        <input class="form-check-input sustainability-factor-checkbox" type="checkbox" id="wildlife_protection" value="wildlife_protection">
                                         <label class="form-check-label" for="wildlife_protection">
                                             <i class="fas fa-paw me-2"></i>Wildlife Protection
                                         </label>
                                     </div>
                                 </div>
                             </div>
+                            {% if form.sustainability_factors.errors %}
+                                <div class="text-danger">{{ form.sustainability_factors.errors.0 }}</div>
+                            {% endif %}
                         </div>
                     </div>
                 </div>
@@ -384,6 +413,9 @@
                             <label for="trip_image" class="form-label fw-bold">Upload an inspiring image for your trip</label>
                             <input type="file" class="form-control" id="trip_image" name="trip_image" accept="image/*">
                             <div class="form-text">Choose an image that captures the essence of your planned journey</div>
+                            {% if form.trip_image.errors %}
+                                <div class="text-danger">{{ form.trip_image.errors.0 }}</div>
+                            {% endif %}
                         </div>
                         <div id="image_preview" style="display: none;">
                             <img id="preview_img" class="img-fluid rounded" style="max-height: 200px;">
@@ -403,14 +435,15 @@
                             <div class="col-md-6 mb-3">
                                 <label for="visibility" class="form-label fw-bold">Who can see this trip?</label>
                                 <select class="form-control" id="visibility" name="visibility">
-                                    <option value="public">Public - All HygGeo users</option>
-                                    <option value="community">Community - Members only</option>
-                                    <option value="private">Private - Only me</option>
+                                    <option value="public" {% if form.visibility.value == 'public' or not form.visibility.value %}selected{% endif %}>Public - All HygGeo users</option>
+                                    <option value="community" {% if form.visibility.value == 'community' %}selected{% endif %}>Community - Members only</option>
+                                    <option value="private" {% if form.visibility.value == 'private' %}selected{% endif %}>Private - Only me</option>
                                 </select>
                             </div>
                             <div class="col-md-6 mb-3">
                                 <div class="form-check mt-4">
-                                    <input class="form-check-input" type="checkbox" id="allow_messages" name="allow_messages" checked>
+                                    <input class="form-check-input" type="checkbox" id="allow_messages" name="allow_messages" 
+                                           {% if form.allow_messages.value or not form.allow_messages.value and not form.data %}checked{% endif %}>
                                     <label class="form-check-label fw-bold" for="allow_messages">
                                         Allow other users to message me about this trip
                                     </label>
@@ -480,6 +513,36 @@ textarea {
 
 <script>
 document.addEventListener('DOMContentLoaded', function() {
+    // Function to update JSON fields
+    function updateTravelStyles() {
+        const checkedValues = [];
+        document.querySelectorAll('.travel-style-checkbox:checked').forEach(cb => {
+            checkedValues.push(cb.value);
+        });
+        document.getElementById('travel_styles_json').value = JSON.stringify(checkedValues);
+    }
+    
+    function updateSustainabilityFactors() {
+        const checkedValues = [];
+        document.querySelectorAll('.sustainability-factor-checkbox:checked').forEach(cb => {
+            checkedValues.push(cb.value);
+        });
+        document.getElementById('sustainability_factors_json').value = JSON.stringify(checkedValues);
+    }
+    
+    // Add event listeners to checkboxes
+    document.querySelectorAll('.travel-style-checkbox').forEach(checkbox => {
+        checkbox.addEventListener('change', updateTravelStyles);
+    });
+    
+    document.querySelectorAll('.sustainability-factor-checkbox').forEach(checkbox => {
+        checkbox.addEventListener('change', updateSustainabilityFactors);
+    });
+    
+    // Initialize JSON values
+    updateTravelStyles();
+    updateSustainabilityFactors();
+    
     // Add animation to cards
     const cards = document.querySelectorAll('.card-hygge');
     cards.forEach((card, index) => {
@@ -578,8 +641,12 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     });
     
-    // UPDATED Form validation with JSON conversion
+    // Form submission
     document.getElementById('createTripForm').addEventListener('submit', function(e) {
+        // Update JSON fields one final time before submission
+        updateTravelStyles();
+        updateSustainabilityFactors();
+        
         // Basic validation
         const tripName = document.getElementById('trip_name').value.trim();
         const destination = document.querySelector('select[name="destination"]').value;
@@ -606,66 +673,11 @@ document.addEventListener('DOMContentLoaded', function() {
             return false;
         }
         
-        // CRITICAL: Convert checkbox arrays to JSON format
-        
-        // Handle travel_styles checkboxes
-        const travelStylesChecked = [];
-        document.querySelectorAll('input[name="travel_styles"]:checked').forEach(checkbox => {
-            travelStylesChecked.push(checkbox.value);
-        });
-        
-        // Remove existing travel_styles hidden input if it exists
-        const existingTravelStylesInput = document.querySelector('input[name="travel_styles"][type="hidden"]');
-        if (existingTravelStylesInput) {
-            existingTravelStylesInput.remove();
-        }
-        
-        // Create hidden input for travel_styles JSON
-        const travelStylesInput = document.createElement('input');
-        travelStylesInput.type = 'hidden';
-        travelStylesInput.name = 'travel_styles';
-        travelStylesInput.value = JSON.stringify(travelStylesChecked);
-        this.appendChild(travelStylesInput);
-        
-        // Disable original travel_styles checkboxes so they don't interfere
-        document.querySelectorAll('input[name="travel_styles"][type="checkbox"]').forEach(checkbox => {
-            checkbox.disabled = true;
-        });
-        
-        // Handle sustainability_factors checkboxes
-        const sustainabilityFactorsChecked = [];
-        document.querySelectorAll('input[name="sustainability_factors"]:checked').forEach(checkbox => {
-            sustainabilityFactorsChecked.push(checkbox.value);
-        });
-        
-        // Remove existing sustainability_factors hidden input if it exists
-        const existingSustainabilityFactorsInput = document.querySelector('input[name="sustainability_factors"][type="hidden"]');
-        if (existingSustainabilityFactorsInput) {
-            existingSustainabilityFactorsInput.remove();
-        }
-        
-        // Create hidden input for sustainability_factors JSON
-        const sustainabilityFactorsInput = document.createElement('input');
-        sustainabilityFactorsInput.type = 'hidden';
-        sustainabilityFactorsInput.name = 'sustainability_factors';
-        sustainabilityFactorsInput.value = JSON.stringify(sustainabilityFactorsChecked);
-        this.appendChild(sustainabilityFactorsInput);
-        
-        // Disable original sustainability_factors checkboxes
-        document.querySelectorAll('input[name="sustainability_factors"][type="checkbox"]').forEach(checkbox => {
-            checkbox.disabled = true;
-        });
-        
         // Show loading state
         const submitBtn = this.querySelector('button[type="submit"]');
         submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin me-2"></i>Creating Trip...';
         submitBtn.disabled = true;
         
-        // Debug logging
-        console.log('Travel styles JSON:', JSON.stringify(travelStylesChecked));
-        console.log('Sustainability factors JSON:', JSON.stringify(sustainabilityFactorsChecked));
-        
-        // Allow form submission to continue
         return true;
     });
 });
