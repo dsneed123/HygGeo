@@ -401,6 +401,13 @@
                         </div>
                     </div>
                 </div>
+                                <!-- DEBUG: Remove this after testing -->
+                <div style="background: #f8f9fa; padding: 10px; margin: 10px 0; border: 1px solid #ddd;">
+                    <strong>Debug Info:</strong><br>
+                    Form fields: {{ form.fields.keys }}<br>
+                    Form errors: {{ form.errors }}<br>
+                    Non-field errors: {{ form.non_field_errors }}
+                </div>
 
                 <!-- Action Buttons -->
                 <div class="text-center">
