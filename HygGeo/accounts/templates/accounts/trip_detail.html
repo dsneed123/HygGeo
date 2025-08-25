@@ -1,0 +1,298 @@
+{% extends 'base.html' %}
+
+{% block title %}{{ trip.trip_name }} - HygGeo{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <!-- Trip Header -->
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="card card-hygge">
+                {% if trip.trip_image %}
+                <div class="position-relative">
+                    <img src="{{ trip.trip_image.url }}" alt="{{ trip.trip_name }}" 
+                         class="card-img-top" style="height: 300px; object-fit: cover;">
+                    <div class="position-absolute top-0 end-0 m-3">
+                        <span class="badge bg-primary px-3 py-2">
+                            {% if trip.trip_status == 'planning' %}
+                                <i class="fas fa-clock me-1"></i>Planning
+                            {% elif trip.trip_status == 'seeking_buddies' %}
+                                <i class="fas fa-users me-1"></i>Seeking Buddies
+                            {% elif trip.trip_status == 'confirmed' %}
+                                <i class="fas fa-check me-1"></i>Confirmed
+                            {% elif trip.trip_status == 'completed' %}
+                                <i class="fas fa-flag-checkered me-1"></i>Completed
+                            {% endif %}
+                        </span>
+                    </div>
+                </div>
+                {% endif %}
+                
+                <div class="card-body p-4">
+                    <div class="row align-items-start">
+                        <div class="col-md-8">
+                            <div class="d-flex align-items-center mb-3">
+                                {% if not trip.trip_image %}
+                                <span class="badge bg-primary me-3 px-3 py-2">
+                                    {% if trip.trip_status == 'planning' %}
+                                        <i class="fas fa-clock me-1"></i>Planning
+                                    {% elif trip.trip_status == 'seeking_buddies' %}
+                                        <i class="fas fa-users me-1"></i>Seeking Buddies
+                                    {% elif trip.trip_status == 'confirmed' %}
+                                        <i class="fas fa-check me-1"></i>Confirmed
+                                    {% elif trip.trip_status == 'completed' %}
+                                        <i class="fas fa-flag-checkered me-1"></i>Completed
+                                    {% endif %}
+                                </span>
+                                {% endif %}
+                                <div>
+                                    <h1 class="h3 fw-bold mb-1" style="color: var(--hygge-green);">{{ trip.trip_name }}</h1>
+                                    <p class="text-muted mb-0">
+                                        <i class="fas fa-map-marker-alt me-2"></i>{{ trip.destination }}
+                                    </p>
+                                </div>
+                            </div>
+                            
+                            {% if trip.description %}
+                            <p class="mb-3">{{ trip.description|linebreaks }}</p>
+                            {% endif %}
+                            
+                            <!-- Trip Details Grid -->
+                            <div class="row g-3 mb-3">
+                                {% if trip.start_date and trip.end_date %}
+                                <div class="col-md-6">
+                                    <div class="p-3 rounded" style="background-color: var(--hygge-cream);">
+                                        <div class="fw-bold mb-1" style="color: var(--hygge-green);">
+                                            <i class="fas fa-calendar-alt me-2"></i>Travel Dates
+                                        </div>
+                                        <div>{{ trip.start_date|date:"M j, Y" }} - {{ trip.end_date|date:"M j, Y" }}</div>
+                                        <small class="text-muted">{{ trip.duration_days }} day{{ trip.duration_days|pluralize }}</small>
+                                    </div>
+                                </div>
+                                {% endif %}
+                                
+                                <div class="col-md-6">
+                                    <div class="p-3 rounded" style="background-color: var(--hygge-cream);">
+                                        <div class="fw-bold mb-1" style="color: var(--hygge-green);">
+                                            <i class="fas fa-users me-2"></i>Group Size
+                                        </div>
+                                        <div>{{ trip.get_group_size_preference_display }}</div>
+                                    </div>
+                                </div>
+                                
+                                <div class="col-md-6">
+                                    <div class="p-3 rounded" style="background-color: var(--hygge-cream);">
+                                        <div class="fw-bold mb-1" style="color: var(--hygge-green);">
+                                            <i class="fas fa-dollar-sign me-2"></i>Budget Range
+                                        </div>
+                                        <div>{{ trip.get_budget_range_display }}</div>
+                                    </div>
+                                </div>
+                                
+                                <div class="col-md-6">
+                                    <div class="p-3 rounded" style="background-color: var(--hygge-cream);">
+                                        <div class="fw-bold mb-1" style="color: var(--hygge-green);">
+                                            <i class="fas fa-leaf me-2"></i>Sustainability
+                                        </div>
+                                        <div>
+                                            <span class="badge bg-success">{{ trip.eco_level_display }}</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <!-- Travel Interests -->
+                            {% if trip.travel_styles %}
+                            <div class="mb-3">
+                                <div class="fw-bold mb-2" style="color: var(--hygge-green);">
+                                    <i class="fas fa-heart me-2"></i>Travel Interests
+                                </div>
+                                <div class="d-flex flex-wrap gap-2">
+                                    {% for style in trip.travel_styles %}
+                                        <span class="badge bg-outline-secondary">{{ style|capfirst }}</span>
+                                    {% endfor %}
+                                </div>
+                            </div>
+                            {% endif %}
+                            
+                            <!-- Sustainability Factors -->
+                            {% if trip.sustainability_factors %}
+                            <div class="mb-3">
+                                <div class="fw-bold mb-2" style="color: var(--hygge-green);">
+                                    <i class="fas fa-recycle me-2"></i>Sustainability Focus
+                                </div>
+                                <div class="d-flex flex-wrap gap-2">
+                                    {% for factor in trip.sustainability_factors %}
+                                        <span class="badge bg-success">{{ factor|title }}</span>
+                                    {% endfor %}
+                                </div>
+                            </div>
+                            {% endif %}
+                        </div>
+                        
+                        <!-- Trip Creator & Actions -->
+                        <div class="col-md-4">
+                            <div class="card border-0" style="background-color: var(--hygge-cream);">
+                                <div class="card-body p-3">
+                                    <h6 class="fw-bold mb-3" style="color: var(--hygge-green);">Trip Organizer</h6>
+                                    
+                                    <!-- Creator Profile -->
+                                    <div class="d-flex align-items-center mb-3">
+                                        <div class="me-3">
+                                            {% if trip.creator.userprofile.avatar %}
+                                                <img src="{{ trip.creator.userprofile.avatar.url }}" alt="{{ trip.creator.first_name }}" 
+                                                     class="rounded-circle" style="width: 50px; height: 50px; object-fit: cover;">
+                                            {% else %}
+                                                <div class="rounded-circle bg-secondary d-flex align-items-center justify-content-center" 
+                                                     style="width: 50px; height: 50px;">
+                                                    <i class="fas fa-user text-white"></i>
+                                                </div>
+                                            {% endif %}
+                                        </div>
+                                        <div>
+                                            <div class="fw-bold">
+                                                {% if trip.creator.first_name and trip.creator.last_name %}
+                                                    {{ trip.creator.first_name }} {{ trip.creator.last_name }}
+                                                {% else %}
+                                                    {{ trip.creator.username }}
+                                                {% endif %}
+                                            </div>
+                                            {% if trip.creator.userprofile.location %}
+                                            <small class="text-muted">
+                                                <i class="fas fa-map-marker-alt me-1"></i>{{ trip.creator.userprofile.location }}
+                                            </small>
+                                            {% endif %}
+                                        </div>
+                                    </div>
+                                    
+                                    <!-- Seeking Buddies Status -->
+                                    <div class="mb-3">
+                                        {% if trip.seeking_buddies == 'yes' %}
+                                        <div class="alert alert-success p-2 mb-2">
+                                            <i class="fas fa-users me-1"></i>
+                                            <small><strong>Seeking travel buddies!</strong></small>
+                                        </div>
+                                        {% elif trip.seeking_buddies == 'maybe' %}
+                                        <div class="alert alert-info p-2 mb-2">
+                                            <i class="fas fa-handshake me-1"></i>
+                                            <small><strong>Open to meeting travelers</strong></small>
+                                        </div>
+                                        {% else %}
+                                        <div class="alert alert-secondary p-2 mb-2">
+                                            <i class="fas fa-lock me-1"></i>
+                                            <small><strong>Planning with existing group</strong></small>
+                                        </div>
+                                        {% endif %}
+                                    </div>
+                                    
+                                    <!-- Action Buttons -->
+                                    <div class="d-grid gap-2">
+                                        {% if can_edit %}
+                                        <a href="{% url 'edit_trip' trip.pk %}" class="btn btn-hygge btn-sm">
+                                            <i class="fas fa-edit me-2"></i>Edit Trip
+                                        </a>
+                                        {% else %}
+                                        <a href="{% url 'public_profile' trip.creator.username %}" class="btn btn-outline-hygge btn-sm">
+                                            <i class="fas fa-user me-2"></i>View Profile
+                                        </a>
+                                        {% if can_message %}
+                                        <a href="{% url 'send_message' trip.creator.username %}?trip_id={{ trip.pk }}" class="btn btn-hygge btn-sm">
+                                            <i class="fas fa-envelope me-2"></i>Send Message
+                                        </a>
+                                        {% endif %}
+                                        {% endif %}
+                                        
+                                        <a href="{% url 'trip_list' %}" class="btn btn-outline-secondary btn-sm">
+                                            <i class="fas fa-arrow-left me-2"></i>Back to Trips
+                                        </a>
+                                    </div>
+                                    
+                                    <!-- Trip Stats -->
+                                    <div class="mt-3 pt-3 border-top">
+                                        <div class="row text-center">
+                                            <div class="col-6">
+                                                <div class="small text-muted">Created</div>
+                                                <div class="fw-bold small">{{ trip.created_at|date:"M j" }}</div>
+                                            </div>
+                                            <div class="col-6">
+                                                <div class="small text-muted">Updated</div>
+                                                <div class="fw-bold small">{{ trip.updated_at|date:"M j" }}</div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Related Trips -->
+    <div class="row">
+        <div class="col-12">
+            <div class="card card-hygge">
+                <div class="card-header" style="background-color: var(--hygge-cream); border-bottom: none;">
+                    <h5 class="mb-0 fw-bold" style="color: var(--hygge-green);">
+                        <i class="fas fa-compass me-2"></i>Similar Trips You Might Like
+                    </h5>
+                </div>
+                <div class="card-body p-4">
+                    <div class="text-center py-4">
+                        <i class="fas fa-search text-muted" style="font-size: 2rem;"></i>
+                        <p class="text-muted mt-2">Discover more sustainable travel adventures</p>
+                        <a href="{% url 'trip_list' %}" class="btn btn-hygge">
+                            <i class="fas fa-map me-2"></i>Browse All Trips
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+.bg-outline-secondary {
+    background-color: transparent !important;
+    border: 1px solid #6c757d;
+    color: #6c757d;
+    font-size: 0.8rem;
+}
+
+.badge {
+    font-size: 0.8rem;
+}
+
+.alert {
+    border-radius: 8px;
+}
+
+@media (max-width: 768px) {
+    .col-md-4 {
+        margin-top: 2rem;
+    }
+    
+    .card-img-top {
+        height: 200px !important;
+    }
+}
+</style>
+
+<script>
+// Add animation to cards
+document.addEventListener('DOMContentLoaded', function() {
+    const cards = document.querySelectorAll('.card-hygge');
+    cards.forEach((card, index) => {
+        card.style.opacity = '0';
+        card.style.transform = 'translateY(30px)';
+        
+        setTimeout(() => {
+            card.style.transition = 'all 0.6s ease';
+            card.style.opacity = '1';
+            card.style.transform = 'translateY(0)';
+        }, index * 100);
+    });
+});
+</script>
+{% endblock %}

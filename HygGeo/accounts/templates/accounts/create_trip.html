@@ -1,0 +1,565 @@
+{% extends 'base.html' %}
+
+{% block title %}Create New Trip - HygGeo{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-10">
+            <div class="text-center mb-4">
+                <i class="fas fa-map-marked-alt" style="font-size: 3rem; color: var(--hygge-green);"></i>
+                <h2 class="h3 fw-bold mt-3" style="color: var(--hygge-green);">Plan Your Sustainable Journey</h2>
+                <p class="text-muted">Create a mindful travel experience and find like-minded travel companions</p>
+            </div>
+
+            <form method="post" enctype="multipart/form-data" id="createTripForm">
+                {% csrf_token %}
+                
+                <!-- Trip Basics -->
+                <div class="card card-hygge mb-4">
+                    <div class="card-header" style="background-color: var(--hygge-cream); border-bottom: none;">
+                        <h5 class="mb-0 fw-bold" style="color: var(--hygge-green);">
+                            <i class="fas fa-info-circle me-2"></i>Trip Basics
+                        </h5>
+                    </div>
+                    <div class="card-body p-4">
+                        <div class="row">
+                            <div class="col-md-8 mb-3">
+                                <label for="trip_name" class="form-label fw-bold">Trip Title</label>
+                                <input type="text" class="form-control" id="trip_name" name="trip_name" required placeholder="e.g., Nordic Hygge Adventure in Copenhagen">
+                                <div class="form-text">Give your journey a meaningful name that captures its essence</div>
+                            </div>
+                            <div class="col-md-4 mb-3">
+                                <label for="trip_status" class="form-label fw-bold">Trip Status</label>
+                                <select class="form-control" id="trip_status" name="trip_status" required>
+                                    <option value="planning">Planning</option>
+                                    <option value="seeking_buddies">Seeking Travel Buddies</option>
+                                    <option value="confirmed">Confirmed</option>
+                                    <option value="completed">Completed</option>
+                                </select>
+                            </div>
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label for="destination" class="form-label fw-bold">Destination</label>
+                            <input type="text" class="form-control" id="destination" name="destination" required placeholder="e.g., Copenhagen, Denmark">
+                            <div class="form-text">Where will your sustainable adventure take place?</div>
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label for="description" class="form-label fw-bold">Trip Description</label>
+                            <textarea class="form-control" id="description" name="description" rows="4" placeholder="Describe your vision for this trip. What experiences are you seeking? What makes this journey special?"></textarea>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Travel Dates & Duration -->
+                <div class="card card-hygge mb-4">
+                    <div class="card-header" style="background-color: var(--hygge-cream); border-bottom: none;">
+                        <h5 class="mb-0 fw-bold" style="color: var(--hygge-green);">
+                            <i class="fas fa-calendar-alt me-2"></i>When & How Long
+                        </h5>
+                    </div>
+                    <div class="card-body p-4">
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label for="start_date" class="form-label fw-bold">Start Date</label>
+                                <input type="date" class="form-control" id="start_date" name="start_date">
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label for="end_date" class="form-label fw-bold">End Date</label>
+                                <input type="date" class="form-control" id="end_date" name="end_date">
+                            </div>
+                        </div>
+                        
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label for="trip_duration_preference" class="form-label fw-bold">Duration Type</label>
+                                <select class="form-control" id="trip_duration_preference" name="trip_duration_preference">
+                                    <option value="short">Short Trip (1-7 days)</option>
+                                    <option value="medium">Medium Trip (1-2 weeks)</option>
+                                    <option value="long">Long Trip (2-4 weeks)</option>
+                                    <option value="extended">Extended Journey (1+ months)</option>
+                                </select>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <div class="p-3 rounded" style="background-color: var(--hygge-cream);">
+                                    <div class="fw-bold mb-2" style="color: var(--hygge-green);">
+                                        <i class="fas fa-clock me-2"></i>Trip Duration
+                                    </div>
+                                    <div id="duration_display" class="h5 mb-0">
+                                        Select dates to calculate duration
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Group & Budget -->
+                <div class="card card-hygge mb-4">
+                    <div class="card-header" style="background-color: var(--hygge-cream); border-bottom: none;">
+                        <h5 class="mb-0 fw-bold" style="color: var(--hygge-green);">
+                            <i class="fas fa-users me-2"></i>Group & Budget
+                        </h5>
+                    </div>
+                    <div class="card-body p-4">
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label for="group_size_preference" class="form-label fw-bold">Preferred Group Size</label>
+                                <select class="form-control" id="group_size_preference" name="group_size_preference">
+                                    <option value="solo">Solo Adventure</option>
+                                    <option value="small">Small Group (2-4 people)</option>
+                                    <option value="medium">Medium Group (5-8 people)</option>
+                                    <option value="large">Large Group (9+ people)</option>
+                                </select>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label for="budget_range" class="form-label fw-bold">Budget Range (per person)</label>
+                                <select class="form-control" id="budget_range" name="budget_range">
+                                    <option value="budget">Budget ($0-1,000)</option>
+                                    <option value="moderate">Moderate ($1,000-3,000)</option>
+                                    <option value="comfortable">Comfortable ($3,000-5,000)</option>
+                                    <option value="luxury">Luxury ($5,000+)</option>
+                                </select>
+                            </div>
+                        </div>
+                        
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label for="travel_frequency" class="form-label fw-bold">Travel Style</label>
+                                <select class="form-control" id="travel_frequency" name="travel_frequency">
+                                    <option value="slow">Slow & Mindful Travel</option>
+                                    <option value="moderate">Balanced Exploration</option>
+                                    <option value="frequent">Active Adventure</option>
+                                    <option value="intensive">Intensive Experience</option>
+                                </select>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label for="seeking_buddies" class="form-label fw-bold">Looking for Travel Companions?</label>
+                                <select class="form-control" id="seeking_buddies" name="seeking_buddies">
+                                    <option value="yes">Yes, seeking travel buddies</option>
+                                    <option value="maybe">Open to meeting fellow travelers</option>
+                                    <option value="no">Planning solo/with existing group</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Travel Interests -->
+                <div class="card card-hygge mb-4">
+                    <div class="card-header" style="background-color: var(--hygge-cream); border-bottom: none;">
+                        <h5 class="mb-0 fw-bold" style="color: var(--hygge-green);">
+                            <i class="fas fa-heart me-2"></i>Travel Interests
+                        </h5>
+                    </div>
+                    <div class="card-body p-4">
+                        <div class="mb-3">
+                            <label class="form-label fw-bold">What are you excited to experience? (Select all that apply)</label>
+                            <div class="row">
+                                <div class="col-md-4 mb-2">
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="checkbox" id="nature" name="travel_styles" value="nature">
+                                        <label class="form-check-label" for="nature">
+                                            <i class="fas fa-tree me-2"></i>Nature & Outdoors
+                                        </label>
+                                    </div>
+                                </div>
+                                <div class="col-md-4 mb-2">
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="checkbox" id="culture" name="travel_styles" value="culture">
+                                        <label class="form-check-label" for="culture">
+                                            <i class="fas fa-landmark me-2"></i>Culture & History
+                                        </label>
+                                    </div>
+                                </div>
+                                <div class="col-md-4 mb-2">
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="checkbox" id="food" name="travel_styles" value="food">
+                                        <label class="form-check-label" for="food">
+                                            <i class="fas fa-utensils me-2"></i>Local Cuisine
+                                        </label>
+                                    </div>
+                                </div>
+                                <div class="col-md-4 mb-2">
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="checkbox" id="wellness" name="travel_styles" value="wellness">
+                                        <label class="form-check-label" for="wellness">
+                                            <i class="fas fa-spa me-2"></i>Wellness & Relaxation
+                                        </label>
+                                    </div>
+                                </div>
+                                <div class="col-md-4 mb-2">
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="checkbox" id="adventure" name="travel_styles" value="adventure">
+                                        <label class="form-check-label" for="adventure">
+                                            <i class="fas fa-mountain me-2"></i>Adventure Sports
+                                        </label>
+                                    </div>
+                                </div>
+                                <div class="col-md-4 mb-2">
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="checkbox" id="photography" name="travel_styles" value="photography">
+                                        <label class="form-check-label" for="photography">
+                                            <i class="fas fa-camera me-2"></i>Photography
+                                        </label>
+                                    </div>
+                                </div>
+                                <div class="col-md-4 mb-2">
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="checkbox" id="luxury" name="travel_styles" value="luxury">
+                                        <label class="form-check-label" for="luxury">
+                                            <i class="fas fa-gem me-2"></i>Luxury Experiences
+                                        </label>
+                                    </div>
+                                </div>
+                                <div class="col-md-4 mb-2">
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="checkbox" id="budget" name="travel_styles" value="budget">
+                                        <label class="form-check-label" for="budget">
+                                            <i class="fas fa-piggy-bank me-2"></i>Budget Travel
+                                        </label>
+                                    </div>
+                                </div>
+                                <div class="col-md-4 mb-2">
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="checkbox" id="comfort" name="travel_styles" value="comfort">
+                                        <label class="form-check-label" for="comfort">
+                                            <i class="fas fa-couch me-2"></i>Comfort Travel
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Sustainability Focus -->
+                <div class="card card-hygge mb-4">
+                    <div class="card-header" style="background-color: var(--hygge-cream); border-bottom: none;">
+                        <h5 class="mb-0 fw-bold" style="color: var(--hygge-green);">
+                            <i class="fas fa-leaf me-2"></i>Sustainability Focus
+                        </h5>
+                    </div>
+                    <div class="card-body p-4">
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label for="sustainability_priority" class="form-label fw-bold">How important is sustainability for this trip?</label>
+                                <select class="form-control" id="sustainability_priority" name="sustainability_priority" required>
+                                    <option value="1">Low Priority</option>
+                                    <option value="2">Medium Priority</option>
+                                    <option value="3" selected>High Priority</option>
+                                    <option value="4">Very High Priority</option>
+                                    <option value="5">Essential - Top Priority</option>
+                                </select>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <div class="p-3 rounded" style="background-color: var(--hygge-cream);">
+                                    <div class="fw-bold mb-2" style="color: var(--hygge-green);">
+                                        <i class="fas fa-info-circle me-2"></i>Your Eco Level
+                                    </div>
+                                    <div id="eco_level_display" class="h6 mb-0">
+                                        <span class="badge bg-success">Eco-Focused Traveler</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label class="form-label fw-bold">Key Sustainability Factors (Select what matters most)</label>
+                            <div class="row">
+                                <div class="col-md-6 mb-2">
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="checkbox" id="transport" name="sustainability_factors" value="sustainable_transport">
+                                        <label class="form-check-label" for="transport">
+                                            <i class="fas fa-train me-2"></i>Sustainable Transportation
+                                        </label>
+                                    </div>
+                                </div>
+                                <div class="col-md-6 mb-2">
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="checkbox" id="accommodation" name="sustainability_factors" value="eco_accommodation">
+                                        <label class="form-check-label" for="accommodation">
+                                            <i class="fas fa-bed me-2"></i>Eco-Friendly Accommodation
+                                        </label>
+                                    </div>
+                                </div>
+                                <div class="col-md-6 mb-2">
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="checkbox" id="local_economy" name="sustainability_factors" value="local_economy">
+                                        <label class="form-check-label" for="local_economy">
+                                            <i class="fas fa-handshake me-2"></i>Supporting Local Economy
+                                        </label>
+                                    </div>
+                                </div>
+                                <div class="col-md-6 mb-2">
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="checkbox" id="waste_reduction" name="sustainability_factors" value="waste_reduction">
+                                        <label class="form-check-label" for="waste_reduction">
+                                            <i class="fas fa-recycle me-2"></i>Waste Reduction
+                                        </label>
+                                    </div>
+                                </div>
+                                <div class="col-md-6 mb-2">
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="checkbox" id="carbon_offset" name="sustainability_factors" value="carbon_offset">
+                                        <label class="form-check-label" for="carbon_offset">
+                                            <i class="fas fa-cloud me-2"></i>Carbon Offsetting
+                                        </label>
+                                    </div>
+                                </div>
+                                <div class="col-md-6 mb-2">
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="checkbox" id="wildlife_protection" name="sustainability_factors" value="wildlife_protection">
+                                        <label class="form-check-label" for="wildlife_protection">
+                                            <i class="fas fa-paw me-2"></i>Wildlife Protection
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Trip Image -->
+                <div class="card card-hygge mb-4">
+                    <div class="card-header" style="background-color: var(--hygge-cream); border-bottom: none;">
+                        <h5 class="mb-0 fw-bold" style="color: var(--hygge-green);">
+                            <i class="fas fa-image me-2"></i>Trip Image (Optional)
+                        </h5>
+                    </div>
+                    <div class="card-body p-4">
+                        <div class="mb-3">
+                            <label for="trip_image" class="form-label fw-bold">Upload an inspiring image for your trip</label>
+                            <input type="file" class="form-control" id="trip_image" name="trip_image" accept="image/*">
+                            <div class="form-text">Choose an image that captures the essence of your planned journey</div>
+                        </div>
+                        <div id="image_preview" style="display: none;">
+                            <img id="preview_img" class="img-fluid rounded" style="max-height: 200px;">
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Privacy & Sharing -->
+                <div class="card card-hygge mb-4">
+                    <div class="card-header" style="background-color: var(--hygge-cream); border-bottom: none;">
+                        <h5 class="mb-0 fw-bold" style="color: var(--hygge-green);">
+                            <i class="fas fa-shield-alt me-2"></i>Privacy & Sharing
+                        </h5>
+                    </div>
+                    <div class="card-body p-4">
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label for="visibility" class="form-label fw-bold">Who can see this trip?</label>
+                                <select class="form-control" id="visibility" name="visibility">
+                                    <option value="public">Public - All HygGeo users</option>
+                                    <option value="community">Community - Members only</option>
+                                    <option value="private">Private - Only me</option>
+                                </select>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <div class="form-check mt-4">
+                                    <input class="form-check-input" type="checkbox" id="allow_messages" name="allow_messages" checked>
+                                    <label class="form-check-label fw-bold" for="allow_messages">
+                                        Allow other users to message me about this trip
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Action Buttons -->
+                <div class="text-center">
+                    <button type="submit" class="btn btn-hygge btn-lg px-5 py-3 me-3">
+                        <i class="fas fa-paper-plane me-2"></i>Create Trip
+                    </button>
+                    <a href="{% url 'user_list' %}" class="btn btn-outline-secondary btn-lg px-5 py-3">
+                        <i class="fas fa-arrow-left me-2"></i>Back to Community
+                    </a>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<style>
+.form-control:focus {
+    border-color: var(--hygge-light-green);
+    box-shadow: 0 0 0 0.2rem rgba(74, 124, 89, 0.25);
+}
+
+.card-hygge {
+    transition: transform 0.3s ease;
+    border-radius: 12px;
+}
+
+.card-hygge:hover {
+    transform: translateY(-2px);
+}
+
+textarea {
+    resize: vertical;
+}
+
+.form-check-input:checked {
+    background-color: var(--hygge-green);
+    border-color: var(--hygge-green);
+}
+
+.badge {
+    font-size: 0.8rem;
+}
+
+#preview_img {
+    transition: opacity 0.3s ease;
+}
+
+@media (max-width: 768px) {
+    .text-center .btn {
+        width: 100%;
+        margin-bottom: 0.5rem;
+    }
+    
+    .text-center .btn:last-child {
+        margin-bottom: 0;
+    }
+}
+</style>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Add animation to cards
+    const cards = document.querySelectorAll('.card-hygge');
+    cards.forEach((card, index) => {
+        card.style.opacity = '0';
+        card.style.transform = 'translateY(30px)';
+        
+        setTimeout(() => {
+            card.style.transition = 'all 0.6s ease';
+            card.style.opacity = '1';
+            card.style.transform = 'translateY(0)';
+        }, index * 100);
+    });
+    
+    // Date validation and duration calculation
+    const startDate = document.getElementById('start_date');
+    const endDate = document.getElementById('end_date');
+    const durationDisplay = document.getElementById('duration_display');
+    
+    function calculateDuration() {
+        if (startDate.value && endDate.value) {
+            const start = new Date(startDate.value);
+            const end = new Date(endDate.value);
+            const diffTime = Math.abs(end - start);
+            const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24)) + 1;
+            
+            if (diffDays > 0) {
+                durationDisplay.textContent = `${diffDays} day${diffDays !== 1 ? 's' : ''}`;
+                durationDisplay.style.color = 'var(--hygge-green)';
+            } else {
+                durationDisplay.textContent = 'Invalid date range';
+                durationDisplay.style.color = '#dc3545';
+            }
+        } else {
+            durationDisplay.textContent = 'Select dates to calculate duration';
+            durationDisplay.style.color = '#6c757d';
+        }
+    }
+    
+    startDate.addEventListener('change', calculateDuration);
+    endDate.addEventListener('change', calculateDuration);
+    
+    // Set minimum date to today
+    const today = new Date().toISOString().split('T')[0];
+    startDate.min = today;
+    
+    // Update end date minimum when start date changes
+    startDate.addEventListener('change', function() {
+        endDate.min = this.value;
+        if (endDate.value && endDate.value < this.value) {
+            endDate.value = this.value;
+        }
+        calculateDuration();
+    });
+    
+    // Sustainability priority display update
+    const sustainabilitySelect = document.getElementById('sustainability_priority');
+    const ecoLevelDisplay = document.getElementById('eco_level_display');
+    
+    function updateEcoLevel() {
+        const value = sustainabilitySelect.value;
+        const levels = {
+            '1': { text: 'Eco-Aware', class: 'bg-secondary' },
+            '2': { text: 'Eco-Friendly', class: 'bg-info' },
+            '3': { text: 'Eco-Focused', class: 'bg-success' },
+            '4': { text: 'Eco-Champion', class: 'bg-primary' },
+            '5': { text: 'Eco-Warrior', class: 'bg-warning text-dark' }
+        };
+        
+        const level = levels[value] || levels['3'];
+        ecoLevelDisplay.innerHTML = `<span class="badge ${level.class}">${level.text}</span>`;
+    }
+    
+    sustainabilitySelect.addEventListener('change', updateEcoLevel);
+    updateEcoLevel(); // Initialize
+    
+    // Image preview
+    const imageInput = document.getElementById('trip_image');
+    const imagePreview = document.getElementById('image_preview');
+    const previewImg = document.getElementById('preview_img');
+    
+    imageInput.addEventListener('change', function(e) {
+        const file = e.target.files[0];
+        if (file && file.type.startsWith('image/')) {
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                previewImg.src = e.target.result;
+                imagePreview.style.display = 'block';
+                previewImg.style.opacity = '0';
+                setTimeout(() => {
+                    previewImg.style.opacity = '1';
+                }, 100);
+            };
+            reader.readAsDataURL(file);
+        } else {
+            imagePreview.style.display = 'none';
+        }
+    });
+    
+    // Form validation
+    document.getElementById('createTripForm').addEventListener('submit', function(e) {
+        const tripName = document.getElementById('trip_name').value.trim();
+        const destination = document.getElementById('destination').value.trim();
+        
+        if (!tripName) {
+            e.preventDefault();
+            alert('Please enter a trip name.');
+            document.getElementById('trip_name').focus();
+            return false;
+        }
+        
+        if (!destination) {
+            e.preventDefault();
+            alert('Please enter a destination.');
+            document.getElementById('destination').focus();
+            return false;
+        }
+        
+        // Check if dates are valid
+        if (startDate.value && endDate.value && new Date(endDate.value) < new Date(startDate.value)) {
+            e.preventDefault();
+            alert('End date must be after start date.');
+            endDate.focus();
+            return false;
+        }
+        
+        // Show loading state
+        const submitBtn = this.querySelector('button[type="submit"]');
+        submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin me-2"></i>Creating Trip...';
+        submitBtn.disabled = true;
+    });
+});
+</script>
+{% endblock %}

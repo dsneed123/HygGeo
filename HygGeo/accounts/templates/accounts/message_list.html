@@ -1,0 +1,242 @@
+{% extends 'base.html' %}
+
+{% block title %}My Messages - HygGeo{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <div class="row">
+        <div class="col-12 mb-4">
+            <div class="d-flex justify-content-between align-items-center">
+                <div>
+                    <h1 class="h2 fw-bold" style="color: var(--hygge-green);">
+                        <i class="fas fa-envelope me-2"></i>My Messages
+                    </h1>
+                    <p class="text-muted">Connect with fellow sustainable travelers</p>
+                </div>
+                <div>
+                    {% if total_unread > 0 %}
+                    <span class="badge bg-danger px-3 py-2 me-3">
+                        {{ total_unread }} unread message{{ total_unread|pluralize }}
+                    </span>
+                    {% endif %}
+                    <a href="{% url 'user_list' %}" class="btn btn-outline-hygge">
+                        <i class="fas fa-users me-2"></i>Find Travel Buddies
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Message Conversations -->
+    <div class="row">
+        {% for conversation in conversations %}
+        <div class="col-12 mb-3">
+            <div class="card conversation-card border-0 shadow-sm">
+                <div class="card-body p-4">
+                    <div class="row align-items-center">
+                        <!-- Participant Info -->
+                        <div class="col-md-2 text-center mb-3 mb-md-0">
+                            {% for participant in conversation.participants %}
+                                {% if participant != user %}
+                                <div class="position-relative d-inline-block">
+                                    {% if participant.userprofile.avatar %}
+                                        <img src="{{ participant.userprofile.avatar.url }}" alt="{{ participant.first_name }}" 
+                                             class="rounded-circle" style="width: 60px; height: 60px; object-fit: cover;">
+                                    {% else %}
+                                        <div class="rounded-circle bg-secondary d-flex align-items-center justify-content-center" 
+                                             style="width: 60px; height: 60px;">
+                                            <i class="fas fa-user text-white"></i>
+                                        </div>
+                                    {% endif %}
+                                    
+                                    {% if conversation.unread_count > 0 %}
+                                    <div class="position-absolute top-0 end-0 bg-danger rounded-circle d-flex align-items-center justify-content-center text-white" 
+                                         style="width: 20px; height: 20px; font-size: 0.7rem;">
+                                        {{ conversation.unread_count }}
+                                    </div>
+                                    {% endif %}
+                                </div>
+                                <div class="mt-2">
+                                    <div class="fw-bold small">
+                                        {% if participant.first_name and participant.last_name %}
+                                            {{ participant.first_name }} {{ participant.last_name }}
+                                        {% else %}
+                                            {{ participant.username }}
+                                        {% endif %}
+                                    </div>
+                                    {% if participant.userprofile.location %}
+                                    <div class="text-muted" style="font-size: 0.8rem;">
+                                        <i class="fas fa-map-marker-alt me-1"></i>{{ participant.userprofile.location }}
+                                    </div>
+                                    {% endif %}
+                                </div>
+                                {% endif %}
+                            {% endfor %}
+                        </div>
+                        
+                        <!-- Message Preview -->
+                        <div class="col-md-6">
+                            <div class="mb-2">
+                                <h6 class="fw-bold mb-1 {% if conversation.unread_count > 0 %}text-primary{% endif %}" style="color: var(--hygge-green);">
+                                    {{ conversation.latest_message.subject|truncatechars:60 }}
+                                </h6>
+                                <p class="text-muted mb-0">{{ conversation.latest_message.body|truncatewords:15 }}</p>
+                            </div>
+                            
+                            <!-- Trip Context -->
+                            {% if conversation.trip %}
+                            <div class="d-flex align-items-center mt-2 p-2 rounded" style="background-color: var(--hygge-cream);">
+                                <i class="fas fa-map-marked-alt me-2 text-success"></i>
+                                <div>
+                                    <div class="fw-bold small">About: {{ conversation.trip.trip_name }}</div>
+                                    <div class="text-muted" style="font-size: 0.8rem;">{{ conversation.trip.destination }}</div>
+                                </div>
+                            </div>
+                            {% endif %}
+                        </div>
+                        
+                        <!-- Message Info & Actions -->
+                        <div class="col-md-4 text-md-end">
+                            <div class="mb-3">
+                                <div class="text-muted small">
+                                    <i class="fas fa-clock me-1"></i>
+                                    {{ conversation.latest_message.created_at|timesince }} ago
+                                </div>
+                                <div class="text-muted small">
+                                    {% if conversation.latest_message.sender == user %}
+                                        <i class="fas fa-arrow-right me-1"></i>You sent
+                                    {% else %}
+                                        <i class="fas fa-arrow-left me-1"></i>You received
+                                    {% endif %}
+                                </div>
+                            </div>
+                            
+                            <div class="d-flex flex-column gap-2">
+                                <a href="{% url 'conversation' conversation.latest_message.conversation_id %}" 
+                                   class="btn btn-hygge btn-sm">
+                                    <i class="fas fa-eye me-1"></i>View Conversation
+                                </a>
+                                {% if conversation.trip %}
+                                <a href="{% url 'trip_detail' conversation.trip.pk %}" 
+                                   class="btn btn-outline-secondary btn-sm">
+                                    <i class="fas fa-map me-1"></i>View Trip
+                                </a>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% empty %}
+        <div class="col-12">
+            <div class="text-center py-5">
+                <i class="fas fa-envelope text-muted" style="font-size: 4rem;"></i>
+                <h4 class="text-muted mt-3">No messages yet</h4>
+                <p class="text-muted">Start connecting with fellow travelers!</p>
+                <div class="mt-4">
+                    <a href="{% url 'user_list' %}" class="btn btn-hygge me-2">
+                        <i class="fas fa-users me-2"></i>Find Travel Buddies
+                    </a>
+                    <a href="{% url 'trip_list' %}" class="btn btn-outline-hygge">
+                        <i class="fas fa-map me-2"></i>Browse Trips
+                    </a>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+
+    <!-- Pagination -->
+    {% if conversations.has_other_pages %}
+    <nav aria-label="Message pagination" class="mt-4">
+        <ul class="pagination justify-content-center">
+            {% if conversations.has_previous %}
+                <li class="page-item">
+                    <a class="page-link" href="?page={{ conversations.previous_page_number }}">Previous</a>
+                </li>
+            {% endif %}
+            
+            {% for num in conversations.paginator.page_range %}
+                {% if conversations.number == num %}
+                    <li class="page-item active">
+                        <span class="page-link">{{ num }}</span>
+                    </li>
+                {% else %}
+                    <li class="page-item">
+                        <a class="page-link" href="?page={{ num }}">{{ num }}</a>
+                    </li>
+                {% endif %}
+            {% endfor %}
+            
+            {% if conversations.has_next %}
+                <li class="page-item">
+                    <a class="page-link" href="?page={{ conversations.next_page_number }}">Next</a>
+                </li>
+            {% endif %}
+        </ul>
+    </nav>
+    {% endif %}
+</div>
+
+<style>
+.conversation-card {
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    border-radius: 12px;
+}
+
+.conversation-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+}
+
+.page-link {
+    color: var(--hygge-green);
+    border-color: #dee2e6;
+}
+
+.page-item.active .page-link {
+    background-color: var(--hygge-green);
+    border-color: var(--hygge-green);
+}
+
+.page-link:hover {
+    color: var(--hygge-light-green);
+    background-color: rgba(74, 124, 89, 0.1);
+    border-color: var(--hygge-light-green);
+}
+
+@media (max-width: 768px) {
+    .col-md-4 {
+        text-align: center !important;
+    }
+    
+    .d-flex.flex-column.gap-2 {
+        flex-direction: row !important;
+        justify-content: center;
+        gap: 0.5rem !important;
+    }
+    
+    .d-flex.flex-column.gap-2 .btn {
+        flex: 1;
+    }
+}
+</style>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Add animation to conversation cards
+    const cards = document.querySelectorAll('.conversation-card');
+    cards.forEach((card, index) => {
+        card.style.opacity = '0';
+        card.style.transform = 'translateY(30px)';
+        
+        setTimeout(() => {
+            card.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
+            card.style.opacity = '1';
+            card.style.transform = 'translateY(0)';
+        }, index * 100);
+    });
+});
+</script>
+{% endblock %}

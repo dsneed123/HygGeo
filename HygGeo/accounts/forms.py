@@ -4,6 +4,7 @@ from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.models import User
 from .models import UserProfile, TravelSurvey
 
+from .models import Trip, Message
 class CustomUserCreationForm(UserCreationForm):
     """Extended user creation form with additional fields"""
     email = forms.EmailField(required=True)
@@ -132,3 +133,93 @@ class UserUpdateForm(forms.ModelForm):
     class Meta:
         model = User
         fields = ['first_name', 'last_name', 'email']
+
+
+
+class TripForm(forms.ModelForm):
+    TRAVEL_STYLES_CHOICES = [
+        ('nature', 'Nature & Outdoors'),
+        ('culture', 'Culture & History'),
+        ('food', 'Local Cuisine'),
+        ('wellness', 'Wellness & Relaxation'),
+        ('adventure', 'Adventure Sports'),
+        ('photography', 'Photography'),
+        ('luxury', 'Luxury Experiences'),
+        ('budget', 'Budget Travel'),
+        ('comfort', 'Comfort Travel'),
+    ]
+    
+    SUSTAINABILITY_FACTORS_CHOICES = [
+        ('sustainable_transport', 'Sustainable Transportation'),
+        ('eco_accommodation', 'Eco-Friendly Accommodation'),
+        ('local_economy', 'Supporting Local Economy'),
+        ('waste_reduction', 'Waste Reduction'),
+        ('carbon_offset', 'Carbon Offsetting'),
+        ('wildlife_protection', 'Wildlife Protection'),
+    ]
+    
+    travel_styles = forms.MultipleChoiceField(
+        choices=TRAVEL_STYLES_CHOICES,
+        widget=forms.CheckboxSelectMultiple,
+        required=False
+    )
+    
+    sustainability_factors = forms.MultipleChoiceField(
+        choices=SUSTAINABILITY_FACTORS_CHOICES,
+        widget=forms.CheckboxSelectMultiple,
+        required=False
+    )
+    
+    class Meta:
+        model = Trip
+        fields = [
+            'trip_name', 'destination', 'description', 'trip_status',
+            'start_date', 'end_date', 'trip_duration_preference',
+            'group_size_preference', 'budget_range', 'travel_frequency',
+            'seeking_buddies', 'travel_styles', 'sustainability_priority',
+            'sustainability_factors', 'trip_image', 'visibility',
+            'allow_messages'
+        ]
+        
+        widgets = {
+            'start_date': forms.DateInput(attrs={'type': 'date'}),
+            'end_date': forms.DateInput(attrs={'type': 'date'}),
+            'description': forms.Textarea(attrs={'rows': 4}),
+        }
+    
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        # Add CSS classes to form fields
+        for field_name, field in self.fields.items():
+            if field_name not in ['travel_styles', 'sustainability_factors', 'allow_messages']:
+                field.widget.attrs['class'] = 'form-control'
+
+# Add this to your accounts/forms.py
+
+class MessageForm(forms.ModelForm):
+    class Meta:
+        model = Message
+        fields = ['subject', 'body']
+        widgets = {
+            'subject': forms.TextInput(attrs={
+                'class': 'form-control',
+                'placeholder': 'Message subject...'
+            }),
+            'body': forms.Textarea(attrs={
+                'class': 'form-control',
+                'rows': 5,
+                'placeholder': 'Write your message here...'
+            }),
+        }
+
+class ReplyForm(forms.ModelForm):
+    class Meta:
+        model = Message
+        fields = ['body']
+        widgets = {
+            'body': forms.Textarea(attrs={
+                'class': 'form-control',
+                'rows': 3,
+                'placeholder': 'Write your reply...'
+            }),
+        }

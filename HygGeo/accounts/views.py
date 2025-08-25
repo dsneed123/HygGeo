@@ -1,23 +1,26 @@
-# accounts/views.py
 from django.shortcuts import render, redirect, get_object_or_404
-from django.contrib.auth import login, authenticate
-from django.contrib.auth.decorators import login_required
+from django.contrib.auth import login, authenticate, update_session_auth_hash
+from django.contrib.auth.decorators import login_required, user_passes_test
 from django.contrib.auth.models import User
 from django.contrib import messages
+from django.urls import reverse
+
 from django.core.paginator import Paginator
-from django.db.models import Q
-from .forms import CustomUserCreationForm, UserProfileForm, TravelSurveyForm, UserUpdateForm
-from .models import UserProfile, TravelSurvey
-import random
+from django.db.models import Q, Count
+from django.utils import timezone
 
-from django.contrib.auth import authenticate, update_session_auth_hash
-from django.contrib.auth.forms import PasswordChangeForm
-
-from django.contrib.auth.decorators import user_passes_test
-
-from django.db.models import Count
+from .forms import (
+    CustomUserCreationForm, 
+    UserProfileForm, 
+    TravelSurveyForm, 
+    UserUpdateForm, 
+    TripForm, 
+    MessageForm, 
+    ReplyForm
+)
+from .models import UserProfile, TravelSurvey, Trip, Message
 from experiences.models import Experience, Destination, Provider, Category, ExperienceType
-
+import random
 
 def index(request):
     """Homepage with hygge concept, sustainability facts, and survey CTA"""
@@ -212,44 +215,78 @@ def delete_account_view(request):
     
     return render(request, 'accounts/delete_account.html')
 
+# In your views.py
+from django.db.models import Q
+from .models import User, TravelSurvey
+
+# Replace your existing user_list_view with this updated version:
+
 def user_list_view(request):
-    """Public user list (optional - for community features)"""
-    search_query = request.GET.get('search', '')
-    users = User.objects.filter(is_active=True).select_related('userprofile')
+    users = User.objects.select_related('userprofile').prefetch_related('travel_surveys')
     
-    if search_query:
+    # Filter by destination (search in dream_destination)
+    destination_query = request.GET.get('destination', '')
+    if destination_query:
         users = users.filter(
-            Q(username__icontains=search_query) |
-            Q(first_name__icontains=search_query) |
-            Q(last_name__icontains=search_query) |
-            Q(userprofile__location__icontains=search_query)
+            travel_surveys__dream_destination__icontains=destination_query
         )
     
-    # Paginate users
+    # Filter by travel style
+    travel_style = request.GET.get('travel_style', '')
+    if travel_style:
+        users = users.filter(
+            travel_surveys__travel_styles__contains=[travel_style]
+        )
+    
+    # Filter by age range
+    age_range = request.GET.get('age_range', '')
+    gender_pref = request.GET.get('gender_pref', '')
+    travel_month = request.GET.get('travel_month', '')
+    
+    # Get recent trips from all users (including current user)
+    recent_trips = Trip.objects.filter(
+        visibility__in=['public', 'community']
+    ).select_related(
+        'creator__userprofile'
+    ).order_by('-created_at')[:12]  # Get 12 most recent trips
+    
+    # Pagination for users
     paginator = Paginator(users, 12)
     page_number = request.GET.get('page')
     page_obj = paginator.get_page(page_number)
     
     context = {
         'users': page_obj,
-        'search_query': search_query,
+        'recent_trips': recent_trips,
+        'destination_query': destination_query,
+        'travel_style': travel_style,
+        'age_range': age_range,
+        'gender_pref': gender_pref,
+        'travel_month': travel_month,
     }
-    
     return render(request, 'accounts/user_list.html', context)
 
+
 def public_profile_view(request, username):
-    """View another user's public profile"""
-    user = get_object_or_404(User, username=username, is_active=True)
-    profile = get_object_or_404(UserProfile, user=user)
+    profile_user = User.objects.get(username=username)
     
-    # Get latest survey for travel interests (if user allows public viewing)
-    latest_survey = TravelSurvey.objects.filter(user=user).first()
+    today = timezone.now().date()
+    
+    public_trips = Trip.objects.filter(
+        creator=profile_user,
+        visibility='public',
+        start_date__gte=today
+    ).order_by('start_date')
+    
+    past_trips = Trip.objects.filter(
+        creator=profile_user,
+        start_date__lt=today
+    ).order_by('-start_date')
     
     context = {
-        'profile_user': user,
-        'profile': profile,
-        'latest_survey': latest_survey,
-        'is_own_profile': request.user == user,
+        'profile_user': profile_user,
+        'public_trips': public_trips,
+        'past_trips': past_trips,
     }
     
     return render(request, 'accounts/public_profile.html', context)
@@ -292,3 +329,288 @@ def admin_dashboard(request):
     
     # Updated template path to match your file location
     return render(request, 'admin-dashboard.html', context)
+
+@login_required
+def create_trip(request):
+    """Create a new trip"""
+    if request.method == 'POST':
+        form = TripForm(request.POST, request.FILES)
+        if form.is_valid():
+            trip = form.save(commit=False)
+            trip.creator = request.user
+            trip.save()
+            messages.success(request, 'Your trip has been created successfully!')
+            return redirect('trip_detail', pk=trip.pk)
+        else:
+            messages.error(request, 'Please correct the errors below.')
+    else:
+        form = TripForm()
+    
+    return render(request, 'accounts/create_trip.html', {'form': form})
+
+@login_required
+def trip_detail_view(request, pk):
+    """View trip details"""
+    trip = get_object_or_404(Trip, pk=pk)
+    
+    # Check visibility permissions
+    if trip.visibility == 'private' and trip.creator != request.user:
+        messages.error(request, 'This trip is private.')
+        return redirect('trip_list')
+    
+    context = {
+        'trip': trip,
+        'can_edit': trip.creator == request.user,
+        'can_message': trip.allow_messages and trip.creator != request.user,
+    }
+    
+    return render(request, 'accounts/trip_detail.html', context)
+
+def trip_list_view(request):
+    """List all public trips with filtering"""
+    trips = Trip.objects.filter(visibility__in=['public', 'community']).select_related('creator__userprofile')
+    
+    # Filter by destination
+    destination_query = request.GET.get('destination')
+    if destination_query:
+        trips = trips.filter(destination__icontains=destination_query)
+    
+    # Filter by budget range
+    budget_filter = request.GET.get('budget_range')
+    if budget_filter:
+        trips = trips.filter(budget_range=budget_filter)
+    
+    # Filter by travel style
+    travel_style = request.GET.get('travel_style')
+    if travel_style:
+        trips = trips.filter(travel_styles__contains=[travel_style])
+    
+    # Filter by seeking buddies
+    seeking_buddies = request.GET.get('seeking_buddies')
+    if seeking_buddies:
+        trips = trips.filter(seeking_buddies=seeking_buddies)
+    
+    # Pagination
+    paginator = Paginator(trips, 12)
+    page_number = request.GET.get('page')
+    page_obj = paginator.get_page(page_number)
+    
+    context = {
+        'trips': page_obj,
+        'destination_query': destination_query,
+        'budget_filter': budget_filter,
+        'travel_style': travel_style,
+        'seeking_buddies': seeking_buddies,
+    }
+    
+    return render(request, 'accounts/trip_list.html', context)
+
+@login_required
+def my_trips_view(request):
+    """View user's own trips"""
+    trips = Trip.objects.filter(creator=request.user).order_by('-created_at')
+    
+    paginator = Paginator(trips, 10)
+    page_number = request.GET.get('page')
+    page_obj = paginator.get_page(page_number)
+    
+    return render(request, 'accounts/my_trips.html', {'trips': page_obj})
+
+@login_required
+def edit_trip_view(request, pk):
+    """Edit an existing trip"""
+    trip = get_object_or_404(Trip, pk=pk, creator=request.user)
+    
+    if request.method == 'POST':
+        form = TripForm(request.POST, request.FILES, instance=trip)
+        if form.is_valid():
+            # Handle image removal if requested
+            if 'remove_image' in request.POST and request.POST.get('remove_image') == 'on':
+                if trip.trip_image:
+                    trip.trip_image.delete()
+                    trip.trip_image = None
+            
+            trip = form.save()
+            messages.success(request, 'Your trip has been updated successfully!')
+            return redirect('trip_detail', pk=trip.pk)
+        else:
+            messages.error(request, 'Please correct the errors below.')
+    else:
+        form = TripForm(instance=trip)
+    
+    context = {
+        'form': form,
+        'trip': trip,
+    }
+    
+    return render(request, 'accounts/edit_trip.html', context)
+
+@login_required
+def delete_trip_view(request, pk):
+    """Delete a trip"""
+    trip = get_object_or_404(Trip, pk=pk, creator=request.user)
+    
+    if request.method == 'POST':
+        trip_name = trip.trip_name
+        trip.delete()
+        messages.success(request, f'Trip "{trip_name}" has been deleted successfully!')
+        return redirect('my_trips')
+    
+    return redirect('trip_detail', pk=pk)
+
+
+# Add these to your accounts/views.py
+
+@login_required
+def send_message_view(request, username=None, trip_id=None):
+    """Send a message to another user, optionally about a specific trip"""
+    recipient = None
+    trip = None
+    
+    if username:
+        recipient = get_object_or_404(User, username=username)
+    if trip_id:
+        trip = get_object_or_404(Trip, pk=trip_id)
+        if not recipient:
+            recipient = trip.creator
+    
+    if request.method == 'POST':
+        form = MessageForm(request.POST)
+        if form.is_valid():
+            message = form.save(commit=False)
+            message.sender = request.user
+            message.recipient = recipient
+            message.trip = trip
+            message.save()
+            
+            messages.success(request, f'Message sent to {recipient.first_name or recipient.username}!')
+            return redirect('message_list')
+        else:
+            messages.error(request, 'Please correct the errors below.')
+    else:
+        initial_data = {}
+        if trip:
+            initial_data['subject'] = f'Interest in your trip: {trip.trip_name}'
+        form = MessageForm(initial=initial_data)
+    
+    context = {
+        'form': form,
+        'recipient': recipient,
+        'trip': trip,
+    }
+    
+    return render(request, 'accounts/send_message.html', context)
+
+@login_required
+def message_list_view(request):
+    """List all conversations for the current user"""
+    # Get all messages where user is sender or recipient
+    user_messages = Message.objects.filter(
+        Q(sender=request.user) | Q(recipient=request.user)
+    ).select_related('sender', 'recipient', 'trip')
+    
+    # Group messages by conversation
+    conversations = {}
+    for message in user_messages:
+        conv_id = message.conversation_id
+        if conv_id not in conversations:
+            conversations[conv_id] = {
+                'latest_message': message,
+                'participants': set(),
+                'unread_count': 0,
+                'trip': message.trip,
+            }
+        
+        # Update latest message if this one is newer
+        if message.created_at > conversations[conv_id]['latest_message'].created_at:
+            conversations[conv_id]['latest_message'] = message
+        
+        # Add participants
+        conversations[conv_id]['participants'].add(message.sender)
+        conversations[conv_id]['participants'].add(message.recipient)
+        
+        # Count unread messages for current user
+        if message.recipient == request.user and not message.is_read:
+            conversations[conv_id]['unread_count'] += 1
+    
+    # Convert to list and sort by latest message
+    conversation_list = list(conversations.values())
+    conversation_list.sort(key=lambda x: x['latest_message'].created_at, reverse=True)
+    
+    # Pagination
+    paginator = Paginator(conversation_list, 20)
+    page_number = request.GET.get('page')
+    page_obj = paginator.get_page(page_number)
+    
+    context = {
+        'conversations': page_obj,
+        'total_unread': sum(conv['unread_count'] for conv in conversation_list),
+    }
+    
+    return render(request, 'accounts/message_list.html', context)
+
+@login_required
+def conversation_view(request, conversation_id):
+    """View a specific conversation thread"""
+    # Get the root message
+    root_message = get_object_or_404(Message, pk=conversation_id)
+    
+    # Check if user is part of this conversation
+    if request.user not in [root_message.sender, root_message.recipient]:
+        messages.error(request, 'You do not have access to this conversation.')
+        return redirect('message_list')
+    
+    # Get all messages in this conversation
+    conversation_messages = Message.objects.filter(
+    Q(id=conversation_id) | Q(parent_message_id=conversation_id)
+        ).select_related('sender', 'recipient', 'trip').order_by('created_at')
+
+        # Mark messages as read for current user
+    Message.objects.filter(
+        Q(id=conversation_id) | Q(parent_message_id=conversation_id),
+        recipient=request.user,
+        is_read=False
+    ).update(is_read=True)
+    
+    # Get the other participant
+    other_user = root_message.recipient if root_message.sender == request.user else root_message.sender
+    
+    # Handle reply form
+    if request.method == 'POST':
+        form = ReplyForm(request.POST)
+        if form.is_valid():
+            reply = form.save(commit=False)
+            reply.sender = request.user
+            reply.recipient = other_user
+            reply.subject = f"Re: {root_message.subject}"
+            reply.trip = root_message.trip
+            reply.parent_message = root_message
+            reply.save()
+            
+            messages.success(request, 'Reply sent!')
+            return redirect('conversation', conversation_id=conversation_id)
+    else:
+        form = ReplyForm()
+    
+    context = {
+        'conversation_messages': conversation_messages,
+        'other_user': other_user,
+        'trip': root_message.trip,
+        'form': form,
+        'conversation_id': conversation_id,
+    }
+    
+    return render(request, 'accounts/conversation.html', context)
+
+@login_required
+def delete_message_view(request, message_id):
+    """Delete a message"""
+    message = get_object_or_404(Message, pk=message_id, sender=request.user)
+    
+    if request.method == 'POST':
+        conversation_id = message.conversation_id
+        message.delete()
+        messages.success(request, 'Message deleted successfully!')
+        return redirect('conversation', conversation_id=conversation_id)
+    
+    return redirect('message_list')
