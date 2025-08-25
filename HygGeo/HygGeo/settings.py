@@ -323,7 +323,7 @@ HYGGEO_SETTINGS = {
     'SURVEY_PAGINATION_SIZE': 5,  # Surveys per page in profile
     'USER_LIST_PAGINATION_SIZE': 12,  # Users per page in community
     'ENABLE_PROFILE_AVATARS': True,
-    'MAX_AVATAR_SIZE': 2 * 1024 * 1024,  # 2MB
+    'MAX_AVATAR_SIZE': 10 * 1024 * 1024,
     'ALLOWED_AVATAR_TYPES': ['image/jpeg', 'image/png', 'image/gif'],
 }
 
