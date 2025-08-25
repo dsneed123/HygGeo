@@ -3,8 +3,10 @@ from django import forms
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.models import User
 from .models import UserProfile, TravelSurvey
-
+from experiences.models import Destination, Experience
 from .models import Trip, Message
+from django.forms.widgets import CheckboxSelectMultiple
+
 class CustomUserCreationForm(UserCreationForm):
     """Extended user creation form with additional fields"""
     email = forms.EmailField(required=True)
@@ -137,39 +139,6 @@ class UserUpdateForm(forms.ModelForm):
 
 
 class TripForm(forms.ModelForm):
-    TRAVEL_STYLES_CHOICES = [
-        ('nature', 'Nature & Outdoors'),
-        ('culture', 'Culture & History'),
-        ('food', 'Local Cuisine'),
-        ('wellness', 'Wellness & Relaxation'),
-        ('adventure', 'Adventure Sports'),
-        ('photography', 'Photography'),
-        ('luxury', 'Luxury Experiences'),
-        ('budget', 'Budget Travel'),
-        ('comfort', 'Comfort Travel'),
-    ]
-    
-    SUSTAINABILITY_FACTORS_CHOICES = [
-        ('sustainable_transport', 'Sustainable Transportation'),
-        ('eco_accommodation', 'Eco-Friendly Accommodation'),
-        ('local_economy', 'Supporting Local Economy'),
-        ('waste_reduction', 'Waste Reduction'),
-        ('carbon_offset', 'Carbon Offsetting'),
-        ('wildlife_protection', 'Wildlife Protection'),
-    ]
-    
-    travel_styles = forms.MultipleChoiceField(
-        choices=TRAVEL_STYLES_CHOICES,
-        widget=forms.CheckboxSelectMultiple,
-        required=False
-    )
-    
-    sustainability_factors = forms.MultipleChoiceField(
-        choices=SUSTAINABILITY_FACTORS_CHOICES,
-        widget=forms.CheckboxSelectMultiple,
-        required=False
-    )
-    
     class Meta:
         model = Trip
         fields = [
@@ -177,24 +146,41 @@ class TripForm(forms.ModelForm):
             'start_date', 'end_date', 'trip_duration_preference',
             'group_size_preference', 'budget_range', 'travel_frequency',
             'seeking_buddies', 'travel_styles', 'sustainability_priority',
-            'sustainability_factors', 'trip_image', 'visibility',
-            'allow_messages'
+            'sustainability_factors', 'experiences', 'trip_image',
+            'visibility', 'allow_messages'
         ]
-        
         widgets = {
-            'start_date': forms.DateInput(attrs={'type': 'date'}),
-            'end_date': forms.DateInput(attrs={'type': 'date'}),
-            'description': forms.Textarea(attrs={'rows': 4}),
+            'destination': forms.Select(attrs={
+                'class': 'form-control',
+                'required': True
+            }),
+            'experiences': CheckboxSelectMultiple(attrs={
+                'class': 'form-check-input'
+            }),
+            'start_date': forms.DateInput(attrs={
+                'type': 'date',
+                'class': 'form-control'
+            }),
+            'end_date': forms.DateInput(attrs={
+                'type': 'date', 
+                'class': 'form-control'
+            }),
+            'description': forms.Textarea(attrs={
+                'rows': 4,
+                'class': 'form-control'
+            }),
+            'trip_image': forms.FileInput(attrs={
+                'class': 'form-control',
+                'accept': 'image/*'
+            }),
         }
     
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        # Add CSS classes to form fields
-        for field_name, field in self.fields.items():
-            if field_name not in ['travel_styles', 'sustainability_factors', 'allow_messages']:
-                field.widget.attrs['class'] = 'form-control'
-
-# Add this to your accounts/forms.py
+        # Customize destination queryset if needed
+        self.fields['destination'].queryset = Destination.objects.all().order_by('name')
+        # Customize experiences queryset if needed  
+        self.fields['experiences'].queryset = Experience.objects.filter(is_active=True).order_by('title')
 
 class MessageForm(forms.ModelForm):
     class Meta:

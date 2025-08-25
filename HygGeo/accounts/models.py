@@ -228,9 +228,11 @@ class Trip(models.Model):
     # Basic Information
     creator = models.ForeignKey(User, on_delete=models.CASCADE, related_name='created_trips')
     trip_name = models.CharField(max_length=200)
-    destination = models.CharField(max_length=200)
+    destination = models.ForeignKey('experiences.Destination', on_delete=models.CASCADE, related_name='trips')
     description = models.TextField(blank=True, null=True)
     trip_status = models.CharField(max_length=20, choices=TRIP_STATUS_CHOICES, default='planning')
+    experiences = models.ManyToManyField('experiences.Experience', blank=True, related_name='trips')
+
     
     # Dates
     start_date = models.DateField(blank=True, null=True)

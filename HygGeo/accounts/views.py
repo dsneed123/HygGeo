@@ -331,6 +331,7 @@ def admin_dashboard(request):
     # Updated template path to match your file location
     return render(request, 'admin-dashboard.html', context)
 
+
 @login_required
 def create_trip(request):
     """Create a new trip"""
@@ -340,6 +341,8 @@ def create_trip(request):
             trip = form.save(commit=False)
             trip.creator = request.user
             trip.save()
+            # Save many-to-many relationships
+            form.save_m2m()
             messages.success(request, 'Your trip has been created successfully!')
             return redirect('trip_detail', pk=trip.pk)
         else:
@@ -347,7 +350,11 @@ def create_trip(request):
     else:
         form = TripForm()
     
-    return render(request, 'accounts/create_trip.html', {'form': form})
+    return render(request, 'accounts/create_trip.html', {
+        'form': form,
+        'destinations': Destination.objects.all(),
+        'experiences': Experience.objects.filter(is_active=True)
+    })
 
 @login_required
 def trip_detail_view(request, pk):

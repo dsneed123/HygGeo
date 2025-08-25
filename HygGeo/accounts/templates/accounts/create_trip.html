@@ -40,11 +40,16 @@
                             </div>
                         </div>
                         
+                        <!-- Replace the destination input section with: -->
                         <div class="mb-3">
-                            <label for="destination" class="form-label fw-bold">Destination</label>
-                            <input type="text" class="form-control" id="destination" name="destination" required placeholder="e.g., Copenhagen, Denmark">
-                            <div class="form-text">Where will your sustainable adventure take place?</div>
+                            <label for="id_destination" class="form-label fw-bold">Destination</label>
+                            {{ form.destination }}
+                            <div class="form-text">Choose from our curated sustainable destinations</div>
+                            {% if form.destination.errors %}
+                                <div class="text-danger">{{ form.destination.errors }}</div>
+                            {% endif %}
                         </div>
+
                         
                         <div class="mb-3">
                             <label for="description" class="form-label fw-bold">Trip Description</label>
@@ -234,6 +239,33 @@
                         </div>
                     </div>
                 </div>
+                <div class="card card-hygge mb-4">
+                <div class="card-header" style="background-color: var(--hygge-cream); border-bottom: none;">
+                    <h5 class="mb-0 fw-bold" style="color: var(--hygge-green);">
+                        <i class="fas fa-star me-2"></i>Add Experiences (Optional)
+                    </h5>
+                </div>
+                <div class="card-body p-4">
+                    <div class="mb-3">
+                        <label class="form-label fw-bold">Select experiences you'd like to include in this trip:</label>
+                        <div class="row">
+                            {% for experience in form.experiences %}
+                                <div class="col-md-6 mb-2">
+                                    <div class="form-check">
+                                        {{ experience.tag }}
+                                        <label class="form-check-label" for="{{ experience.id_for_label }}">
+                                            <i class="fas fa-map-marker-alt me-2"></i>{{ experience.choice_label }}
+                                        </label>
+                                    </div>
+                                </div>
+                            {% endfor %}
+                        </div>
+                        {% if form.experiences.errors %}
+                            <div class="text-danger mt-2">{{ form.experiences.errors }}</div>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
 
                 <!-- Sustainability Focus -->
                 <div class="card card-hygge mb-4">
