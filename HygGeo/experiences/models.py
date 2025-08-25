@@ -4,7 +4,9 @@ from django.contrib.auth.models import User
 from django.urls import reverse
 from django.core.validators import MinValueValidator, MaxValueValidator
 import uuid
+from storages.backends.s3boto3 import S3Boto3Storage
 
+s3_storage = S3Boto3Storage()
 class Category(models.Model):
     """Categories for travel experiences"""
     name = models.CharField(max_length=100, unique=True)

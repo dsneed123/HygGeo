@@ -5,6 +5,8 @@ from django.db.models.signals import post_save
 from django.dispatch import receiver
 from django.urls import reverse
 from storages.backends.s3boto3 import S3Boto3Storage
+
+s3_storage = S3Boto3Storage()
 class UserProfile(models.Model):
     """Extended user profile for HygGeo users"""
     user = models.OneToOneField(User, on_delete=models.CASCADE)
