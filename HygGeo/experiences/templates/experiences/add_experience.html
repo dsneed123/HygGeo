@@ -15,125 +15,112 @@
                     <form method="post" enctype="multipart/form-data">
                         {% csrf_token %}
                         
-                        <!-- Basic Details (unchanged) -->
+                        <!-- Basic Details -->
                         <div class="row mb-4">
                             <div class="col-12">
                                 <h4 class="fw-bold mb-3">Basic Details</h4>
                             </div>
                             <div class="col-12 mb-3">
-                                <label for="title" class="form-label fw-bold">Title:</label>
-                                <input type="text" class="form-control" id="title" name="title" required>
+                                <label for="{{ form.title.id_for_label }}" class="form-label fw-bold">Title:</label>
+                                {{ form.title }}
+                                {% if form.title.errors %}
+                                    <div class="text-danger">{{ form.title.errors }}</div>
+                                {% endif %}
+                                <div class="form-text">{{ form.title.help_text }}</div>
                             </div>
                             <div class="col-12 mb-3">
-                                <label for="short_description" class="form-label fw-bold">Short description:</label>
-                                <textarea class="form-control" id="short_description" name="short_description" rows="2" maxlength="300" required></textarea>
-                                <div class="form-text">Brief description for cards (max 300 characters)</div>
+                                <label for="{{ form.short_description.id_for_label }}" class="form-label fw-bold">Short description:</label>
+                                {{ form.short_description }}
+                                {% if form.short_description.errors %}
+                                    <div class="text-danger">{{ form.short_description.errors }}</div>
+                                {% endif %}
+                                <div class="form-text">{{ form.short_description.help_text }}</div>
                             </div>
                             <div class="col-12 mb-3">
-                                <label for="description" class="form-label fw-bold">Description:</label>
-                                <textarea class="form-control" id="description" name="description" rows="5" required></textarea>
+                                <label for="{{ form.description.id_for_label }}" class="form-label fw-bold">Description:</label>
+                                {{ form.description }}
+                                {% if form.description.errors %}
+                                    <div class="text-danger">{{ form.description.errors }}</div>
+                                {% endif %}
                             </div>
                             <div class="col-12 mb-3">
-                                <label for="main_image" class="form-label fw-bold">Main image:</label>
-                                <input type="file" class="form-control" id="main_image" name="main_image" accept="image/*">
-                                <div class="form-text">Upload a high-quality image representing this experience</div>
+                                <label for="{{ form.main_image.id_for_label }}" class="form-label fw-bold">Main image:</label>
+                                {{ form.main_image }}
+                                {% if form.main_image.errors %}
+                                    <div class="text-danger">{{ form.main_image.errors }}</div>
+                                {% endif %}
+                                <div class="form-text">{{ form.main_image.help_text }}</div>
                             </div>
                         </div>
                         
-                        <!-- Categorization (updated) -->
+                        <!-- Categorization -->
                         <div class="row mb-4">
                             <div class="col-12">
                                 <h4 class="fw-bold mb-3">Categorization</h4>
                             </div>
-                            
                             <div class="col-md-6 mb-3">
-                                <label for="destination" class="form-label fw-bold">Destination:</label>
-                                <select class="form-select" id="destination" name="destination" required>
-                                    <option value="">---------</option>
-                                    {% for destination in destinations %}
-                                        <option value="{{ destination.id }}">{{ destination.name }}, {{ destination.country }}</option>
-                                    {% empty %}
-                                        <option value="">No destinations available</option>
-                                    {% endfor %}
-                                </select>
+                                <label for="{{ form.destination.id_for_label }}" class="form-label fw-bold">Destination:</label>
+                                {{ form.destination }}
+                                {% if form.destination.errors %}
+                                    <div class="text-danger">{{ form.destination.errors }}</div>
+                                {% endif %}
                                 <small class="text-muted"><a href="{% url 'destinations:add_destination' %}">+ Add new destination</a></small>
                             </div>
-                            
                             <div class="col-md-6 mb-3">
-                                <label for="provider" class="form-label fw-bold">Provider:</label>
-                                <select class="form-select" id="provider" name="provider" required>
-                                    <option value="">---------</option>
-                                    {% for provider in providers %}
-                                        <option value="{{ provider.id }}">{{ provider.name }}</option>
-                                    {% empty %}
-                                        <option value="">No providers available</option>
-                                    {% endfor %}
-                                </select>
+                                <label for="{{ form.provider.id_for_label }}" class="form-label fw-bold">Provider:</label>
+                                {{ form.provider }}
+                                {% if form.provider.errors %}
+                                    <div class="text-danger">{{ form.provider.errors }}</div>
+                                {% endif %}
                                 <small class="text-muted"><a href="{% url 'providers:add_provider' %}">+ Add new provider</a></small>
                             </div>
-                            
                             <div class="col-md-6 mb-3">
-                                <label for="experience_type" class="form-label fw-bold">Experience type:</label>
-                                <select class="form-select" id="experience_type" name="experience_type">
-                                    <option value="">---------</option>
-                                    {% for exp_type in experience_types %}
-                                        <option value="{{ exp_type.id }}">{{ exp_type.name }}</option>
-                                    {% empty %}
-                                        <option value="">No experience types available</option>
-                                    {% endfor %}
-                                </select>
+                                <label for="{{ form.experience_type.id_for_label }}" class="form-label fw-bold">Experience type:</label>
+                                {{ form.experience_type }}
+                                {% if form.experience_type.errors %}
+                                    <div class="text-danger">{{ form.experience_type.errors }}</div>
+                                {% endif %}
                                 <small class="text-muted"><a href="{% url 'experiences:add_experience_type' %}">+ Add new experience type</a></small>
                             </div>
-                            
                             <div class="col-md-6 mb-3">
-                                <label for="categories" class="form-label fw-bold">Categories:</label>
-                                <select class="form-select" id="categories" name="categories" multiple>
-                                    {% for category in categories %}
-                                        <option value="{{ category.id }}">{{ category.name }}</option>
-                                    {% empty %}
-                                        <option value="">No categories available</option>
-                                    {% endfor %}
-                                </select>
-                                <div class="form-text"><a href="{% url 'categories:add_category' %}">+ Add new category</a><br>Hold Ctrl/Cmd to select multiple categories</div>
+                                <label for="{{ form.categories.id_for_label }}" class="form-label fw-bold">Categories:</label>
+                                {{ form.categories }}
+                                {% if form.categories.errors %}
+                                    <div class="text-danger">{{ form.categories.errors }}</div>
+                                {% endif %}
+                                <div class="form-text"><a href="{% url 'categories:add_category' %}">+ Add new category</a><br>{{ form.categories.help_text }}</div>
                             </div>
-                            
                             <div class="col-12 mb-3">
-                                <label for="budget_range" class="form-label fw-bold">Budget range:</label>
-                                <select class="form-select" id="budget_range" name="budget_range" required>
-                                    <option value="">---------</option>
-                                    {% for value, label in form.fields.budget_range.choices %}
-                                        <option value="{{ value }}">{{ label }}</option>
-                                    {% endfor %}
-                                </select>
+                                <label for="{{ form.budget_range.id_for_label }}" class="form-label fw-bold">Budget range:</label>
+                                {{ form.budget_range }}
+                                {% if form.budget_range.errors %}
+                                    <div class="text-danger">{{ form.budget_range.errors }}</div>
+                                {% endif %}
                             </div>
                         </div>
                         
-                        <!-- Trip Details (unchanged) -->
+                        <!-- Trip Details -->
                         <div class="row mb-4">
                             <div class="col-12">
                                 <h4 class="fw-bold mb-3">Trip Details</h4>
                             </div>
                             <div class="col-md-6 mb-3">
-                                <label for="group_size" class="form-label fw-bold">Group size:</label>
-                                <select class="form-select" id="group_size" name="group_size" required>
-                                    <option value="">---------</option>
-                                    {% for value, label in form.fields.group_size.choices %}
-                                        <option value="{{ value }}">{{ label }}</option>
-                                    {% endfor %}
-                                </select>
+                                <label for="{{ form.group_size.id_for_label }}" class="form-label fw-bold">Group size:</label>
+                                {{ form.group_size }}
+                                {% if form.group_size.errors %}
+                                    <div class="text-danger">{{ form.group_size.errors }}</div>
+                                {% endif %}
                             </div>
                             <div class="col-md-6 mb-3">
-                                <label for="duration" class="form-label fw-bold">Duration:</label>
-                                <select class="form-select" id="duration" name="duration" required>
-                                    <option value="">---------</option>
-                                    {% for value, label in form.fields.duration.choices %}
-                                        <option value="{{ value }}">{{ label }}</option>
-                                    {% endfor %}
-                                </select>
+                                <label for="{{ form.duration.id_for_label }}" class="form-label fw-bold">Duration:</label>
+                                {{ form.duration }}
+                                {% if form.duration.errors %}
+                                    <div class="text-danger">{{ form.duration.errors }}</div>
+                                {% endif %}
                             </div>
                         </div>
                         
-                        <!-- Sustainability & Hygge (unchanged) -->
+                        <!-- Sustainability & Hygge -->
                         <div class="row mb-4">
                             <div class="col-12">
                                 <h4 class="fw-bold mb-3" style="color: var(--hygge-green);">
@@ -141,52 +128,48 @@
                                 </h4>
                             </div>
                             <div class="col-md-6 mb-3">
-                                <label for="sustainability_score" class="form-label fw-bold">
+                                <label for="{{ form.sustainability_score.id_for_label }}" class="form-label fw-bold">
                                     <i class="fas fa-seedling text-success me-1"></i>Sustainability Score:
                                 </label>
-                                <select class="form-select" id="sustainability_score" name="sustainability_score" required>
-                                    <option value="">Select rating...</option>
-                                    {% for score in form.fields.sustainability_score.choices %}
-                                        <option value="{{ score.0 }}" {% if score.0 == 5 %}selected{% endif %}>{{ score.1 }}</option>
-                                    {% endfor %}
-                                </select>
-                                <div class="form-text">Rate environmental sustainability (1-10)</div>
+                                {{ form.sustainability_score }}
+                                {% if form.sustainability_score.errors %}
+                                    <div class="text-danger">{{ form.sustainability_score.errors }}</div>
+                                {% endif %}
+                                <div class="form-text">{{ form.sustainability_score.help_text }}</div>
                             </div>
                             <div class="col-md-6 mb-3">
-                                <label for="hygge_factor" class="form-label fw-bold">
+                                <label for="{{ form.hygge_factor.id_for_label }}" class="form-label fw-bold">
                                     <i class="fas fa-heart text-danger me-1"></i>Hygge Factor:
                                 </label>
-                                <select class="form-select" id="hygge_factor" name="hygge_factor" required>
-                                    <option value="">Select rating...</option>
-                                    {% for score in form.fields.hygge_factor.choices %}
-                                        <option value="{{ score.0 }}" {% if score.0 == 5 %}selected{% endif %}>{{ score.1 }}</option>
-                                    {% endfor %}
-                                </select>
-                                <div class="form-text">Rate coziness and comfort (1-10)</div>
+                                {{ form.hygge_factor }}
+                                {% if form.hygge_factor.errors %}
+                                    <div class="text-danger">{{ form.hygge_factor.errors }}</div>
+                                {% endif %}
+                                <div class="form-text">{{ form.hygge_factor.help_text }}</div>
                             </div>
                         </div>
                         
-                        <!-- Status Options (unchanged) -->
+                        <!-- Status Options -->
                         <div class="row mb-4">
                             <div class="col-md-6">
                                 <div class="form-check">
-                                    <input class="form-check-input" type="checkbox" id="is_featured" name="is_featured">
-                                    <label class="form-check-label fw-bold" for="is_featured">
+                                    {{ form.is_featured }}
+                                    <label class="form-check-label fw-bold" for="{{ form.is_featured.id_for_label }}">
                                         Is featured
                                     </label>
                                 </div>
                             </div>
                             <div class="col-md-6">
                                 <div class="form-check">
-                                    <input class="form-check-input" type="checkbox" id="is_active" name="is_active" checked>
-                                    <label class="form-check-label fw-bold" for="is_active">
+                                    {{ form.is_active }}
+                                    <label class="form-check-label fw-bold" for="{{ form.is_active.id_for_label }}">
                                         Is active
                                     </label>
                                 </div>
                             </div>
                         </div>
                         
-                        <!-- Submit Button (unchanged) -->
+                        <!-- Submit Button -->
                         <div class="d-grid gap-2 d-md-flex justify-content-md-end">
                             <a href="{% url 'experiences:experience_list' %}" class="btn btn-outline-secondary me-md-2">
                                 <i class="fas fa-times me-1"></i>Cancel
