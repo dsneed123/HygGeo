@@ -372,4 +372,4 @@ if not DEBUG:
 else:
     # Development: Use local media files (keep existing settings)
     MEDIA_URL = '/media/'
-    MEDIA_ROOT = BASE_DIR / 'media
+    MEDIA_ROOT = BASE_DIR / 'media'
