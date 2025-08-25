@@ -10550,3 +10550,23 @@ WARNING 2025-08-24 18:25:06,810 basehttp 59092 64108 "GET /favicon.ico HTTP/1.1"
 INFO 2025-08-24 18:25:09,658 basehttp 59092 64108 "GET /accounts/logout/ HTTP/1.1" 302 0
 INFO 2025-08-24 18:25:09,664 basehttp 59092 64108 "GET / HTTP/1.1" 200 27031
 INFO 2025-08-24 18:25:12,076 basehttp 59092 64108 "GET / HTTP/1.1" 200 26673
+INFO 2025-08-24 19:28:53,794 autoreload 35272 19992 Watching for file changes with StatReloader
+INFO 2025-08-24 20:57:39,522 basehttp 35272 29104 "GET / HTTP/1.1" 200 26704
+WARNING 2025-08-24 20:57:39,810 log 35272 29104 Not Found: /favicon.ico
+WARNING 2025-08-24 20:57:39,811 basehttp 35272 29104 "GET /favicon.ico HTTP/1.1" 404 3346
+INFO 2025-08-24 20:57:41,586 basehttp 35272 29104 "GET / HTTP/1.1" 200 26674
+WARNING 2025-08-24 20:57:41,661 log 35272 29104 Not Found: /favicon.ico
+WARNING 2025-08-24 20:57:41,662 basehttp 35272 29104 "GET /favicon.ico HTTP/1.1" 404 3346
+INFO 2025-08-24 20:57:48,293 basehttp 35272 29104 "GET / HTTP/1.1" 200 26662
+WARNING 2025-08-24 20:57:48,401 log 35272 29104 Not Found: /favicon.ico
+WARNING 2025-08-24 20:57:48,402 basehttp 35272 29104 "GET /favicon.ico HTTP/1.1" 404 3346
+INFO 2025-08-24 20:57:51,321 basehttp 35272 19524 "GET / HTTP/1.1" 200 26666
+WARNING 2025-08-24 20:57:51,415 log 35272 19524 Not Found: /favicon.ico
+WARNING 2025-08-24 20:57:51,415 basehttp 35272 19524 "GET /favicon.ico HTTP/1.1" 404 3346
+INFO 2025-08-24 21:03:11,347 autoreload 35272 19992 C:\Users\DLSne\OneDrive\Desktop\Code\webdev\HygGeo\HygGeo\HygGeo\urls.py changed, reloading.
+INFO 2025-08-24 21:03:12,029 autoreload 62256 15756 Watching for file changes with StatReloader
+INFO 2025-08-24 21:20:54,862 autoreload 34928 46872 Watching for file changes with StatReloader
+INFO 2025-08-24 21:23:33,928 autoreload 34928 46872 C:\Users\DLSne\OneDrive\Desktop\Code\webdev\HygGeo\HygGeo\HygGeo\urls.py changed, reloading.
+INFO 2025-08-24 21:23:34,375 autoreload 46184 1840 Watching for file changes with StatReloader
+INFO 2025-08-24 21:24:02,855 autoreload 70616 65956 Watching for file changes with StatReloader
+INFO 2025-08-24 21:25:40,393 autoreload 68620 37312 Watching for file changes with StatReloader

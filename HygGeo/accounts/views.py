@@ -622,3 +622,60 @@ def logout_view(request):
     logout(request)
     messages.success(request, "You have been logged out successfully.")
     return redirect('index')
+
+def user_trips_view(request, username):
+    """Display all public trips for a specific user"""
+    user = get_object_or_404(User, username=username)
+    
+    # Base queryset for the user's trips
+    trips = Trip.objects.filter(creator=user)
+    
+    # Filter by visibility based on the viewer
+    if request.user == user:
+        # User viewing their own trips - show all trips
+        pass
+    elif request.user.is_authenticated:
+        # Logged-in user viewing someone else's trips - show public and community trips
+        trips = trips.filter(visibility__in=['public', 'community'])
+    else:
+        # Anonymous user - only show public trips
+        trips = trips.filter(visibility='public')
+    
+    # Filter by trip status (optional - you might want to show all or filter out completed trips)
+    status_filter = request.GET.get('status')
+    if status_filter:
+        trips = trips.filter(trip_status=status_filter)
+    
+    # Search functionality
+    search_query = request.GET.get('search')
+    if search_query:
+        trips = trips.filter(
+            Q(trip_name__icontains=search_query) |
+            Q(destination__icontains=search_query) |
+            Q(description__icontains=search_query)
+        )
+    
+    # Ordering
+    order_by = request.GET.get('order_by', '-created_at')
+    if order_by in ['created_at', '-created_at', 'start_date', '-start_date', 'trip_name', '-trip_name']:
+        trips = trips.order_by(order_by)
+    
+    # Pagination
+    paginator = Paginator(trips, 12)  # Show 12 trips per page
+    page_number = request.GET.get('page')
+    page_obj = paginator.get_page(page_number)
+    
+    # Get trip status choices for filtering
+    status_choices = Trip.TRIP_STATUS_CHOICES
+    
+    context = {
+        'profile_user': user,
+        'trips': page_obj,
+        'total_trips': trips.count(),
+        'status_choices': status_choices,
+        'current_status': status_filter,
+        'search_query': search_query,
+        'current_order': order_by,
+    }
+    
+    return render(request, 'accounts/user_trips.html', context)

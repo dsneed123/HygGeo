@@ -20,8 +20,9 @@ urlpatterns = [
     path('accounts/', include('django.contrib.auth.urls')),  # Built-in auth views
     path('experiences/', include('experiences.urls')),
 ]
+# FIXED: Serve media files in production AND development
+urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 
-# Serve media files during development
+# Serve static files during development only (WhiteNoise handles this in production)  
 if settings.DEBUG:
-    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
     urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
