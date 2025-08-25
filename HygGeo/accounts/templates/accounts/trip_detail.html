@@ -137,34 +137,29 @@
                                     <h6 class="fw-bold mb-3" style="color: var(--hygge-green);">Trip Organizer</h6>
                                     
                                     <!-- Creator Profile -->
-                                    <div class="d-flex align-items-center mb-3">
-                                        <div class="me-3">
-                                            {% if trip.creator.userprofile.avatar %}
-                                                <img src="{{ trip.creator.userprofile.avatar.url }}" alt="{{ trip.creator.first_name }}" 
-                                                     class="rounded-circle" style="width: 50px; height: 50px; object-fit: cover;">
-                                            {% else %}
-                                                <div class="rounded-circle bg-secondary d-flex align-items-center justify-content-center" 
-                                                     style="width: 50px; height: 50px;">
-                                                    <i class="fas fa-user text-white"></i>
-                                                </div>
-                                            {% endif %}
-                                        </div>
-                                        <div>
-                                            <div class="fw-bold">
-                                                {% if trip.creator.first_name and trip.creator.last_name %}
-                                                    {{ trip.creator.first_name }} {{ trip.creator.last_name }}
-                                                {% else %}
-                                                    {{ trip.creator.username }}
-                                                {% endif %}
+                                   <div class="d-flex align-items-center mb-3">
+                                    <div class="me-3">
+                                        {% if trip.creator.userprofile and trip.creator.userprofile.avatar %}
+                                            <img src="{{ trip.creator.userprofile.avatar.url }}" alt="{{ trip.creator.first_name }}" 
+                                                class="rounded-circle" style="width: 50px; height: 50px; object-fit: cover;">
+                                        {% else %}
+                                            <div class="rounded-circle bg-secondary d-flex align-items-center justify-content-center" 
+                                                style="width: 50px; height: 50px;">
+                                                <i class="fas fa-user text-white"></i>
                                             </div>
-                                            {% if trip.creator.userprofile.location %}
-                                            <small class="text-muted">
-                                                <i class="fas fa-map-marker-alt me-1"></i>{{ trip.creator.userprofile.location }}
-                                            </small>
-                                            {% endif %}
-                                        </div>
+                                        {% endif %}
                                     </div>
-                                    
+                                    <div>
+                                        <h6 class="fw-bold mb-1">{{ trip.creator.first_name|default:trip.creator.username }}</h6>
+                                        <p class="text-muted small mb-0">Trip Organizer</p>
+                                        {% if trip.creator.userprofile %}
+                                            {% if trip.creator.userprofile.bio %}
+                                                <p class="small mb-0">{{ trip.creator.userprofile.bio|truncatechars:50 }}</p>
+                                            {% endif %}
+                                        {% endif %}
+                                    </div>
+                                </div>
+                                                                    
                                     <!-- Seeking Buddies Status -->
                                     <div class="mb-3">
                                         {% if trip.seeking_buddies == 'yes' %}
