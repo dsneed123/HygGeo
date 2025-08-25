@@ -3,7 +3,8 @@ from django.contrib.auth import login, authenticate, update_session_auth_hash
 from django.contrib.auth.decorators import login_required, user_passes_test
 from django.contrib.auth.models import User
 from django.contrib import messages
-from django.urls import reverse
+from django.contrib.auth import logout
+
 
 from django.core.paginator import Paginator
 from django.db.models import Q, Count
@@ -614,3 +615,10 @@ def delete_message_view(request, message_id):
         return redirect('conversation', conversation_id=conversation_id)
     
     return redirect('message_list')
+
+@login_required
+def logout_view(request):
+    """Log the user out and redirect to homepage"""
+    logout(request)
+    messages.success(request, "You have been logged out successfully.")
+    return redirect('index')
