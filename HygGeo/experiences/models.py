@@ -131,6 +131,16 @@ class Experience(models.Model):
     slug = models.SlugField(max_length=200, unique=True)
     description = models.TextField()
     short_description = models.CharField(max_length=300, help_text="Brief description for cards")
+    booking_required = models.BooleanField(
+        default=True, 
+        help_text="Uncheck if no booking is required for this experience"
+    )
+    
+    # Update existing booking field to be optional:
+    affiliate_link = models.URLField(
+        blank=True, 
+        help_text="Booking/affiliate link (leave empty for experiences that don't require booking)"
+    )
     
     # Relationships
     destination = models.ForeignKey(Destination, on_delete=models.CASCADE, related_name='experiences')
@@ -195,16 +205,7 @@ class Experience(models.Model):
     )
     gallery_images = models.JSONField(default=list, blank=True, help_text="List of image URLs")
     
-    # Affiliate & Booking
-    affiliate_link = models.URLField(help_text="Affiliate tracking link for bookings")
-    booking_link = models.URLField(blank=True, help_text="Direct booking link (optional)")
-    commission_rate = models.DecimalField(
-        max_digits=5, 
-        decimal_places=2, 
-        null=True, 
-        blank=True,
-        help_text="Commission percentage for affiliate sales"
-    )
+
     
     # Features & Amenities
     included_features = models.JSONField(default=list, help_text="What's included in the experience")

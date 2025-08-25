@@ -209,9 +209,16 @@
                     </div>
                     
                     <!-- Book Now Button -->
+                    {% if experience.booking_required and experience.affiliate_link %}
                     <button class="btn btn-hygge w-100 mb-3 book-now-btn" data-experience-id="{{ experience.id }}" data-affiliate-url="{{ experience.affiliate_link }}">
                         <i class="fas fa-calendar-check me-2"></i>Book This Experience
                     </button>
+                    {% else %}
+                    <div class="alert alert-info text-center">
+                        This experience does not require booking.
+                    </div>
+                    {% endif %}
+
                     
                     <!-- Bookmark Button -->
                     <button class="btn btn-outline-hygge w-100 mb-3 bookmark-btn" data-experience-id="{{ experience.id }}">

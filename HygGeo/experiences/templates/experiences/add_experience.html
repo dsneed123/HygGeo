@@ -148,6 +148,21 @@
                                 <div class="form-text">{{ form.hygge_factor.help_text }}</div>
                             </div>
                         </div>
+                        <div class="mb-4 form-check">
+                            {{ form.booking_required }}
+                            <label class="form-check-label" for="id_booking_required">
+                                Booking Required
+                            </label>
+                        </div>
+
+                        <div class="mb-4">
+                            <label for="id_affiliate_link" class="form-label">Affiliate/Booking Link</label>
+                            {{ form.affiliate_link }}
+                            <div class="form-text">
+                                Leave empty if no booking is required.
+                            </div>
+                        </div>
+
                         
                         <!-- Status Options -->
                         <div class="row mb-4">

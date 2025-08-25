@@ -9,7 +9,8 @@ class ExperienceForm(forms.ModelForm):
             'title', 'short_description', 'description', 'main_image',
             'destination', 'provider', 'experience_type', 'categories',
             'budget_range', 'group_size', 'duration', 'sustainability_score',
-            'hygge_factor', 'is_featured', 'is_active'
+            'hygge_factor', 'is_featured', 'is_active', 'booking_required',
+            'affiliate_link',
         ]
         widgets = {
             'title': forms.TextInput(attrs={
