@@ -386,21 +386,39 @@ else:
 
 print(f"Django DEBUG: {DEBUG}, Storage: {'Spaces' if not DEBUG else 'Local'}")
 
-# CRITICAL: Set storage backend AFTER all other settings
+# Set DEFAULT_FILE_STORAGE setting
 if not DEBUG:
     DEFAULT_FILE_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
     print(f"🔧 Set DEFAULT_FILE_STORAGE = {DEFAULT_FILE_STORAGE}")
+
+# =============================================================================
+# NUCLEAR OPTION: FORCE DJANGO TO USE S3 STORAGE
+# =============================================================================
+
+if not DEBUG:
+    print("🚀 NUCLEAR OPTION: Forcing S3 storage replacement...")
     
-    # Also set as environment variable to force Django to use it
-    import os
-    os.environ.setdefault('DEFAULT_FILE_STORAGE', DEFAULT_FILE_STORAGE)
-    
-    # Force Django to reload default storage
     try:
-        from django.core.files.storage import default_storage, get_storage_class
-        # Clear any cached storage
-        if hasattr(default_storage, '_wrapped') and default_storage._wrapped:
-            default_storage._wrapped = None
-        print("🔄 Cleared Django storage cache")
+        # Import storage after settings are loaded
+        from storages.backends.s3boto3 import S3Boto3Storage
+        
+        # Create S3 storage instance
+        s3_storage = S3Boto3Storage()
+        
+        # FORCE replace Django's default storage
+        import django.core.files.storage as storage_module
+        storage_module.default_storage = s3_storage
+        
+        # Also replace internal reference if it exists
+        if hasattr(storage_module, '_default_storage'):
+            storage_module._default_storage = s3_storage
+        
+        print(f"💥 FORCED REPLACEMENT: {type(s3_storage)}")
+        print(f"   - Storage class: {s3_storage.__class__.__name__}")
+        print("✅ SUCCESS: Django forced to use S3 storage!")
+        
     except Exception as e:
-        print(f"⚠️  Storage cache clear failed (this is OK): {e}")
+        print(f"❌ NUCLEAR OPTION FAILED: {e}")
+        import traceback
+        print("Full traceback:")
+        traceback.print_exc()
