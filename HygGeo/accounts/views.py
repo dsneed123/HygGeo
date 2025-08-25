@@ -684,8 +684,9 @@ def debug_spaces(request):
     from django.conf import settings
     from django.http import JsonResponse
     import os
+    import boto3
     
-    return JsonResponse({
+    debug_info = {
         'DEBUG': settings.DEBUG,
         'INSTALLED_APPS_has_storages': 'storages' in settings.INSTALLED_APPS,
         'AWS_ACCESS_KEY_ID': getattr(settings, 'AWS_ACCESS_KEY_ID', 'NOT_SET')[:8] + '...' if getattr(settings, 'AWS_ACCESS_KEY_ID', None) else 'NOT_SET',
@@ -695,4 +696,23 @@ def debug_spaces(request):
         'MEDIA_URL': settings.MEDIA_URL,
         'env_SPACES_ACCESS_KEY': 'EXISTS' if os.environ.get('SPACES_ACCESS_KEY') else 'MISSING',
         'env_SPACES_BUCKET_NAME': os.environ.get('SPACES_BUCKET_NAME', 'MISSING'),
-    })
+    }
+    
+    # Test connection to Spaces
+    try:
+        client = boto3.client(
+            's3',
+            endpoint_url=settings.AWS_S3_ENDPOINT_URL,
+            aws_access_key_id=settings.AWS_ACCESS_KEY_ID,
+            aws_secret_access_key=settings.AWS_SECRET_ACCESS_KEY
+        )
+        
+        # Try to list bucket contents
+        response = client.list_objects_v2(Bucket=settings.AWS_STORAGE_BUCKET_NAME)
+        debug_info['connection_test'] = 'SUCCESS'
+        debug_info['objects_in_bucket'] = response.get('KeyCount', 0)
+        
+    except Exception as e:
+        debug_info['connection_test'] = f'FAILED: {str(e)}'
+    
+    return JsonResponse(debug_info)
