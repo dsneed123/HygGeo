@@ -716,3 +716,42 @@ def debug_spaces(request):
         debug_info['connection_test'] = f'FAILED: {str(e)}'
     
     return JsonResponse(debug_info)
+
+def test_upload(request):
+    from django.http import JsonResponse
+    from django.core.files.base import ContentFile
+    from django.core.files.storage import default_storage
+    from django.conf import settings
+    
+    if request.method == 'POST':
+        try:
+            # Create a test file
+            test_content = ContentFile(b"This is a test file from Django")
+            test_filename = "test-upload.txt"
+            
+            # Try to save it using the default storage
+            saved_name = default_storage.save(f"test/{test_filename}", test_content)
+            
+            # Get the URL
+            file_url = default_storage.url(saved_name)
+            
+            return JsonResponse({
+                'status': 'success',
+                'saved_name': saved_name,
+                'file_url': file_url,
+                'storage_class': str(type(default_storage)),
+            })
+            
+        except Exception as e:
+            return JsonResponse({
+                'status': 'error',
+                'error': str(e),
+                'error_type': str(type(e)),
+                'storage_class': str(type(default_storage)),
+            })
+    
+    # Show a simple form for testing
+    return JsonResponse({
+        'message': 'Send a POST request to test upload',
+        'storage_class': str(type(default_storage)),
+    })
