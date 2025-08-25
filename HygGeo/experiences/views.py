@@ -290,16 +290,18 @@ def destination_list_view(request):
     
     return render(request, 'experiences/destination_list.html', context)
 
+
 def destination_detail_view(request, slug):
+
     destination = get_object_or_404(Destination, slug=slug)
-    # Get all active experiences for the destination
+    # Fetch active experiences for the destination
     experiences = Experience.objects.filter(destination=destination, is_active=True)
     # Group experiences by experience_type.name
     experiences_by_type = defaultdict(list)
     for experience in experiences:
         exp_type_name = experience.experience_type.name if experience.experience_type else "Unspecified"
         experiences_by_type[exp_type_name].append(experience)
-    # Convert defaultdict to regular dict for template
+    # Convert to regular dict
     experiences_by_type = dict(experiences_by_type)
     # Calculate total experiences
     total_experiences = len(experiences)
@@ -309,6 +311,7 @@ def destination_detail_view(request, slug):
         'total_experiences': total_experiences,
     }
     return render(request, 'experiences/destination_detail.html', context)
+    
 def destination_detail_view(request, slug):
     """Detailed view of a destination"""
     destination = get_object_or_404(Destination, slug=slug)
