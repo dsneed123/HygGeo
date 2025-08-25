@@ -15,7 +15,7 @@ from django.utils.text import slugify
 
 from .models import (
     Experience, Destination, Category, Provider, 
-    UserRecommendation, ExperienceReview, BookingTracking
+    UserRecommendation, ExperienceReview, BookingTracking, ExperienceType
 )
 import random
 from decimal import Decimal
