@@ -12,6 +12,24 @@
                 <p class="text-muted">Create a mindful travel experience and find like-minded travel companions</p>
             </div>
 
+            <!-- DEBUG: Remove this after testing -->
+            <div style="background: #f8f9fa; padding: 10px; margin: 10px 0; border: 1px solid #ddd;">
+                <strong>Debug Info:</strong><br>
+                Form fields: {{ form.fields.keys }}<br>
+                Form errors: {{ form.errors }}<br>
+                Non-field errors: {{ form.non_field_errors }}
+            </div>
+
+            <!-- Add message display -->
+            {% if messages %}
+                {% for message in messages %}
+                    <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+                        {{ message }}
+                        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                    </div>
+                {% endfor %}
+            {% endif %}
+
             <form method="post" enctype="multipart/form-data" id="createTripForm">
                 {% csrf_token %}
                 
@@ -401,13 +419,6 @@
                         </div>
                     </div>
                 </div>
-                                <!-- DEBUG: Remove this after testing -->
-                <div style="background: #f8f9fa; padding: 10px; margin: 10px 0; border: 1px solid #ddd;">
-                    <strong>Debug Info:</strong><br>
-                    Form fields: {{ form.fields.keys }}<br>
-                    Form errors: {{ form.errors }}<br>
-                    Non-field errors: {{ form.non_field_errors }}
-                </div>
 
                 <!-- Action Buttons -->
                 <div class="text-center">
@@ -567,10 +578,11 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     });
     
-    // Form validation
+    // UPDATED Form validation with JSON conversion
     document.getElementById('createTripForm').addEventListener('submit', function(e) {
+        // Basic validation
         const tripName = document.getElementById('trip_name').value.trim();
-        const destination = document.getElementById('destination').value.trim();
+        const destination = document.querySelector('select[name="destination"]').value;
         
         if (!tripName) {
             e.preventDefault();
@@ -581,8 +593,8 @@ document.addEventListener('DOMContentLoaded', function() {
         
         if (!destination) {
             e.preventDefault();
-            alert('Please enter a destination.');
-            document.getElementById('destination').focus();
+            alert('Please select a destination.');
+            document.querySelector('select[name="destination"]').focus();
             return false;
         }
         
@@ -594,10 +606,67 @@ document.addEventListener('DOMContentLoaded', function() {
             return false;
         }
         
+        // CRITICAL: Convert checkbox arrays to JSON format
+        
+        // Handle travel_styles checkboxes
+        const travelStylesChecked = [];
+        document.querySelectorAll('input[name="travel_styles"]:checked').forEach(checkbox => {
+            travelStylesChecked.push(checkbox.value);
+        });
+        
+        // Remove existing travel_styles hidden input if it exists
+        const existingTravelStylesInput = document.querySelector('input[name="travel_styles"][type="hidden"]');
+        if (existingTravelStylesInput) {
+            existingTravelStylesInput.remove();
+        }
+        
+        // Create hidden input for travel_styles JSON
+        const travelStylesInput = document.createElement('input');
+        travelStylesInput.type = 'hidden';
+        travelStylesInput.name = 'travel_styles';
+        travelStylesInput.value = JSON.stringify(travelStylesChecked);
+        this.appendChild(travelStylesInput);
+        
+        // Disable original travel_styles checkboxes so they don't interfere
+        document.querySelectorAll('input[name="travel_styles"][type="checkbox"]').forEach(checkbox => {
+            checkbox.disabled = true;
+        });
+        
+        // Handle sustainability_factors checkboxes
+        const sustainabilityFactorsChecked = [];
+        document.querySelectorAll('input[name="sustainability_factors"]:checked').forEach(checkbox => {
+            sustainabilityFactorsChecked.push(checkbox.value);
+        });
+        
+        // Remove existing sustainability_factors hidden input if it exists
+        const existingSustainabilityFactorsInput = document.querySelector('input[name="sustainability_factors"][type="hidden"]');
+        if (existingSustainabilityFactorsInput) {
+            existingSustainabilityFactorsInput.remove();
+        }
+        
+        // Create hidden input for sustainability_factors JSON
+        const sustainabilityFactorsInput = document.createElement('input');
+        sustainabilityFactorsInput.type = 'hidden';
+        sustainabilityFactorsInput.name = 'sustainability_factors';
+        sustainabilityFactorsInput.value = JSON.stringify(sustainabilityFactorsChecked);
+        this.appendChild(sustainabilityFactorsInput);
+        
+        // Disable original sustainability_factors checkboxes
+        document.querySelectorAll('input[name="sustainability_factors"][type="checkbox"]').forEach(checkbox => {
+            checkbox.disabled = true;
+        });
+        
         // Show loading state
         const submitBtn = this.querySelector('button[type="submit"]');
         submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin me-2"></i>Creating Trip...';
         submitBtn.disabled = true;
+        
+        // Debug logging
+        console.log('Travel styles JSON:', JSON.stringify(travelStylesChecked));
+        console.log('Sustainability factors JSON:', JSON.stringify(sustainabilityFactorsChecked));
+        
+        // Allow form submission to continue
+        return true;
     });
 });
 </script>
