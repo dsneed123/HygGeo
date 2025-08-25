@@ -356,9 +356,11 @@ if not DEBUG:
     AWS_S3_ENDPOINT_URL = config('SPACES_ENDPOINT_URL', default='https://nyc3.digitaloceanspaces.com')
     AWS_S3_OBJECT_PARAMETERS = {
         'CacheControl': 'max-age=86400',
+        'ACL': 'public-read',  # Ensure files are publicly readable
     }
     AWS_LOCATION = 'media'  # Optional: subfolder in your Space
     AWS_DEFAULT_ACL = 'public-read'
+    AWS_S3_FILE_OVERWRITE = False  # Don't overwrite files with same name
     # CDN URL (if enabled) - update this after enabling CDN
     AWS_S3_CUSTOM_DOMAIN = config('SPACES_CDN_ENDPOINT', default=f'{AWS_STORAGE_BUCKET_NAME}.{AWS_S3_ENDPOINT_URL.replace("https://", "")}')
     
@@ -370,4 +372,4 @@ if not DEBUG:
 else:
     # Development: Use local media files (keep existing settings)
     MEDIA_URL = '/media/'
-    MEDIA_ROOT = BASE_DIR / 'media'
+    MEDIA_ROOT = BASE_DIR / 'media
