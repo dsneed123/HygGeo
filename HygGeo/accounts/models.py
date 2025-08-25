@@ -4,13 +4,19 @@ from django.contrib.auth.models import User
 from django.db.models.signals import post_save
 from django.dispatch import receiver
 from django.urls import reverse
+from storages.backends.s3boto3 import S3Boto3Storage
 class UserProfile(models.Model):
     """Extended user profile for HygGeo users"""
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     bio = models.TextField(max_length=500, blank=True)
     location = models.CharField(max_length=100, blank=True)
     birth_date = models.DateField(null=True, blank=True)
-    avatar = models.ImageField(upload_to='avatars/', null=True, blank=True)
+    avatar = models.ImageField(
+        storage=s3_storage,
+        upload_to='avatars/',
+        null=True,
+        blank=True
+    )
     
     # Travel preferences
     sustainability_priority = models.IntegerField(

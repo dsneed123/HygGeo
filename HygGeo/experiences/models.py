@@ -42,7 +42,12 @@ class Destination(models.Model):
         default=5,
         help_text="How well this destination embodies hygge principles (1-10)"
     )
-    image = models.ImageField(upload_to='destinations/', null=True, blank=True)
+    image = models.ImageField(
+        storage=s3_storage,
+        upload_to='destinations/',
+        null=True,
+        blank=True
+    )
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
     
@@ -66,7 +71,12 @@ class Provider(models.Model):
     phone = models.CharField(max_length=20, blank=True)
     sustainability_certifications = models.TextField(blank=True, help_text="List any eco-certifications")
     verified = models.BooleanField(default=False, help_text="Verified as sustainable by HygGeo team")
-    logo = models.ImageField(upload_to='providers/', null=True, blank=True)
+    logo = models.ImageField(
+        storage=s3_storage,
+        upload_to='providers/',
+        null=True,
+        blank=True
+    )
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
     
@@ -175,7 +185,12 @@ class Experience(models.Model):
     )
     
     # Media
-    main_image = models.ImageField(upload_to='experiences/', null=True, blank=True)
+    main_image = models.ImageField(
+        storage=s3_storage,
+        upload_to='experiences/',
+        null=True,
+        blank=True
+    )
     gallery_images = models.JSONField(default=list, blank=True, help_text="List of image URLs")
     
     # Affiliate & Booking
