@@ -12,7 +12,7 @@ from accounts.models import TravelSurvey
 from experiences.forms import ExperienceForm, DestinationForm, ExperienceTypeForm, CategoryForm
 from .forms import ProviderForm  # add this import at top
 from django.utils.text import slugify 
-
+from collections import defaultdict
 from .models import (
     Experience, Destination, Category, Provider, 
     UserRecommendation, ExperienceReview, BookingTracking, ExperienceType
@@ -292,7 +292,22 @@ def destination_list_view(request):
 
 def destination_detail_view(request, slug):
     destination = get_object_or_404(Destination, slug=slug)
-    context = {'destination': destination}
+    # Get all active experiences for the destination
+    experiences = Experience.objects.filter(destination=destination, is_active=True)
+    # Group experiences by experience_type.name
+    experiences_by_type = defaultdict(list)
+    for experience in experiences:
+        exp_type_name = experience.experience_type.name if experience.experience_type else "Unspecified"
+        experiences_by_type[exp_type_name].append(experience)
+    # Convert defaultdict to regular dict for template
+    experiences_by_type = dict(experiences_by_type)
+    # Calculate total experiences
+    total_experiences = len(experiences)
+    context = {
+        'destination': destination,
+        'experiences_by_type': experiences_by_type,
+        'total_experiences': total_experiences,
+    }
     return render(request, 'experiences/destination_detail.html', context)
 def destination_detail_view(request, slug):
     """Detailed view of a destination"""
