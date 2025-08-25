@@ -519,7 +519,9 @@ document.addEventListener('DOMContentLoaded', function() {
         document.querySelectorAll('.travel-style-checkbox:checked').forEach(cb => {
             checkedValues.push(cb.value);
         });
-        document.getElementById('travel_styles_json').value = JSON.stringify(checkedValues);
+        const jsonValue = JSON.stringify(checkedValues.length > 0 ? checkedValues : []);
+        document.getElementById('travel_styles_json').value = jsonValue;
+        console.log('Travel Styles JSON:', jsonValue); // Debug log
     }
     
     function updateSustainabilityFactors() {
@@ -527,7 +529,9 @@ document.addEventListener('DOMContentLoaded', function() {
         document.querySelectorAll('.sustainability-factor-checkbox:checked').forEach(cb => {
             checkedValues.push(cb.value);
         });
-        document.getElementById('sustainability_factors_json').value = JSON.stringify(checkedValues);
+        const jsonValue = JSON.stringify(checkedValues.length > 0 ? checkedValues : []);
+        document.getElementById('sustainability_factors_json').value = jsonValue;
+        console.log('Sustainability Factors JSON:', jsonValue); // Debug log
     }
     
     // Add event listeners to checkboxes
