@@ -15,28 +15,24 @@
                     <form method="post" enctype="multipart/form-data">
                         {% csrf_token %}
                         
-                        <!-- Basic Details -->
+                        <!-- Basic Details (unchanged) -->
                         <div class="row mb-4">
                             <div class="col-12">
                                 <h4 class="fw-bold mb-3">Basic Details</h4>
                             </div>
-                            
                             <div class="col-12 mb-3">
                                 <label for="title" class="form-label fw-bold">Title:</label>
                                 <input type="text" class="form-control" id="title" name="title" required>
                             </div>
-                            
                             <div class="col-12 mb-3">
                                 <label for="short_description" class="form-label fw-bold">Short description:</label>
                                 <textarea class="form-control" id="short_description" name="short_description" rows="2" maxlength="300" required></textarea>
                                 <div class="form-text">Brief description for cards (max 300 characters)</div>
                             </div>
-                            
                             <div class="col-12 mb-3">
                                 <label for="description" class="form-label fw-bold">Description:</label>
                                 <textarea class="form-control" id="description" name="description" rows="5" required></textarea>
                             </div>
-                            
                             <div class="col-12 mb-3">
                                 <label for="main_image" class="form-label fw-bold">Main image:</label>
                                 <input type="file" class="form-control" id="main_image" name="main_image" accept="image/*">
@@ -44,7 +40,7 @@
                             </div>
                         </div>
                         
-                        <!-- Categorization -->
+                        <!-- Categorization (updated) -->
                         <div class="row mb-4">
                             <div class="col-12">
                                 <h4 class="fw-bold mb-3">Categorization</h4>
@@ -54,129 +50,123 @@
                                 <label for="destination" class="form-label fw-bold">Destination:</label>
                                 <select class="form-select" id="destination" name="destination" required>
                                     <option value="">---------</option>
-                                    <option value="seattle">Seattle, United States</option>
+                                    {% for destination in destinations %}
+                                        <option value="{{ destination.id }}">{{ destination.name }}, {{ destination.country }}</option>
+                                    {% empty %}
+                                        <option value="">No destinations available</option>
+                                    {% endfor %}
                                 </select>
-                                <small class="text-muted">+ Add new destination</small>
+                                <small class="text-muted"><a href="{% url 'destinations:add_destination' %}">+ Add new destination</a></small>
                             </div>
                             
                             <div class="col-md-6 mb-3">
                                 <label for="provider" class="form-label fw-bold">Provider:</label>
                                 <select class="form-select" id="provider" name="provider" required>
                                     <option value="">---------</option>
-                                    <option value="seattle-coffee-co">Seattle Coffee Co</option>
+                                    {% for provider in providers %}
+                                        <option value="{{ provider.id }}">{{ provider.name }}</option>
+                                    {% empty %}
+                                        <option value="">No providers available</option>
+                                    {% endfor %}
                                 </select>
-                                <small class="text-muted">+ Add new provider</small>
+                                <small class="text-muted"><a href="{% url 'providers:add_provider' %}">+ Add new provider</a></small>
                             </div>
                             
                             <div class="col-md-6 mb-3">
                                 <label for="experience_type" class="form-label fw-bold">Experience type:</label>
                                 <select class="form-select" id="experience_type" name="experience_type">
                                     <option value="">---------</option>
-                                    <option value="tour">Guided-tour</option>
+                                    {% for exp_type in experience_types %}
+                                        <option value="{{ exp_type.id }}">{{ exp_type.name }}</option>
+                                    {% empty %}
+                                        <option value="">No experience types available</option>
+                                    {% endfor %}
                                 </select>
-                                <small class="text-muted">+ Add new experience type</small>
+                                <small class="text-muted"><a href="{% url 'experiences:add_experience_type' %}">+ Add new experience type</a></small>
                             </div>
                             
                             <div class="col-md-6 mb-3">
                                 <label for="categories" class="form-label fw-bold">Categories:</label>
                                 <select class="form-select" id="categories" name="categories" multiple>
-                                    <option value="coffee-culture">Coffee Culture</option>
+                                    {% for category in categories %}
+                                        <option value="{{ category.id }}">{{ category.name }}</option>
+                                    {% empty %}
+                                        <option value="">No categories available</option>
+                                    {% endfor %}
                                 </select>
-                                <div class="form-text">+ Add new category<br>Hold Ctrl/Cmd to select multiple categories</div>
+                                <div class="form-text"><a href="{% url 'categories:add_category' %}">+ Add new category</a><br>Hold Ctrl/Cmd to select multiple categories</div>
                             </div>
                             
                             <div class="col-12 mb-3">
                                 <label for="budget_range" class="form-label fw-bold">Budget range:</label>
                                 <select class="form-select" id="budget_range" name="budget_range" required>
                                     <option value="">---------</option>
-                                    <option value="budget">Budget ($0-50/day)</option>
-                                    <option value="mid_range">Mid-range ($50-150/day)</option>
-                                    <option value="luxury">Luxury ($150+/day)</option>
+                                    {% for value, label in form.fields.budget_range.choices %}
+                                        <option value="{{ value }}">{{ label }}</option>
+                                    {% endfor %}
                                 </select>
                             </div>
                         </div>
                         
-                        <!-- Trip Details -->
+                        <!-- Trip Details (unchanged) -->
                         <div class="row mb-4">
                             <div class="col-12">
                                 <h4 class="fw-bold mb-3">Trip Details</h4>
                             </div>
-                            
                             <div class="col-md-6 mb-3">
                                 <label for="group_size" class="form-label fw-bold">Group size:</label>
                                 <select class="form-select" id="group_size" name="group_size" required>
                                     <option value="">---------</option>
-                                    <option value="solo">Solo Friendly</option>
-                                    <option value="couple">Perfect for Couples</option>
-                                    <option value="small_group">Small Groups (3-5)</option>
-                                    <option value="large_group">Large Groups (6+)</option>
-                                    <option value="family">Family Friendly</option>
+                                    {% for value, label in form.fields.group_size.choices %}
+                                        <option value="{{ value }}">{{ label }}</option>
+                                    {% endfor %}
                                 </select>
                             </div>
-                            
                             <div class="col-md-6 mb-3">
                                 <label for="duration" class="form-label fw-bold">Duration:</label>
                                 <select class="form-select" id="duration" name="duration" required>
                                     <option value="">---------</option>
-                                    <option value="half_day">Half Day</option>
-                                    <option value="full_day">Full Day</option>
-                                    <option value="weekend">Weekend (2-3 days)</option>
-                                    <option value="short_trip">Short Trip (4-7 days)</option>
-                                    <option value="long_trip">Extended Trip (1+ weeks)</option>
+                                    {% for value, label in form.fields.duration.choices %}
+                                        <option value="{{ value }}">{{ label }}</option>
+                                    {% endfor %}
                                 </select>
                             </div>
                         </div>
                         
-                        <!-- Sustainability & Hygge -->
+                        <!-- Sustainability & Hygge (unchanged) -->
                         <div class="row mb-4">
                             <div class="col-12">
                                 <h4 class="fw-bold mb-3" style="color: var(--hygge-green);">
                                     <i class="fas fa-leaf me-2"></i>Sustainability & Hygge
                                 </h4>
                             </div>
-                            
                             <div class="col-md-6 mb-3">
                                 <label for="sustainability_score" class="form-label fw-bold">
                                     <i class="fas fa-seedling text-success me-1"></i>Sustainability Score:
                                 </label>
                                 <select class="form-select" id="sustainability_score" name="sustainability_score" required>
                                     <option value="">Select rating...</option>
-                                    <option value="1">1 - Very Poor</option>
-                                    <option value="2">2 - Poor</option>
-                                    <option value="3">3 - Below Average</option>
-                                    <option value="4">4 - Fair</option>
-                                    <option value="5" selected>5 - Average</option>
-                                    <option value="6">6 - Good</option>
-                                    <option value="7">7 - Very Good</option>
-                                    <option value="8">8 - Excellent</option>
-                                    <option value="9">9 - Outstanding</option>
-                                    <option value="10">10 - Perfect</option>
+                                    {% for score in form.fields.sustainability_score.choices %}
+                                        <option value="{{ score.0 }}" {% if score.0 == 5 %}selected{% endif %}>{{ score.1 }}</option>
+                                    {% endfor %}
                                 </select>
                                 <div class="form-text">Rate environmental sustainability (1-10)</div>
                             </div>
-                            
                             <div class="col-md-6 mb-3">
                                 <label for="hygge_factor" class="form-label fw-bold">
                                     <i class="fas fa-heart text-danger me-1"></i>Hygge Factor:
                                 </label>
                                 <select class="form-select" id="hygge_factor" name="hygge_factor" required>
                                     <option value="">Select rating...</option>
-                                    <option value="1">1 - Very Low</option>
-                                    <option value="2">2 - Low</option>
-                                    <option value="3">3 - Below Average</option>
-                                    <option value="4">4 - Fair</option>
-                                    <option value="5" selected>5 - Average</option>
-                                    <option value="6">6 - Good</option>
-                                    <option value="7">7 - Very Good</option>
-                                    <option value="8">8 - Excellent</option>
-                                    <option value="9">9 - Outstanding</option>
-                                    <option value="10">10 - Perfect</option>
+                                    {% for score in form.fields.hygge_factor.choices %}
+                                        <option value="{{ score.0 }}" {% if score.0 == 5 %}selected{% endif %}>{{ score.1 }}</option>
+                                    {% endfor %}
                                 </select>
                                 <div class="form-text">Rate coziness and comfort (1-10)</div>
                             </div>
                         </div>
                         
-                        <!-- Status Options -->
+                        <!-- Status Options (unchanged) -->
                         <div class="row mb-4">
                             <div class="col-md-6">
                                 <div class="form-check">
@@ -186,7 +176,6 @@
                                     </label>
                                 </div>
                             </div>
-                            
                             <div class="col-md-6">
                                 <div class="form-check">
                                     <input class="form-check-input" type="checkbox" id="is_active" name="is_active" checked>
@@ -197,7 +186,7 @@
                             </div>
                         </div>
                         
-                        <!-- Submit Button -->
+                        <!-- Submit Button (unchanged) -->
                         <div class="d-grid gap-2 d-md-flex justify-content-md-end">
                             <a href="{% url 'experiences:experience_list' %}" class="btn btn-outline-secondary me-md-2">
                                 <i class="fas fa-times me-1"></i>Cancel

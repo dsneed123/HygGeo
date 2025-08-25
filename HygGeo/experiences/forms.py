@@ -8,7 +8,8 @@ class ExperienceForm(forms.ModelForm):
         fields = [
             'title', 'short_description', 'description', 'main_image',
             'destination', 'provider', 'experience_type', 'categories',
-            'budget_range', 'group_size', 'duration', 'is_featured', 'is_active'
+            'budget_range', 'group_size', 'duration', 'sustainability_score',
+            'hygge_factor', 'is_featured', 'is_active'
         ]
         widgets = {
             'title': forms.TextInput(attrs={
@@ -57,6 +58,20 @@ class ExperienceForm(forms.ModelForm):
                 'class': 'form-select',
                 'required': True
             }),
+            'sustainability_score': forms.Select(attrs={
+                'class': 'form-select',
+                'required': True
+            }, choices=[
+                (i, f"{i} - {'Very Poor' if i == 1 else 'Poor' if i == 2 else 'Below Average' if i == 3 else 'Fair' if i == 4 else 'Average' if i == 5 else 'Good' if i == 6 else 'Very Good' if i == 7 else 'Excellent' if i == 8 else 'Outstanding' if i == 9 else 'Perfect'}")
+                for i in range(1, 11)
+            ]),
+            'hygge_factor': forms.Select(attrs={
+                'class': 'form-select',
+                'required': True
+            }, choices=[
+                (i, f"{i} - {'Very Low' if i == 1 else 'Low' if i == 2 else 'Below Average' if i == 3 else 'Fair' if i == 4 else 'Average' if i == 5 else 'Good' if i == 6 else 'Very Good' if i == 7 else 'Excellent' if i == 8 else 'Outstanding' if i == 9 else 'Perfect'}")
+                for i in range(1, 11)
+            ]),
             'is_featured': forms.CheckboxInput(attrs={
                 'class': 'form-check-input'
             }),
@@ -71,19 +86,26 @@ class ExperienceForm(forms.ModelForm):
         # Set initial values
         self.fields['is_active'].initial = True
         self.fields['is_featured'].initial = False
+        self.fields['sustainability_score'].initial = 5
+        self.fields['hygge_factor'].initial = 5
         
         # Add help text
         self.fields['title'].help_text = 'This will be the main headline for your experience'
         self.fields['short_description'].help_text = 'Brief description shown on cards and previews'
         self.fields['categories'].help_text = 'Hold Ctrl/Cmd to select multiple categories'
         self.fields['main_image'].help_text = 'Upload a high-quality image representing this experience'
+        self.fields['sustainability_score'].help_text = 'Rate environmental sustainability (1-10)'
+        self.fields['hygge_factor'].help_text = 'Rate coziness and comfort (1-10)'
         
         # Make sure we have data for dropdowns
         if not self.fields['destination'].queryset.exists():
             self.fields['destination'].widget.attrs['data-no-options'] = 'No destinations available'
-            
         if not self.fields['provider'].queryset.exists():
             self.fields['provider'].widget.attrs['data-no-options'] = 'No providers available'
+        if not self.fields['experience_type'].queryset.exists():
+            self.fields['experience_type'].widget.attrs['data-no-options'] = 'No experience types available'
+        if not self.fields['categories'].queryset.exists():
+            self.fields['categories'].widget.attrs['data-no-options'] = 'No categories available'
 
     def clean_title(self):
         title = self.cleaned_data.get('title')

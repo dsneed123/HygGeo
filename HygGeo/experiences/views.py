@@ -434,13 +434,13 @@ def add_experience(request):
                     
                     experience.slug = slug
                 
-                # Set any default values
-                if not hasattr(experience, 'affiliate_link') or not experience.affiliate_link:
+                # Set default affiliate link if not provided
+                if not experience.affiliate_link:
                     experience.affiliate_link = "https://placeholder-affiliate-link.com"
                 
                 experience.save()
                 
-                # Save many-to-many relationships
+                # Save many-to-many relationships (e.g., categories)
                 form.save_m2m()
                 
                 messages.success(request, f'✅ Experience "{experience.title}" created successfully!')
@@ -455,11 +455,20 @@ def add_experience(request):
     else:
         form = ExperienceForm()
     
+    # Fetch data for dropdowns
+    destinations = Destination.objects.all()
+    providers = Provider.objects.all()
+    experience_types = ExperienceType.objects.all()
+    categories = Category.objects.all()
+    
     return render(request, 'experiences/add_experience.html', {
         'form': form,
-        'page_title': 'Add New Experience'
+        'page_title': 'Add New Experience',
+        'destinations': destinations,
+        'providers': providers,
+        'experience_types': experience_types,
+        'categories': categories,
     })
-
 
 @user_passes_test(lambda u: u.is_staff)  # restrict to staff/admin
 def add_destination(request):
