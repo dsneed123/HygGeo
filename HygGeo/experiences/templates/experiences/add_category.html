@@ -1,10 +1,563 @@
 {% extends 'base.html' %}
 
 {% block content %}
-<h2>Add Category</h2>
-<form method="post">
-    {% csrf_token %}
-    {{ form.as_p }}
-    <button type="submit" class="btn btn-primary">Add Category</button>
-</form>
+<div class="container mt-4">
+    <div class="row justify-content-center">
+        <div class="col-md-10">
+            <div class="card card-hygge shadow-lg">
+                <div class="card-header text-white" style="background: linear-gradient(135deg, var(--hygge-green), var(--hygge-light-green)); border-radius: 15px 15px 0 0;">
+                    <h2 class="mb-0 fw-bold"><i class="fas fa-tags me-2"></i>Add New Category</h2>
+                    <small class="opacity-75">Create a new category for travel experiences</small>
+                </div>
+                <div class="card-body p-4" style="background: var(--hygge-cream);">
+                    <form method="post">
+                        {% csrf_token %}
+                        
+                        <!-- Name Field -->
+                        <div class="mb-3">
+                            <label for="{{ form.name.id_for_label }}" class="form-label">Category Name</label>
+                            {{ form.name }}
+                            {% if form.name.errors %}
+                                <div class="text-danger">{{ form.name.errors }}</div>
+                            {% endif %}
+                        </div>
+                        
+                        <!-- Slug Field -->
+                        <div class="mb-3">
+                            <label for="{{ form.slug.id_for_label }}" class="form-label">Slug</label>
+                            {{ form.slug }}
+                            {% if form.slug.errors %}
+                                <div class="text-danger">{{ form.slug.errors }}</div>
+                            {% endif %}
+                        </div>
+                        
+                        <!-- Description Field -->
+                        <div class="mb-3">
+                            <label for="{{ form.description.id_for_label }}" class="form-label">Description</label>
+                            {{ form.description }}
+                            {% if form.description.errors %}
+                                <div class="text-danger">{{ form.description.errors }}</div>
+                            {% endif %}
+                        </div>
+                        
+                        <!-- Icon Field with Custom Selector -->
+                        <div class="mb-3">
+                            <label for="{{ form.icon.id_for_label }}" class="form-label">Icon</label>
+                            <div class="row">
+                                <div class="col-md-8">
+                                    {{ form.icon }}
+                                    {% if form.icon.errors %}
+                                        <div class="text-danger">{{ form.icon.errors }}</div>
+                                    {% endif %}
+                                </div>
+                                <div class="col-md-4">
+                                    <button type="button" class="btn btn-outline-hygge w-100" data-bs-toggle="modal" data-bs-target="#iconModal">
+                                        <i class="fas fa-icons me-2"></i>Choose Icon
+                                    </button>
+                                </div>
+                            </div>
+                            <div class="mt-2">
+                                <small class="text-muted">Preview: </small>
+                                <span id="icon-preview"><i class="fas fa-map-marker-alt"></i></span>
+                            </div>
+                        </div>
+                        
+                        <!-- Color Field -->
+                        <div class="mb-3">
+                            <label for="{{ form.color.id_for_label }}" class="form-label">Color</label>
+                            <div class="row">
+                                <div class="col-md-6">
+                                    {{ form.color }}
+                                    {% if form.color.errors %}
+                                        <div class="text-danger">{{ form.color.errors }}</div>
+                                    {% endif %}
+                                </div>
+                                <div class="col-md-6">
+                                    <div id="color-preview" class="border rounded p-2 text-center" style="background-color: #2d5a3d; color: white;">
+                                        Color Preview
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="d-flex gap-3 mt-4">
+                            <button type="submit" class="btn btn-hygge px-4 py-2">
+                                <i class="fas fa-plus me-2"></i>Create Category
+                            </button>
+                            <a href="{% url 'admin:experiences_category_changelist' %}" class="btn btn-outline-hygge px-4 py-2">
+                                <i class="fas fa-arrow-left me-2"></i>Back to Categories
+                            </a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Icon Selection Modal -->
+<div class="modal fade" id="iconModal" tabindex="-1" aria-labelledby="iconModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-xl">
+        <div class="modal-content" style="background: var(--hygge-warm-white);">
+            <div class="modal-header text-white" style="background: linear-gradient(135deg, var(--hygge-green), var(--hygge-light-green));">
+                <h5 class="modal-title fw-bold" id="iconModalLabel">
+                    <i class="fas fa-icons me-2"></i>Select an Icon
+                </h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body p-4" style="background: var(--hygge-cream);">
+                <div class="row mb-4">
+                    <div class="col-md-8">
+                        <div class="input-group input-group-lg">
+                            <span class="input-group-text bg-white">
+                                <i class="fas fa-search text-muted"></i>
+                            </span>
+                            <input type="text" class="form-control" id="icon-search" placeholder="Search from 2000+ FontAwesome icons...">
+                            <button class="btn btn-outline-secondary" type="button" id="clear-search" style="display: none;">
+                                <i class="fas fa-times"></i>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <select class="form-select form-select-lg" id="icon-category">
+                            <option value="">All Categories</option>
+                            <option value="travel">Travel & Places</option>
+                            <option value="nature">Nature & Weather</option>
+                            <option value="activities">Activities & Sports</option>
+                            <option value="food">Food & Dining</option>
+                            <option value="culture">Culture & Arts</option>
+                            <option value="business">Business & Finance</option>
+                            <option value="technology">Technology</option>
+                            <option value="interface">Interface & UI</option>
+                        </select>
+                    </div>
+                </div>
+                <div id="loading-message" class="text-center py-4">
+                    <div class="spinner-border text-success" role="status">
+                        <span class="visually-hidden">Loading icons...</span>
+                    </div>
+                    <p class="mt-2 text-muted">Loading FontAwesome icons...</p>
+                </div>
+                <div id="icon-grid" style="
+                    max-height: 400px; 
+                    overflow-y: auto; 
+                    display: none;
+                    grid-template-columns: repeat(auto-fill, minmax(80px, 1fr));
+                    gap: 10px;
+                    padding: 10px;
+                ">
+                    <!-- Icons will be dynamically loaded here -->
+                </div>
+                <div id="no-results" class="text-center py-4 text-muted" style="display: none;">
+                    <i class="fas fa-search fa-2x mb-2"></i>
+                    <p>No icons found matching your search</p>
+                    <small>Try adjusting your search terms or category filter</small>
+                </div>
+            </div>
+            <div class="modal-footer" style="background: var(--hygge-cream);">
+                <div class="d-flex justify-content-between align-items-center w-100">
+                    <small class="text-muted">
+                        <span id="icon-count">0</span> icons available
+                    </small>
+                    <div class="d-flex gap-2">
+                        <button type="button" class="btn btn-outline-hygge" data-bs-dismiss="modal">
+                            <i class="fas fa-times me-2"></i>Close
+                        </button>
+                        <button type="button" class="btn btn-hygge" id="select-icon" data-bs-dismiss="modal">
+                            <i class="fas fa-check me-2"></i>Select Icon
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const iconField = document.querySelector('#{{ form.icon.id_for_label }}');
+    const colorField = document.querySelector('#{{ form.color.id_for_label }}');
+    const iconPreview = document.querySelector('#icon-preview');
+    const colorPreview = document.querySelector('#color-preview');
+    const iconSearch = document.querySelector('#icon-search');
+    const iconCategory = document.querySelector('#icon-category');
+    const selectIconBtn = document.querySelector('#select-icon');
+    const iconGrid = document.querySelector('#icon-grid');
+    const iconCount = document.querySelector('#icon-count');
+    const loadingMessage = document.querySelector('#loading-message');
+    
+    let selectedIcon = iconField.value || 'fas fa-map-marker-alt';
+    let allIcons = [];
+    let filteredIcons = [];
+
+    // Comprehensive FontAwesome icon collection organized by category
+    const iconCategories = {
+        travel: [
+            'fas fa-map-marker-alt', 'fas fa-map', 'fas fa-globe', 'fas fa-compass', 'fas fa-route',
+            'fas fa-suitcase', 'fas fa-luggage-cart', 'fas fa-plane', 'fas fa-car', 'fas fa-bus',
+            'fas fa-train', 'fas fa-ship', 'fas fa-anchor', 'fas fa-taxi', 'fas fa-motorcycle',
+            'fas fa-bicycle', 'fas fa-walking', 'fas fa-running', 'fas fa-hiking', 'fas fa-mountain',
+            'fas fa-campground', 'fas fa-tent', 'fas fa-caravan', 'fas fa-rv', 'fas fa-hotel',
+            'fas fa-bed', 'fas fa-home', 'fas fa-building', 'fas fa-city', 'fas fa-landmark',
+            'fas fa-monument', 'fas fa-castle', 'fas fa-torii-gate', 'fas fa-synagogue', 'fas fa-church',
+            'fas fa-mosque', 'fas fa-place-of-worship', 'fas fa-university', 'fas fa-school',
+            'fas fa-hospital', 'fas fa-gas-station', 'fas fa-parking', 'fas fa-traffic-light'
+        ],
+        nature: [
+            'fas fa-tree', 'fas fa-seedling', 'fas fa-leaf', 'fas fa-spa', 'fas fa-forest',
+            'fas fa-pine-tree', 'fas fa-palm-tree', 'fas fa-cactus', 'fas fa-flower-tulip',
+            'fas fa-rose', 'fas fa-sun', 'fas fa-moon', 'fas fa-star', 'fas fa-cloud',
+            'fas fa-cloud-rain', 'fas fa-cloud-sun', 'fas fa-rainbow', 'fas fa-snowflake',
+            'fas fa-icicles', 'fas fa-wind', 'fas fa-tornado', 'fas fa-bolt', 'fas fa-fire',
+            'fas fa-water', 'fas fa-waves', 'fas fa-umbrella-beach', 'fas fa-island-tropical',
+            'fas fa-mountain', 'fas fa-volcano', 'fas fa-gem', 'fas fa-rock', 'fas fa-paw',
+            'fas fa-dog', 'fas fa-cat', 'fas fa-horse', 'fas fa-fish', 'fas fa-dove',
+            'fas fa-crow', 'fas fa-eagle', 'fas fa-feather', 'fas fa-spider', 'fas fa-bug'
+        ],
+        activities: [
+            'fas fa-swimming-pool', 'fas fa-swimmer', 'fas fa-diving', 'fas fa-surfing',
+            'fas fa-skiing', 'fas fa-skiing-nordic', 'fas fa-snowboarding', 'fas fa-ice-skating',
+            'fas fa-hockey-puck', 'fas fa-golf-ball', 'fas fa-golf-club', 'fas fa-tennis-ball',
+            'fas fa-basketball-ball', 'fas fa-football-ball', 'fas fa-baseball-ball', 'fas fa-volleyball-ball',
+            'fas fa-soccer-ball', 'fas fa-bowling-ball', 'fas fa-fishing', 'fas fa-anchor',
+            'fas fa-biking', 'fas fa-motorcycle', 'fas fa-running', 'fas fa-walking',
+            'fas fa-dumbbell', 'fas fa-weight-hanging', 'fas fa-heartbeat', 'fas fa-stopwatch',
+            'fas fa-medal', 'fas fa-trophy', 'fas fa-award', 'fas fa-ribbon', 'fas fa-star',
+            'fas fa-fire', 'fas fa-thumbs-up', 'fas fa-hand-peace', 'fas fa-fist-raised'
+        ],
+        food: [
+            'fas fa-utensils', 'fas fa-plate-wheat', 'fas fa-bowl-food', 'fas fa-pizza-slice',
+            'fas fa-hamburger', 'fas fa-hotdog', 'fas fa-taco', 'fas fa-burrito', 'fas fa-sandwich',
+            'fas fa-bread-slice', 'fas fa-cheese', 'fas fa-egg', 'fas fa-bacon', 'fas fa-drumstick-bite',
+            'fas fa-fish', 'fas fa-shrimp', 'fas fa-lobster', 'fas fa-crab', 'fas fa-apple-whole',
+            'fas fa-banana', 'fas fa-lemon', 'fas fa-orange', 'fas fa-strawberry', 'fas fa-grapes',
+            'fas fa-carrot', 'fas fa-pepper-hot', 'fas fa-corn', 'fas fa-cake-candles',
+            'fas fa-birthday-cake', 'fas fa-cookie', 'fas fa-ice-cream', 'fas fa-candy-cane',
+            'fas fa-coffee', 'fas fa-mug-hot', 'fas fa-tea', 'fas fa-wine-glass', 'fas fa-wine-bottle',
+            'fas fa-beer', 'fas fa-cocktail', 'fas fa-champagne-glasses', 'fas fa-glass-water',
+            'fas fa-bottle-water', 'fas fa-cookie-bite', 'fas fa-pretzel'
+        ],
+        culture: [
+            'fas fa-theater-masks', 'fas fa-masks-theater', 'fas fa-music', 'fas fa-guitar',
+            'fas fa-piano', 'fas fa-drum', 'fas fa-microphone', 'fas fa-headphones',
+            'fas fa-radio', 'fas fa-tv', 'fas fa-film', 'fas fa-camera', 'fas fa-video',
+            'fas fa-palette', 'fas fa-paint-brush', 'fas fa-pen-fancy', 'fas fa-feather-alt',
+            'fas fa-book', 'fas fa-book-open', 'fas fa-newspaper', 'fas fa-scroll',
+            'fas fa-museum', 'fas fa-columns', 'fas fa-statue', 'fas fa-vihara',
+            'fas fa-om', 'fas fa-cross', 'fas fa-star-of-david', 'fas fa-yin-yang',
+            'fas fa-peace', 'fas fa-heart', 'fas fa-infinity', 'fas fa-crown',
+            'fas fa-chess', 'fas fa-dice', 'fas fa-playing-cards', 'fas fa-puzzle-piece'
+        ],
+        business: [
+            'fas fa-briefcase', 'fas fa-suitcase', 'fas fa-handshake', 'fas fa-chart-line',
+            'fas fa-chart-bar', 'fas fa-chart-pie', 'fas fa-trending-up', 'fas fa-trending-down',
+            'fas fa-dollar-sign', 'fas fa-euro-sign', 'fas fa-pound-sign', 'fas fa-yen-sign',
+            'fas fa-credit-card', 'fas fa-money-bill', 'fas fa-coins', 'fas fa-piggy-bank',
+            'fas fa-bank', 'fas fa-building', 'fas fa-industry', 'fas fa-factory',
+            'fas fa-store', 'fas fa-shopping-cart', 'fas fa-shopping-bag', 'fas fa-receipt',
+            'fas fa-calculator', 'fas fa-balance-scale', 'fas fa-percentage', 'fas fa-tag',
+            'fas fa-tags', 'fas fa-barcode', 'fas fa-qrcode', 'fas fa-ticket-alt'
+        ],
+        technology: [
+            'fas fa-laptop', 'fas fa-desktop', 'fas fa-tablet', 'fas fa-mobile-alt',
+            'fas fa-phone', 'fas fa-headset', 'fas fa-keyboard', 'fas fa-mouse',
+            'fas fa-webcam', 'fas fa-microchip', 'fas fa-memory', 'fas fa-hard-drive',
+            'fas fa-usb-drive', 'fas fa-wifi', 'fas fa-bluetooth', 'fas fa-satellite',
+            'fas fa-router', 'fas fa-ethernet', 'fas fa-cloud', 'fas fa-server',
+            'fas fa-database', 'fas fa-code', 'fas fa-terminal', 'fas fa-bug',
+            'fas fa-cog', 'fas fa-cogs', 'fas fa-tools', 'fas fa-wrench',
+            'fas fa-screwdriver', 'fas fa-hammer', 'fas fa-plug', 'fas fa-battery-full',
+            'fas fa-solar-panel', 'fas fa-robot', 'fas fa-rocket', 'fas fa-satellite-dish'
+        ],
+        interface: [
+            'fas fa-home', 'fas fa-user', 'fas fa-users', 'fas fa-cog', 'fas fa-search',
+            'fas fa-heart', 'fas fa-star', 'fas fa-bookmark', 'fas fa-share', 'fas fa-download',
+            'fas fa-upload', 'fas fa-edit', 'fas fa-trash', 'fas fa-save', 'fas fa-print',
+            'fas fa-copy', 'fas fa-cut', 'fas fa-paste', 'fas fa-undo', 'fas fa-redo',
+            'fas fa-plus', 'fas fa-minus', 'fas fa-times', 'fas fa-check', 'fas fa-exclamation',
+            'fas fa-question', 'fas fa-info', 'fas fa-warning', 'fas fa-bell', 'fas fa-envelope',
+            'fas fa-comment', 'fas fa-comments', 'fas fa-thumbs-up', 'fas fa-thumbs-down',
+            'fas fa-arrow-up', 'fas fa-arrow-down', 'fas fa-arrow-left', 'fas fa-arrow-right',
+            'fas fa-chevron-up', 'fas fa-chevron-down', 'fas fa-chevron-left', 'fas fa-chevron-right',
+            'fas fa-angle-up', 'fas fa-angle-down', 'fas fa-angle-left', 'fas fa-angle-right',
+            'fas fa-bars', 'fas fa-ellipsis-h', 'fas fa-ellipsis-v', 'fas fa-grip-horizontal',
+            'fas fa-grip-vertical', 'fas fa-sort', 'fas fa-filter', 'fas fa-calendar',
+            'fas fa-clock', 'fas fa-stopwatch', 'fas fa-hourglass', 'fas fa-history'
+        ]
+    };
+
+    // Initialize
+    loadAllIcons();
+    updateIconPreview();
+    updateColorPreview();
+    
+    // Keyboard navigation support
+    iconModal.addEventListener('keydown', function(e) {
+        if (e.key === 'Escape') {
+            // ESC key handling is already handled by Bootstrap
+        } else if (e.key === 'Enter' && selectedIcon) {
+            e.preventDefault();
+            selectIconBtn.click();
+        }
+    });
+    
+    iconSearch.addEventListener('keydown', function(e) {
+        if (e.key === 'Enter') {
+            e.preventDefault();
+            const firstIcon = iconGrid.querySelector('.icon-option');
+            if (firstIcon) {
+                selectIconOption(firstIcon);
+            }
+        }
+    });
+
+    function loadAllIcons() {
+        // Combine all icon categories
+        for (const category in iconCategories) {
+            allIcons = allIcons.concat(iconCategories[category].map(icon => ({
+                class: icon,
+                category: category,
+                name: formatIconName(icon)
+            })));
+        }
+        
+        filteredIcons = [...allIcons];
+        updateIconCount();
+        renderIcons();
+    }
+
+    function formatIconName(iconClass) {
+        return iconClass.replace('fas fa-', '').replace(/-/g, ' ').replace(/\b\w/g, l => l.toUpperCase());
+    }
+
+    function renderIcons() {
+        loadingMessage.style.display = 'none';
+        const noResults = document.querySelector('#no-results');
+        
+        if (filteredIcons.length === 0) {
+            iconGrid.style.display = 'none';
+            noResults.style.display = 'block';
+            return;
+        }
+        
+        noResults.style.display = 'none';
+        iconGrid.style.display = 'grid';
+        iconGrid.innerHTML = '';
+
+        // Render icons in batches for better performance
+        const iconsToShow = filteredIcons.slice(0, 120); // Show more icons but still performant
+        
+        iconsToShow.forEach(icon => {
+            const iconElement = document.createElement('div');
+            iconElement.className = 'icon-option text-center p-2 border rounded d-flex flex-column align-items-center justify-content-center';
+            iconElement.dataset.icon = icon.class;
+            iconElement.dataset.category = icon.category;
+            iconElement.title = icon.name;
+            
+            const isSelected = selectedIcon === icon.class;
+            const selectedStyles = isSelected ? 
+                'background: var(--hygge-cream); border-color: var(--hygge-green); border-width: 2px; transform: scale(1.02);' : 
+                'background: white; border-color: #dee2e6; border-width: 1px;';
+                
+            iconElement.style.cssText = `
+                cursor: pointer; 
+                transition: all 0.2s ease; 
+                height: 75px; 
+                ${selectedStyles}
+            `;
+                
+            iconElement.innerHTML = `
+                <i class="${icon.class} mb-1" style="color: var(--hygge-green); font-size: 1.2rem;"></i>
+                <small class="text-truncate w-100 text-center" style="font-size: 0.65rem; line-height: 1;">${icon.name}</small>
+            `;
+            iconGrid.appendChild(iconElement);
+        });
+
+        // Add click handlers to new icons
+        iconGrid.querySelectorAll('.icon-option').forEach(option => {
+            option.addEventListener('click', function() {
+                selectIconOption(this);
+            });
+            
+            // Add hover effects
+            option.addEventListener('mouseenter', function() {
+                if (selectedIcon !== this.dataset.icon) {
+                    this.style.background = 'var(--hygge-warm-white)';
+                    this.style.borderColor = 'var(--hygge-light-green)';
+                    this.style.transform = 'scale(1.01)';
+                }
+            });
+            
+            option.addEventListener('mouseleave', function() {
+                if (selectedIcon !== this.dataset.icon) {
+                    this.style.background = 'white';
+                    this.style.borderColor = '#dee2e6';
+                    this.style.transform = 'none';
+                }
+            });
+        });
+        
+        // Show pagination info if there are more icons
+        if (filteredIcons.length > iconsToShow.length) {
+            const paginationInfo = document.createElement('div');
+            paginationInfo.style.gridColumn = '1 / -1';
+            paginationInfo.className = 'text-center text-muted mt-2';
+            paginationInfo.innerHTML = `<small>Showing first ${iconsToShow.length} of ${filteredIcons.length} icons. Use search to narrow results.</small>`;
+            iconGrid.appendChild(paginationInfo);
+        }
+    }
+
+    function selectIconOption(option) {
+        // Remove previous selection
+        iconGrid.querySelectorAll('.icon-option').forEach(opt => {
+            opt.style.background = 'white';
+            opt.style.borderColor = '#dee2e6';
+            opt.style.borderWidth = '1px';
+            opt.style.transform = 'none';
+        });
+        
+        // Add selection to clicked option
+        option.style.background = 'var(--hygge-cream)';
+        option.style.borderColor = 'var(--hygge-green)';
+        option.style.borderWidth = '2px';
+        option.style.transform = 'scale(1.02)';
+        selectedIcon = option.dataset.icon;
+        
+        // Update the input field immediately
+        iconField.value = selectedIcon;
+        
+        // Update the icon preview immediately
+        updateIconPreview();
+    }
+
+    function updateIconCount() {
+        iconCount.textContent = filteredIcons.length;
+    }
+
+    function filterIcons() {
+        const searchTerm = iconSearch.value.toLowerCase().trim();
+        const categoryFilter = iconCategory.value;
+
+        filteredIcons = allIcons.filter(icon => {
+            const matchesSearch = !searchTerm || 
+                                icon.name.toLowerCase().includes(searchTerm) || 
+                                icon.class.toLowerCase().includes(searchTerm) ||
+                                icon.category.toLowerCase().includes(searchTerm);
+            const matchesCategory = !categoryFilter || icon.category === categoryFilter;
+            return matchesSearch && matchesCategory;
+        });
+
+        updateIconCount();
+        renderIcons();
+    }
+
+    // Debounced search to improve performance
+    let searchTimeout;
+    function debouncedFilter() {
+        clearTimeout(searchTimeout);
+        searchTimeout = setTimeout(filterIcons, 300);
+    }
+
+    // Event listeners
+    const clearSearchBtn = document.querySelector('#clear-search');
+    
+    iconSearch.addEventListener('input', function() {
+        // Show/hide clear button
+        clearSearchBtn.style.display = this.value ? 'block' : 'none';
+        debouncedFilter();
+    });
+    
+    clearSearchBtn.addEventListener('click', function() {
+        iconSearch.value = '';
+        this.style.display = 'none';
+        iconSearch.focus();
+        filterIcons();
+    });
+    
+    iconCategory.addEventListener('change', filterIcons);
+
+    selectIconBtn.addEventListener('click', function() {
+        if (selectedIcon) {
+            iconField.value = selectedIcon;
+            updateIconPreview();
+            
+            // Show success feedback
+            const btn = this;
+            const originalText = btn.innerHTML;
+            btn.innerHTML = '<i class="fas fa-check me-2"></i>Selected!';
+            btn.classList.add('btn-success');
+            btn.classList.remove('btn-hygge');
+            
+            setTimeout(() => {
+                btn.innerHTML = originalText;
+                btn.classList.remove('btn-success');
+                btn.classList.add('btn-hygge');
+            }, 1000);
+        }
+    });
+
+    // Modal event handlers
+    const iconModal = document.querySelector('#iconModal');
+    iconModal.addEventListener('show.bs.modal', function() {
+        // Set selected icon to current field value
+        selectedIcon = iconField.value || 'fas fa-map-marker-alt';
+        
+        // Reset search when opening modal
+        iconSearch.value = '';
+        iconCategory.value = '';
+        filteredIcons = [...allIcons];
+        updateIconCount();
+        renderIcons();
+        
+        // Scroll to top and focus search
+        iconGrid.scrollTop = 0;
+        setTimeout(() => iconSearch.focus(), 150);
+    });
+    
+    iconModal.addEventListener('shown.bs.modal', function() {
+        // Scroll to selected icon if visible
+        const selectedOption = iconGrid.querySelector(`[data-icon="${selectedIcon}"]`);
+        if (selectedOption) {
+            selectedOption.scrollIntoView({ 
+                behavior: 'smooth', 
+                block: 'center' 
+            });
+        }
+    });
+
+    colorField.addEventListener('input', updateColorPreview);
+    iconField.addEventListener('input', updateIconPreview);
+
+    function updateIconPreview() {
+        const iconClass = iconField.value || 'fas fa-map-marker-alt';
+        iconPreview.innerHTML = `<i class="${iconClass}" style="color: var(--hygge-green); font-size: 1.5rem;"></i>`;
+    }
+
+    function updateColorPreview() {
+        const color = colorField.value || '#2d5a3d';
+        colorPreview.style.backgroundColor = color;
+        
+        // Determine text color based on background brightness
+        const rgb = hexToRgb(color);
+        const brightness = (rgb.r * 299 + rgb.g * 587 + rgb.b * 114) / 1000;
+        colorPreview.style.color = brightness > 128 ? '#333' : '#fff';
+        
+        // Update icon preview color too
+        const previewIcon = iconPreview.querySelector('i');
+        if (previewIcon) {
+            previewIcon.style.color = color;
+        }
+    }
+
+    function hexToRgb(hex) {
+        const result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
+        return result ? {
+            r: parseInt(result[1], 16),
+            g: parseInt(result[2], 16),
+            b: parseInt(result[3], 16)
+        } : null;
+    }
+});
+</script>
+
 {% endblock %}

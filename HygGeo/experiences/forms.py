@@ -210,4 +210,31 @@ class CategoryForm(forms.ModelForm):
     class Meta:
         model = Category
         fields = ['name', 'slug', 'description', 'icon', 'color']
+        widgets = {
+            'name': forms.TextInput(attrs={
+                'class': 'form-control',
+                'placeholder': 'Enter category name',
+                'required': True
+            }),
+            'slug': forms.TextInput(attrs={
+                'class': 'form-control',
+                'placeholder': 'auto-generated-slug',
+                'help_text': 'Leave blank to auto-generate from name'
+            }),
+            'description': forms.Textarea(attrs={
+                'class': 'form-control',
+                'rows': 3,
+                'placeholder': 'Brief description of this category...'
+            }),
+            'icon': forms.TextInput(attrs={
+                'class': 'form-control',
+                'placeholder': 'fas fa-map-marker-alt',
+                'help_text': 'FontAwesome icon class'
+            }),
+            'color': forms.TextInput(attrs={
+                'class': 'form-control',
+                'type': 'color',
+                'help_text': 'Hex color code for this category'
+            }),
+        }
 

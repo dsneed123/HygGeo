@@ -224,6 +224,13 @@
                     <button class="btn btn-outline-hygge w-100 mb-3 bookmark-btn" data-experience-id="{{ experience.id }}">
                         <i class="far fa-bookmark me-2"></i>Save for Later
                     </button>
+
+                    <!-- Edit Button for Staff -->
+                    {% if user.is_staff %}
+                    <a href="{% url 'experiences:edit_experience' experience.slug %}" class="btn btn-outline-hygge-edit w-100 mb-3">
+                        <i class="fas fa-edit me-2"></i>Edit Experience
+                    </a>
+                    {% endif %}
                     
                     <!-- Provider Info -->
                     <div class="border-top pt-3">
@@ -300,6 +307,18 @@
 .book-now-btn:hover {
     transform: translateY(-2px);
     box-shadow: 0 5px 15px rgba(45, 90, 61, 0.3);
+}
+
+.btn-outline-hygge-edit {
+    border: 1px solid var(--hygge-gold);
+    color: var(--hygge-gold);
+    background: transparent;
+}
+
+.btn-outline-hygge-edit:hover {
+    background: var(--hygge-gold);
+    color: white;
+    border-color: var(--hygge-gold);
 }
 </style>
 

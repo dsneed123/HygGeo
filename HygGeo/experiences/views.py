@@ -580,4 +580,60 @@ def my_bookmarks_view(request):
 def about_view(request):
     return render(request, 'experiences/about.html')
 
+@user_passes_test(lambda u: u.is_staff)  # staff/admin only
+def edit_experience(request, slug):
+    experience = get_object_or_404(Experience, slug=slug)
+
+    if request.method == "POST":
+        form = ExperienceForm(request.POST, request.FILES, instance=experience)
+        if form.is_valid():
+            try:
+                experience = form.save(commit=False)
+
+                # Auto-generate slug if changed and not provided
+                if not experience.slug or experience.slug != slug:
+                    base_slug = slugify(experience.title)
+                    new_slug = base_slug
+                    counter = 1
+
+                    # Ensure slug is unique (excluding current experience)
+                    while Experience.objects.filter(slug=new_slug).exclude(id=experience.id).exists():
+                        new_slug = f"{base_slug}-{counter}"
+                        counter += 1
+
+                    experience.slug = new_slug
+
+                experience.save()
+
+                # Save many-to-many relationships (e.g., categories)
+                form.save_m2m()
+
+                messages.success(request, f'✅ Experience "{experience.title}" updated successfully!')
+                return redirect('experiences:experience_detail', slug=experience.slug)
+
+            except Exception as e:
+                messages.error(request, f'❌ Error updating experience: {str(e)}')
+                print(f"Error details: {e}")  # For debugging
+        else:
+            messages.error(request, '⚠️ Please correct the errors below.')
+            print(f"Form errors: {form.errors}")  # For debugging
+    else:
+        form = ExperienceForm(instance=experience)
+
+    # Fetch data for dropdowns
+    destinations = Destination.objects.all()
+    providers = Provider.objects.all()
+    experience_types = ExperienceType.objects.all()
+    categories = Category.objects.all()
+
+    return render(request, 'experiences/edit_experience.html', {
+        'form': form,
+        'experience': experience,
+        'page_title': f'Edit Experience - {experience.title}',
+        'destinations': destinations,
+        'providers': providers,
+        'experience_types': experience_types,
+        'categories': categories,
+    })
+
 

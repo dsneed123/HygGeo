@@ -176,11 +176,11 @@
     <!-- Management Cards -->
     <div class="row mb-5">
         <!-- View All Experiences -->
-        <div class="col-lg-6 col-xl-3 mb-4">
+        <div class="col-lg-6 col-xl-2 mb-4">
             <div class="card card-hygge h-100">
-                <div class="card-body text-center p-4">
-                    <i class="fas fa-eye mb-3" style="font-size: 2.5rem; color: var(--hygge-green);"></i>
-                    <h6 class="fw-bold mb-3">View Experiences</h6>
+                <div class="card-body text-center p-3">
+                    <i class="fas fa-eye mb-2" style="font-size: 2rem; color: var(--hygge-green);"></i>
+                    <h6 class="fw-bold mb-2 small">View Experiences</h6>
                     <a href="{% url 'experiences:experience_list' %}" class="btn btn-sm btn-outline-hygge">
                         <i class="fas fa-arrow-right me-1"></i>View All
                     </a>
@@ -188,12 +188,25 @@
             </div>
         </div>
 
-        <!-- View All Destinations -->
-        <div class="col-lg-6 col-xl-3 mb-4">
+        <!-- Edit Experiences -->
+        <div class="col-lg-6 col-xl-2 mb-4">
             <div class="card card-hygge h-100">
-                <div class="card-body text-center p-4">
-                    <i class="fas fa-globe mb-3" style="font-size: 2.5rem; color: var(--hygge-soft-blue);"></i>
-                    <h6 class="fw-bold mb-3">View Destinations</h6>
+                <div class="card-body text-center p-3">
+                    <i class="fas fa-edit mb-2" style="font-size: 2rem; color: var(--hygge-gold);"></i>
+                    <h6 class="fw-bold mb-2 small">Edit Experiences</h6>
+                    <a href="{% url 'experiences:experience_list' %}" class="btn btn-sm btn-outline-hygge">
+                        <i class="fas fa-arrow-right me-1"></i>Manage
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <!-- View All Destinations -->
+        <div class="col-lg-6 col-xl-2 mb-4">
+            <div class="card card-hygge h-100">
+                <div class="card-body text-center p-3">
+                    <i class="fas fa-globe mb-2" style="font-size: 2rem; color: var(--hygge-soft-blue);"></i>
+                    <h6 class="fw-bold mb-2 small">View Destinations</h6>
                     <a href="{% url 'experiences:destination_list' %}" class="btn btn-sm btn-outline-hygge">
                         <i class="fas fa-arrow-right me-1"></i>View All
                     </a>
@@ -204,9 +217,9 @@
         <!-- User Management -->
         <div class="col-lg-6 col-xl-3 mb-4">
             <div class="card card-hygge h-100">
-                <div class="card-body text-center p-4">
-                    <i class="fas fa-users-cog mb-3" style="font-size: 2.5rem; color: var(--hygge-gold);"></i>
-                    <h6 class="fw-bold mb-3">User Management</h6>
+                <div class="card-body text-center p-3">
+                    <i class="fas fa-users-cog mb-2" style="font-size: 2rem; color: var(--hygge-gold);"></i>
+                    <h6 class="fw-bold mb-2 small">User Management</h6>
                     <a href="{% url 'user_list' %}" class="btn btn-sm btn-outline-hygge">
                         <i class="fas fa-arrow-right me-1"></i>Manage Users
                     </a>
@@ -217,9 +230,9 @@
         <!-- Analytics -->
         <div class="col-lg-6 col-xl-3 mb-4">
             <div class="card card-hygge h-100">
-                <div class="card-body text-center p-4">
-                    <i class="fas fa-chart-bar mb-3" style="font-size: 2.5rem; color: var(--hygge-light-green);"></i>
-                    <h6 class="fw-bold mb-3">Analytics</h6>
+                <div class="card-body text-center p-3">
+                    <i class="fas fa-chart-bar mb-2" style="font-size: 2rem; color: var(--hygge-light-green);"></i>
+                    <h6 class="fw-bold mb-2 small">Analytics</h6>
                     <a href="#" class="btn btn-sm btn-outline-hygge">
                         <i class="fas fa-arrow-right me-1"></i>View Stats
                     </a>
@@ -247,11 +260,31 @@
                         {% for experience in recent_experiences %}
                         <div class="col-md-6 col-lg-4 mb-3">
                             <div class="border rounded p-3 h-100" style="background: var(--hygge-warm-white);">
-                                <h6 class="fw-bold mb-2">{{ experience.title }}</h6>
-                                <p class="text-muted small mb-2">{{ experience.destination.name }}</p>
-                                <p class="text-muted small mb-0">
-                                    <i class="fas fa-calendar me-1"></i>{{ experience.created_at|date:"M d, Y" }}
+                                <div class="d-flex justify-content-between align-items-start mb-2">
+                                    <h6 class="fw-bold mb-0">{{ experience.title }}</h6>
+                                    <div class="dropdown">
+                                        <button class="btn btn-sm btn-outline-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                            <i class="fas fa-ellipsis-v"></i>
+                                        </button>
+                                        <ul class="dropdown-menu">
+                                            <li><a class="dropdown-item" href="{% url 'experiences:experience_detail' experience.slug %}">
+                                                <i class="fas fa-eye me-2"></i>View
+                                            </a></li>
+                                            <li><a class="dropdown-item" href="{% url 'experiences:edit_experience' experience.slug %}">
+                                                <i class="fas fa-edit me-2"></i>Edit
+                                            </a></li>
+                                        </ul>
+                                    </div>
+                                </div>
+                                <p class="text-muted small mb-2">
+                                    <i class="fas fa-map-marker-alt me-1"></i>{{ experience.destination.name }}
                                 </p>
+                                <div class="d-flex justify-content-between align-items-center small text-muted">
+                                    <span><i class="fas fa-calendar me-1"></i>{{ experience.created_at|date:"M d, Y" }}</span>
+                                    {% if experience.is_featured %}
+                                    <span class="badge bg-warning">Featured</span>
+                                    {% endif %}
+                                </div>
                             </div>
                         </div>
                         {% endfor %}
