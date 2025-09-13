@@ -147,6 +147,22 @@
             </div>
         </div>
 
+        <!-- Analytics Dashboard -->
+        <div class="col-lg-6 col-xl-4 mb-4">
+            <div class="card card-hygge h-100 admin-action-card">
+                <div class="card-body text-center p-4">
+                    <div class="action-icon mb-3">
+                        <i class="fas fa-chart-line" style="font-size: 3rem; color: var(--hygge-light-green);"></i>
+                    </div>
+                    <h5 class="fw-bold mb-3">Analytics Dashboard</h5>
+                    <p class="text-muted mb-4">Track user engagement, content performance, and platform growth metrics.</p>
+                    <a href="{% url 'analytics_dashboard' %}" class="btn btn-hygge btn-lg w-100">
+                        <i class="fas fa-chart-bar me-2"></i>View Analytics
+                    </a>
+                </div>
+            </div>
+        </div>
+
         <!-- Django Admin -->
         <div class="col-lg-6 col-xl-4 mb-4">
             <div class="card card-hygge h-100 admin-action-card">
@@ -233,8 +249,8 @@
                 <div class="card-body text-center p-3">
                     <i class="fas fa-chart-bar mb-2" style="font-size: 2rem; color: var(--hygge-light-green);"></i>
                     <h6 class="fw-bold mb-2 small">Analytics</h6>
-                    <a href="#" class="btn btn-sm btn-outline-hygge">
-                        <i class="fas fa-arrow-right me-1"></i>View Stats
+                    <a href="{% url 'analytics_dashboard' %}" class="btn btn-sm btn-outline-hygge">
+                        <i class="fas fa-chart-line me-1"></i>View Analytics
                     </a>
                 </div>
             </div>

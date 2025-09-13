@@ -74,25 +74,55 @@
             {% endif %}
 
             <div class="card card-hygge">
-                <div class="card-body p-4 text-center">
-                    <h5 class="fw-bold mb-3" style="color: var(--hygge-green);">
+                <div class="card-body p-4">
+                    <h5 class="fw-bold mb-4 text-center" style="color: var(--hygge-green);">
                         <i class="fas fa-sparkles me-2"></i>What's Next?
                     </h5>
-                    <p class="text-muted mb-4">
-                        We're currently building our recommendation engine to match you with sustainable travel options 
-                        that embrace the hygge philosophy. Stay tuned for personalized suggestions!
-                    </p>
-                    
-                    <div class="d-flex flex-wrap justify-content-center gap-3">
-                        <a href="{% url 'profile' %}" class="btn btn-hygge">
-                            <i class="fas fa-user me-2"></i>View Your Profile
-                        </a>
-                        <a href="{% url 'survey' %}" class="btn btn-outline-hygge">
-                            <i class="fas fa-edit me-2"></i>Update Survey
-                        </a>
-                        <a href="{% url 'index' %}" class="btn btn-outline-primary">
-                            <i class="fas fa-home me-2"></i>Back to Home
-                        </a>
+
+                    <!-- Profile Setup Reminder -->
+                    <div class="row mb-4">
+                        <div class="col-md-6">
+                            <div class="p-3 rounded" style="background-color: var(--hygge-cream);">
+                                <div class="d-flex align-items-center mb-2">
+                                    <i class="fas fa-user-circle text-primary me-2" style="font-size: 1.5rem;"></i>
+                                    <h6 class="fw-bold mb-0">Complete Your Profile</h6>
+                                </div>
+                                <p class="small text-muted mb-2">
+                                    Add a profile picture, bio, and location to personalize your HygGeo experience and connect with other travelers.
+                                </p>
+                                <a href="{% url 'edit_profile' %}" class="btn btn-sm btn-outline-primary">
+                                    <i class="fas fa-camera me-1"></i>Add Profile Picture & Bio
+                                </a>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="p-3 rounded" style="background-color: rgba(74, 124, 89, 0.1);">
+                                <div class="d-flex align-items-center mb-2">
+                                    <i class="fas fa-compass text-success me-2" style="font-size: 1.5rem;"></i>
+                                    <h6 class="fw-bold mb-0">Get Recommendations</h6>
+                                </div>
+                                <p class="small text-muted mb-2">
+                                    Based on your survey responses, we'll match you with sustainable travel experiences that align with your values.
+                                </p>
+                                <a href="{% url 'experiences:recommendations' %}" class="btn btn-sm btn-outline-success">
+                                    <i class="fas fa-leaf me-1"></i>View My Recommendations
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="text-center">
+                        <div class="d-flex flex-wrap justify-content-center gap-3">
+                            <a href="{% url 'profile' %}" class="btn btn-hygge">
+                                <i class="fas fa-user me-2"></i>View Your Profile
+                            </a>
+                            <a href="{% url 'survey' %}" class="btn btn-outline-hygge">
+                                <i class="fas fa-edit me-2"></i>Update Survey
+                            </a>
+                            <a href="{% url 'experiences:experience_list' %}" class="btn btn-outline-primary">
+                                <i class="fas fa-search me-2"></i>Browse Experiences
+                            </a>
+                        </div>
                     </div>
                 </div>
             </div>

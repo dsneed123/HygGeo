@@ -221,8 +221,9 @@
 
                     
                     <!-- Bookmark Button -->
-                    <button class="btn btn-outline-hygge w-100 mb-3 bookmark-btn" data-experience-id="{{ experience.id }}">
-                        <i class="far fa-bookmark me-2"></i>Save for Later
+                    <button class="btn btn-outline-hygge w-100 mb-3 bookmark-btn{% if is_bookmarked %} bookmarked{% endif %}" data-experience-id="{{ experience.id }}">
+                        <i class="{% if is_bookmarked %}fas{% else %}far{% endif %} fa-bookmark me-2"></i>
+                        {% if is_bookmarked %}Bookmarked{% else %}Save for Later{% endif %}
                     </button>
 
                     <!-- Edit Button for Staff -->
@@ -304,6 +305,12 @@
     color: white;
 }
 
+.bookmark-btn.bookmarked:hover {
+    background-color: #d19900;
+    border-color: #d19900;
+    color: white;
+}
+
 .book-now-btn:hover {
     transform: translateY(-2px);
     box-shadow: 0 5px 15px rgba(45, 90, 61, 0.3);
@@ -376,10 +383,20 @@ document.addEventListener('DOMContentLoaded', function() {
     if (bookmarkBtn) {
         bookmarkBtn.addEventListener('click', async function(e) {
             e.preventDefault();
-            
+
+            {% if not user.is_authenticated %}
+            // Redirect to login if not authenticated
+            window.location.href = '{% url "login" %}';
+            return;
+            {% endif %}
+
             const experienceId = this.dataset.experienceId;
-            const icon = this.querySelector('i');
-            
+            const originalContent = this.innerHTML;
+
+            // Show loading state
+            this.disabled = true;
+            this.innerHTML = '<i class="fas fa-spinner fa-spin me-2"></i>Processing...';
+
             try {
                 const response = await fetch(`{% url 'experiences:bookmark_experience' '00000000-0000-0000-0000-000000000000' %}`.replace('00000000-0000-0000-0000-000000000000', experienceId), {
                     method: 'POST',
@@ -388,24 +405,52 @@ document.addEventListener('DOMContentLoaded', function() {
                         'Content-Type': 'application/json',
                     },
                 });
-                
+
                 const data = await response.json();
-                
+
                 if (data.success) {
                     if (data.bookmarked) {
-                        icon.className = 'fas fa-bookmark me-2';
+                        this.innerHTML = '<i class="fas fa-bookmark me-2"></i>Bookmarked';
                         this.classList.add('bookmarked');
-                        this.innerHTML = '<i class="fas fa-bookmark me-2"></i>Saved!';
+                        showBookmarkMessage('Added to bookmarks!', 'success');
                     } else {
-                        icon.className = 'far fa-bookmark me-2';
-                        this.classList.remove('bookmarked');
                         this.innerHTML = '<i class="far fa-bookmark me-2"></i>Save for Later';
+                        this.classList.remove('bookmarked');
+                        showBookmarkMessage('Removed from bookmarks', 'info');
                     }
+                } else {
+                    console.error('Bookmark failed:', data.error);
+                    showBookmarkMessage('Failed to bookmark', 'error');
+                    this.innerHTML = originalContent;
                 }
             } catch (error) {
                 console.error('Error bookmarking experience:', error);
+                showBookmarkMessage('Network error', 'error');
+                this.innerHTML = originalContent;
             }
+
+            this.disabled = false;
         });
+    }
+
+    // Show bookmark feedback messages
+    function showBookmarkMessage(message, type) {
+        const messageDiv = document.createElement('div');
+        messageDiv.className = `alert alert-${type === 'success' ? 'success' : type === 'error' ? 'danger' : 'info'} position-fixed`;
+        messageDiv.style.cssText = 'top: 20px; right: 20px; z-index: 1050; min-width: 250px;';
+        messageDiv.innerHTML = `
+            <div class="d-flex align-items-center">
+                <i class="fas fa-${type === 'success' ? 'check-circle' : type === 'error' ? 'exclamation-triangle' : 'info-circle'} me-2"></i>
+                ${message}
+            </div>
+        `;
+
+        document.body.appendChild(messageDiv);
+
+        // Auto-remove after 3 seconds
+        setTimeout(() => {
+            messageDiv.remove();
+        }, 3000);
     }
     
     // Smooth scroll for internal links

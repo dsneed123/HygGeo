@@ -11057,3 +11057,70 @@ INFO 2025-09-13 16:21:01,144 basehttp 26432 2168 "POST /experiences/experience/q
 INFO 2025-09-13 16:21:01,266 basehttp 26432 2168 "GET /experiences/experience/qwvew/ HTTP/1.1" 200 32919
 INFO 2025-09-13 16:21:09,599 basehttp 26432 2168 "GET /experiences/destinations/ HTTP/1.1" 200 42728
 INFO 2025-09-13 16:21:16,005 basehttp 26432 2168 "GET /accounts/users/ HTTP/1.1" 200 36348
+INFO 2025-09-13 16:32:48,862 autoreload 6424 15984 Watching for file changes with StatReloader
+INFO 2025-09-13 16:35:37,073 basehttp 6424 6064 "GET /admin/dashboard/ HTTP/1.1" 200 38238
+WARNING 2025-09-13 16:35:37,248 log 6424 6064 Not Found: /favicon.ico
+WARNING 2025-09-13 16:35:37,249 basehttp 6424 6064 "GET /favicon.ico HTTP/1.1" 404 3533
+INFO 2025-09-13 16:35:50,885 basehttp 6424 13900 "GET /admin/analytics/ HTTP/1.1" 200 44592
+INFO 2025-09-13 16:37:53,815 autoreload 6424 15984 C:\Users\DLSne\OneDrive\Desktop\Code\webdev\HygGeo\HygGeo\accounts\views.py changed, reloading.
+INFO 2025-09-13 16:37:54,653 autoreload 12808 21312 Watching for file changes with StatReloader
+INFO 2025-09-13 16:38:12,026 autoreload 12808 21312 C:\Users\DLSne\OneDrive\Desktop\Code\webdev\HygGeo\HygGeo\accounts\views.py changed, reloading.
+INFO 2025-09-13 16:38:12,812 autoreload 22504 22180 Watching for file changes with StatReloader
+INFO 2025-09-13 16:38:31,239 autoreload 22504 22180 C:\Users\DLSne\OneDrive\Desktop\Code\webdev\HygGeo\HygGeo\accounts\views.py changed, reloading.
+INFO 2025-09-13 16:38:32,036 autoreload 22848 3040 Watching for file changes with StatReloader
+INFO 2025-09-13 16:38:55,772 autoreload 22848 3040 C:\Users\DLSne\OneDrive\Desktop\Code\webdev\HygGeo\HygGeo\accounts\views.py changed, reloading.
+INFO 2025-09-13 16:38:56,494 autoreload 3288 6512 Watching for file changes with StatReloader
+INFO 2025-09-13 16:40:51,483 basehttp 3288 3044 "GET /admin/analytics/ HTTP/1.1" 200 55673
+INFO 2025-09-13 16:40:59,298 basehttp 3288 3044 "GET /admin/analytics/ HTTP/1.1" 200 55673
+WARNING 2025-09-13 16:40:59,610 log 3288 3044 Not Found: /favicon.ico
+WARNING 2025-09-13 16:40:59,610 basehttp 3288 3044 "GET /favicon.ico HTTP/1.1" 404 3533
+INFO 2025-09-13 16:41:06,682 basehttp 3288 3044 "GET /admin/analytics/?period=6m HTTP/1.1" 200 56604
+INFO 2025-09-13 16:41:43,414 autoreload 3288 6512 C:\Users\DLSne\OneDrive\Desktop\Code\webdev\HygGeo\HygGeo\experiences\views.py changed, reloading.
+INFO 2025-09-13 16:41:44,181 autoreload 13800 14468 Watching for file changes with StatReloader
+INFO 2025-09-13 16:41:55,074 autoreload 13800 14468 C:\Users\DLSne\OneDrive\Desktop\Code\webdev\HygGeo\HygGeo\experiences\views.py changed, reloading.
+INFO 2025-09-13 16:41:55,810 autoreload 16720 15336 Watching for file changes with StatReloader
+INFO 2025-09-13 16:42:01,381 autoreload 16720 15336 C:\Users\DLSne\OneDrive\Desktop\Code\webdev\HygGeo\HygGeo\experiences\views.py changed, reloading.
+INFO 2025-09-13 16:42:02,065 autoreload 5576 27576 Watching for file changes with StatReloader
+INFO 2025-09-13 16:42:24,545 autoreload 5576 27576 C:\Users\DLSne\OneDrive\Desktop\Code\webdev\HygGeo\HygGeo\experiences\views.py changed, reloading.
+INFO 2025-09-13 16:42:25,289 autoreload 27128 1420 Watching for file changes with StatReloader
+INFO 2025-09-13 16:42:35,086 autoreload 27128 1420 C:\Users\DLSne\OneDrive\Desktop\Code\webdev\HygGeo\HygGeo\experiences\views.py changed, reloading.
+INFO 2025-09-13 16:42:35,805 autoreload 8340 23012 Watching for file changes with StatReloader
+INFO 2025-09-13 16:45:02,328 basehttp 8340 19776 "GET /experiences/bookmarks/ HTTP/1.1" 200 24515
+INFO 2025-09-13 16:45:04,780 basehttp 8340 19776 "GET /experiences/ HTTP/1.1" 200 39708
+INFO 2025-09-13 16:45:06,774 basehttp 8340 19776 "POST /experiences/api/bookmark/f59068d2-a4b8-476a-8f62-4f2e5e1b33dc/ HTTP/1.1" 200 70
+INFO 2025-09-13 16:45:09,198 basehttp 8340 19776 "POST /experiences/api/bookmark/f59068d2-a4b8-476a-8f62-4f2e5e1b33dc/ HTTP/1.1" 200 75
+INFO 2025-09-13 16:45:10,102 basehttp 8340 19776 "POST /experiences/api/bookmark/f59068d2-a4b8-476a-8f62-4f2e5e1b33dc/ HTTP/1.1" 200 70
+INFO 2025-09-13 16:45:14,498 basehttp 8340 19776 "GET /experiences/bookmarks/ HTTP/1.1" 200 28785
+WARNING 2025-09-13 16:45:18,951 log 8340 19776 Method Not Allowed (GET): /experiences/bookmark/remove/f59068d2-a4b8-476a-8f62-4f2e5e1b33dc/
+WARNING 2025-09-13 16:45:18,952 basehttp 8340 19776 "GET /experiences/bookmark/remove/f59068d2-a4b8-476a-8f62-4f2e5e1b33dc/ HTTP/1.1" 405 0
+INFO 2025-09-13 16:46:05,017 autoreload 8340 23012 C:\Users\DLSne\OneDrive\Desktop\Code\webdev\HygGeo\HygGeo\experiences\views.py changed, reloading.
+INFO 2025-09-13 16:46:05,749 autoreload 4728 2504 Watching for file changes with StatReloader
+INFO 2025-09-13 16:46:10,354 autoreload 4728 2504 C:\Users\DLSne\OneDrive\Desktop\Code\webdev\HygGeo\HygGeo\experiences\views.py changed, reloading.
+INFO 2025-09-13 16:46:10,959 autoreload 25088 25716 Watching for file changes with StatReloader
+WARNING 2025-09-13 16:47:17,227 log 25088 15988 Method Not Allowed (GET): /experiences/bookmark/remove/f59068d2-a4b8-476a-8f62-4f2e5e1b33dc/
+WARNING 2025-09-13 16:47:17,228 basehttp 25088 15988 "GET /experiences/bookmark/remove/f59068d2-a4b8-476a-8f62-4f2e5e1b33dc/ HTTP/1.1" 405 0
+WARNING 2025-09-13 16:47:18,339 log 25088 15988 Method Not Allowed (GET): /experiences/bookmark/remove/f59068d2-a4b8-476a-8f62-4f2e5e1b33dc/
+WARNING 2025-09-13 16:47:18,340 basehttp 25088 15988 "GET /experiences/bookmark/remove/f59068d2-a4b8-476a-8f62-4f2e5e1b33dc/ HTTP/1.1" 405 0
+WARNING 2025-09-13 16:47:20,053 log 25088 15988 Not Found: /favicon.ico
+WARNING 2025-09-13 16:47:20,054 basehttp 25088 15988 "GET /favicon.ico HTTP/1.1" 404 3533
+INFO 2025-09-13 16:47:20,870 basehttp 25088 15988 "GET /experiences/bookmarks/ HTTP/1.1" 200 32041
+WARNING 2025-09-13 16:47:21,135 log 25088 15988 Not Found: /favicon.ico
+WARNING 2025-09-13 16:47:21,136 basehttp 25088 15988 "GET /favicon.ico HTTP/1.1" 404 3533
+INFO 2025-09-13 16:47:23,704 basehttp 25088 15988 "POST /experiences/bookmark/remove/f59068d2-a4b8-476a-8f62-4f2e5e1b33dc/ HTTP/1.1" 200 54
+INFO 2025-09-13 16:47:24,228 basehttp 25088 15988 "GET /experiences/bookmarks/ HTTP/1.1" 200 27856
+INFO 2025-09-13 16:47:29,023 basehttp 25088 15988 "GET /admin/dashboard/ HTTP/1.1" 200 38238
+INFO 2025-09-13 16:52:17,319 basehttp 25088 15988 "GET /accounts/logout/ HTTP/1.1" 302 0
+INFO 2025-09-13 16:52:17,330 basehttp 25088 15988 "GET / HTTP/1.1" 200 27092
+INFO 2025-09-13 16:52:19,207 basehttp 25088 15988 "GET /accounts/signup/ HTTP/1.1" 200 19405
+INFO 2025-09-13 16:52:51,543 basehttp 25088 15988 "POST /accounts/signup/ HTTP/1.1" 302 0
+INFO 2025-09-13 16:52:51,559 basehttp 25088 15988 "GET /accounts/survey/ HTTP/1.1" 200 67816
+INFO 2025-09-13 16:53:20,154 basehttp 25088 15988 "POST /accounts/survey/ HTTP/1.1" 302 0
+INFO 2025-09-13 16:53:20,188 basehttp 25088 15988 "GET /accounts/survey/success/ HTTP/1.1" 200 29453
+INFO 2025-09-13 16:53:23,958 basehttp 25088 15988 "GET /accounts/profile/ HTTP/1.1" 200 33544
+INFO 2025-09-13 16:54:00,350 autoreload 25088 25716 C:\Users\DLSne\OneDrive\Desktop\Code\webdev\HygGeo\HygGeo\accounts\forms.py changed, reloading.
+INFO 2025-09-13 16:54:01,091 autoreload 7448 19712 Watching for file changes with StatReloader
+INFO 2025-09-13 16:55:12,928 autoreload 7448 19712 C:\Users\DLSne\OneDrive\Desktop\Code\webdev\HygGeo\HygGeo\accounts\views.py changed, reloading.
+INFO 2025-09-13 16:55:13,622 autoreload 27896 3988 Watching for file changes with StatReloader
+INFO 2025-09-13 16:56:38,078 basehttp 27896 27180 "GET /accounts/logout/ HTTP/1.1" 302 0
+INFO 2025-09-13 16:56:38,092 basehttp 27896 27180 "GET / HTTP/1.1" 200 27083
+INFO 2025-09-13 16:56:39,257 basehttp 27896 27180 "GET /accounts/signup/ HTTP/1.1" 200 24755

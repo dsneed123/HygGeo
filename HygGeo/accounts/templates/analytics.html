@@ -1,0 +1,781 @@
+{% extends 'base.html' %}
+
+{% block title %}Analytics Dashboard - HygGeo{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <!-- Header Section -->
+    <div class="row mb-5">
+        <div class="col-12">
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <div>
+                    <h1 class="h2 fw-bold" style="color: var(--hygge-green);">
+                        <i class="fas fa-chart-bar me-3"></i>Analytics Dashboard
+                    </h1>
+                    <p class="text-muted">Track user engagement, content performance, and platform growth</p>
+                </div>
+                <div class="d-flex gap-3 align-items-center">
+                    <!-- Time Period Selector -->
+                    <div class="dropdown">
+                        <button class="btn btn-outline-hygge dropdown-toggle" type="button" data-bs-toggle="dropdown">
+                            <i class="fas fa-calendar-alt me-2"></i>
+                            {% for period_code, period_name in available_periods %}
+                                {% if period_code == current_period %}{{ period_name }}{% endif %}
+                            {% endfor %}
+                        </button>
+                        <ul class="dropdown-menu">
+                            {% for period_code, period_name in available_periods %}
+                            <li>
+                                <a class="dropdown-item {% if period_code == current_period %}active{% endif %}"
+                                   href="?period={{ period_code }}">
+                                    {% if period_code == current_period %}<i class="fas fa-check me-2"></i>{% endif %}
+                                    {{ period_name }}
+                                </a>
+                            </li>
+                            {% endfor %}
+                        </ul>
+                    </div>
+                    <a href="{% url 'admin_dashboard' %}" class="btn btn-outline-hygge">
+                        <i class="fas fa-arrow-left me-2"></i>Back to Dashboard
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Quick Stats Overview -->
+    <div class="row mb-5">
+        <div class="col-12">
+            <h3 class="fw-bold mb-4" style="color: var(--hygge-green);">
+                <i class="fas fa-tachometer-alt me-2"></i>Key Metrics
+            </h3>
+        </div>
+    </div>
+
+    <!-- Key Metrics Cards -->
+    <div class="row mb-5">
+        <!-- Total Users -->
+        <div class="col-lg-3 col-md-6 mb-4">
+            <div class="card card-hygge h-100">
+                <div class="card-body text-center p-4">
+                    <i class="fas fa-users mb-3" style="font-size: 2.5rem; color: var(--hygge-green);"></i>
+                    <h3 class="fw-bold mb-1">{{ analytics.total_users }}</h3>
+                    <p class="text-muted mb-2">Total Users</p>
+                    <small class="text-success">
+                        <i class="fas fa-arrow-up me-1"></i>+{{ analytics.new_users_period }} this period
+                    </small>
+                </div>
+            </div>
+        </div>
+
+        <!-- Active Users -->
+        <div class="col-lg-3 col-md-6 mb-4">
+            <div class="card card-hygge h-100">
+                <div class="card-body text-center p-4">
+                    <i class="fas fa-user-check mb-3" style="font-size: 2.5rem; color: var(--hygge-soft-blue);"></i>
+                    <h3 class="fw-bold mb-1">{{ analytics.active_users_period }}</h3>
+                    <p class="text-muted mb-2">Active Users (Period)</p>
+                    <small class="text-info">
+                        <i class="fas fa-clock me-1"></i>{{ analytics.active_users_24_hours }} in last 24h
+                    </small>
+                </div>
+            </div>
+        </div>
+
+        <!-- Period Bookings -->
+        <div class="col-lg-3 col-md-6 mb-4">
+            <div class="card card-hygge h-100">
+                <div class="card-body text-center p-4">
+                    <i class="fas fa-calendar-check mb-3" style="font-size: 2.5rem; color: var(--hygge-gold);"></i>
+                    <h3 class="fw-bold mb-1">{{ analytics.bookings_period }}</h3>
+                    <p class="text-muted mb-2">Bookings (Period)</p>
+                    <small class="text-warning">
+                        <i class="fas fa-chart-line me-1"></i>{{ analytics.total_bookings }} total
+                    </small>
+                </div>
+            </div>
+        </div>
+
+        <!-- Page Views -->
+        <div class="col-lg-3 col-md-6 mb-4">
+            <div class="card card-hygge h-100">
+                <div class="card-body text-center p-4">
+                    <i class="fas fa-eye mb-3" style="font-size: 2.5rem; color: var(--hygge-light-green);"></i>
+                    <h3 class="fw-bold mb-1">{{ analytics.page_views_period }}</h3>
+                    <p class="text-muted mb-2">Page Views (Period)</p>
+                    <small class="text-muted">
+                        <i class="fas fa-info-circle me-1"></i>{{ analytics.bounce_rate }}% bounce rate
+                    </small>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Charts Section -->
+    <div class="row mb-5">
+        <!-- User Registrations Chart -->
+        <div class="col-lg-6 mb-4">
+            <div class="card card-hygge h-100">
+                <div class="card-header bg-white border-bottom">
+                    <h5 class="fw-bold mb-0">
+                        <i class="fas fa-user-plus me-2 text-primary"></i>User Registrations (30 Days)
+                    </h5>
+                </div>
+                <div class="card-body p-4">
+                    <canvas id="userRegistrationsChart" width="400" height="200"></canvas>
+                </div>
+            </div>
+        </div>
+
+        <!-- Hourly Activity Chart -->
+        <div class="col-lg-6 mb-4">
+            <div class="card card-hygge h-100">
+                <div class="card-header bg-white border-bottom">
+                    <h5 class="fw-bold mb-0">
+                        <i class="fas fa-clock me-2 text-success"></i>User Activity (24 Hours)
+                    </h5>
+                </div>
+                <div class="card-body p-4">
+                    <canvas id="hourlyActivityChart" width="400" height="200"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Booking Trends -->
+    <div class="row mb-5">
+        <div class="col-12">
+            <div class="card card-hygge">
+                <div class="card-header bg-white border-bottom">
+                    <h5 class="fw-bold mb-0">
+                        <i class="fas fa-chart-line me-2 text-warning"></i>Booking Trends (7 Days)
+                    </h5>
+                </div>
+                <div class="card-body p-4">
+                    <canvas id="bookingTrendsChart" width="400" height="150"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Engagement Metrics -->
+    <div class="row mb-5">
+        <div class="col-12">
+            <h3 class="fw-bold mb-4" style="color: var(--hygge-green);">
+                <i class="fas fa-heart me-2"></i>User Engagement
+            </h3>
+        </div>
+    </div>
+
+    <div class="row mb-5">
+        <!-- Recommendation Stats -->
+        <div class="col-lg-4 mb-4">
+            <div class="card card-hygge h-100">
+                <div class="card-body p-4">
+                    <div class="d-flex justify-content-between align-items-center mb-3">
+                        <h5 class="fw-bold mb-0">Recommendations</h5>
+                        <i class="fas fa-compass text-primary" style="font-size: 1.5rem;"></i>
+                    </div>
+                    <div class="mb-3">
+                        <div class="d-flex justify-content-between">
+                            <small>Total Generated</small>
+                            <strong>{{ analytics.total_recommendations }}</strong>
+                        </div>
+                        <div class="d-flex justify-content-between">
+                            <small>Viewed</small>
+                            <strong>{{ analytics.viewed_recommendations }}</strong>
+                        </div>
+                        <div class="d-flex justify-content-between">
+                            <small>Clicked</small>
+                            <strong>{{ analytics.clicked_recommendations }}</strong>
+                        </div>
+                    </div>
+                    <div class="progress mb-2" style="height: 8px;">
+                        <div class="progress-bar" style="width: {{ analytics.recommendation_view_rate }}%; background-color: var(--hygge-green);"></div>
+                    </div>
+                    <small class="text-muted">{{ analytics.recommendation_view_rate }}% view rate</small>
+                </div>
+            </div>
+        </div>
+
+        <!-- Bookmark Stats -->
+        <div class="col-lg-4 mb-4">
+            <div class="card card-hygge h-100">
+                <div class="card-body p-4">
+                    <div class="d-flex justify-content-between align-items-center mb-3">
+                        <h5 class="fw-bold mb-0">Bookmarks</h5>
+                        <i class="fas fa-bookmark text-warning" style="font-size: 1.5rem;"></i>
+                    </div>
+                    <div class="mb-3">
+                        <div class="d-flex justify-content-between">
+                            <small>Total Bookmarked</small>
+                            <strong>{{ analytics.bookmarked_experiences }}</strong>
+                        </div>
+                        <div class="d-flex justify-content-between">
+                            <small>Avg per User</small>
+                            <strong>{% widthratio analytics.bookmarked_experiences analytics.total_users 1 %}</strong>
+                        </div>
+                    </div>
+                    <div class="text-center">
+                        <div class="display-6 fw-bold text-warning">
+                            {% widthratio analytics.bookmarked_experiences analytics.total_users 100 %}%
+                        </div>
+                        <small class="text-muted">of users bookmark experiences</small>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Survey Completion -->
+        <div class="col-lg-4 mb-4">
+            <div class="card card-hygge h-100">
+                <div class="card-body p-4">
+                    <div class="d-flex justify-content-between align-items-center mb-3">
+                        <h5 class="fw-bold mb-0">Travel Surveys</h5>
+                        <i class="fas fa-clipboard-list text-success" style="font-size: 1.5rem;"></i>
+                    </div>
+                    <div class="mb-3">
+                        <div class="d-flex justify-content-between">
+                            <small>Completed</small>
+                            <strong>{{ analytics.travel_surveys }}</strong>
+                        </div>
+                        <div class="d-flex justify-content-between">
+                            <small>Total Users</small>
+                            <strong>{{ analytics.total_users }}</strong>
+                        </div>
+                    </div>
+                    <div class="progress mb-2" style="height: 8px;">
+                        <div class="progress-bar bg-success" style="width: {{ analytics.survey_completion_rate }}%;"></div>
+                    </div>
+                    <small class="text-muted">{{ analytics.survey_completion_rate }}% completion rate</small>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Content Performance -->
+    <div class="row mb-5">
+        <div class="col-12">
+            <h3 class="fw-bold mb-4" style="color: var(--hygge-green);">
+                <i class="fas fa-star me-2"></i>Content Performance
+            </h3>
+        </div>
+    </div>
+
+    <div class="row mb-5">
+        <!-- Top Experiences -->
+        <div class="col-lg-6 mb-4">
+            <div class="card card-hygge h-100">
+                <div class="card-header bg-white border-bottom">
+                    <h5 class="fw-bold mb-0">
+                        <i class="fas fa-trophy me-2 text-warning"></i>Top Experiences (by bookings)
+                    </h5>
+                </div>
+                <div class="card-body p-3">
+                    {% for experience in top_experiences %}
+                    <div class="d-flex align-items-center mb-3 p-2 rounded" style="background: var(--hygge-warm-white);">
+                        <div class="badge bg-primary me-3">{{ forloop.counter }}</div>
+                        <div class="flex-grow-1">
+                            <h6 class="mb-1">{{ experience.title|truncatechars:40 }}</h6>
+                            <small class="text-muted">{{ experience.destination.name }}</small>
+                        </div>
+                        <div class="text-end">
+                            <div class="fw-bold">{{ experience.booking_count }}</div>
+                            <small class="text-muted">bookings</small>
+                        </div>
+                    </div>
+                    {% empty %}
+                    <p class="text-muted text-center py-4">No booking data available</p>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+
+        <!-- Top Destinations -->
+        <div class="col-lg-6 mb-4">
+            <div class="card card-hygge h-100">
+                <div class="card-header bg-white border-bottom">
+                    <h5 class="fw-bold mb-0">
+                        <i class="fas fa-map-marker-alt me-2 text-info"></i>Popular Destinations
+                    </h5>
+                </div>
+                <div class="card-body p-3">
+                    {% for destination in top_destinations %}
+                    <div class="d-flex align-items-center mb-3 p-2 rounded" style="background: var(--hygge-warm-white);">
+                        <div class="badge bg-info me-3">{{ forloop.counter }}</div>
+                        <div class="flex-grow-1">
+                            <h6 class="mb-1">{{ destination.name }}</h6>
+                            <small class="text-muted">{{ destination.country }}</small>
+                        </div>
+                        <div class="text-end">
+                            <div class="fw-bold">{{ destination.experience_count }}</div>
+                            <small class="text-muted">experiences</small>
+                        </div>
+                    </div>
+                    {% empty %}
+                    <p class="text-muted text-center py-4">No destination data available</p>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Category Performance -->
+    <div class="row mb-5">
+        <div class="col-12">
+            <div class="card card-hygge">
+                <div class="card-header bg-white border-bottom">
+                    <h5 class="fw-bold mb-0">
+                        <i class="fas fa-tags me-2 text-success"></i>Category Performance
+                    </h5>
+                </div>
+                <div class="card-body p-4">
+                    <div class="row">
+                        {% for category in category_stats %}
+                        <div class="col-lg-3 col-md-6 mb-3">
+                            <div class="text-center p-3 rounded" style="background: var(--hygge-warm-white);">
+                                <i class="{{ category.icon }} mb-2" style="color: {{ category.color }}; font-size: 1.5rem;"></i>
+                                <h6 class="fw-bold mb-1">{{ category.name }}</h6>
+                                <div class="d-flex justify-content-between small">
+                                    <span>{{ category.experience_count }} exp.</span>
+                                    <span>{{ category.booking_count }} bookings</span>
+                                </div>
+                            </div>
+                        </div>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Extended Analytics Section -->
+    <div class="row mb-5">
+        <div class="col-12">
+            <h3 class="fw-bold mb-4" style="color: var(--hygge-green);">
+                <i class="fas fa-chart-area me-2"></i>Extended Analytics
+            </h3>
+        </div>
+    </div>
+
+    <div class="row mb-5">
+        <!-- Time Period Comparison -->
+        <div class="col-lg-8 mb-4">
+            <div class="card card-hygge h-100">
+                <div class="card-header bg-white border-bottom">
+                    <h5 class="fw-bold mb-0">
+                        <i class="fas fa-calendar-alt me-2 text-primary"></i>Growth Comparison
+                    </h5>
+                </div>
+                <div class="card-body p-4">
+                    <div class="row text-center">
+                        <div class="col-6 col-md-3 mb-3">
+                            <h4 class="fw-bold">{{ analytics.new_users_7_days }}</h4>
+                            <small class="text-muted">7 Days</small>
+                        </div>
+                        <div class="col-6 col-md-3 mb-3">
+                            <h4 class="fw-bold">{{ analytics.new_users_30_days }}</h4>
+                            <small class="text-muted">30 Days</small>
+                        </div>
+                        <div class="col-6 col-md-3 mb-3">
+                            <h4 class="fw-bold">{{ analytics.new_users_90_days }}</h4>
+                            <small class="text-muted">3 Months</small>
+                        </div>
+                        <div class="col-6 col-md-3 mb-3">
+                            <h4 class="fw-bold">{{ analytics.new_users_year }}</h4>
+                            <small class="text-muted">1 Year</small>
+                        </div>
+                    </div>
+                    <hr class="my-4">
+                    <h6 class="fw-bold mb-3">Booking Trends</h6>
+                    <div class="row text-center">
+                        <div class="col-6 col-md-3 mb-2">
+                            <div class="text-warning fw-bold">{{ analytics.bookings_7_days }}</div>
+                            <small>7d</small>
+                        </div>
+                        <div class="col-6 col-md-3 mb-2">
+                            <div class="text-warning fw-bold">{{ analytics.bookings_30_days }}</div>
+                            <small>30d</small>
+                        </div>
+                        <div class="col-6 col-md-3 mb-2">
+                            <div class="text-warning fw-bold">{{ analytics.bookings_90_days }}</div>
+                            <small>90d</small>
+                        </div>
+                        <div class="col-6 col-md-3 mb-2">
+                            <div class="text-warning fw-bold">{{ analytics.bookings_year }}</div>
+                            <small>1y</small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Quick Insights -->
+        <div class="col-lg-4 mb-4">
+            <div class="card card-hygge h-100">
+                <div class="card-header bg-white border-bottom">
+                    <h5 class="fw-bold mb-0">
+                        <i class="fas fa-lightbulb me-2 text-warning"></i>Quick Insights
+                    </h5>
+                </div>
+                <div class="card-body p-3">
+                    <div class="mb-3">
+                        <div class="d-flex justify-content-between">
+                            <small>Growth Rate</small>
+                            <strong class="text-success">{{ analytics.user_growth_rate|floatformat:1 }}%</strong>
+                        </div>
+                    </div>
+                    <div class="mb-3">
+                        <div class="d-flex justify-content-between">
+                            <small>Engagement Rate</small>
+                            <strong class="text-info">{{ analytics.recommendation_view_rate }}%</strong>
+                        </div>
+                    </div>
+                    <div class="mb-3">
+                        <div class="d-flex justify-content-between">
+                            <small>Conversion Rate</small>
+                            <strong class="text-warning">{{ analytics.booking_conversion_rate }}%</strong>
+                        </div>
+                    </div>
+                    <div class="mb-3">
+                        <div class="d-flex justify-content-between">
+                            <small>Survey Completion</small>
+                            <strong class="text-success">{{ analytics.survey_completion_rate }}%</strong>
+                        </div>
+                    </div>
+                    <div class="mb-3">
+                        <div class="d-flex justify-content-between">
+                            <small>Bounce Rate</small>
+                            <strong class="text-danger">{{ analytics.bounce_rate }}%</strong>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Additional Tracking Data -->
+    <div class="row mb-5">
+        <!-- User Locations -->
+        <div class="col-lg-4 mb-4">
+            <div class="card card-hygge h-100">
+                <div class="card-header bg-white border-bottom">
+                    <h5 class="fw-bold mb-0">
+                        <i class="fas fa-globe me-2 text-info"></i>User Locations
+                    </h5>
+                </div>
+                <div class="card-body p-3">
+                    {% for location in user_locations %}
+                    <div class="d-flex justify-content-between mb-2">
+                        <span class="text-truncate">{{ location.userprofile__location|default:"Unknown" }}</span>
+                        <strong>{{ location.count }}</strong>
+                    </div>
+                    {% empty %}
+                    <p class="text-muted text-center">No location data available</p>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+
+        <!-- Platform Usage -->
+        <div class="col-lg-4 mb-4">
+            <div class="card card-hygge h-100">
+                <div class="card-header bg-white border-bottom">
+                    <h5 class="fw-bold mb-0">
+                        <i class="fas fa-laptop me-2 text-secondary"></i>Platform Usage
+                    </h5>
+                </div>
+                <div class="card-body p-3">
+                    {% for platform in platform_data %}
+                    <div class="mb-3">
+                        <div class="d-flex justify-content-between mb-1">
+                            <span>{{ platform.name }}</span>
+                            <strong>{{ platform.count }}</strong>
+                        </div>
+                        <div class="progress" style="height: 6px;">
+                            <div class="progress-bar" style="width: {% widthratio platform.count analytics.total_users 100 %}%; background-color: var(--hygge-green);"></div>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+
+        <!-- Popular Search Terms -->
+        <div class="col-lg-4 mb-4">
+            <div class="card card-hygge h-100">
+                <div class="card-header bg-white border-bottom">
+                    <h5 class="fw-bold mb-0">
+                        <i class="fas fa-search me-2 text-primary"></i>Popular Categories
+                    </h5>
+                </div>
+                <div class="card-body p-3">
+                    {% for term in search_terms %}
+                    <div class="d-flex justify-content-between mb-2">
+                        <span class="text-truncate">{{ term.name }}</span>
+                        <strong>{{ term.search_count }}</strong>
+                    </div>
+                    {% empty %}
+                    <p class="text-muted text-center">No search data available</p>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Platform Health -->
+    <div class="row mb-5">
+        <div class="col-12">
+            <h3 class="fw-bold mb-4" style="color: var(--hygge-green);">
+                <i class="fas fa-heartbeat me-2"></i>Platform Health
+            </h3>
+        </div>
+    </div>
+
+    <div class="row mb-5">
+        <div class="col-lg-4 mb-4">
+            <div class="card card-hygge h-100">
+                <div class="card-body text-center p-4">
+                    <i class="fas fa-leaf mb-3" style="font-size: 2rem; color: var(--hygge-green);"></i>
+                    <h4 class="fw-bold mb-2">{{ analytics.avg_sustainability_score }}/10</h4>
+                    <p class="text-muted">Avg Sustainability Score</p>
+                    <small class="text-success">Excellent platform sustainability focus</small>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-4 mb-4">
+            <div class="card card-hygge h-100">
+                <div class="card-body text-center p-4">
+                    <i class="fas fa-heart mb-3" style="font-size: 2rem; color: var(--hygge-soft-blue);"></i>
+                    <h4 class="fw-bold mb-2">{{ analytics.avg_hygge_factor }}/10</h4>
+                    <p class="text-muted">Avg Hygge Factor</p>
+                    <small class="text-info">Strong hygge experience rating</small>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-4 mb-4">
+            <div class="card card-hygge h-100">
+                <div class="card-body text-center p-4">
+                    <i class="fas fa-plus-circle mb-3" style="font-size: 2rem; color: var(--hygge-gold);"></i>
+                    <h4 class="fw-bold mb-2">{{ analytics.experiences_created_7_days }}</h4>
+                    <p class="text-muted">New Experiences (7d)</p>
+                    <small class="text-warning">{{ analytics.destinations_created_7_days }} new destinations</small>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Export Section -->
+    <div class="row">
+        <div class="col-12">
+            <div class="card card-hygge">
+                <div class="card-body p-4 text-center">
+                    <h5 class="fw-bold mb-3">Export Analytics Data</h5>
+                    <p class="text-muted mb-4">Download comprehensive reports for further analysis</p>
+                    <div class="d-flex gap-3 justify-content-center">
+                        <button class="btn btn-outline-hygge" onclick="exportToCSV()">
+                            <i class="fas fa-file-csv me-2"></i>Export to CSV
+                        </button>
+                        <button class="btn btn-outline-hygge" onclick="generatePDF()">
+                            <i class="fas fa-file-pdf me-2"></i>Generate PDF Report
+                        </button>
+                        <button class="btn btn-hygge" onclick="window.print()">
+                            <i class="fas fa-print me-2"></i>Print Report
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Include Chart.js -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<style>
+.card-hygge {
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.card-hygge:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 25px rgba(0,0,0,0.15);
+}
+
+.progress {
+    border-radius: 10px;
+    overflow: hidden;
+}
+
+.progress-bar {
+    border-radius: 10px;
+}
+
+.badge {
+    width: 30px;
+    height: 30px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    font-size: 0.8rem;
+    font-weight: bold;
+}
+
+@media print {
+    .btn, .card-hygge:hover {
+        transform: none !important;
+        box-shadow: none !important;
+    }
+}
+</style>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Parse chart data
+    const userRegistrations = JSON.parse('{{ chart_data.user_registrations|safe }}');
+    const hourlyActivity = JSON.parse('{{ chart_data.hourly_activity|safe }}');
+    const bookingTrends = JSON.parse('{{ chart_data.booking_trends|safe }}');
+
+    // Chart.js default configuration
+    Chart.defaults.font.family = "'Inter', sans-serif";
+    Chart.defaults.color = '#6c757d';
+
+    // User Registrations Chart
+    new Chart(document.getElementById('userRegistrationsChart'), {
+        type: 'line',
+        data: {
+            labels: userRegistrations.map(item => item.date),
+            datasets: [{
+                label: 'New Users',
+                data: userRegistrations.map(item => item.count),
+                borderColor: 'var(--hygge-green)',
+                backgroundColor: 'rgba(74, 124, 89, 0.1)',
+                borderWidth: 3,
+                fill: true,
+                tension: 0.4
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                legend: {
+                    display: false
+                }
+            },
+            scales: {
+                y: {
+                    beginAtZero: true,
+                    grid: {
+                        color: 'rgba(0,0,0,0.1)'
+                    }
+                },
+                x: {
+                    grid: {
+                        display: false
+                    }
+                }
+            }
+        }
+    });
+
+    // Hourly Activity Chart
+    new Chart(document.getElementById('hourlyActivityChart'), {
+        type: 'bar',
+        data: {
+            labels: hourlyActivity.map(item => item.hour),
+            datasets: [{
+                label: 'Active Users',
+                data: hourlyActivity.map(item => item.count),
+                backgroundColor: 'var(--hygge-soft-blue)',
+                borderRadius: 4
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                legend: {
+                    display: false
+                }
+            },
+            scales: {
+                y: {
+                    beginAtZero: true,
+                    grid: {
+                        color: 'rgba(0,0,0,0.1)'
+                    }
+                },
+                x: {
+                    grid: {
+                        display: false
+                    }
+                }
+            }
+        }
+    });
+
+    // Booking Trends Chart
+    new Chart(document.getElementById('bookingTrendsChart'), {
+        type: 'line',
+        data: {
+            labels: bookingTrends.map(item => item.date),
+            datasets: [{
+                label: 'Bookings',
+                data: bookingTrends.map(item => item.count),
+                borderColor: 'var(--hygge-gold)',
+                backgroundColor: 'rgba(255, 193, 7, 0.1)',
+                borderWidth: 3,
+                fill: true,
+                tension: 0.4,
+                pointBackgroundColor: 'var(--hygge-gold)',
+                pointBorderColor: '#fff',
+                pointBorderWidth: 2,
+                pointRadius: 5
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                legend: {
+                    display: false
+                }
+            },
+            scales: {
+                y: {
+                    beginAtZero: true,
+                    grid: {
+                        color: 'rgba(0,0,0,0.1)'
+                    }
+                },
+                x: {
+                    grid: {
+                        display: false
+                    }
+                }
+            }
+        }
+    });
+});
+
+// Export functions
+function exportToCSV() {
+    // Simple CSV export functionality
+    alert('CSV export functionality would be implemented here');
+}
+
+function generatePDF() {
+    // PDF generation functionality
+    alert('PDF generation functionality would be implemented here');
+}
+
+// Auto-refresh every 5 minutes
+setTimeout(function() {
+    location.reload();
+}, 300000);
+</script>
+{% endblock %}

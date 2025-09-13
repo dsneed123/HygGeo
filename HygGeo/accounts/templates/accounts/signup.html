@@ -13,7 +13,7 @@
                     <p class="text-muted">Start your sustainable travel journey with us</p>
                 </div>
                 
-                <form method="post">
+                <form method="post" enctype="multipart/form-data">
                     {% csrf_token %}
                     
                     <div class="row">
@@ -66,12 +66,59 @@
                         </div>
                     </div>
                     
-                    <div class="mb-4">
+                    <div class="mb-3">
                         <label for="{{ form.password2.id_for_label }}" class="form-label fw-bold">Confirm Password</label>
                         <input type="password" name="password2" class="form-control" id="{{ form.password2.id_for_label }}" required>
                         {% if form.password2.errors %}
                             <div class="text-danger small">{{ form.password2.errors.0 }}</div>
                         {% endif %}
+                    </div>
+
+                    <!-- Profile Picture Upload -->
+                    <div class="mb-4">
+                        <label for="{{ form.avatar.id_for_label }}" class="form-label fw-bold">Profile Picture</label>
+
+                        <!-- Upload Area -->
+                        <div class="mb-3">
+                            <div class="d-flex align-items-center">
+                                <div class="rounded-circle me-3 d-flex align-items-center justify-content-center" id="avatarPlaceholder" style="width: 80px; height: 80px; background-color: var(--hygge-cream); border: 2px dashed var(--hygge-green);">
+                                    <i class="fas fa-camera text-muted" style="font-size: 1.5rem;"></i>
+                                </div>
+                                <div>
+                                    <p class="mb-1 fw-semibold" style="color: var(--hygge-green);">
+                                        <i class="fas fa-user-circle me-1"></i>Add Your Photo
+                                    </p>
+                                    <small class="text-muted">Help others recognize you (optional)</small>
+                                </div>
+                            </div>
+                        </div>
+
+                        <input type="file" name="avatar" class="form-control" id="{{ form.avatar.id_for_label }}" accept="image/*">
+                        {% if form.avatar.errors %}
+                            <div class="text-danger small">{{ form.avatar.errors.0 }}</div>
+                        {% endif %}
+
+                        <!-- Preview Area -->
+                        <div id="imagePreview" class="mt-3" style="display: none;">
+                            <div class="d-flex align-items-center">
+                                <img id="previewImg" class="rounded-circle me-3" style="width: 80px; height: 80px; object-fit: cover; border: 3px solid var(--hygge-green);">
+                                <div>
+                                    <p class="mb-1 fw-semibold text-success">
+                                        <i class="fas fa-check-circle me-1"></i>Looking great!
+                                    </p>
+                                    <button type="button" class="btn btn-sm btn-outline-danger" id="removePreview">
+                                        <i class="fas fa-times me-1"></i>Remove
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-text">
+                            <small>
+                                <i class="fas fa-info-circle me-1"></i>
+                                Upload JPG, PNG, or GIF images. Max size: 2MB. You can skip this and add one later.
+                            </small>
+                        </div>
                     </div>
                     
                     <div class="mb-4">
@@ -141,4 +188,74 @@
     box-shadow: 0 0 0 0.2rem rgba(45, 90, 61, 0.25);
 }
 </style>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Image preview functionality for signup form
+    const fileInput = document.querySelector('input[type="file"]');
+    const previewDiv = document.getElementById('imagePreview');
+    const previewImg = document.getElementById('previewImg');
+    const avatarPlaceholder = document.getElementById('avatarPlaceholder');
+    const removeButton = document.getElementById('removePreview');
+
+    if (fileInput) {
+        fileInput.addEventListener('change', function(e) {
+            const file = e.target.files[0];
+
+            if (file && file.type.startsWith('image/')) {
+                // Check file size (2MB limit)
+                if (file.size > 2 * 1024 * 1024) {
+                    alert('File size too large. Please select an image smaller than 2MB.');
+                    this.value = '';
+                    return;
+                }
+
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    previewImg.src = e.target.result;
+                    previewDiv.style.display = 'block';
+
+                    // Hide placeholder with animation
+                    avatarPlaceholder.parentElement.style.opacity = '0.3';
+
+                    // Add preview with animation
+                    previewDiv.style.opacity = '0';
+                    previewDiv.style.transform = 'scale(0.8)';
+
+                    setTimeout(() => {
+                        previewDiv.style.transition = 'all 0.3s ease';
+                        previewDiv.style.opacity = '1';
+                        previewDiv.style.transform = 'scale(1)';
+                    }, 50);
+                };
+                reader.readAsDataURL(file);
+            } else {
+                // Reset preview if no valid file
+                previewDiv.style.display = 'none';
+                avatarPlaceholder.parentElement.style.opacity = '1';
+            }
+        });
+    }
+
+    // Remove preview functionality
+    if (removeButton) {
+        removeButton.addEventListener('click', function() {
+            fileInput.value = '';
+            previewDiv.style.display = 'none';
+            avatarPlaceholder.parentElement.style.opacity = '1';
+        });
+    }
+
+    // Form animation on load
+    const formCard = document.querySelector('.card-hygge');
+    formCard.style.opacity = '0';
+    formCard.style.transform = 'translateY(30px)';
+
+    setTimeout(() => {
+        formCard.style.transition = 'all 0.6s ease';
+        formCard.style.opacity = '1';
+        formCard.style.transform = 'translateY(0)';
+    }, 100);
+});
+</script>
 {% endblock %}

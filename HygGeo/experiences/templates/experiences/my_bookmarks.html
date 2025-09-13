@@ -107,9 +107,9 @@
                                 <a href="{% url 'experiences:experience_detail' experience.slug %}" class="btn btn-hygge btn-sm flex-grow-1">
                                     <i class="fas fa-eye me-1"></i>View Details
                                 </a>
-                                <a href="{% url 'experiences:remove_bookmark' experience.id %}" class="btn btn-outline-danger btn-sm remove-bookmark-btn" data-experience-id="{{ experience.id }}" onclick="return confirm('Remove from bookmarks?')">
+                                <button class="btn btn-outline-danger btn-sm remove-bookmark-btn" data-experience-id="{{ experience.id }}" title="Remove from bookmarks">
                                     <i class="fas fa-bookmark"></i>
-                                </a>
+                                </button>
                             </div>
                         </div>
                     </div>
@@ -197,33 +197,118 @@
 </style>
 
 <script>
-// Auto-submit form when filters change
 document.addEventListener('DOMContentLoaded', function() {
-    // Remove bookmark functionality with animation
+    // Remove bookmark functionality with AJAX
     const removeButtons = document.querySelectorAll('.remove-bookmark-btn');
-    
+
     removeButtons.forEach(button => {
-        button.addEventListener('click', function(e) {
-            if (confirm('Remove this experience from your bookmarks?')) {
-                const card = this.closest('.card-hygge');
-                card.style.opacity = '0.5';
-                card.style.transform = 'scale(0.95)';
+        button.addEventListener('click', async function(e) {
+            e.preventDefault();
+
+            if (!confirm('Remove this experience from your bookmarks?')) {
+                return;
+            }
+
+            const experienceId = this.dataset.experienceId;
+            const card = this.closest('.col-lg-4');
+            const originalContent = this.innerHTML;
+
+            // Show loading state
+            this.disabled = true;
+            this.innerHTML = '<i class="fas fa-spinner fa-spin"></i>';
+
+            try {
+                const response = await fetch(`{% url 'experiences:remove_bookmark' '00000000-0000-0000-0000-000000000000' %}`.replace('00000000-0000-0000-0000-000000000000', experienceId), {
+                    method: 'POST',
+                    headers: {
+                        'X-CSRFToken': document.querySelector('[name=csrfmiddlewaretoken]').value,
+                        'Content-Type': 'application/json',
+                    },
+                });
+
+                const data = await response.json();
+
+                if (data.success) {
+                    // Animate card removal
+                    card.style.transition = 'all 0.5s ease';
+                    card.style.opacity = '0';
+                    card.style.transform = 'scale(0.8) translateY(-20px)';
+
+                    setTimeout(() => {
+                        card.remove();
+
+                        // Check if no more bookmarks
+                        const remainingCards = document.querySelectorAll('.col-lg-4').length;
+                        if (remainingCards === 0) {
+                            // Reload page to show "no bookmarks" message
+                            window.location.reload();
+                        }
+                    }, 500);
+
+                    showMessage('Removed from bookmarks', 'success');
+                } else {
+                    console.error('Remove bookmark failed:', data.error);
+                    showMessage('Failed to remove bookmark', 'error');
+                    this.innerHTML = originalContent;
+                    this.disabled = false;
+                }
+            } catch (error) {
+                console.error('Network error:', error);
+                showMessage('Network error', 'error');
+                this.innerHTML = originalContent;
+                this.disabled = false;
             }
         });
     });
-    
+
+    // Show feedback messages
+    function showMessage(message, type) {
+        const messageDiv = document.createElement('div');
+        messageDiv.className = `alert alert-${type === 'success' ? 'success' : 'danger'} position-fixed`;
+        messageDiv.style.cssText = 'top: 20px; right: 20px; z-index: 1050; min-width: 250px;';
+        messageDiv.innerHTML = `
+            <div class="d-flex align-items-center">
+                <i class="fas fa-${type === 'success' ? 'check-circle' : 'exclamation-triangle'} me-2"></i>
+                ${message}
+            </div>
+        `;
+
+        document.body.appendChild(messageDiv);
+
+        // Auto-remove after 3 seconds
+        setTimeout(() => {
+            messageDiv.remove();
+        }, 3000);
+    }
+
     // Add animation to cards
     const cards = document.querySelectorAll('.card-hygge');
     cards.forEach((card, index) => {
         card.style.opacity = '0';
         card.style.transform = 'translateY(30px)';
-        
+
         setTimeout(() => {
             card.style.transition = 'all 0.6s ease';
             card.style.opacity = '1';
             card.style.transform = 'translateY(0)';
         }, index * 50);
     });
+
+    // Add CSRF token getter function
+    function getCookie(name) {
+        let cookieValue = null;
+        if (document.cookie && document.cookie !== '') {
+            const cookies = document.cookie.split(';');
+            for (let i = 0; i < cookies.length; i++) {
+                const cookie = cookies[i].trim();
+                if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                    cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                    break;
+                }
+            }
+        }
+        return cookieValue;
+    }
 });
 </script>
 

@@ -85,12 +85,64 @@
                         
                         <div class="mb-3">
                             <label for="{{ profile_form.avatar.id_for_label }}" class="form-label fw-bold">Profile Picture</label>
-                            <input type="file" name="avatar" class="form-control" id="{{ profile_form.avatar.id_for_label }}" accept="image/*">
-                            {% if profile_form.avatar.errors %}
-                                <div class="text-danger small">{{ profile_form.avatar.errors.0 }}</div>
+
+                            <!-- Current Avatar Preview -->
+                            {% if user.userprofile.avatar %}
+                            <div class="mb-3">
+                                <div class="d-flex align-items-center">
+                                    <img src="{{ user.userprofile.avatar.url }}" alt="Current profile picture" class="rounded-circle me-3" id="currentAvatar" style="width: 80px; height: 80px; object-fit: cover; border: 3px solid var(--hygge-light-green);">
+                                    <div>
+                                        <p class="mb-1 fw-semibold text-success">
+                                            <i class="fas fa-check-circle me-1"></i>Current Profile Picture
+                                        </p>
+                                        <small class="text-muted">Upload a new image to replace</small>
+                                    </div>
+                                </div>
+                            </div>
+                            {% else %}
+                            <div class="mb-3">
+                                <div class="d-flex align-items-center">
+                                    <div class="rounded-circle me-3 d-flex align-items-center justify-content-center" id="avatarPlaceholder" style="width: 80px; height: 80px; background-color: var(--hygge-cream); border: 2px dashed var(--hygge-green);">
+                                        <i class="fas fa-camera text-muted" style="font-size: 1.5rem;"></i>
+                                    </div>
+                                    <div>
+                                        <p class="mb-1 fw-semibold" style="color: var(--hygge-green);">
+                                            <i class="fas fa-plus-circle me-1"></i>Add Profile Picture
+                                        </p>
+                                        <small class="text-muted">Help others recognize you in the community</small>
+                                    </div>
+                                </div>
+                            </div>
                             {% endif %}
+
+                            <!-- File Input -->
+                            <div class="mb-2">
+                                <input type="file" name="avatar" class="form-control" id="{{ profile_form.avatar.id_for_label }}" accept="image/*">
+                                {% if profile_form.avatar.errors %}
+                                    <div class="text-danger small">{{ profile_form.avatar.errors.0 }}</div>
+                                {% endif %}
+                            </div>
+
+                            <!-- Preview Area for New Upload -->
+                            <div id="imagePreview" class="mb-2" style="display: none;">
+                                <div class="d-flex align-items-center">
+                                    <img id="previewImg" class="rounded-circle me-3" style="width: 80px; height: 80px; object-fit: cover; border: 3px solid var(--hygge-green);">
+                                    <div>
+                                        <p class="mb-1 fw-semibold text-primary">
+                                            <i class="fas fa-eye me-1"></i>Preview - New Profile Picture
+                                        </p>
+                                        <button type="button" class="btn btn-sm btn-outline-danger" id="removePreview">
+                                            <i class="fas fa-times me-1"></i>Remove
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+
                             <div class="form-text">
-                                <small>Upload a profile picture (optional). Max size: 2MB</small>
+                                <small>
+                                    <i class="fas fa-info-circle me-1"></i>
+                                    Upload JPG, PNG, or GIF images. Max size: 2MB. Square images work best.
+                                </small>
                             </div>
                         </div>
                     </div>
@@ -279,16 +331,75 @@ textarea {
 </style>
 
 <script>
-// Preview uploaded image
+// Enhanced image preview functionality
 document.querySelector('input[type="file"]').addEventListener('change', function(e) {
     const file = e.target.files[0];
+    const previewDiv = document.getElementById('imagePreview');
+    const previewImg = document.getElementById('previewImg');
+    const currentAvatar = document.getElementById('currentAvatar');
+    const avatarPlaceholder = document.getElementById('avatarPlaceholder');
+
     if (file && file.type.startsWith('image/')) {
+        // Check file size (2MB limit)
+        if (file.size > 2 * 1024 * 1024) {
+            alert('File size too large. Please select an image smaller than 2MB.');
+            this.value = '';
+            return;
+        }
+
         const reader = new FileReader();
         reader.onload = function(e) {
-            // You could add image preview here if desired
-            console.log('Image selected:', file.name);
+            previewImg.src = e.target.result;
+            previewDiv.style.display = 'block';
+
+            // Hide current avatar or placeholder
+            if (currentAvatar) {
+                currentAvatar.parentElement.parentElement.style.opacity = '0.5';
+            }
+            if (avatarPlaceholder) {
+                avatarPlaceholder.parentElement.parentElement.style.opacity = '0.5';
+            }
+
+            // Add upload animation
+            previewDiv.style.opacity = '0';
+            previewDiv.style.transform = 'scale(0.8)';
+
+            setTimeout(() => {
+                previewDiv.style.transition = 'all 0.3s ease';
+                previewDiv.style.opacity = '1';
+                previewDiv.style.transform = 'scale(1)';
+            }, 50);
         };
         reader.readAsDataURL(file);
+    } else {
+        previewDiv.style.display = 'none';
+
+        // Restore original avatar or placeholder opacity
+        if (currentAvatar) {
+            currentAvatar.parentElement.parentElement.style.opacity = '1';
+        }
+        if (avatarPlaceholder) {
+            avatarPlaceholder.parentElement.parentElement.style.opacity = '1';
+        }
+    }
+});
+
+// Remove preview functionality
+document.getElementById('removePreview')?.addEventListener('click', function() {
+    const fileInput = document.querySelector('input[type="file"]');
+    const previewDiv = document.getElementById('imagePreview');
+    const currentAvatar = document.getElementById('currentAvatar');
+    const avatarPlaceholder = document.getElementById('avatarPlaceholder');
+
+    fileInput.value = '';
+    previewDiv.style.display = 'none';
+
+    // Restore original avatar or placeholder opacity
+    if (currentAvatar) {
+        currentAvatar.parentElement.parentElement.style.opacity = '1';
+    }
+    if (avatarPlaceholder) {
+        avatarPlaceholder.parentElement.parentElement.style.opacity = '1';
     }
 });
 

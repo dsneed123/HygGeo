@@ -216,8 +216,8 @@
                                 <i class="fas fa-edit"></i>
                             </a>
                             {% endif %}
-                            <button class="btn btn-outline-hygge btn-sm bookmark-btn" data-experience-id="{{ experience.id }}">
-                                <i class="far fa-bookmark"></i>
+                            <button class="btn btn-outline-hygge btn-sm bookmark-btn{% if experience.id in user_bookmarks %} bookmarked{% endif %}" data-experience-id="{{ experience.id }}">
+                                <i class="{% if experience.id in user_bookmarks %}fas{% else %}far{% endif %} fa-bookmark"></i>
                             </button>
                         </div>
                     </div>
@@ -276,8 +276,20 @@
     padding: 0.375rem 0;
 }
 
+.bookmark-btn.bookmarked {
+    background-color: var(--hygge-gold);
+    border-color: var(--hygge-gold);
+    color: white;
+}
+
+.bookmark-btn.bookmarked:hover {
+    background-color: #d19900;
+    border-color: #d19900;
+    color: white;
+}
+
 .bookmark-btn.bookmarked i {
-    color: var(--hygge-gold);
+    color: white;
 }
 
 .btn-outline-hygge-edit {
@@ -336,10 +348,21 @@ document.addEventListener('DOMContentLoaded', function() {
     bookmarkButtons.forEach(button => {
         button.addEventListener('click', async function(e) {
             e.preventDefault();
-            
+
+            {% if not user.is_authenticated %}
+            // Redirect to login if not authenticated
+            window.location.href = '{% url "login" %}';
+            return;
+            {% endif %}
+
             const experienceId = this.dataset.experienceId;
             const icon = this.querySelector('i');
-            
+            const originalContent = this.innerHTML;
+
+            // Show loading state
+            this.disabled = true;
+            this.innerHTML = '<i class="fas fa-spinner fa-spin"></i>';
+
             try {
                 const response = await fetch(`{% url 'experiences:bookmark_experience' '00000000-0000-0000-0000-000000000000' %}`.replace('00000000-0000-0000-0000-000000000000', experienceId), {
                     method: 'POST',
@@ -348,23 +371,53 @@ document.addEventListener('DOMContentLoaded', function() {
                         'Content-Type': 'application/json',
                     },
                 });
-                
+
                 const data = await response.json();
-                
+
                 if (data.success) {
                     if (data.bookmarked) {
-                        icon.className = 'fas fa-bookmark';
+                        this.innerHTML = '<i class="fas fa-bookmark"></i>';
                         this.classList.add('bookmarked');
+                        showBookmarkMessage('Added to bookmarks!', 'success');
                     } else {
-                        icon.className = 'far fa-bookmark';
+                        this.innerHTML = '<i class="far fa-bookmark"></i>';
                         this.classList.remove('bookmarked');
+                        showBookmarkMessage('Removed from bookmarks', 'info');
                     }
+                } else {
+                    console.error('Bookmark failed:', data.error);
+                    showBookmarkMessage('Failed to bookmark', 'error');
+                    this.innerHTML = originalContent;
                 }
             } catch (error) {
                 console.error('Error bookmarking experience:', error);
+                showBookmarkMessage('Network error', 'error');
+                this.innerHTML = originalContent;
             }
+
+            this.disabled = false;
         });
     });
+
+    // Show bookmark feedback messages
+    function showBookmarkMessage(message, type) {
+        const messageDiv = document.createElement('div');
+        messageDiv.className = `alert alert-${type === 'success' ? 'success' : type === 'error' ? 'danger' : 'info'} position-fixed`;
+        messageDiv.style.cssText = 'top: 20px; right: 20px; z-index: 1050; min-width: 250px;';
+        messageDiv.innerHTML = `
+            <div class="d-flex align-items-center">
+                <i class="fas fa-${type === 'success' ? 'check-circle' : type === 'error' ? 'exclamation-triangle' : 'info-circle'} me-2"></i>
+                ${message}
+            </div>
+        `;
+
+        document.body.appendChild(messageDiv);
+
+        // Auto-remove after 3 seconds
+        setTimeout(() => {
+            messageDiv.remove();
+        }, 3000);
+    }
     
     // Add animation to cards
     const cards = document.querySelectorAll('.card-hygge');

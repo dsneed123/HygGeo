@@ -12,11 +12,19 @@ class CustomUserCreationForm(UserCreationForm):
     email = forms.EmailField(required=True)
     first_name = forms.CharField(max_length=30, required=True)
     last_name = forms.CharField(max_length=30, required=True)
-    
+    avatar = forms.ImageField(required=False, help_text="Upload a profile picture (optional)")
+
     class Meta:
         model = User
-        fields = ('username', 'first_name', 'last_name', 'email', 'password1', 'password2')
-    
+        fields = ('username', 'first_name', 'last_name', 'email', 'password1', 'password2', 'avatar')
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields['avatar'].widget.attrs.update({
+            'class': 'form-control',
+            'accept': 'image/*'
+        })
+
     def save(self, commit=True):
         user = super().save(commit=False)
         user.email = self.cleaned_data['email']
@@ -24,6 +32,11 @@ class CustomUserCreationForm(UserCreationForm):
         user.last_name = self.cleaned_data['last_name']
         if commit:
             user.save()
+            # Create or update user profile with avatar
+            profile, created = UserProfile.objects.get_or_create(user=user)
+            if self.cleaned_data.get('avatar'):
+                profile.avatar = self.cleaned_data['avatar']
+                profile.save()
         return user
 
 class UserProfileForm(forms.ModelForm):

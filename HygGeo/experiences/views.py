@@ -193,12 +193,16 @@ def experience_list_view(request):
         experience_count=Count('experiences')
     ).filter(experience_count__gt=0)
     
+    # Get user bookmarks for template
+    user_bookmarks = get_user_bookmarks(request.user)
+
     context = {
         'experiences': page_obj,
         'categories': categories,
         'destinations': destinations,
         'experience_types': Experience.EXPERIENCE_TYPES,
         'budget_ranges': Experience.BUDGET_RANGES,
+        'user_bookmarks': user_bookmarks,
         'current_filters': {
             'category': category_slug,
             'destination': destination_slug,
@@ -265,11 +269,21 @@ def experience_detail_view(request, slug):
         except UserRecommendation.DoesNotExist:
             pass
     
+    # Check if user has bookmarked this experience
+    is_bookmarked = False
+    if request.user.is_authenticated:
+        is_bookmarked = UserRecommendation.objects.filter(
+            user=request.user,
+            experience=experience,
+            bookmarked=True
+        ).exists()
+
     context = {
         'experience': experience,
         'reviews': reviews[:5],  # Show first 5 reviews
         'review_stats': review_stats,
         'similar_experiences': similar_experiences,
+        'is_bookmarked': is_bookmarked,
     }
     
     return render(request, 'experiences/experience_detail.html', context)
@@ -396,40 +410,46 @@ def bookmark_experience(request, experience_id):
     """Bookmark/unbookmark an experience"""
     try:
         experience = Experience.objects.get(id=experience_id, is_active=True)
-        
+
         recommendation, created = UserRecommendation.objects.get_or_create(
             user=request.user,
             experience=experience,
             defaults={
                 'match_score': Decimal('0'),
-                'reasons': ['Manually bookmarked']
+                'reasons': ['Manually bookmarked'],
+                'bookmarked': True,
+                'viewed': True  # Mark as viewed when bookmarked
             }
         )
-        
-        recommendation.bookmarked = not recommendation.bookmarked
+
+        if not created:
+            # Toggle bookmark status
+            recommendation.bookmarked = not recommendation.bookmarked
+            if recommendation.bookmarked:
+                recommendation.viewed = True  # Mark as viewed when bookmarked
+
         recommendation.save()
-        
+
+        # Return comprehensive response
         return JsonResponse({
             'success': True,
-            'bookmarked': recommendation.bookmarked
+            'bookmarked': recommendation.bookmarked,
+            'message': 'Added to bookmarks' if recommendation.bookmarked else 'Removed from bookmarks'
         })
-        
+
     except Experience.DoesNotExist:
         return JsonResponse({'success': False, 'error': 'Experience not found'})
+    except Exception as e:
+        return JsonResponse({'success': False, 'error': str(e)})
 
-@login_required
-def my_bookmarks_view(request):
-    """View user's bookmarked experiences"""
-    bookmarks = UserRecommendation.objects.filter(
-        user=request.user,
-        bookmarked=True
-    ).select_related('experience__destination', 'experience__provider')
-    
-    context = {
-        'bookmarks': bookmarks,
-    }
-    
-    return render(request, 'experiences/my_bookmarks.html', context)
+def get_user_bookmarks(user):
+    """Helper function to get user's bookmarked experience IDs"""
+    if user.is_authenticated:
+        return set(UserRecommendation.objects.filter(
+            user=user,
+            bookmarked=True
+        ).values_list('experience_id', flat=True))
+    return set()
 
 @user_passes_test(lambda u: u.is_staff)  # staff/admin only
 def add_experience(request):
@@ -533,6 +553,7 @@ def add_category(request):
 @login_required
 @require_POST
 def remove_bookmark_view(request, experience_id):
+    """Remove bookmark via AJAX - used on bookmarks page"""
     try:
         recommendation = UserRecommendation.objects.get(
             user=request.user,
@@ -541,9 +562,20 @@ def remove_bookmark_view(request, experience_id):
         )
         recommendation.bookmarked = False
         recommendation.save()
-        return JsonResponse({'success': True})
+        return JsonResponse({
+            'success': True,
+            'message': 'Removed from bookmarks'
+        })
     except UserRecommendation.DoesNotExist:
-        return JsonResponse({'success': False, 'error': 'Bookmark not found'})
+        return JsonResponse({
+            'success': False,
+            'error': 'Bookmark not found'
+        })
+    except Exception as e:
+        return JsonResponse({
+            'success': False,
+            'error': str(e)
+        })
 
 @require_POST
 def track_booking_view(request, experience_id):
