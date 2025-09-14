@@ -11124,3 +11124,16 @@ INFO 2025-09-13 16:55:13,622 autoreload 27896 3988 Watching for file changes wit
 INFO 2025-09-13 16:56:38,078 basehttp 27896 27180 "GET /accounts/logout/ HTTP/1.1" 302 0
 INFO 2025-09-13 16:56:38,092 basehttp 27896 27180 "GET / HTTP/1.1" 200 27083
 INFO 2025-09-13 16:56:39,257 basehttp 27896 27180 "GET /accounts/signup/ HTTP/1.1" 200 24755
+INFO 2025-09-13 18:24:39,445 autoreload 6456 28452 Watching for file changes with StatReloader
+INFO 2025-09-13 18:24:44,996 basehttp 6456 16756 "GET /accounts/signup/ HTTP/1.1" 200 24755
+WARNING 2025-09-13 18:24:45,213 log 6456 16756 Not Found: /favicon.ico
+WARNING 2025-09-13 18:24:45,214 basehttp 6456 16756 "GET /favicon.ico HTTP/1.1" 404 3533
+INFO 2025-09-13 18:24:47,509 basehttp 6456 16756 "GET /accounts/login/ HTTP/1.1" 200 18946
+INFO 2025-09-13 18:24:54,190 basehttp 6456 16756 "POST /accounts/login/ HTTP/1.1" 200 19177
+INFO 2025-09-13 18:25:02,966 basehttp 6456 16756 "POST /accounts/login/ HTTP/1.1" 200 19177
+INFO 2025-09-13 18:25:06,797 basehttp 6456 16756 "POST /accounts/login/ HTTP/1.1" 200 19177
+INFO 2025-09-13 18:25:11,742 basehttp 6456 16756 "POST /accounts/login/ HTTP/1.1" 302 0
+INFO 2025-09-13 18:25:11,754 basehttp 6456 16756 "GET / HTTP/1.1" 200 35364
+INFO 2025-09-13 18:25:16,048 basehttp 6456 16756 "GET /experiences/destinations/ HTTP/1.1" 200 42728
+INFO 2025-09-13 18:25:18,302 basehttp 6456 16756 "GET /experiences/destinations/seattle/ HTTP/1.1" 200 46195
+INFO 2025-09-13 18:25:23,989 basehttp 6456 16756 "GET /experiences/?destination=1 HTTP/1.1" 200 36527
