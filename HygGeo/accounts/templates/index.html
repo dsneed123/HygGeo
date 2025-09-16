@@ -850,15 +850,18 @@
 @media (max-width: 768px) {
     .hero-visual {
         height: 400px;
+        padding: 0 1rem; /* Add horizontal padding for mobile */
     }
 
     .destination-carousel-container {
         height: 400px;
         border-radius: 15px;
+        margin: 0 1rem; /* Add horizontal margins for mobile */
+        box-shadow: 0 10px 30px rgba(0,0,0,0.15); /* Slightly reduce shadow */
     }
 
     .destination-content {
-        padding: 1.5rem;
+        padding: 1rem 1.5rem; /* Reduce top/bottom padding on mobile */
     }
 
     .destination-name {
@@ -871,6 +874,7 @@
 
     .destination-description {
         font-size: 0.85rem;
+        margin-bottom: 0.75rem; /* Reduce margin on mobile */
     }
 
     .destination-stats {
@@ -885,9 +889,13 @@
         font-size: 1rem;
     }
 
+    .carousel-controls {
+        padding: 0 1.5rem; /* Adjust control padding for mobile margins */
+    }
+
     .brand-overlay {
         top: 15px;
-        left: 15px;
+        left: 25px; /* Adjust for mobile margins */
         padding: 0.75rem 1rem;
     }
 
@@ -949,6 +957,80 @@
     .circle-3 {
         width: 220px;
         height: 220px;
+    }
+}
+
+/* Extra responsive adjustments for smaller screens */
+@media (max-width: 576px) {
+    .hero-visual {
+        padding: 0 0.75rem;
+    }
+
+    .destination-carousel-container {
+        margin: 0 0.75rem;
+        height: 350px; /* Slightly smaller on very small screens */
+    }
+
+    .destination-content {
+        padding: 0.75rem 1rem; /* Further reduce padding on small screens */
+    }
+
+    .destination-name {
+        font-size: 1.25rem; /* Smaller title on small screens */
+    }
+
+    .destination-description {
+        font-size: 0.8rem;
+        margin-bottom: 0.5rem;
+    }
+
+    .destination-stats {
+        margin-bottom: 0.75rem;
+    }
+
+    .destination-stats .stat {
+        font-size: 0.8rem;
+    }
+
+    .btn-explore {
+        padding: 0.375rem 1rem;
+        font-size: 0.875rem;
+    }
+
+    .carousel-controls {
+        padding: 0 1rem;
+    }
+
+    .brand-overlay {
+        left: 20px;
+        padding: 0.5rem 0.75rem;
+    }
+
+    .brand-overlay h4 {
+        font-size: 0.9rem;
+    }
+
+    .brand-overlay p {
+        font-size: 0.75rem;
+    }
+}
+
+/* Adjustments for very large mobile screens and small tablets */
+@media (min-width: 576px) and (max-width: 768px) {
+    .destination-carousel-container {
+        margin: 0 1.5rem; /* More margin on larger mobile screens */
+    }
+
+    .hero-visual {
+        padding: 0 1.5rem;
+    }
+
+    .carousel-controls {
+        padding: 0 2rem;
+    }
+
+    .brand-overlay {
+        left: 30px;
     }
 }
 </style>

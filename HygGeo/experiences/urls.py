@@ -23,8 +23,14 @@ urlpatterns = [
     
     # Providers, Experience Types, Categories - specific before general
     path('providers/add/', views.add_provider, name='add_provider'),
+    path('experience-types/', views.experience_type_list_view, name='experience_type_list'),
     path('experience-types/add/', views.add_experience_type, name='add_experience_type'),
+    path('experience-types/<slug:slug>/edit/', views.edit_experience_type, name='edit_experience_type'),
+    path('experience-types/<slug:slug>/delete/', views.delete_experience_type, name='delete_experience_type'),
+    path('categories/', views.category_list_view, name='category_list'),
     path('categories/add/', views.add_category, name='add_category'),
+    path('categories/<slug:slug>/edit/', views.edit_category, name='edit_category'),
+    path('categories/<slug:slug>/delete/', views.delete_category, name='delete_category'),
     
     # Categories
     path('category/<slug:slug>/', views.category_detail_view, name='category_detail'),

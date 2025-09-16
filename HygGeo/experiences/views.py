@@ -668,4 +668,191 @@ def edit_experience(request, slug):
         'categories': categories,
     })
 
+# Experience Type Management Views
+
+@user_passes_test(lambda u: u.is_staff)
+def experience_type_list_view(request):
+    """View all experience types with edit/delete options"""
+    experience_types = ExperienceType.objects.all().order_by('name')
+
+    # Add count of experiences for each type
+    for exp_type in experience_types:
+        exp_type.experience_count = Experience.objects.filter(experience_type=exp_type).count()
+
+    paginator = Paginator(experience_types, 20)
+    page_number = request.GET.get('page')
+    page_obj = paginator.get_page(page_number)
+
+    context = {
+        'experience_types': page_obj,
+        'total_count': experience_types.count(),
+    }
+
+    return render(request, 'experiences/experience_type_list.html', context)
+
+@user_passes_test(lambda u: u.is_staff)
+def edit_experience_type(request, slug):
+    """Edit an existing experience type"""
+    experience_type = get_object_or_404(ExperienceType, slug=slug)
+
+    if request.method == 'POST':
+        form = ExperienceTypeForm(request.POST, instance=experience_type)
+        if form.is_valid():
+            try:
+                exp_type = form.save(commit=False)
+
+                # Auto-generate slug if changed
+                if not exp_type.slug or exp_type.slug != slug:
+                    base_slug = slugify(exp_type.name)
+                    new_slug = base_slug
+                    counter = 1
+
+                    while ExperienceType.objects.filter(slug=new_slug).exclude(id=exp_type.id).exists():
+                        new_slug = f"{base_slug}-{counter}"
+                        counter += 1
+
+                    exp_type.slug = new_slug
+
+                exp_type.save()
+                messages.success(request, f'✅ Experience type "{exp_type.name}" updated successfully!')
+                return redirect('experiences:experience_type_list')
+
+            except Exception as e:
+                messages.error(request, f'❌ Error updating experience type: {str(e)}')
+        else:
+            messages.error(request, '⚠️ Please correct the errors below.')
+    else:
+        form = ExperienceTypeForm(instance=experience_type)
+
+    # Get count of experiences using this type
+    experience_count = Experience.objects.filter(experience_type=experience_type).count()
+
+    context = {
+        'form': form,
+        'experience_type': experience_type,
+        'experience_count': experience_count,
+        'page_title': f'Edit Experience Type - {experience_type.name}',
+    }
+
+    return render(request, 'experiences/edit_experience_type.html', context)
+
+@user_passes_test(lambda u: u.is_staff)
+def delete_experience_type(request, slug):
+    """Delete an experience type"""
+    experience_type = get_object_or_404(ExperienceType, slug=slug)
+
+    # Check if any experiences are using this type
+    experience_count = Experience.objects.filter(experience_type=experience_type).count()
+
+    if request.method == 'POST':
+        if experience_count > 0:
+            messages.error(request, f'❌ Cannot delete "{experience_type.name}" because it is used by {experience_count} experience(s). Please reassign or delete those experiences first.')
+        else:
+            type_name = experience_type.name
+            experience_type.delete()
+            messages.success(request, f'✅ Experience type "{type_name}" deleted successfully!')
+
+        return redirect('experiences:experience_type_list')
+
+    context = {
+        'experience_type': experience_type,
+        'experience_count': experience_count,
+        'can_delete': experience_count == 0,
+    }
+
+    return render(request, 'experiences/delete_experience_type.html', context)
+
+# Category Management Views
+
+@user_passes_test(lambda u: u.is_staff)
+def category_list_view(request):
+    """View all categories with edit/delete options"""
+    categories = Category.objects.all().order_by('name')
+
+    # Add count of experiences for each category
+    for category in categories:
+        category.experience_count = category.experiences.count()
+
+    paginator = Paginator(categories, 20)
+    page_number = request.GET.get('page')
+    page_obj = paginator.get_page(page_number)
+
+    context = {
+        'categories': page_obj,
+        'total_count': categories.count(),
+    }
+
+    return render(request, 'experiences/category_list.html', context)
+
+@user_passes_test(lambda u: u.is_staff)
+def edit_category(request, slug):
+    """Edit an existing category"""
+    category = get_object_or_404(Category, slug=slug)
+
+    if request.method == 'POST':
+        form = CategoryForm(request.POST, instance=category)
+        if form.is_valid():
+            try:
+                cat = form.save(commit=False)
+
+                # Auto-generate slug if changed
+                if not cat.slug or cat.slug != slug:
+                    base_slug = slugify(cat.name)
+                    new_slug = base_slug
+                    counter = 1
+
+                    while Category.objects.filter(slug=new_slug).exclude(id=cat.id).exists():
+                        new_slug = f"{base_slug}-{counter}"
+                        counter += 1
+
+                    cat.slug = new_slug
+
+                cat.save()
+                messages.success(request, f'✅ Category "{cat.name}" updated successfully!')
+                return redirect('experiences:category_list')
+
+            except Exception as e:
+                messages.error(request, f'❌ Error updating category: {str(e)}')
+        else:
+            messages.error(request, '⚠️ Please correct the errors below.')
+    else:
+        form = CategoryForm(instance=category)
+
+    # Get count of experiences using this category
+    experience_count = category.experiences.count()
+
+    context = {
+        'form': form,
+        'category': category,
+        'experience_count': experience_count,
+        'page_title': f'Edit Category - {category.name}',
+    }
+
+    return render(request, 'experiences/edit_category.html', context)
+
+@user_passes_test(lambda u: u.is_staff)
+def delete_category(request, slug):
+    """Delete a category"""
+    category = get_object_or_404(Category, slug=slug)
+
+    # Check if any experiences are using this category
+    experience_count = category.experiences.count()
+
+    if request.method == 'POST':
+        if experience_count > 0:
+            messages.error(request, f'❌ Cannot delete "{category.name}" because it is used by {experience_count} experience(s). Please reassign or delete those experiences first.')
+        else:
+            category_name = category.name
+            category.delete()
+            messages.success(request, f'✅ Category "{category_name}" deleted successfully!')
+
+        return redirect('experiences:category_list')
+
+    context = {
+        'category': category,
+        'experience_count': experience_count,
+        'can_delete': experience_count == 0,
+    }
+
+    return render(request, 'experiences/delete_category.html', context)
 

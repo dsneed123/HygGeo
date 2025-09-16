@@ -1,0 +1,211 @@
+{% extends 'base.html' %}
+
+{% block title %}{{ page_title }} - HygGeo Admin{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <!-- Header -->
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="d-flex justify-content-between align-items-center">
+                <div>
+                    <h1 class="h2 fw-bold" style="color: var(--hygge-green);">
+                        <i class="fas fa-edit me-2"></i>Edit Experience Type
+                    </h1>
+                    <p class="text-muted">Update experience type details and settings</p>
+                </div>
+                <div class="d-flex gap-2">
+                    <a href="{% url 'experiences:experience_type_list' %}" class="btn btn-outline-secondary">
+                        <i class="fas fa-arrow-left me-2"></i>Back to Types
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Current Usage Info -->
+    <div class="row mb-4">
+        <div class="col-md-4">
+            <div class="card card-hygge">
+                <div class="card-body text-center">
+                    <i class="fas fa-star text-primary mb-2" style="font-size: 2rem;"></i>
+                    <h4 class="fw-bold">{{ experience_count }}</h4>
+                    <p class="text-muted mb-0">Experience{{ experience_count|pluralize }} using this type</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Edit Form -->
+    <div class="row">
+        <div class="col-lg-8">
+            <div class="card card-hygge">
+                <div class="card-header">
+                    <h5 class="fw-bold mb-0">Experience Type Details</h5>
+                </div>
+                <div class="card-body">
+                    <form method="post">
+                        {% csrf_token %}
+
+                        <!-- Name Field -->
+                        <div class="mb-3">
+                            <label for="{{ form.name.id_for_label }}" class="form-label fw-bold">
+                                {{ form.name.label }}
+                                <span class="text-danger">*</span>
+                            </label>
+                            {{ form.name }}
+                            {% if form.name.help_text %}
+                                <div class="form-text">{{ form.name.help_text }}</div>
+                            {% endif %}
+                            {% if form.name.errors %}
+                                <div class="text-danger">
+                                    {% for error in form.name.errors %}
+                                        <small>{{ error }}</small>
+                                    {% endfor %}
+                                </div>
+                            {% endif %}
+                        </div>
+
+                        <!-- Slug Field -->
+                        <div class="mb-3">
+                            <label for="{{ form.slug.id_for_label }}" class="form-label fw-bold">
+                                {{ form.slug.label }}
+                                <span class="text-danger">*</span>
+                            </label>
+                            {{ form.slug }}
+                            {% if form.slug.help_text %}
+                                <div class="form-text">{{ form.slug.help_text }}</div>
+                            {% endif %}
+                            {% if form.slug.errors %}
+                                <div class="text-danger">
+                                    {% for error in form.slug.errors %}
+                                        <small>{{ error }}</small>
+                                    {% endfor %}
+                                </div>
+                            {% endif %}
+                        </div>
+
+                        <!-- Description Field -->
+                        <div class="mb-4">
+                            <label for="{{ form.description.id_for_label }}" class="form-label fw-bold">
+                                {{ form.description.label }}
+                            </label>
+                            {{ form.description }}
+                            {% if form.description.help_text %}
+                                <div class="form-text">{{ form.description.help_text }}</div>
+                            {% endif %}
+                            {% if form.description.errors %}
+                                <div class="text-danger">
+                                    {% for error in form.description.errors %}
+                                        <small>{{ error }}</small>
+                                    {% endfor %}
+                                </div>
+                            {% endif %}
+                        </div>
+
+                        <!-- Actions -->
+                        <div class="d-flex justify-content-between">
+                            <div>
+                                <button type="submit" class="btn btn-hygge">
+                                    <i class="fas fa-save me-2"></i>Update Experience Type
+                                </button>
+                                <a href="{% url 'experiences:experience_type_list' %}" class="btn btn-secondary ms-2">
+                                    Cancel
+                                </a>
+                            </div>
+                            <div>
+                                <a href="{% url 'experiences:delete_experience_type' experience_type.slug %}"
+                                   class="btn btn-outline-danger"
+                                   onclick="return confirm('Are you sure you want to delete this experience type? This action cannot be undone.')">
+                                    <i class="fas fa-trash me-2"></i>Delete Type
+                                </a>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <!-- Help Sidebar -->
+        <div class="col-lg-4">
+            <div class="card card-hygge">
+                <div class="card-header">
+                    <h6 class="fw-bold mb-0">
+                        <i class="fas fa-info-circle me-2"></i>Guidelines
+                    </h6>
+                </div>
+                <div class="card-body">
+                    <div class="mb-3">
+                        <h6 class="fw-bold">Name</h6>
+                        <p class="small text-muted">
+                            Choose a clear, descriptive name for this experience type (e.g., "Adventure Tour", "Cultural Experience").
+                        </p>
+                    </div>
+
+                    <div class="mb-3">
+                        <h6 class="fw-bold">Slug</h6>
+                        <p class="small text-muted">
+                            URL-friendly version of the name. Will be auto-generated if left empty.
+                        </p>
+                    </div>
+
+                    <div class="mb-3">
+                        <h6 class="fw-bold">Description</h6>
+                        <p class="small text-muted">
+                            Optional description to help users understand what this type of experience includes.
+                        </p>
+                    </div>
+
+                    {% if experience_count > 0 %}
+                    <div class="alert alert-info">
+                        <i class="fas fa-exclamation-circle me-2"></i>
+                        <strong>Note:</strong> This type is currently used by {{ experience_count }} experience{{ experience_count|pluralize }}.
+                        Changes will affect all associated experiences.
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+.form-control:focus {
+    border-color: var(--hygge-green);
+    box-shadow: 0 0 0 0.2rem rgba(74, 124, 89, 0.25);
+}
+
+.form-select:focus {
+    border-color: var(--hygge-green);
+    box-shadow: 0 0 0 0.2rem rgba(74, 124, 89, 0.25);
+}
+
+.alert-info {
+    background-color: rgba(74, 124, 89, 0.1);
+    border-color: var(--hygge-green);
+    color: var(--hygge-green);
+}
+</style>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Auto-generate slug from name if slug is empty
+    const nameField = document.getElementById('{{ form.name.id_for_label }}');
+    const slugField = document.getElementById('{{ form.slug.id_for_label }}');
+
+    if (nameField && slugField) {
+        nameField.addEventListener('input', function() {
+            if (!slugField.value) {
+                const slug = this.value
+                    .toLowerCase()
+                    .replace(/[^a-z0-9\s-]/g, '') // Remove invalid chars
+                    .replace(/\s+/g, '-')         // Replace spaces with hyphens
+                    .replace(/-+/g, '-')          // Replace multiple hyphens with single
+                    .trim('-');                   // Remove leading/trailing hyphens
+                slugField.value = slug;
+            }
+        });
+    }
+});
+</script>
+{% endblock %}

@@ -11328,3 +11328,19 @@ INFO 2025-09-15 19:53:16,516 basehttp 16956 35560 "GET /experiences/ HTTP/1.1" 2
 INFO 2025-09-15 19:53:20,980 basehttp 16956 29616 "GET /experiences/destinations/ HTTP/1.1" 200 42728
 INFO 2025-09-15 19:53:26,548 basehttp 16956 29616 "GET /experiences/destinations/seattle/ HTTP/1.1" 200 46195
 INFO 2025-09-15 19:53:39,731 basehttp 16956 29616 "GET / HTTP/1.1" 200 50541
+INFO 2025-09-15 20:02:08,462 autoreload 12864 24548 Watching for file changes with StatReloader
+INFO 2025-09-15 20:02:09,198 basehttp 12864 31584 "GET / HTTP/1.1" 200 50565
+WARNING 2025-09-15 20:02:09,554 log 12864 31584 Not Found: /favicon.ico
+WARNING 2025-09-15 20:02:09,555 basehttp 12864 31584 "GET /favicon.ico HTTP/1.1" 404 3533
+INFO 2025-09-15 20:02:14,102 basehttp 12864 31584 "GET /admin/dashboard/ HTTP/1.1" 200 39559
+INFO 2025-09-15 20:02:20,554 basehttp 12864 31584 "GET /experiences/ HTTP/1.1" 200 39844
+INFO 2025-09-15 20:02:23,940 basehttp 12864 31584 "GET /experiences/experience-types/ HTTP/1.1" 200 27147
+INFO 2025-09-15 20:02:27,155 basehttp 12864 31584 "GET /experiences/experience-types/test/edit/ HTTP/1.1" 200 29246
+INFO 2025-09-15 20:02:34,034 basehttp 12864 31584 "POST /experiences/experience-types/test/edit/ HTTP/1.1" 302 0
+INFO 2025-09-15 20:02:34,062 basehttp 12864 31584 "GET /experiences/experience-types/ HTTP/1.1" 200 27523
+INFO 2025-09-15 20:03:57,842 basehttp 12864 31584 "GET / HTTP/1.1" 200 52482
+INFO 2025-09-15 20:03:58,540 basehttp 12864 31584 "GET / HTTP/1.1" 200 52452
+WARNING 2025-09-15 20:03:58,852 log 12864 31584 Not Found: /favicon.ico
+WARNING 2025-09-15 20:03:58,852 basehttp 12864 31584 "GET /favicon.ico HTTP/1.1" 404 3533
+WARNING 2025-09-15 20:04:00,891 log 12864 31584 Not Found: /.well-known/appspecific/com.chrome.devtools.json
+WARNING 2025-09-15 20:04:00,892 basehttp 12864 31584 "GET /.well-known/appspecific/com.chrome.devtools.json HTTP/1.1" 404 3644

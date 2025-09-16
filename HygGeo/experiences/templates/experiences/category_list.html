@@ -1,0 +1,204 @@
+{% extends 'base.html' %}
+
+{% block title %}Manage Categories - HygGeo Admin{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <!-- Header -->
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="d-flex justify-content-between align-items-center">
+                <div>
+                    <h1 class="h2 fw-bold" style="color: var(--hygge-green);">
+                        <i class="fas fa-tags me-2"></i>Manage Categories
+                    </h1>
+                    <p class="text-muted">Manage and edit experience categories</p>
+                </div>
+                <div class="d-flex gap-2">
+                    <a href="{% url 'experiences:add_category' %}" class="btn btn-hygge">
+                        <i class="fas fa-plus me-2"></i>Add New Category
+                    </a>
+                    <a href="{% url 'admin_dashboard' %}" class="btn btn-outline-secondary">
+                        <i class="fas fa-arrow-left me-2"></i>Back to Dashboard
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Stats -->
+    <div class="row mb-4">
+        <div class="col-md-3">
+            <div class="card card-hygge">
+                <div class="card-body text-center">
+                    <h3 class="fw-bold text-primary">{{ total_count }}</h3>
+                    <p class="text-muted mb-0">Total Categories</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    {% if categories %}
+    <!-- Categories List -->
+    <div class="row">
+        <div class="col-12">
+            <div class="card card-hygge">
+                <div class="card-header">
+                    <h5 class="fw-bold mb-0">Categories</h5>
+                </div>
+                <div class="card-body p-0">
+                    <div class="table-responsive">
+                        <table class="table table-hover mb-0">
+                            <thead class="table-light">
+                                <tr>
+                                    <th>Preview</th>
+                                    <th>Name</th>
+                                    <th>Slug</th>
+                                    <th>Description</th>
+                                    <th>Experiences</th>
+                                    <th>Created</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for category in categories %}
+                                <tr>
+                                    <td>
+                                        <div class="d-flex align-items-center">
+                                            <div class="category-icon me-2" style="background-color: {{ category.color }};">
+                                                <i class="{{ category.icon }} text-white"></i>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <strong class="text-hygge">{{ category.name }}</strong>
+                                    </td>
+                                    <td>
+                                        <code class="text-muted">{{ category.slug }}</code>
+                                    </td>
+                                    <td>
+                                        <span class="text-muted">
+                                            {% if category.description %}
+                                                {{ category.description|truncatewords:10 }}
+                                            {% else %}
+                                                <em>No description</em>
+                                            {% endif %}
+                                        </span>
+                                    </td>
+                                    <td>
+                                        <span class="badge bg-info">
+                                            {{ category.experience_count }} experience{{ category.experience_count|pluralize }}
+                                        </span>
+                                    </td>
+                                    <td>
+                                        <small class="text-muted">{{ category.created_at|date:"M d, Y" }}</small>
+                                    </td>
+                                    <td>
+                                        <div class="btn-group btn-group-sm" role="group">
+                                            <a href="{% url 'experiences:edit_category' category.slug %}"
+                                               class="btn btn-outline-primary"
+                                               title="Edit">
+                                                <i class="fas fa-edit"></i>
+                                            </a>
+                                            <a href="{% url 'experiences:delete_category' category.slug %}"
+                                               class="btn btn-outline-danger"
+                                               title="Delete"
+                                               onclick="return confirm('Are you sure you want to delete this category?')">
+                                                <i class="fas fa-trash"></i>
+                                            </a>
+                                        </div>
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Pagination -->
+    {% if categories.has_other_pages %}
+    <nav aria-label="Categories pagination" class="mt-4">
+        <ul class="pagination justify-content-center">
+            {% if categories.has_previous %}
+                <li class="page-item">
+                    <a class="page-link" href="?page={{ categories.previous_page_number }}">Previous</a>
+                </li>
+            {% endif %}
+
+            {% for num in categories.paginator.page_range %}
+                {% if categories.number == num %}
+                    <li class="page-item active">
+                        <span class="page-link">{{ num }}</span>
+                    </li>
+                {% else %}
+                    <li class="page-item">
+                        <a class="page-link" href="?page={{ num }}">{{ num }}</a>
+                    </li>
+                {% endif %}
+            {% endfor %}
+
+            {% if categories.has_next %}
+                <li class="page-item">
+                    <a class="page-link" href="?page={{ categories.next_page_number }}">Next</a>
+                </li>
+            {% endif %}
+        </ul>
+    </nav>
+    {% endif %}
+
+    {% else %}
+    <!-- Empty State -->
+    <div class="row">
+        <div class="col-12">
+            <div class="text-center py-5">
+                <i class="fas fa-tags text-muted" style="font-size: 4rem;"></i>
+                <h4 class="text-muted mt-3">No categories yet</h4>
+                <p class="text-muted">Create your first category to organize experiences.</p>
+                <a href="{% url 'experiences:add_category' %}" class="btn btn-hygge">
+                    <i class="fas fa-plus me-2"></i>Add First Category
+                </a>
+            </div>
+        </div>
+    </div>
+    {% endif %}
+</div>
+
+<style>
+.text-hygge {
+    color: var(--hygge-green);
+}
+
+.category-icon {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.875rem;
+}
+
+.page-link {
+    color: var(--hygge-green);
+    border-color: #dee2e6;
+}
+
+.page-item.active .page-link {
+    background-color: var(--hygge-green);
+    border-color: var(--hygge-green);
+}
+
+.page-link:hover {
+    color: var(--hygge-light-green);
+    background-color: rgba(74, 124, 89, 0.1);
+    border-color: var(--hygge-light-green);
+}
+
+.table-hover tbody tr:hover {
+    background-color: rgba(74, 124, 89, 0.05);
+}
+</style>
+{% endblock %}

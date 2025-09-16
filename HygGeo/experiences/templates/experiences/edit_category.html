@@ -1,0 +1,328 @@
+{% extends 'base.html' %}
+
+{% block title %}{{ page_title }} - HygGeo Admin{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <!-- Header -->
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="d-flex justify-content-between align-items-center">
+                <div>
+                    <h1 class="h2 fw-bold" style="color: var(--hygge-green);">
+                        <i class="fas fa-edit me-2"></i>Edit Category
+                    </h1>
+                    <p class="text-muted">Update category details and settings</p>
+                </div>
+                <div class="d-flex gap-2">
+                    <a href="{% url 'experiences:category_list' %}" class="btn btn-outline-secondary">
+                        <i class="fas fa-arrow-left me-2"></i>Back to Categories
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Current Usage Info -->
+    <div class="row mb-4">
+        <div class="col-md-4">
+            <div class="card card-hygge">
+                <div class="card-body text-center">
+                    <div class="category-preview mb-3">
+                        <div class="category-icon mx-auto" style="background-color: {{ category.color }};">
+                            <i class="{{ category.icon }} text-white"></i>
+                        </div>
+                    </div>
+                    <h4 class="fw-bold">{{ experience_count }}</h4>
+                    <p class="text-muted mb-0">Experience{{ experience_count|pluralize }} using this category</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Edit Form -->
+    <div class="row">
+        <div class="col-lg-8">
+            <div class="card card-hygge">
+                <div class="card-header">
+                    <h5 class="fw-bold mb-0">Category Details</h5>
+                </div>
+                <div class="card-body">
+                    <form method="post">
+                        {% csrf_token %}
+
+                        <!-- Name Field -->
+                        <div class="mb-3">
+                            <label for="{{ form.name.id_for_label }}" class="form-label fw-bold">
+                                {{ form.name.label }}
+                                <span class="text-danger">*</span>
+                            </label>
+                            {{ form.name }}
+                            {% if form.name.help_text %}
+                                <div class="form-text">{{ form.name.help_text }}</div>
+                            {% endif %}
+                            {% if form.name.errors %}
+                                <div class="text-danger">
+                                    {% for error in form.name.errors %}
+                                        <small>{{ error }}</small>
+                                    {% endfor %}
+                                </div>
+                            {% endif %}
+                        </div>
+
+                        <!-- Slug Field -->
+                        <div class="mb-3">
+                            <label for="{{ form.slug.id_for_label }}" class="form-label fw-bold">
+                                {{ form.slug.label }}
+                                <span class="text-danger">*</span>
+                            </label>
+                            {{ form.slug }}
+                            {% if form.slug.help_text %}
+                                <div class="form-text">{{ form.slug.help_text }}</div>
+                            {% endif %}
+                            {% if form.slug.errors %}
+                                <div class="text-danger">
+                                    {% for error in form.slug.errors %}
+                                        <small>{{ error }}</small>
+                                    {% endfor %}
+                                </div>
+                            {% endif %}
+                        </div>
+
+                        <!-- Description Field -->
+                        <div class="mb-3">
+                            <label for="{{ form.description.id_for_label }}" class="form-label fw-bold">
+                                {{ form.description.label }}
+                            </label>
+                            {{ form.description }}
+                            {% if form.description.help_text %}
+                                <div class="form-text">{{ form.description.help_text }}</div>
+                            {% endif %}
+                            {% if form.description.errors %}
+                                <div class="text-danger">
+                                    {% for error in form.description.errors %}
+                                        <small>{{ error }}</small>
+                                    {% endfor %}
+                                </div>
+                            {% endif %}
+                        </div>
+
+                        <div class="row">
+                            <!-- Icon Field -->
+                            <div class="col-md-6 mb-3">
+                                <label for="{{ form.icon.id_for_label }}" class="form-label fw-bold">
+                                    {{ form.icon.label }}
+                                </label>
+                                {{ form.icon }}
+                                {% if form.icon.help_text %}
+                                    <div class="form-text">{{ form.icon.help_text }}</div>
+                                {% endif %}
+                                {% if form.icon.errors %}
+                                    <div class="text-danger">
+                                        {% for error in form.icon.errors %}
+                                            <small>{{ error }}</small>
+                                        {% endfor %}
+                                    </div>
+                                {% endif %}
+                            </div>
+
+                            <!-- Color Field -->
+                            <div class="col-md-6 mb-3">
+                                <label for="{{ form.color.id_for_label }}" class="form-label fw-bold">
+                                    {{ form.color.label }}
+                                </label>
+                                <div class="input-group">
+                                    {{ form.color }}
+                                    <div class="input-group-text">
+                                        <div class="color-preview" style="background-color: {{ form.color.value|default:'#2d5a3d' }};"></div>
+                                    </div>
+                                </div>
+                                {% if form.color.help_text %}
+                                    <div class="form-text">{{ form.color.help_text }}</div>
+                                {% endif %}
+                                {% if form.color.errors %}
+                                    <div class="text-danger">
+                                        {% for error in form.color.errors %}
+                                            <small>{{ error }}</small>
+                                        {% endfor %}
+                                    </div>
+                                {% endif %}
+                            </div>
+                        </div>
+
+                        <!-- Actions -->
+                        <div class="d-flex justify-content-between">
+                            <div>
+                                <button type="submit" class="btn btn-hygge">
+                                    <i class="fas fa-save me-2"></i>Update Category
+                                </button>
+                                <a href="{% url 'experiences:category_list' %}" class="btn btn-secondary ms-2">
+                                    Cancel
+                                </a>
+                            </div>
+                            <div>
+                                <a href="{% url 'experiences:delete_category' category.slug %}"
+                                   class="btn btn-outline-danger"
+                                   onclick="return confirm('Are you sure you want to delete this category? This action cannot be undone.')">
+                                    <i class="fas fa-trash me-2"></i>Delete Category
+                                </a>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <!-- Help Sidebar -->
+        <div class="col-lg-4">
+            <div class="card card-hygge">
+                <div class="card-header">
+                    <h6 class="fw-bold mb-0">
+                        <i class="fas fa-info-circle me-2"></i>Guidelines
+                    </h6>
+                </div>
+                <div class="card-body">
+                    <div class="mb-3">
+                        <h6 class="fw-bold">Icon</h6>
+                        <p class="small text-muted">
+                            Use FontAwesome icon classes (e.g., "fas fa-mountain", "fas fa-utensils").
+                            <a href="https://fontawesome.com/icons" target="_blank" class="text-decoration-none">Browse icons</a>
+                        </p>
+                    </div>
+
+                    <div class="mb-3">
+                        <h6 class="fw-bold">Color</h6>
+                        <p class="small text-muted">
+                            Choose a hex color code for the category badge and icon background.
+                        </p>
+                    </div>
+
+                    {% if experience_count > 0 %}
+                    <div class="alert alert-info">
+                        <i class="fas fa-exclamation-circle me-2"></i>
+                        <strong>Note:</strong> This category is currently used by {{ experience_count }} experience{{ experience_count|pluralize }}.
+                        Changes will affect all associated experiences.
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+
+            <!-- Live Preview -->
+            <div class="card card-hygge mt-3">
+                <div class="card-header">
+                    <h6 class="fw-bold mb-0">
+                        <i class="fas fa-eye me-2"></i>Preview
+                    </h6>
+                </div>
+                <div class="card-body text-center">
+                    <div class="category-preview-large">
+                        <div class="category-icon-large mx-auto mb-3" id="preview-icon" style="background-color: {{ form.color.value|default:'#2d5a3d' }};">
+                            <i class="{{ form.icon.value|default:'fas fa-map-marker-alt' }} text-white"></i>
+                        </div>
+                        <h6 class="fw-bold" id="preview-name">{{ form.name.value|default:'Category Name' }}</h6>
+                        <p class="text-muted small" id="preview-description">{{ form.description.value|default:'Category description...' }}</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+.form-control:focus {
+    border-color: var(--hygge-green);
+    box-shadow: 0 0 0 0.2rem rgba(74, 124, 89, 0.25);
+}
+
+.category-icon {
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.25rem;
+}
+
+.category-icon-large {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 2rem;
+}
+
+.color-preview {
+    width: 20px;
+    height: 20px;
+    border-radius: 3px;
+    border: 1px solid #ddd;
+}
+
+.alert-info {
+    background-color: rgba(74, 124, 89, 0.1);
+    border-color: var(--hygge-green);
+    color: var(--hygge-green);
+}
+</style>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Auto-generate slug from name if slug is empty
+    const nameField = document.getElementById('{{ form.name.id_for_label }}');
+    const slugField = document.getElementById('{{ form.slug.id_for_label }}');
+    const iconField = document.getElementById('{{ form.icon.id_for_label }}');
+    const colorField = document.getElementById('{{ form.color.id_for_label }}');
+    const descriptionField = document.getElementById('{{ form.description.id_for_label }}');
+
+    // Preview elements
+    const previewIcon = document.getElementById('preview-icon');
+    const previewName = document.getElementById('preview-name');
+    const previewDescription = document.getElementById('preview-description');
+    const colorPreview = document.querySelector('.color-preview');
+
+    // Auto-generate slug
+    if (nameField && slugField) {
+        nameField.addEventListener('input', function() {
+            if (!slugField.value) {
+                const slug = this.value
+                    .toLowerCase()
+                    .replace(/[^a-z0-9\s-]/g, '')
+                    .replace(/\s+/g, '-')
+                    .replace(/-+/g, '-')
+                    .trim('-');
+                slugField.value = slug;
+            }
+            // Update preview
+            previewName.textContent = this.value || 'Category Name';
+        });
+    }
+
+    // Update icon preview
+    if (iconField) {
+        iconField.addEventListener('input', function() {
+            const iconClass = this.value || 'fas fa-map-marker-alt';
+            previewIcon.innerHTML = `<i class="${iconClass} text-white"></i>`;
+        });
+    }
+
+    // Update color preview
+    if (colorField) {
+        colorField.addEventListener('input', function() {
+            const color = this.value || '#2d5a3d';
+            previewIcon.style.backgroundColor = color;
+            colorPreview.style.backgroundColor = color;
+        });
+    }
+
+    // Update description preview
+    if (descriptionField) {
+        descriptionField.addEventListener('input', function() {
+            previewDescription.textContent = this.value || 'Category description...';
+        });
+    }
+});
+</script>
+{% endblock %}

@@ -243,6 +243,32 @@
             </div>
         </div>
 
+        <!-- Edit Categories -->
+        <div class="col-lg-6 col-xl-2 mb-4">
+            <div class="card card-hygge h-100">
+                <div class="card-body text-center p-3">
+                    <i class="fas fa-tags mb-2" style="font-size: 2rem; color: var(--hygge-light-green);"></i>
+                    <h6 class="fw-bold mb-2 small">Edit Categories</h6>
+                    <a href="{% url 'experiences:category_list' %}" class="btn btn-sm btn-outline-hygge">
+                        <i class="fas fa-edit me-1"></i>Manage
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Edit Experience Types -->
+        <div class="col-lg-6 col-xl-2 mb-4">
+            <div class="card card-hygge h-100">
+                <div class="card-body text-center p-3">
+                    <i class="fas fa-list-ul mb-2" style="font-size: 2rem; color: #e74c3c;"></i>
+                    <h6 class="fw-bold mb-2 small">Edit Types</h6>
+                    <a href="{% url 'experiences:experience_type_list' %}" class="btn btn-sm btn-outline-hygge">
+                        <i class="fas fa-edit me-1"></i>Manage
+                    </a>
+                </div>
+            </div>
+        </div>
+
         <!-- Analytics -->
         <div class="col-lg-6 col-xl-3 mb-4">
             <div class="card card-hygge h-100">
