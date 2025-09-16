@@ -11137,3 +11137,77 @@ INFO 2025-09-13 18:25:11,754 basehttp 6456 16756 "GET / HTTP/1.1" 200 35364
 INFO 2025-09-13 18:25:16,048 basehttp 6456 16756 "GET /experiences/destinations/ HTTP/1.1" 200 42728
 INFO 2025-09-13 18:25:18,302 basehttp 6456 16756 "GET /experiences/destinations/seattle/ HTTP/1.1" 200 46195
 INFO 2025-09-13 18:25:23,989 basehttp 6456 16756 "GET /experiences/?destination=1 HTTP/1.1" 200 36527
+INFO 2025-09-13 18:36:33,035 autoreload 8168 16732 Watching for file changes with StatReloader
+INFO 2025-09-13 18:36:46,227 basehttp 8168 9432 "GET /accounts/users/ HTTP/1.1" 200 77946
+WARNING 2025-09-13 18:36:48,223 log 8168 9432 Not Found: /favicon.ico
+WARNING 2025-09-13 18:36:48,223 basehttp 8168 9432 "GET /favicon.ico HTTP/1.1" 404 3533
+INFO 2025-09-15 19:05:24,551 basehttp 8168 37196 "GET / HTTP/1.1" 200 35368
+INFO 2025-09-15 19:05:26,701 basehttp 8168 37196 "GET /accounts/users/ HTTP/1.1" 200 77946
+INFO 2025-09-15 19:08:39,515 basehttp 8168 32508 "GET / HTTP/1.1" 200 26738
+WARNING 2025-09-15 19:08:40,011 log 8168 32508 Not Found: /favicon.ico
+WARNING 2025-09-15 19:08:40,011 basehttp 8168 32508 "GET /favicon.ico HTTP/1.1" 404 3533
+INFO 2025-09-15 19:08:57,620 basehttp 8168 37196 "GET /accounts/users/ HTTP/1.1" 200 74403
+WARNING 2025-09-15 19:08:57,952 log 8168 37196 Not Found: /favicon.ico
+WARNING 2025-09-15 19:08:57,953 basehttp 8168 37196 "GET /favicon.ico HTTP/1.1" 404 3533
+INFO 2025-09-15 19:13:25,909 basehttp 8168 37196 "GET /experiences/ HTTP/1.1" 200 39708
+INFO 2025-09-15 19:13:28,264 basehttp 8168 37196 "GET /experiences/experience/qwvew/ HTTP/1.1" 200 34036
+INFO 2025-09-15 19:13:48,294 basehttp 8168 37196 "GET /accounts/users/ HTTP/1.1" 200 78524
+INFO 2025-09-15 19:16:40,212 basehttp 8168 21260 "GET /accounts/users/ HTTP/1.1" 200 80887
+WARNING 2025-09-15 19:16:40,846 log 8168 21260 Not Found: /favicon.ico
+WARNING 2025-09-15 19:16:40,846 basehttp 8168 21260 "GET /favicon.ico HTTP/1.1" 404 3533
+INFO 2025-09-15 19:17:09,997 basehttp 8168 21260 "GET /accounts/users/ HTTP/1.1" 200 82267
+INFO 2025-09-15 19:17:11,129 basehttp 8168 21260 "GET /accounts/users/ HTTP/1.1" 200 82267
+WARNING 2025-09-15 19:17:11,420 log 8168 21260 Not Found: /favicon.ico
+WARNING 2025-09-15 19:17:11,421 basehttp 8168 21260 "GET /favicon.ico HTTP/1.1" 404 3533
+INFO 2025-09-15 19:17:37,691 basehttp 8168 21260 "GET /accounts/profile/edit/ HTTP/1.1" 200 46590
+INFO 2025-09-15 19:18:18,240 basehttp 8168 21260 "GET /accounts/users/ HTTP/1.1" 200 82252
+WARNING 2025-09-15 19:18:18,908 log 8168 21260 Not Found: /favicon.ico
+WARNING 2025-09-15 19:18:18,909 basehttp 8168 21260 "GET /favicon.ico HTTP/1.1" 404 3533
+INFO 2025-09-15 19:19:14,563 basehttp 8168 21260 "GET /accounts/users/?destination=&travel_month=2025-06&sustainability=high&travel_style=&age_range=&group_size=&budget=&experience=&languages=&verified= HTTP/1.1" 200 83193
+INFO 2025-09-15 19:22:39,206 basehttp 8168 31856 "GET /accounts/users/?destination=&travel_month=2025-06&sustainability=high&travel_style=&age_range=&group_size=&budget=&experience=&languages=&verified= HTTP/1.1" 200 83539
+WARNING 2025-09-15 19:22:39,534 log 8168 31856 Not Found: /favicon.ico
+WARNING 2025-09-15 19:22:39,535 basehttp 8168 31856 "GET /favicon.ico HTTP/1.1" 404 3533
+INFO 2025-09-15 19:22:40,396 basehttp 8168 31856 "GET /accounts/users/?destination=&travel_month=2025-06&sustainability=high&travel_style=&age_range=&group_size=&budget=&experience=&languages=&verified= HTTP/1.1" 200 83539
+WARNING 2025-09-15 19:22:40,629 log 8168 31856 Not Found: /favicon.ico
+WARNING 2025-09-15 19:22:40,631 basehttp 8168 31856 "GET /favicon.ico HTTP/1.1" 404 3533
+INFO 2025-09-15 19:23:19,300 basehttp 8168 31856 "GET /accounts/users/?destination=&travel_month=2025-06&sustainability=high&travel_style=&age_range=&group_size=&budget=&experience=&languages=&verified= HTTP/1.1" 200 83539
+WARNING 2025-09-15 19:23:19,643 log 8168 31856 Not Found: /favicon.ico
+WARNING 2025-09-15 19:23:19,643 basehttp 8168 31856 "GET /favicon.ico HTTP/1.1" 404 3533
+INFO 2025-09-15 19:23:20,911 basehttp 8168 31856 "GET /accounts/users/?destination=&travel_month=2025-06&sustainability=high&travel_style=&age_range=&group_size=&budget=&experience=&languages=&verified= HTTP/1.1" 200 83539
+WARNING 2025-09-15 19:23:21,198 log 8168 31856 Not Found: /favicon.ico
+WARNING 2025-09-15 19:23:21,198 basehttp 8168 31856 "GET /favicon.ico HTTP/1.1" 404 3533
+INFO 2025-09-15 19:23:28,681 basehttp 8168 31856 "GET /accounts/users/?destination=canada&travel_month=2025-06&sustainability=&travel_style=&age_range=&group_size=&budget=&travel_frequency=&languages=&profile_complete= HTTP/1.1" 200 73401
+INFO 2025-09-15 19:24:08,293 basehttp 8168 31856 "GET /accounts/users/ HTTP/1.1" 200 82615
+INFO 2025-09-15 19:24:57,349 basehttp 8168 31856 "GET /accounts/users/ HTTP/1.1" 200 82615
+WARNING 2025-09-15 19:24:57,590 log 8168 31856 Not Found: /favicon.ico
+WARNING 2025-09-15 19:24:57,590 basehttp 8168 31856 "GET /favicon.ico HTTP/1.1" 404 3533
+INFO 2025-09-15 19:24:58,475 basehttp 8168 31856 "GET /accounts/users/ HTTP/1.1" 200 82615
+WARNING 2025-09-15 19:24:58,649 log 8168 31856 Not Found: /favicon.ico
+WARNING 2025-09-15 19:24:58,650 basehttp 8168 31856 "GET /favicon.ico HTTP/1.1" 404 3533
+INFO 2025-09-15 19:24:59,093 basehttp 8168 31856 "GET /accounts/users/ HTTP/1.1" 200 82615
+WARNING 2025-09-15 19:24:59,278 log 8168 31856 Not Found: /favicon.ico
+WARNING 2025-09-15 19:24:59,278 basehttp 8168 31856 "GET /favicon.ico HTTP/1.1" 404 3533
+WARNING 2025-09-15 19:25:47,766 log 8168 31856 Not Found: /.well-known/appspecific/com.chrome.devtools.json
+WARNING 2025-09-15 19:25:47,767 basehttp 8168 31856 "GET /.well-known/appspecific/com.chrome.devtools.json HTTP/1.1" 404 3644
+INFO 2025-09-15 19:26:02,271 basehttp 8168 31856 "GET /accounts/users/ HTTP/1.1" 200 82615
+WARNING 2025-09-15 19:26:02,303 log 8168 31856 Not Found: /.well-known/appspecific/com.chrome.devtools.json
+WARNING 2025-09-15 19:26:02,303 basehttp 8168 31856 "GET /.well-known/appspecific/com.chrome.devtools.json HTTP/1.1" 404 3644
+WARNING 2025-09-15 19:26:02,706 log 8168 31856 Not Found: /favicon.ico
+WARNING 2025-09-15 19:26:02,706 basehttp 8168 31856 "GET /favicon.ico HTTP/1.1" 404 3533
+INFO 2025-09-15 19:26:42,565 basehttp 8168 31856 "GET /accounts/users/ HTTP/1.1" 200 82616
+WARNING 2025-09-15 19:26:42,587 log 8168 31856 Not Found: /.well-known/appspecific/com.chrome.devtools.json
+WARNING 2025-09-15 19:26:42,588 basehttp 8168 31856 "GET /.well-known/appspecific/com.chrome.devtools.json HTTP/1.1" 404 3644
+WARNING 2025-09-15 19:26:42,920 log 8168 31856 Not Found: /favicon.ico
+WARNING 2025-09-15 19:26:42,921 basehttp 8168 31856 "GET /favicon.ico HTTP/1.1" 404 3533
+INFO 2025-09-15 19:27:29,485 basehttp 8168 31856 "GET /accounts/users/ HTTP/1.1" 200 82617
+WARNING 2025-09-15 19:27:29,520 log 8168 31856 Not Found: /.well-known/appspecific/com.chrome.devtools.json
+WARNING 2025-09-15 19:27:29,521 basehttp 8168 31856 "GET /.well-known/appspecific/com.chrome.devtools.json HTTP/1.1" 404 3644
+WARNING 2025-09-15 19:27:29,893 log 8168 31856 Not Found: /favicon.ico
+WARNING 2025-09-15 19:27:29,894 basehttp 8168 31856 "GET /favicon.ico HTTP/1.1" 404 3533
+INFO 2025-09-15 19:27:52,126 basehttp 8168 31856 "GET /accounts/users/ HTTP/1.1" 200 82616
+WARNING 2025-09-15 19:27:52,420 log 8168 31856 Not Found: /favicon.ico
+WARNING 2025-09-15 19:27:52,420 basehttp 8168 31856 "GET /favicon.ico HTTP/1.1" 404 3533
+INFO 2025-09-15 19:28:15,209 basehttp 8168 31856 "GET /accounts/users/ HTTP/1.1" 200 82616
+WARNING 2025-09-15 19:28:15,454 log 8168 31856 Not Found: /favicon.ico
+WARNING 2025-09-15 19:28:15,454 basehttp 8168 31856 "GET /favicon.ico HTTP/1.1" 404 3533
+INFO 2025-09-15 19:28:28,163 basehttp 8168 31856 "GET /accounts/users/?destination=canada&travel_month=2025-07&sustainability=&travel_style=&age_range=&group_size=&budget=&travel_frequency=&languages=&profile_complete= HTTP/1.1" 200 73461
