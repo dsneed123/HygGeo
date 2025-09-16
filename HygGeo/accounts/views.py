@@ -25,7 +25,7 @@ import random
 
 def index(request):
     """Homepage with hygge concept, sustainability facts, and survey CTA"""
-    
+
     # Sustainability facts to display randomly
     sustainability_facts = [
         {
@@ -53,20 +53,32 @@ def index(request):
             'action': 'Travel during off-peak seasons and explore lesser-known destinations'
         }
     ]
-    
+
     # Select 3 random facts for display
     featured_facts = random.sample(sustainability_facts, 3)
-    
+
+    # Get featured destinations for the carousel
+    featured_destinations = Destination.objects.filter(
+        experiences__is_featured=True
+    ).distinct().order_by('-created_at')[:6]
+
+    # If no featured destinations, get recent destinations with images
+    if not featured_destinations.exists():
+        featured_destinations = Destination.objects.exclude(
+            image__isnull=True
+        ).exclude(image='').order_by('-created_at')[:6]
+
     # Check if user has completed a survey
     has_survey = False
     if request.user.is_authenticated:
         has_survey = TravelSurvey.objects.filter(user=request.user).exists()
-    
+
     context = {
         'sustainability_facts': featured_facts,
         'has_survey': has_survey,
+        'featured_destinations': featured_destinations,
     }
-    
+
     return render(request, 'index.html', context)
 
 def signup_view(request):
