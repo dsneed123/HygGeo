@@ -40,43 +40,40 @@
             <div class="col-lg-6 text-center">
                 <div class="hero-visual">
                     <div class="destination-carousel-container">
-                        <!-- Destination Carousel -->
+                        <!-- Multi-Destination Grid Carousel -->
                         <div class="destination-carousel" id="destinationCarousel">
+                            <!-- Individual destination slides -->
                             {% for destination in featured_destinations %}
-                            <div class="destination-slide {{ forloop.first|yesno:'active,' }}" data-destination="{{ destination.slug }}">
-                                <div class="destination-image">
-                                    {% if destination.image %}
-                                        <img src="{{ destination.image.url }}" alt="{{ destination.name }}" loading="lazy">
-                                    {% else %}
-                                        <div class="placeholder-image">
-                                            <i class="fas fa-map-marker-alt"></i>
-                                        </div>
-                                    {% endif %}
-                                    <div class="image-overlay"></div>
-                                </div>
-
+                            <div class="destination-slide{% if forloop.first %} active{% endif %}">
+                                {% if destination.image %}
+                                    <img src="{{ destination.image.url }}" alt="{{ destination.name }}" loading="lazy">
+                                {% else %}
+                                    <div class="placeholder-image {% cycle 'nordic' 'forest' 'coastal' %}">
+                                        <i class="fas fa-{% cycle 'mountain' 'tree' 'water' %}"></i>
+                                    </div>
+                                {% endif %}
+                                <div class="image-overlay"></div>
                                 <div class="destination-content">
                                     <div class="destination-badge">
                                         <i class="fas fa-leaf"></i>
-                                        <span>{{ destination.sustainability_score }}/10 Sustainable</span>
+                                        {{ destination.sustainability_score }}/10
                                     </div>
-                                    <h3 class="destination-name">{{ destination.name }}</h3>
+                                    <h2 class="destination-name">{{ destination.name }}</h2>
                                     <p class="destination-country">{{ destination.country }}</p>
-                                    <p class="destination-description">{{ destination.description|truncatewords:15 }}</p>
-
+                                    <p class="destination-description">{{ destination.description|truncatewords:20 }}</p>
                                     <div class="destination-stats">
                                         <div class="stat">
                                             <i class="fas fa-heart"></i>
-                                            <span>{{ destination.hygge_factor }}/10 Hygge</span>
+                                            {{ destination.hygge_factor }}/10 Hygge
                                         </div>
                                         <div class="stat">
                                             <i class="fas fa-map-marked-alt"></i>
-                                            <span>{{ destination.experiences.count }} Experience{{ destination.experiences.count|pluralize }}</span>
+                                            {{ destination.experiences.count }} Experiences
                                         </div>
                                     </div>
-
-                                    <a href="{{ destination.get_absolute_url }}" class="btn btn-light btn-explore">
-                                        <i class="fas fa-compass me-2"></i>Explore {{ destination.name }}
+                                    <a href="{{ destination.get_absolute_url }}" class="btn btn-explore">
+                                        <i class="fas fa-compass"></i>
+                                        Explore Destination
                                     </a>
                                 </div>
                             </div>
@@ -96,7 +93,7 @@
                         <!-- Carousel Indicators -->
                         <div class="carousel-indicators">
                             {% for destination in featured_destinations %}
-                            <button class="indicator {{ forloop.first|yesno:'active,' }}" onclick="goToSlide({{ forloop.counter0 }})"></button>
+                            <button class="indicator{% if forloop.first %} active{% endif %}" onclick="goToSlide({{ forloop.counter0 }})"></button>
                             {% endfor %}
                         </div>
 
@@ -585,10 +582,12 @@
 .destination-carousel-container {
     position: relative;
     width: 100%;
-    height: 450px;
+    height: 520px;
     overflow: hidden;
-    border-radius: 20px;
-    box-shadow: 0 15px 40px rgba(0,0,0,0.15);
+    border-radius: 24px;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.15);
+    background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+    border: 1px solid rgba(255,255,255,0.2);
 }
 
 .destination-carousel {
@@ -628,8 +627,16 @@
 }
 
 .destination-slide.active .destination-image img {
-    transform: scale(1.05);
+    transform: scale(1.02);
 }
+
+/* Full slide image layout */
+.destination-slide img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
 
 .placeholder-image {
     width: 100%;
@@ -777,24 +784,52 @@
 
 .carousel-btn {
     pointer-events: all;
-    background: rgba(255,255,255,0.2);
-    border: none;
+    background: linear-gradient(135deg, rgba(255,255,255,0.25) 0%, rgba(255,255,255,0.15) 100%);
+    border: 2px solid rgba(255,255,255,0.3);
     color: white;
-    width: 50px;
-    height: 50px;
+    width: 56px;
+    height: 56px;
     border-radius: 50%;
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 1.2rem;
+    font-size: 1.3rem;
     cursor: pointer;
-    transition: all 0.3s ease;
-    backdrop-filter: blur(10px);
+    transition: all 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
+    backdrop-filter: blur(20px);
+    box-shadow: 0 8px 32px rgba(0,0,0,0.1);
+    position: relative;
+    overflow: hidden;
+}
+
+.carousel-btn::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(135deg, rgba(74, 124, 89, 0.1) 0%, rgba(46, 125, 50, 0.2) 100%);
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    border-radius: 50%;
+}
+
+.carousel-btn:hover::before {
+    opacity: 1;
 }
 
 .carousel-btn:hover {
-    background: rgba(255,255,255,0.3);
-    transform: scale(1.1);
+    background: linear-gradient(135deg, rgba(255,255,255,0.4) 0%, rgba(255,255,255,0.25) 100%);
+    transform: scale(1.15);
+    border-color: rgba(255,255,255,0.5);
+    box-shadow: 0 12px 48px rgba(0,0,0,0.15);
+}
+
+.carousel-btn i {
+    position: relative;
+    z-index: 1;
+    filter: drop-shadow(0 2px 4px rgba(0,0,0,0.2));
 }
 
 .carousel-indicators {
@@ -807,18 +842,47 @@
 }
 
 .indicator {
-    width: 12px;
-    height: 12px;
+    width: 14px;
+    height: 14px;
     border-radius: 50%;
-    border: none;
-    background: rgba(255,255,255,0.4);
+    border: 2px solid rgba(255,255,255,0.6);
+    background: rgba(255,255,255,0.2);
     cursor: pointer;
-    transition: all 0.3s ease;
+    transition: all 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
+    backdrop-filter: blur(10px);
+    position: relative;
+    overflow: hidden;
+}
+
+.indicator::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 0;
+    height: 0;
+    background: white;
+    border-radius: 50%;
+    transition: all 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
+    transform: translate(-50%, -50%);
+}
+
+.indicator.active::before {
+    width: 8px;
+    height: 8px;
 }
 
 .indicator.active {
-    background: white;
-    transform: scale(1.2);
+    background: rgba(255,255,255,0.3);
+    border-color: white;
+    transform: scale(1.3);
+    box-shadow: 0 4px 15px rgba(255,255,255,0.3);
+}
+
+.indicator:hover {
+    transform: scale(1.15);
+    background: rgba(255,255,255,0.3);
+    border-color: rgba(255,255,255,0.8);
 }
 
 .brand-overlay {
@@ -850,15 +914,21 @@
 @media (max-width: 768px) {
     .hero-visual {
         height: 400px;
-        padding: 0 1rem; /* Add horizontal padding for mobile */
+        padding: 0 1rem;
     }
 
     .destination-carousel-container {
-        height: 400px;
+        height: 450px;
         border-radius: 15px;
-        margin: 0 1rem; /* Add horizontal margins for mobile */
-        box-shadow: 0 10px 30px rgba(0,0,0,0.15); /* Slightly reduce shadow */
+        margin: 0 1rem;
+        box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+        background: linear-gradient(135deg,
+            rgba(116, 75, 162, 0.95) 0%,
+            rgba(102, 126, 234, 0.95) 30%,
+            rgba(74, 124, 89, 0.95) 70%,
+            rgba(46, 125, 50, 0.95) 100%);
     }
+
 
     .destination-content {
         padding: 1rem 1.5rem; /* Reduce top/bottom padding on mobile */
@@ -887,10 +957,33 @@
         width: 40px;
         height: 40px;
         font-size: 1rem;
+        background: linear-gradient(135deg, rgba(255,255,255,0.25) 0%, rgba(255,255,255,0.15) 100%);
+        backdrop-filter: blur(15px);
+        box-shadow: 0 6px 24px rgba(0,0,0,0.1);
+    }
+
+    .carousel-btn:hover {
+        transform: scale(1.1);
+        box-shadow: 0 8px 32px rgba(0,0,0,0.15);
     }
 
     .carousel-controls {
-        padding: 0 1.5rem; /* Adjust control padding for mobile margins */
+        padding: 0 1.5rem;
+    }
+
+    .indicator {
+        width: 12px;
+        height: 12px;
+        background: rgba(255,255,255,0.2);
+        border: 2px solid rgba(255,255,255,0.5);
+        backdrop-filter: blur(8px);
+    }
+
+    .indicator.active {
+        background: rgba(255,255,255,0.3);
+        border-color: white;
+        transform: scale(1.2);
+        box-shadow: 0 3px 12px rgba(255,255,255,0.3);
     }
 
     .brand-overlay {
@@ -968,8 +1061,9 @@
 
     .destination-carousel-container {
         margin: 0 0.75rem;
-        height: 350px; /* Slightly smaller on very small screens */
+        height: 400px; /* Slightly smaller on very small screens */
     }
+
 
     .destination-content {
         padding: 0.75rem 1rem; /* Further reduce padding on small screens */
