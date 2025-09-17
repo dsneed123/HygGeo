@@ -42,7 +42,6 @@
                     <div class="destination-carousel-container">
                         <!-- Multi-Destination Grid Carousel -->
                         <div class="destination-carousel" id="destinationCarousel">
-                            <!-- Individual destination slides -->
                             {% for destination in featured_destinations %}
                             <div class="destination-slide{% if forloop.first %} active{% endif %}">
                                 {% if destination.image %}
@@ -60,7 +59,9 @@
                                     </div>
                                     <h2 class="destination-name">{{ destination.name }}</h2>
                                     <p class="destination-country">{{ destination.country }}</p>
+                                    {% if destination.description %}
                                     <p class="destination-description">{{ destination.description|truncatewords:20 }}</p>
+                                    {% endif %}
                                     <div class="destination-stats">
                                         <div class="stat">
                                             <i class="fas fa-heart"></i>
@@ -68,7 +69,7 @@
                                         </div>
                                         <div class="stat">
                                             <i class="fas fa-map-marked-alt"></i>
-                                            {{ destination.experiences.count }} Experiences
+                                            {{ destination.experiences.count }} Experience{{ destination.experiences.count|pluralize }}
                                         </div>
                                     </div>
                                     <a href="{{ destination.get_absolute_url }}" class="btn btn-explore">
@@ -585,9 +586,9 @@
     height: 520px;
     overflow: hidden;
     border-radius: 24px;
-    box-shadow: 0 20px 60px rgba(0,0,0,0.15);
-    background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
-    border: 1px solid rgba(255,255,255,0.2);
+    box-shadow: 0 25px 80px rgba(0,0,0,0.25);
+    background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+    border: 1px solid rgba(255,255,255,0.1);
 }
 
 .destination-carousel {
@@ -630,11 +631,16 @@
     transform: scale(1.02);
 }
 
-/* Full slide image layout */
+/* Full-width destination slide image */
 .destination-slide img {
     width: 100%;
     height: 100%;
     object-fit: cover;
+    transition: transform 0.6s cubic-bezier(0.25, 0.8, 0.25, 1);
+}
+
+.destination-slide.active img {
+    transform: scale(1.02);
 }
 
 
@@ -669,9 +675,9 @@
     height: 100%;
     background: linear-gradient(
         135deg,
-        rgba(0,0,0,0.1) 0%,
-        rgba(0,0,0,0.3) 50%,
-        rgba(0,0,0,0.6) 100%
+        rgba(0,0,0,0.2) 0%,
+        rgba(0,0,0,0.4) 50%,
+        rgba(0,0,0,0.7) 100%
     );
 }
 
@@ -680,17 +686,18 @@
     bottom: 0;
     left: 0;
     right: 0;
-    padding: 2rem;
+    padding: 2.5rem;
     background: linear-gradient(
         to top,
-        rgba(0,0,0,0.8) 0%,
-        rgba(0,0,0,0.4) 70%,
+        rgba(0,0,0,0.9) 0%,
+        rgba(0,0,0,0.6) 50%,
+        rgba(0,0,0,0.2) 80%,
         transparent 100%
     );
     color: white;
-    transform: translateY(20px);
+    transform: translateY(30px);
     opacity: 0;
-    transition: all 0.6s ease 0.3s;
+    transition: all 0.8s cubic-bezier(0.25, 0.8, 0.25, 1);
 }
 
 .destination-slide.active .destination-content {
@@ -701,14 +708,18 @@
 .destination-badge {
     display: inline-flex;
     align-items: center;
-    background: rgba(46, 125, 50, 0.9);
+    background: linear-gradient(135deg, rgba(46, 125, 50, 0.95) 0%, rgba(76, 175, 80, 0.95) 100%);
     color: white;
-    padding: 0.25rem 0.75rem;
-    border-radius: 15px;
-    font-size: 0.8rem;
-    font-weight: 600;
-    margin-bottom: 1rem;
-    backdrop-filter: blur(10px);
+    padding: 0.5rem 1rem;
+    border-radius: 25px;
+    font-size: 0.85rem;
+    font-weight: 700;
+    margin-bottom: 1.5rem;
+    backdrop-filter: blur(15px);
+    box-shadow: 0 4px 20px rgba(46, 125, 50, 0.4);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
 }
 
 .destination-badge i {
@@ -716,36 +727,52 @@
 }
 
 .destination-name {
-    font-size: 2rem;
-    font-weight: 700;
-    margin-bottom: 0.25rem;
+    font-size: 3rem;
+    font-weight: 800;
+    margin-bottom: 0.5rem;
     color: white;
+    text-shadow: 0 4px 20px rgba(0,0,0,0.5);
+    line-height: 1.1;
+    letter-spacing: -0.02em;
 }
 
 .destination-country {
-    font-size: 1rem;
-    margin-bottom: 0.75rem;
+    font-size: 1.2rem;
+    margin-bottom: 1rem;
     color: rgba(255,255,255,0.9);
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    text-shadow: 0 2px 10px rgba(0,0,0,0.3);
 }
 
 .destination-description {
-    font-size: 0.9rem;
-    margin-bottom: 1rem;
-    color: rgba(255,255,255,0.8);
-    line-height: 1.5;
+    font-size: 1.1rem;
+    margin-bottom: 1.5rem;
+    color: rgba(255,255,255,0.9);
+    line-height: 1.6;
+    font-weight: 400;
+    text-shadow: 0 1px 5px rgba(0,0,0,0.3);
 }
 
 .destination-stats {
     display: flex;
-    gap: 1rem;
-    margin-bottom: 1.5rem;
+    gap: 1.5rem;
+    margin-bottom: 2rem;
+    flex-wrap: wrap;
 }
 
 .destination-stats .stat {
     display: flex;
     align-items: center;
-    font-size: 0.85rem;
-    color: rgba(255,255,255,0.9);
+    font-size: 1rem;
+    color: rgba(255,255,255,0.95);
+    background: rgba(255,255,255,0.1);
+    padding: 0.75rem 1.25rem;
+    border-radius: 30px;
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255,255,255,0.2);
+    font-weight: 600;
 }
 
 .destination-stats .stat i {
@@ -754,21 +781,43 @@
 }
 
 .btn-explore {
-    background: rgba(255,255,255,0.15);
-    border: 2px solid rgba(255,255,255,0.3);
+    background: linear-gradient(135deg, rgba(255,255,255,0.2) 0%, rgba(255,255,255,0.1) 100%);
+    border: 2px solid rgba(255,255,255,0.4);
     color: white;
     font-weight: 600;
-    padding: 0.5rem 1.5rem;
-    border-radius: 25px;
-    transition: all 0.3s ease;
-    backdrop-filter: blur(10px);
+    padding: 0.7rem 1.8rem;
+    border-radius: 30px;
+    transition: all 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
+    backdrop-filter: blur(20px);
+    font-size: 0.95rem;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    box-shadow: 0 6px 24px rgba(0,0,0,0.2);
+    position: relative;
+    overflow: hidden;
 }
 
 .btn-explore:hover {
-    background: white;
+    background: linear-gradient(135deg, rgba(255,255,255,0.95) 0%, rgba(255,255,255,0.9) 100%);
     color: var(--hygge-green);
-    border-color: white;
-    transform: translateY(-2px);
+    border-color: rgba(255,255,255,0.9);
+    transform: translateY(-4px) scale(1.05);
+    box-shadow: 0 15px 50px rgba(0,0,0,0.3);
+}
+
+.btn-explore::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.4), transparent);
+    transition: left 0.6s ease;
+}
+
+.btn-explore:hover::before {
+    left: 100%;
 }
 
 .carousel-controls {
@@ -922,30 +971,44 @@
         border-radius: 15px;
         margin: 0 1rem;
         box-shadow: 0 10px 30px rgba(0,0,0,0.15);
-        background: linear-gradient(135deg,
-            rgba(116, 75, 162, 0.95) 0%,
-            rgba(102, 126, 234, 0.95) 30%,
-            rgba(74, 124, 89, 0.95) 70%,
-            rgba(46, 125, 50, 0.95) 100%);
     }
+
 
 
     .destination-content {
-        padding: 1rem 1.5rem; /* Reduce top/bottom padding on mobile */
+        padding: 1.5rem 2rem;
     }
 
     .destination-name {
-        font-size: 1.5rem;
+        font-size: 2rem;
+        margin-bottom: 0.5rem;
     }
 
     .destination-country {
-        font-size: 0.9rem;
+        font-size: 1rem;
+        margin-bottom: 1rem;
     }
 
     .destination-description {
-        font-size: 0.85rem;
-        margin-bottom: 0.75rem; /* Reduce margin on mobile */
+        font-size: 1rem;
+        margin-bottom: 1rem;
     }
+
+    .destination-stats {
+        gap: 1rem;
+        margin-bottom: 1.5rem;
+    }
+
+    .destination-stats .stat {
+        padding: 0.6rem 1rem;
+        font-size: 0.9rem;
+    }
+
+    .btn-explore {
+        padding: 0.6rem 1.5rem;
+        font-size: 0.9rem;
+    }
+
 
     .destination-stats {
         flex-direction: column;
@@ -1061,22 +1124,46 @@
 
     .destination-carousel-container {
         margin: 0 0.75rem;
-        height: 400px; /* Slightly smaller on very small screens */
+        height: 400px;
     }
+
 
 
     .destination-content {
-        padding: 0.75rem 1rem; /* Further reduce padding on small screens */
+        padding: 1rem 1.5rem;
     }
 
     .destination-name {
-        font-size: 1.25rem; /* Smaller title on small screens */
+        font-size: 1.5rem;
+        margin-bottom: 0.4rem;
+    }
+
+    .destination-country {
+        font-size: 0.9rem;
+        margin-bottom: 0.8rem;
     }
 
     .destination-description {
-        font-size: 0.8rem;
-        margin-bottom: 0.5rem;
+        font-size: 0.9rem;
+        margin-bottom: 1rem;
     }
+
+    .destination-stats {
+        gap: 0.8rem;
+        margin-bottom: 1.2rem;
+    }
+
+    .destination-stats .stat {
+        padding: 0.5rem 0.8rem;
+        font-size: 0.8rem;
+    }
+
+    .btn-explore {
+        padding: 0.5rem 1.2rem;
+        font-size: 0.8rem;
+    }
+
+
 
     .destination-stats {
         margin-bottom: 0.75rem;
@@ -1206,7 +1293,7 @@ function startSlideShow() {
 
     slideInterval = setInterval(() => {
         changeSlide(1);
-    }, 5000); // Change slide every 5 seconds
+    }, 4000); // Change slide every 4 seconds
 }
 
 function stopSlideShow() {

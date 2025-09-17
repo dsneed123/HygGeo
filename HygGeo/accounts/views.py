@@ -57,12 +57,12 @@ def index(request):
     # Select 3 random facts for display
     featured_facts = random.sample(sustainability_facts, 3)
 
-    # Get featured destinations for the carousel
+    # Get all destinations with experiences, prioritizing those with featured experiences
     featured_destinations = Destination.objects.filter(
-        experiences__is_featured=True
-    ).distinct().order_by('-created_at')[:6]
+        experiences__isnull=False
+    ).distinct().order_by('-experiences__is_featured', '-created_at')[:6]
 
-    # If no featured destinations, get recent destinations with images
+    # If still no destinations, get any destinations with images
     if not featured_destinations.exists():
         featured_destinations = Destination.objects.exclude(
             image__isnull=True
