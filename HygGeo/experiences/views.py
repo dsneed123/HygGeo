@@ -135,64 +135,99 @@ def recommendations_view(request):
 def experience_list_view(request):
     """Browse all experiences with filtering"""
     experiences = Experience.objects.filter(is_active=True).select_related(
-        'destination', 'provider'
+        'destination', 'provider', 'experience_type'
     ).prefetch_related('categories')
-    
+
     # Filtering
     category_slug = request.GET.get('category')
     destination_slug = request.GET.get('destination')
-    experience_type = request.GET.get('type')
+    experience_type_slug = request.GET.get('type')
     budget_range = request.GET.get('budget')
     sustainability_min = request.GET.get('sustainability_min')
-    search_query = request.GET.get('search')
-    
+    hygge_min = request.GET.get('hygge_min')
+    group_size = request.GET.get('group_size')
+    duration = request.GET.get('duration')
+    carbon_neutral = request.GET.get('carbon_neutral')
+    search_query = request.GET.get('search', '')
+
+    # Apply filters
     if category_slug:
-        experiences = experiences.filter(categories__slug=category_slug)
-    
+        experiences = experiences.filter(categories__slug=category_slug).distinct()
+
     if destination_slug:
         experiences = experiences.filter(destination__slug=destination_slug)
-    
-    if experience_type:
-        experiences = experiences.filter(experience_type=experience_type)
-    
+
+    if experience_type_slug:
+        experiences = experiences.filter(experience_type__slug=experience_type_slug)
+
     if budget_range:
         experiences = experiences.filter(budget_range=budget_range)
-    
+
+    if group_size:
+        experiences = experiences.filter(group_size=group_size)
+
+    if duration:
+        experiences = experiences.filter(duration=duration)
+
     if sustainability_min:
-        experiences = experiences.filter(sustainability_score__gte=sustainability_min)
-    
+        try:
+            sustainability_min = int(sustainability_min)
+            experiences = experiences.filter(sustainability_score__gte=sustainability_min)
+        except (ValueError, TypeError):
+            pass
+
+    if hygge_min:
+        try:
+            hygge_min = int(hygge_min)
+            experiences = experiences.filter(hygge_factor__gte=hygge_min)
+        except (ValueError, TypeError):
+            pass
+
+    if carbon_neutral == 'true':
+        experiences = experiences.filter(carbon_neutral=True)
+
     if search_query:
-        experiences = experiences.filter(
-            Q(title__icontains=search_query) |
-            Q(description__icontains=search_query) |
-            Q(destination__name__icontains=search_query) |
-            Q(destination__country__icontains=search_query)
-        )
-    
+        search_query = search_query.strip()
+        if search_query:
+            experiences = experiences.filter(
+                Q(title__icontains=search_query) |
+                Q(description__icontains=search_query) |
+                Q(short_description__icontains=search_query) |
+                Q(destination__name__icontains=search_query) |
+                Q(destination__country__icontains=search_query) |
+                Q(provider__name__icontains=search_query) |
+                Q(categories__name__icontains=search_query)
+            ).distinct()
+
     # Sorting
     sort_by = request.GET.get('sort', 'newest')
     if sort_by == 'price_low':
-        experiences = experiences.order_by('price_from')
+        # Put null prices at the end
+        experiences = experiences.order_by('price_from', 'title')
     elif sort_by == 'price_high':
-        experiences = experiences.order_by('-price_from')
+        # Put null prices at the end
+        experiences = experiences.order_by('-price_from', 'title')
     elif sort_by == 'sustainability':
-        experiences = experiences.order_by('-sustainability_score')
+        experiences = experiences.order_by('-sustainability_score', '-created_at')
     elif sort_by == 'hygge':
-        experiences = experiences.order_by('-hygge_factor')
+        experiences = experiences.order_by('-hygge_factor', '-created_at')
+    elif sort_by == 'alphabetical':
+        experiences = experiences.order_by('title')
     else:  # newest
         experiences = experiences.order_by('-created_at')
-    
+
     # Pagination
     paginator = Paginator(experiences, 12)
     page_number = request.GET.get('page')
     page_obj = paginator.get_page(page_number)
-    
+
     # Get filter options
-    categories = Category.objects.all()
+    categories = Category.objects.all().order_by('name')
     destinations = Destination.objects.annotate(
-        experience_count=Count('experiences')
-    ).filter(experience_count__gt=0)
-    
+        experience_count=Count('experiences', filter=Q(experiences__is_active=True))
+    ).filter(experience_count__gt=0).order_by('name')
+    experience_types = ExperienceType.objects.all().order_by('name')
+
     # Get user bookmarks for template
     user_bookmarks = get_user_bookmarks(request.user)
 
@@ -200,17 +235,23 @@ def experience_list_view(request):
         'experiences': page_obj,
         'categories': categories,
         'destinations': destinations,
-        'experience_types': Experience.EXPERIENCE_TYPES,
+        'experience_types': experience_types,
         'budget_ranges': Experience.BUDGET_RANGES,
+        'group_sizes': Experience.GROUP_SIZES,
+        'duration_types': Experience.DURATION_TYPES,
         'user_bookmarks': user_bookmarks,
         'current_filters': {
-            'category': category_slug,
-            'destination': destination_slug,
-            'type': experience_type,
-            'budget': budget_range,
-            'sustainability_min': sustainability_min,
-            'search': search_query,
-            'sort': sort_by,
+            'category': category_slug or '',
+            'destination': destination_slug or '',
+            'type': experience_type_slug or '',
+            'budget': budget_range or '',
+            'group_size': group_size or '',
+            'duration': duration or '',
+            'sustainability_min': sustainability_min or '',
+            'hygge_min': hygge_min or '',
+            'carbon_neutral': carbon_neutral or '',
+            'search': search_query or '',
+            'sort': sort_by or 'newest',
         }
     }
     

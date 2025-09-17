@@ -235,32 +235,36 @@ def delete_account_view(request):
     return render(request, 'accounts/delete_account.html')
 
 # In your views.py
-from django.db.models import Q
+from django.db.models import Q, Count, F
+from django.db import models
 from .models import User, TravelSurvey
 
 # Replace your existing user_list_view with this updated version:
 
 def user_list_view(request):
     users = User.objects.select_related('userprofile').prefetch_related('travel_surveys')
-    
+
     # Filter by destination (search in dream_destination)
     destination_query = request.GET.get('destination', '')
     if destination_query:
         users = users.filter(
             travel_surveys__dream_destination__icontains=destination_query
         )
-    
+
     # Filter by travel style
     travel_style = request.GET.get('travel_style', '')
     if travel_style:
         users = users.filter(
             travel_surveys__travel_styles__contains=[travel_style]
         )
-    
+
     # Filter by age range
     age_range = request.GET.get('age_range', '')
     gender_pref = request.GET.get('gender_pref', '')
     travel_month = request.GET.get('travel_month', '')
+
+    # Sort by newest members (default and only option)
+    users = users.order_by('-date_joined')
     
     # Get recent trips from all users (including current user)
     recent_trips = Trip.objects.filter(

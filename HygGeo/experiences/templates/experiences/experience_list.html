@@ -24,8 +24,8 @@
                             <!-- Search -->
                             <div class="col-md-4">
                                 <label for="search" class="form-label fw-bold">Search</label>
-                                <input type="text" class="form-control" id="search" name="search" 
-                                       value="{{ current_filters.search }}" placeholder="Search experiences or destinations...">
+                                <input type="text" class="form-control" id="search" name="search"
+                                       value="{{ current_filters.search|default:'' }}" placeholder="Search experiences or destinations...">
                             </div>
                             
                             <!-- Category -->
@@ -59,9 +59,9 @@
                                 <label for="type" class="form-label fw-bold">Type</label>
                                 <select class="form-control" id="type" name="type">
                                     <option value="">All Types</option>
-                                    {% for value, label in experience_types %}
-                                    <option value="{{ value }}" {% if current_filters.type == value %}selected{% endif %}>
-                                        {{ label }}
+                                    {% for exp_type in experience_types %}
+                                    <option value="{{ exp_type.slug }}" {% if current_filters.type == exp_type.slug %}selected{% endif %}>
+                                        {{ exp_type.name }}
                                     </option>
                                     {% endfor %}
                                 </select>
@@ -82,27 +82,81 @@
                         </div>
                         
                         <div class="row g-3 mt-2">
+                            <!-- Group Size -->
+                            <div class="col-md-2">
+                                <label for="group_size" class="form-label fw-bold">Group Size</label>
+                                <select class="form-control" id="group_size" name="group_size">
+                                    <option value="">Any Size</option>
+                                    {% for value, label in group_sizes %}
+                                    <option value="{{ value }}" {% if current_filters.group_size == value %}selected{% endif %}>
+                                        {{ label }}
+                                    </option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+
+                            <!-- Duration -->
+                            <div class="col-md-2">
+                                <label for="duration" class="form-label fw-bold">Duration</label>
+                                <select class="form-control" id="duration" name="duration">
+                                    <option value="">Any Duration</option>
+                                    {% for value, label in duration_types %}
+                                    <option value="{{ value }}" {% if current_filters.duration == value %}selected{% endif %}>
+                                        {{ label }}
+                                    </option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+
                             <!-- Sustainability -->
-                            <div class="col-md-3">
-                                <label for="sustainability_min" class="form-label fw-bold">Min Sustainability Score</label>
+                            <div class="col-md-2">
+                                <label for="sustainability_min" class="form-label fw-bold">Min Sustainability</label>
                                 <select class="form-control" id="sustainability_min" name="sustainability_min">
                                     <option value="">Any Score</option>
+                                    <option value="5" {% if current_filters.sustainability_min == "5" %}selected{% endif %}>5+ (Fair)</option>
                                     <option value="6" {% if current_filters.sustainability_min == "6" %}selected{% endif %}>6+ (Good)</option>
                                     <option value="8" {% if current_filters.sustainability_min == "8" %}selected{% endif %}>8+ (Excellent)</option>
                                 </select>
                             </div>
-                            
+
+                            <!-- Hygge Factor -->
+                            <div class="col-md-2">
+                                <label for="hygge_min" class="form-label fw-bold">Min Hygge</label>
+                                <select class="form-control" id="hygge_min" name="hygge_min">
+                                    <option value="">Any Score</option>
+                                    <option value="5" {% if current_filters.hygge_min == "5" %}selected{% endif %}>5+ (Fair)</option>
+                                    <option value="6" {% if current_filters.hygge_min == "6" %}selected{% endif %}>6+ (Good)</option>
+                                    <option value="8" {% if current_filters.hygge_min == "8" %}selected{% endif %}>8+ (Excellent)</option>
+                                </select>
+                            </div>
+
                             <!-- Sort -->
-                            <div class="col-md-3">
+                            <div class="col-md-2">
                                 <label for="sort" class="form-label fw-bold">Sort By</label>
                                 <select class="form-control" id="sort" name="sort">
                                     <option value="newest" {% if current_filters.sort == "newest" %}selected{% endif %}>Newest First</option>
+                                    <option value="alphabetical" {% if current_filters.sort == "alphabetical" %}selected{% endif %}>Alphabetical</option>
                                     <option value="price_low" {% if current_filters.sort == "price_low" %}selected{% endif %}>Price: Low to High</option>
                                     <option value="price_high" {% if current_filters.sort == "price_high" %}selected{% endif %}>Price: High to Low</option>
                                     <option value="sustainability" {% if current_filters.sort == "sustainability" %}selected{% endif %}>Most Sustainable</option>
                                     <option value="hygge" {% if current_filters.sort == "hygge" %}selected{% endif %}>Most Hygge</option>
                                 </select>
                             </div>
+
+                            <!-- Additional Options -->
+                            <div class="col-md-2">
+                                <label class="form-label fw-bold">Eco Features</label>
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" id="carbon_neutral" name="carbon_neutral" value="true"
+                                           {% if current_filters.carbon_neutral == "true" %}checked{% endif %}>
+                                    <label class="form-check-label" for="carbon_neutral">
+                                        Carbon Neutral
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row g-3 mt-1">
                             
                             <!-- Filter Buttons -->
                             <div class="col-md-6 d-flex align-items-end gap-2">
@@ -120,12 +174,83 @@
         </div>
     </div>
 
+    <!-- Active Filters Display -->
+    {% if current_filters.search or current_filters.category or current_filters.destination or current_filters.type or current_filters.budget or current_filters.group_size or current_filters.duration or current_filters.sustainability_min or current_filters.hygge_min or current_filters.carbon_neutral %}
+    <div class="row mb-3">
+        <div class="col-12">
+            <div class="d-flex flex-wrap align-items-center gap-2">
+                <span class="fw-bold text-muted">Active Filters:</span>
+                {% if current_filters.search %}
+                    <span class="badge bg-secondary">Search: "{{ current_filters.search }}"</span>
+                {% endif %}
+                {% if current_filters.category %}
+                    {% for category in categories %}
+                        {% if category.slug == current_filters.category %}
+                            <span class="badge bg-success">Category: {{ category.name }}</span>
+                        {% endif %}
+                    {% endfor %}
+                {% endif %}
+                {% if current_filters.destination %}
+                    {% for destination in destinations %}
+                        {% if destination.slug == current_filters.destination %}
+                            <span class="badge bg-info">Destination: {{ destination.name }}</span>
+                        {% endif %}
+                    {% endfor %}
+                {% endif %}
+                {% if current_filters.type %}
+                    {% for exp_type in experience_types %}
+                        {% if exp_type.slug == current_filters.type %}
+                            <span class="badge bg-primary">Type: {{ exp_type.name }}</span>
+                        {% endif %}
+                    {% endfor %}
+                {% endif %}
+                {% if current_filters.budget %}
+                    {% for value, label in budget_ranges %}
+                        {% if value == current_filters.budget %}
+                            <span class="badge bg-warning">Budget: {{ label }}</span>
+                        {% endif %}
+                    {% endfor %}
+                {% endif %}
+                {% if current_filters.group_size %}
+                    {% for value, label in group_sizes %}
+                        {% if value == current_filters.group_size %}
+                            <span class="badge bg-dark">Group: {{ label }}</span>
+                        {% endif %}
+                    {% endfor %}
+                {% endif %}
+                {% if current_filters.duration %}
+                    {% for value, label in duration_types %}
+                        {% if value == current_filters.duration %}
+                            <span class="badge bg-light text-dark">Duration: {{ label }}</span>
+                        {% endif %}
+                    {% endfor %}
+                {% endif %}
+                {% if current_filters.sustainability_min %}
+                    <span class="badge bg-success">Sustainability: {{ current_filters.sustainability_min }}+</span>
+                {% endif %}
+                {% if current_filters.hygge_min %}
+                    <span class="badge bg-danger">Hygge: {{ current_filters.hygge_min }}+</span>
+                {% endif %}
+                {% if current_filters.carbon_neutral == "true" %}
+                    <span class="badge bg-success">Carbon Neutral</span>
+                {% endif %}
+                <a href="{% url 'experiences:experience_list' %}" class="btn btn-warning btn-sm">
+                    <i class="fas fa-times me-1"></i>Clear All Filters
+                </a>
+            </div>
+        </div>
+    </div>
+    {% endif %}
+
     <!-- Results Header -->
     <div class="row mb-4">
         <div class="col-12">
             <div class="d-flex justify-content-between align-items-center">
                 <h5 class="fw-bold mb-0">
                     Found {{ experiences.paginator.count }} experience{{ experiences.paginator.count|pluralize }}
+                    {% if current_filters.search or current_filters.category or current_filters.destination or current_filters.type or current_filters.budget or current_filters.group_size or current_filters.duration or current_filters.sustainability_min or current_filters.hygge_min or current_filters.carbon_neutral %}
+                        <small class="text-muted">(filtered)</small>
+                    {% endif %}
                 </h5>
                 <div class="d-flex gap-2">
                     <a href="{% url 'experiences:recommendations' %}" class="btn btn-outline-hygge btn-sm">
@@ -244,10 +369,10 @@
         <ul class="pagination justify-content-center">
             {% if experiences.has_previous %}
                 <li class="page-item">
-                    <a class="page-link" href="?page={{ experiences.previous_page_number }}{% if request.GET.urlencode %}&{{ request.GET.urlencode }}{% endif %}">Previous</a>
+                    <a class="page-link" href="?page={{ experiences.previous_page_number }}{% for key, value in current_filters.items %}{% if value %}&{{ key }}={{ value }}{% endif %}{% endfor %}">Previous</a>
                 </li>
             {% endif %}
-            
+
             {% for num in experiences.paginator.page_range %}
                 {% if experiences.number == num %}
                     <li class="page-item active">
@@ -255,14 +380,14 @@
                     </li>
                 {% else %}
                     <li class="page-item">
-                        <a class="page-link" href="?page={{ num }}{% if request.GET.urlencode %}&{{ request.GET.urlencode }}{% endif %}">{{ num }}</a>
+                        <a class="page-link" href="?page={{ num }}{% for key, value in current_filters.items %}{% if value %}&{{ key }}={{ value }}{% endif %}{% endfor %}">{{ num }}</a>
                     </li>
                 {% endif %}
             {% endfor %}
-            
+
             {% if experiences.has_next %}
                 <li class="page-item">
-                    <a class="page-link" href="?page={{ experiences.next_page_number }}{% if request.GET.urlencode %}&{{ request.GET.urlencode }}{% endif %}">Next</a>
+                    <a class="page-link" href="?page={{ experiences.next_page_number }}{% for key, value in current_filters.items %}{% if value %}&{{ key }}={{ value }}{% endif %}{% endfor %}">Next</a>
                 </li>
             {% endif %}
         </ul>
@@ -334,13 +459,57 @@
 // Auto-submit form when filters change
 document.addEventListener('DOMContentLoaded', function() {
     const form = document.getElementById('filterForm');
-    const selects = form.querySelectorAll('select');
-    
-    selects.forEach(select => {
-        select.addEventListener('change', function() {
-            form.submit();
-        });
+    const filterElements = form.querySelectorAll('select, input[type="checkbox"]');
+    const searchInput = document.getElementById('search');
+
+    // Auto-submit for select elements and checkboxes
+    filterElements.forEach(element => {
+        if (element.id !== 'search') {
+            element.addEventListener('change', function() {
+                showFilterLoading();
+                form.submit();
+            });
+        }
     });
+
+    // Search with debounce
+    let searchTimeout;
+    if (searchInput) {
+        searchInput.addEventListener('input', function() {
+            clearTimeout(searchTimeout);
+            searchTimeout = setTimeout(() => {
+                showFilterLoading();
+                form.submit();
+            }, 1000);
+        });
+    }
+
+    // Show loading state
+    function showFilterLoading() {
+        const submitBtn = form.querySelector('button[type="submit"]');
+        if (submitBtn) {
+            submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin me-2"></i>Filtering...';
+            submitBtn.disabled = true;
+        }
+
+        // Add subtle loading indicator to form
+        form.style.opacity = '0.8';
+        form.style.pointerEvents = 'none';
+    }
+
+    // Reset filter loading state (in case of navigation back)
+    function resetFilterLoading() {
+        const submitBtn = form.querySelector('button[type="submit"]');
+        if (submitBtn) {
+            submitBtn.innerHTML = '<i class="fas fa-filter me-2"></i>Apply Filters';
+            submitBtn.disabled = false;
+        }
+        form.style.opacity = '1';
+        form.style.pointerEvents = 'auto';
+    }
+
+    // Reset loading state when page loads
+    resetFilterLoading();
     
     // Bookmark functionality
     const bookmarkButtons = document.querySelectorAll('.bookmark-btn');

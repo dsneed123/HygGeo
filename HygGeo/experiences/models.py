@@ -252,6 +252,24 @@ class Experience(models.Model):
         else:
             return {'level': 'fair', 'color': '#fd7e14', 'text': 'Fair'}
 
+    def get_experience_type_display(self):
+        """Return experience type name or default"""
+        if self.experience_type:
+            return self.experience_type.name
+        return "General Experience"
+
+    def get_group_size_display(self):
+        """Return human-readable group size"""
+        return dict(self.GROUP_SIZES).get(self.group_size, self.group_size)
+
+    def get_duration_display(self):
+        """Return human-readable duration"""
+        return dict(self.DURATION_TYPES).get(self.duration, self.duration)
+
+    def get_budget_range_display(self):
+        """Return human-readable budget range"""
+        return dict(self.BUDGET_RANGES).get(self.budget_range, self.budget_range)
+
 class UserRecommendation(models.Model):
     """Personalized recommendations for users based on their survey"""
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='recommendations')

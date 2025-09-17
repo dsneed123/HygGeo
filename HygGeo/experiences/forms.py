@@ -1,7 +1,6 @@
 # experiences/forms.py
 from django import forms
-from .models import Experience, Provider, Destination, Category
-from .models import Category
+from .models import Experience, Provider, Destination, Category, ExperienceType
 class ExperienceForm(forms.ModelForm):
     class Meta:
         model = Experience
