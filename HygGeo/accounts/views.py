@@ -57,16 +57,15 @@ def index(request):
     # Select 3 random facts for display
     featured_facts = random.sample(sustainability_facts, 3)
 
-    # Get all destinations with experiences, prioritizing those with featured experiences
-    featured_destinations = Destination.objects.filter(
-        experiences__isnull=False
-    ).distinct().order_by('-experiences__is_featured', '-created_at')[:6]
+    # Get all destinations, prioritizing those with experiences and featured status
+    featured_destinations = Destination.objects.annotate(
+        has_experiences=Count('experiences'),
+        has_featured=Count('experiences', filter=Q(experiences__is_featured=True))
+    ).order_by('-has_featured', '-has_experiences', '-created_at')[:6]
 
-    # If still no destinations, get any destinations with images
+    # If no destinations at all, create some sample data
     if not featured_destinations.exists():
-        featured_destinations = Destination.objects.exclude(
-            image__isnull=True
-        ).exclude(image='').order_by('-created_at')[:6]
+        featured_destinations = Destination.objects.all().order_by('-created_at')[:6]
 
     # Check if user has completed a survey
     has_survey = False

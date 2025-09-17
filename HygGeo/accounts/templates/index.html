@@ -55,17 +55,19 @@
                                 <div class="destination-content">
                                     <div class="destination-badge">
                                         <i class="fas fa-leaf"></i>
-                                        {{ destination.sustainability_score }}/10
+                                        {% if destination.sustainability_score %}{{ destination.sustainability_score }}/10{% else %}Eco-Friendly{% endif %}
                                     </div>
                                     <h2 class="destination-name">{{ destination.name }}</h2>
-                                    <p class="destination-country">{{ destination.country }}</p>
+                                    <p class="destination-country">{% if destination.country and destination.country != 'TBD' %}{{ destination.country }}{% else %}Beautiful Destination{% endif %}</p>
                                     {% if destination.description %}
                                     <p class="destination-description">{{ destination.description|truncatewords:20 }}</p>
+                                    {% else %}
+                                    <p class="destination-description">Discover the beauty and charm of this amazing destination with sustainable travel experiences.</p>
                                     {% endif %}
                                     <div class="destination-stats">
                                         <div class="stat">
                                             <i class="fas fa-heart"></i>
-                                            {{ destination.hygge_factor }}/10 Hygge
+                                            {% if destination.hygge_factor %}{{ destination.hygge_factor }}/10{% else %}9/10{% endif %} Hygge
                                         </div>
                                         <div class="stat">
                                             <i class="fas fa-map-marked-alt"></i>
@@ -105,6 +107,7 @@
                                 <p>Where hygge meets mindful travel</p>
                             </div>
                         </div>
+
                     </div>
                 </div>
             </div>
@@ -342,6 +345,20 @@
     align-items: center;
     justify-content: center;
     overflow: hidden;
+    margin: 0;
+    padding: 0;
+}
+
+@media (max-width: 768px) {
+    .hero-visual {
+        height: 350px;
+    }
+}
+
+@media (max-width: 576px) {
+    .hero-visual {
+        height: 320px;
+    }
 }
 
 .visual-showcase {
@@ -586,8 +603,25 @@
     height: 500px;
     overflow: hidden;
     border-radius: 20px;
-    box-shadow: 0 15px 35px rgba(0,0,0,0.1);
-    background: #ffffff;
+    box-shadow: 0 20px 40px rgba(0,0,0,0.15);
+    background: transparent;
+    margin: 0;
+}
+
+@media (max-width: 768px) {
+    .destination-carousel-container {
+        height: 350px;
+        border-radius: 15px;
+        box-shadow: 0 15px 30px rgba(0,0,0,0.2);
+    }
+}
+
+@media (max-width: 576px) {
+    .destination-carousel-container {
+        height: 320px;
+        border-radius: 12px;
+        box-shadow: 0 10px 25px rgba(0,0,0,0.25);
+    }
 }
 
 .destination-carousel {
@@ -604,17 +638,20 @@
     height: 100%;
     opacity: 0;
     visibility: hidden;
-    transition: all 0.6s ease-in-out;
-    transform: scale(0.95);
+    transition: all 0.8s cubic-bezier(0.25, 0.8, 0.25, 1);
+    transform: scale(0.95) translateY(10px);
     border-radius: 20px;
     overflow: hidden;
+    margin: 0;
+    box-sizing: border-box;
 }
 
 .destination-slide.active {
     opacity: 1;
     visibility: visible;
-    transform: scale(1);
+    transform: scale(1) translateY(0);
     z-index: 2;
+    box-shadow: 0 25px 50px rgba(0,0,0,0.2);
 }
 
 .destination-image {
@@ -689,17 +726,39 @@
     bottom: 0;
     left: 0;
     right: 0;
-    padding: 2rem;
+    padding: 2.5rem;
     background: linear-gradient(
         to top,
-        rgba(0,0,0,0.8) 0%,
-        rgba(0,0,0,0.4) 70%,
+        rgba(0,0,0,0.9) 0%,
+        rgba(0,0,0,0.7) 50%,
+        rgba(0,0,0,0.4) 75%,
+        rgba(0,0,0,0.1) 90%,
         transparent 100%
     );
     color: white;
     transform: translateY(20px);
     opacity: 0;
-    transition: all 0.6s ease;
+    transition: all 0.8s cubic-bezier(0.25, 0.8, 0.25, 1) 0.3s;
+    margin: 0;
+    box-sizing: border-box;
+}
+
+@media (max-width: 768px) {
+    .destination-content {
+        padding: 1.5rem;
+    }
+}
+
+@media (max-width: 576px) {
+    .destination-content {
+        padding: 1rem 1.25rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .destination-content {
+        padding: 0.75rem 1rem;
+    }
 }
 
 .destination-slide.active .destination-content {
@@ -710,18 +769,16 @@
 .destination-badge {
     display: inline-flex;
     align-items: center;
-    background: linear-gradient(135deg, rgba(46, 125, 50, 0.95) 0%, rgba(76, 175, 80, 0.95) 100%);
+    background: linear-gradient(135deg, rgba(46, 125, 50, 0.9) 0%, rgba(76, 175, 80, 0.9) 100%);
     color: white;
-    padding: 0.5rem 1rem;
-    border-radius: 25px;
-    font-size: 0.85rem;
-    font-weight: 700;
-    margin-bottom: 1.5rem;
-    backdrop-filter: blur(15px);
-    box-shadow: 0 4px 20px rgba(46, 125, 50, 0.4);
-    border: 1px solid rgba(255, 255, 255, 0.2);
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
+    padding: 0.4rem 0.9rem;
+    border-radius: 20px;
+    font-size: 0.8rem;
+    font-weight: 600;
+    margin-bottom: 1rem;
+    backdrop-filter: blur(10px);
+    box-shadow: 0 3px 15px rgba(46, 125, 50, 0.3);
+    border: 1px solid rgba(255, 255, 255, 0.3);
 }
 
 .destination-badge i {
@@ -729,12 +786,35 @@
 }
 
 .destination-name {
-    font-size: 2.5rem;
-    font-weight: 700;
+    font-size: 2.8rem;
+    font-weight: 800;
     margin-bottom: 0.5rem;
     color: white;
-    text-shadow: 0 2px 10px rgba(0,0,0,0.7);
-    line-height: 1.2;
+    text-shadow: 0 3px 15px rgba(0,0,0,0.8);
+    line-height: 1.1;
+    letter-spacing: -0.02em;
+}
+
+@media (max-width: 768px) {
+    .destination-name {
+        font-size: 2.2rem;
+        margin-bottom: 0.4rem;
+    }
+}
+
+@media (max-width: 576px) {
+    .destination-name {
+        font-size: 1.8rem;
+        margin-bottom: 0.3rem;
+        line-height: 1.2;
+    }
+}
+
+@media (max-width: 480px) {
+    .destination-name {
+        font-size: 1.5rem;
+        margin-bottom: 0.25rem;
+    }
 }
 
 .destination-country {
@@ -747,6 +827,28 @@
     text-shadow: 0 1px 5px rgba(0,0,0,0.5);
 }
 
+@media (max-width: 768px) {
+    .destination-country {
+        font-size: 0.9rem;
+        margin-bottom: 0.8rem;
+    }
+}
+
+@media (max-width: 576px) {
+    .destination-country {
+        font-size: 0.8rem;
+        margin-bottom: 0.6rem;
+        letter-spacing: 0.3px;
+    }
+}
+
+@media (max-width: 480px) {
+    .destination-country {
+        font-size: 0.75rem;
+        margin-bottom: 0.5rem;
+    }
+}
+
 .destination-description {
     font-size: 1rem;
     margin-bottom: 1.2rem;
@@ -756,6 +858,33 @@
     text-shadow: 0 1px 3px rgba(0,0,0,0.5);
 }
 
+@media (max-width: 768px) {
+    .destination-description {
+        font-size: 0.9rem;
+        margin-bottom: 1rem;
+        line-height: 1.4;
+    }
+}
+
+@media (max-width: 576px) {
+    .destination-description {
+        font-size: 0.85rem;
+        margin-bottom: 0.8rem;
+        line-height: 1.3;
+    }
+}
+
+@media (max-width: 480px) {
+    .destination-description {
+        font-size: 0.8rem;
+        margin-bottom: 0.6rem;
+        display: -webkit-box;
+        -webkit-line-clamp: 2;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+    }
+}
+
 .destination-stats {
     display: flex;
     gap: 1rem;
@@ -763,17 +892,71 @@
     flex-wrap: wrap;
 }
 
+@media (max-width: 768px) {
+    .destination-stats {
+        gap: 0.8rem;
+        margin-bottom: 1.2rem;
+    }
+}
+
+@media (max-width: 576px) {
+    .destination-stats {
+        gap: 0.6rem;
+        margin-bottom: 1rem;
+        flex-direction: column;
+        align-items: flex-start;
+    }
+}
+
+@media (max-width: 480px) {
+    .destination-stats {
+        gap: 0.5rem;
+        margin-bottom: 0.8rem;
+    }
+}
+
 .destination-stats .stat {
     display: flex;
     align-items: center;
-    font-size: 0.9rem;
+    font-size: 0.85rem;
     color: rgba(255,255,255,0.95);
-    background: rgba(255,255,255,0.15);
-    padding: 0.5rem 1rem;
-    border-radius: 20px;
-    backdrop-filter: blur(8px);
-    border: 1px solid rgba(255,255,255,0.2);
-    font-weight: 500;
+    background: rgba(255,255,255,0.12);
+    padding: 0.6rem 1.1rem;
+    border-radius: 25px;
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255,255,255,0.25);
+    font-weight: 600;
+    transition: all 0.3s ease;
+}
+
+@media (max-width: 768px) {
+    .destination-stats .stat {
+        padding: 0.5rem 0.9rem;
+        font-size: 0.8rem;
+        border-radius: 20px;
+    }
+}
+
+@media (max-width: 576px) {
+    .destination-stats .stat {
+        padding: 0.4rem 0.8rem;
+        font-size: 0.75rem;
+        border-radius: 18px;
+        width: fit-content;
+    }
+}
+
+@media (max-width: 480px) {
+    .destination-stats .stat {
+        padding: 0.35rem 0.7rem;
+        font-size: 0.7rem;
+        border-radius: 15px;
+    }
+}
+
+.destination-stats .stat:hover {
+    background: rgba(255,255,255,0.2);
+    transform: translateY(-2px);
 }
 
 .destination-stats .stat i {
@@ -782,27 +965,58 @@
 }
 
 .btn-explore {
-    background: linear-gradient(135deg, rgba(255,255,255,0.2) 0%, rgba(255,255,255,0.1) 100%);
-    border: 2px solid rgba(255,255,255,0.3);
+    background: linear-gradient(135deg, rgba(255,255,255,0.25) 0%, rgba(255,255,255,0.15) 100%);
+    border: 2px solid rgba(255,255,255,0.4);
     color: white;
-    font-weight: 600;
-    padding: 0.6rem 1.5rem;
-    border-radius: 25px;
-    transition: all 0.3s ease;
-    backdrop-filter: blur(10px);
-    font-size: 0.9rem;
+    font-weight: 700;
+    padding: 0.8rem 2rem;
+    border-radius: 30px;
+    transition: all 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
+    backdrop-filter: blur(15px);
+    font-size: 0.95rem;
     text-decoration: none;
     display: inline-flex;
     align-items: center;
-    box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+    box-shadow: 0 6px 25px rgba(0,0,0,0.25);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+@media (max-width: 768px) {
+    .btn-explore {
+        padding: 0.7rem 1.5rem;
+        font-size: 0.9rem;
+        border-radius: 25px;
+        letter-spacing: 0.3px;
+    }
+}
+
+@media (max-width: 576px) {
+    .btn-explore {
+        padding: 0.6rem 1.2rem;
+        font-size: 0.85rem;
+        border-radius: 22px;
+        letter-spacing: 0.2px;
+        width: 100%;
+        justify-content: center;
+    }
+}
+
+@media (max-width: 480px) {
+    .btn-explore {
+        padding: 0.5rem 1rem;
+        font-size: 0.8rem;
+        border-radius: 20px;
+        letter-spacing: 0.1px;
+    }
 }
 
 .btn-explore:hover {
-    background: rgba(255,255,255,0.9);
+    background: rgba(255,255,255,0.95);
     color: var(--hygge-green);
-    border-color: rgba(255,255,255,0.8);
-    transform: translateY(-2px);
-    box-shadow: 0 8px 25px rgba(0,0,0,0.3);
+    border-color: rgba(255,255,255,0.9);
+    transform: translateY(-3px) scale(1.02);
+    box-shadow: 0 12px 40px rgba(0,0,0,0.35);
 }
 
 .btn-explore i {
@@ -820,27 +1034,75 @@
     pointer-events: none;
 }
 
+@media (max-width: 768px) {
+    .carousel-controls {
+        padding: 0 0.8rem;
+    }
+}
+
+@media (max-width: 576px) {
+    .carousel-controls {
+        padding: 0 0.6rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .carousel-controls {
+        padding: 0 0.5rem;
+    }
+}
+
 .carousel-btn {
     pointer-events: all;
-    background: rgba(255,255,255,0.9);
-    border: none;
+    background: linear-gradient(135deg, rgba(255,255,255,0.95) 0%, rgba(255,255,255,0.85) 100%);
+    border: 2px solid rgba(255,255,255,0.4);
     color: var(--hygge-green);
-    width: 50px;
-    height: 50px;
+    width: 55px;
+    height: 55px;
     border-radius: 50%;
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 1.2rem;
+    font-size: 1.3rem;
     cursor: pointer;
-    transition: all 0.3s ease;
-    box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+    transition: all 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
+    box-shadow: 0 8px 25px rgba(0,0,0,0.2);
+    backdrop-filter: blur(10px);
+    font-weight: 700;
+}
+
+@media (max-width: 768px) {
+    .carousel-btn {
+        width: 50px;
+        height: 50px;
+        font-size: 1.2rem;
+        box-shadow: 0 6px 20px rgba(0,0,0,0.25);
+    }
+}
+
+@media (max-width: 576px) {
+    .carousel-btn {
+        width: 45px;
+        height: 45px;
+        font-size: 1.1rem;
+        box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+    }
+}
+
+@media (max-width: 480px) {
+    .carousel-btn {
+        width: 40px;
+        height: 40px;
+        font-size: 1rem;
+        box-shadow: 0 3px 12px rgba(0,0,0,0.3);
+    }
 }
 
 .carousel-btn:hover {
-    background: white;
-    transform: scale(1.1);
-    box-shadow: 0 6px 20px rgba(0,0,0,0.3);
+    background: linear-gradient(135deg, white 0%, rgba(255,255,255,0.98) 100%);
+    transform: scale(1.15) translateY(-2px);
+    box-shadow: 0 12px 35px rgba(0,0,0,0.3);
+    border-color: rgba(255,255,255,0.8);
 }
 
 .carousel-btn i {
@@ -855,64 +1117,152 @@
     left: 50%;
     transform: translateX(-50%);
     display: flex;
-    gap: 0.5rem;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    padding: 8px 16px;
+    background: rgba(0,0,0,0.3);
+    border-radius: 20px;
+    backdrop-filter: blur(10px);
 }
 
 .indicator {
-    width: 12px;
-    height: 12px;
+    width: 10px;
+    height: 10px;
     border-radius: 50%;
-    background: rgba(255,255,255,0.5);
+    background: rgba(255,255,255,0.6);
     cursor: pointer;
     transition: all 0.3s ease;
+    border: none;
+    padding: 0;
+    flex-shrink: 0;
 }
 
 .indicator.active {
     background: white;
-    transform: scale(1.2);
+    width: 12px;
+    height: 12px;
+    box-shadow: 0 2px 8px rgba(255,255,255,0.3);
 }
 
 .indicator:hover {
-    background: rgba(255,255,255,0.8);
+    background: rgba(255,255,255,0.9);
 }
 
 .brand-overlay {
     position: absolute;
-    top: 20px;
-    left: 20px;
-    background: rgba(255,255,255,0.1);
-    backdrop-filter: blur(15px);
-    border-radius: 15px;
-    padding: 1rem 1.5rem;
+    top: 25px;
+    left: 25px;
+    background: linear-gradient(135deg, rgba(255,255,255,0.15) 0%, rgba(255,255,255,0.08) 100%);
+    backdrop-filter: blur(20px);
+    border-radius: 16px;
+    padding: 1.2rem 1.8rem;
     color: white;
-    border: 1px solid rgba(255,255,255,0.2);
+    border: 1px solid rgba(255,255,255,0.25);
+    box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+    transition: all 0.3s ease;
+}
+
+@media (max-width: 768px) {
+    .brand-overlay {
+        top: 20px;
+        left: 20px;
+        padding: 1rem 1.4rem;
+        border-radius: 14px;
+    }
+}
+
+@media (max-width: 576px) {
+    .brand-overlay {
+        top: 15px;
+        left: 15px;
+        padding: 0.8rem 1.2rem;
+        border-radius: 12px;
+    }
+}
+
+@media (max-width: 480px) {
+    .brand-overlay {
+        top: 12px;
+        left: 12px;
+        padding: 0.6rem 1rem;
+        border-radius: 10px;
+    }
 }
 
 .brand-overlay h4 {
-    font-size: 1.1rem;
-    font-weight: 700;
-    margin-bottom: 0.25rem;
+    font-size: 1.15rem;
+    font-weight: 800;
+    margin-bottom: 0.3rem;
     color: white;
+    text-shadow: 0 2px 8px rgba(0,0,0,0.3);
+    letter-spacing: 0.3px;
+}
+
+@media (max-width: 768px) {
+    .brand-overlay h4 {
+        font-size: 1.05rem;
+        margin-bottom: 0.25rem;
+    }
+}
+
+@media (max-width: 576px) {
+    .brand-overlay h4 {
+        font-size: 0.95rem;
+        margin-bottom: 0.2rem;
+        letter-spacing: 0.2px;
+    }
+}
+
+@media (max-width: 480px) {
+    .brand-overlay h4 {
+        font-size: 0.85rem;
+        margin-bottom: 0.15rem;
+        letter-spacing: 0.1px;
+        line-height: 1.1;
+    }
 }
 
 .brand-overlay p {
-    font-size: 0.85rem;
+    font-size: 0.9rem;
     margin: 0;
-    color: rgba(255,255,255,0.9);
+    color: rgba(255,255,255,0.95);
+    text-shadow: 0 1px 4px rgba(0,0,0,0.2);
+    font-weight: 500;
+}
+
+@media (max-width: 768px) {
+    .brand-overlay p {
+        font-size: 0.8rem;
+    }
+}
+
+@media (max-width: 576px) {
+    .brand-overlay p {
+        font-size: 0.75rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .brand-overlay p {
+        font-size: 0.7rem;
+        line-height: 1.2;
+    }
 }
 
 /* Responsive Design */
 @media (max-width: 768px) {
     .hero-visual {
         height: 400px;
-        padding: 0 1rem;
+        padding: 0;
+        margin: 0;
     }
 
     .destination-carousel-container {
         height: 450px;
         border-radius: 15px;
-        margin: 0 1rem;
-        box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+        margin: 0;
+        box-shadow: 0 15px 30px rgba(0,0,0,0.2);
     }
 
 
@@ -1061,11 +1411,12 @@
 /* Extra responsive adjustments for smaller screens */
 @media (max-width: 576px) {
     .hero-visual {
-        padding: 0 0.75rem;
+        padding: 0;
+        margin: 0;
     }
 
     .destination-carousel-container {
-        margin: 0 0.75rem;
+        margin: 0;
         height: 400px;
     }
 
@@ -1141,25 +1492,24 @@
 /* Adjustments for very large mobile screens and small tablets */
 @media (min-width: 576px) and (max-width: 768px) {
     .destination-carousel-container {
-        margin: 0 1.5rem; /* More margin on larger mobile screens */
+        margin: 0;
     }
 
     .hero-visual {
-        padding: 0 1.5rem;
+        padding: 0;
+        margin: 0;
     }
 
     .carousel-controls {
-        padding: 0 2rem;
+        padding: 0 1.5rem;
     }
 
     .brand-overlay {
-        left: 30px;
+        left: 25px;
     }
 }
 </style>
-{% endblock %}
 
-{% block extra_js %}
 <script>
 // Destination Carousel Functionality
 let currentSlide = 0;
@@ -1169,10 +1519,13 @@ document.addEventListener('DOMContentLoaded', function() {
     const slides = document.querySelectorAll('.destination-slide');
     const indicators = document.querySelectorAll('.indicator');
 
-    console.log('Carousel initialized with', slides.length, 'slides');
+    console.log('Carousel Debug: Found', slides.length, 'slides');
+    slides.forEach((slide, index) => {
+        console.log(`Slide ${index}:`, slide.querySelector('.destination-name')?.textContent);
+    });
 
     if (slides.length === 0) {
-        console.log('No slides found');
+        console.log('No slides found - carousel will not work');
         return;
     }
 
@@ -1219,7 +1572,7 @@ function updateSlide(index) {
     const slides = document.querySelectorAll('.destination-slide');
     const indicators = document.querySelectorAll('.indicator');
 
-    console.log('Updating slide to index:', index);
+    console.log(`Updating slide to index: ${index}, total slides: ${slides.length}`);
 
     if (slides.length === 0) return;
 
@@ -1230,7 +1583,8 @@ function updateSlide(index) {
     // Add active class to current slide and indicator
     if (slides[index]) {
         slides[index].classList.add('active');
-        console.log('Activated slide', index);
+        const destinationName = slides[index].querySelector('.destination-name')?.textContent;
+        console.log(`Activated slide ${index}: ${destinationName}`);
     }
     if (indicators[index]) {
         indicators[index].classList.add('active');
@@ -1239,9 +1593,15 @@ function updateSlide(index) {
 
 function startSlideShow() {
     const slides = document.querySelectorAll('.destination-slide');
-    if (slides.length <= 1) return;
+    console.log(`Starting slideshow with ${slides.length} slides`);
+
+    if (slides.length <= 1) {
+        console.log('Not enough slides for slideshow');
+        return;
+    }
 
     slideInterval = setInterval(() => {
+        console.log('Auto-changing slide...');
         changeSlide(1);
     }, 4000); // Change slide every 4 seconds
 }
@@ -1336,4 +1696,5 @@ function handleSwipe() {
     }
 }
 </script>
+
 {% endblock %}
