@@ -51,8 +51,8 @@ Disallow: /experiences/*/edit/
 Allow: /about/
 Allow: /contact/
 
-# Sitemap location
-Sitemap: https://yourdomain.com/sitemap.xml""", content_type='text/plain')),
+# Sitemap location - will be dynamically generated with correct domain
+Sitemap: /sitemap.xml""", content_type='text/plain')),
 ]
 
 # Serve media files during development

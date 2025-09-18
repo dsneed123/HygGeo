@@ -2,6 +2,48 @@
 
 {% block title %}Sustainable Travel Experiences - HygGeo{% endblock %}
 
+{% block description %}Discover sustainable travel experiences around the world. From eco-friendly adventures to mindful journeys, find responsible tourism options that embrace hygge principles.{% endblock %}
+
+{% block keywords %}sustainable travel experiences, eco-friendly travel, responsible tourism, green travel, hygge travel, mindful travel, sustainable adventures, eco tourism{% endblock %}
+
+<!-- Structured Data for Experience List -->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "ItemList",
+  "name": "Sustainable Travel Experiences",
+  "description": "A curated list of sustainable travel experiences that embrace hygge and responsible tourism",
+  "url": "{{ request.build_absolute_uri }}",
+  "numberOfItems": {{ experiences.paginator.count|default:0 }},
+  "itemListElement": [
+    {% for experience in experiences %}
+    {
+      "@type": "ListItem",
+      "position": {{ forloop.counter }},
+      "item": {
+        "@type": "TouristAttraction",
+        "name": "{{ experience.title }}",
+        "description": "{{ experience.short_description|default:experience.description|striptags|truncatewords:30 }}",
+        "url": "{{ request.scheme }}://{{ request.get_host }}{% url 'experiences:experience_detail' experience.slug %}",
+        {% if experience.main_image %}"image": "{{ request.scheme }}://{{ request.get_host }}{{ experience.main_image.url }}",{% endif %}
+        "address": {
+          "@type": "PostalAddress",
+          "addressLocality": "{{ experience.destination.name }}",
+          "addressCountry": "{{ experience.destination.country }}"
+        },
+        "offers": {
+          "@type": "Offer",
+          "priceCurrency": "{{ experience.currency }}",
+          {% if experience.price_from %}"price": "{{ experience.price_from }}",{% endif %}
+          "availability": "https://schema.org/InStock"
+        }
+      }
+    }{% if not forloop.last %},{% endif %}
+    {% endfor %}
+  ]
+}
+</script>
+
 {% block content %}
 <div class="container py-5">
     <!-- Header -->

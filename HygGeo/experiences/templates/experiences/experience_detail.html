@@ -9,7 +9,53 @@
 {% block og_type %}article{% endblock %}
 {% block og_title %}{{ experience.title }} in {{ experience.destination.name }}{% endblock %}
 {% block og_description %}{{ experience.short_description|default:experience.description|truncatewords:30 }}{% endblock %}
-{% block og_image %}{% if experience.image %}{{ experience.image.url }}{% else %}https://yourdomain.com/static/images/hyggeo-og-image.jpg{% endif %}{% endblock %}
+{% block og_image %}{% if experience.main_image %}{{ experience.main_image.url }}{% else %}https://hyggeo.com/static/images/hyggeo-og-image.jpg{% endif %}{% endblock %}
+
+<!-- Structured Data for Search Engines -->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "TouristAttraction",
+  "name": "{{ experience.title }}",
+  "description": "{{ experience.description|striptags|truncatewords:50 }}",
+  "url": "{{ request.build_absolute_uri }}",
+  {% if experience.main_image %}"image": "{{ request.scheme }}://{{ request.get_host }}{{ experience.main_image.url }}",{% endif %}
+  "address": {
+    "@type": "PostalAddress",
+    "addressLocality": "{{ experience.destination.name }}",
+    "addressCountry": "{{ experience.destination.country }}"
+  },
+  "geo": {
+    "@type": "GeoCoordinates"{% if experience.destination.latitude and experience.destination.longitude %},
+    "latitude": {{ experience.destination.latitude }},
+    "longitude": {{ experience.destination.longitude }}{% endif %}
+  },
+  "provider": {
+    "@type": "Organization",
+    "name": "{{ experience.provider.name }}",
+    "url": "{{ experience.provider.website }}"
+  },
+  "touristType": "{{ experience.get_experience_type_display }}",
+  "category": [{% for category in experience.categories.all %}"{{ category.name }}"{% if not forloop.last %},{% endif %}{% endfor %}],
+  "offers": {
+    "@type": "Offer",
+    "priceCurrency": "{{ experience.currency }}",
+    {% if experience.price_from %}"price": "{{ experience.price_from }}",{% endif %}
+    "availability": "https://schema.org/InStock",
+    "url": "{{ experience.affiliate_link|default:request.build_absolute_uri }}"
+  },
+  "aggregateRating": {
+    "@type": "AggregateRating",
+    "ratingValue": "{{ experience.sustainability_score }}",
+    "bestRating": "10",
+    "worstRating": "1",
+    "ratingCount": "1"
+  },
+  "keywords": "{{ experience.title }}, {{ experience.destination.name }}, {{ experience.destination.country }}, sustainable travel, hygge, eco-friendly, {{ experience.get_experience_type_display }}{% for category in experience.categories.all %}, {{ category.name }}{% endfor %}",
+  "isAccessibleForFree": {% if not experience.price_from %}true{% else %}false{% endif %},
+  "publicAccess": true
+}
+</script>
 
 {% block content %}
 <div class="container py-5">
