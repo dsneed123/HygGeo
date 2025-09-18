@@ -12382,3 +12382,43 @@ INFO 2025-09-17 20:46:36,267 basehttp 37256 36424 "GET /experiences/ HTTP/1.1" 2
 WARNING 2025-09-17 20:46:36,348 log 37256 36424 Not Found: /.well-known/appspecific/com.chrome.devtools.json
 WARNING 2025-09-17 20:46:36,348 basehttp 37256 36424 "GET /.well-known/appspecific/com.chrome.devtools.json HTTP/1.1" 404 3967
 INFO 2025-09-17 20:46:48,476 basehttp 37256 36424 "GET / HTTP/1.1" 200 63892
+INFO 2025-09-17 20:56:12,326 autoreload 18408 31736 Watching for file changes with StatReloader
+INFO 2025-09-17 20:57:13,643 autoreload 18408 31736 C:\Users\DLSne\OneDrive\Desktop\Code\webdev\HygGeo\HygGeo\accounts\urls.py changed, reloading.
+INFO 2025-09-17 20:57:14,654 autoreload 46964 46340 Watching for file changes with StatReloader
+INFO 2025-09-17 20:57:17,245 basehttp 46964 35128 "GET /accounts/login/ HTTP/1.1" 200 23085
+INFO 2025-09-17 20:57:26,928 basehttp 46964 35128 "POST /accounts/login/ HTTP/1.1" 200 23316
+INFO 2025-09-17 20:57:32,189 basehttp 46964 35128 "POST /accounts/login/ HTTP/1.1" 200 23316
+INFO 2025-09-17 20:57:36,771 basehttp 46964 35128 "POST /accounts/login/ HTTP/1.1" 200 23316
+INFO 2025-09-17 20:57:41,347 basehttp 46964 35128 "POST /accounts/login/ HTTP/1.1" 302 0
+INFO 2025-09-17 20:57:41,382 basehttp 46964 35128 "GET / HTTP/1.1" 200 70757
+INFO 2025-09-17 20:57:43,166 basehttp 46964 35128 "GET /admin/dashboard/ HTTP/1.1" 200 42678
+ERROR 2025-09-17 20:57:45,022 log 46964 35128 Internal Server Error: /admin/analytics/
+Traceback (most recent call last):
+  File "C:\Users\DLSne\AppData\Local\Packages\PythonSoftwareFoundation.Python.3.12_qbz5n2kfra8p0\LocalCache\local-packages\Python312\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+               ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\DLSne\AppData\Local\Packages\PythonSoftwareFoundation.Python.3.12_qbz5n2kfra8p0\LocalCache\local-packages\Python312\site-packages\django\core\handlers\base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\DLSne\AppData\Local\Packages\PythonSoftwareFoundation.Python.3.12_qbz5n2kfra8p0\LocalCache\local-packages\Python312\site-packages\django\contrib\auth\decorators.py", line 59, in _view_wrapper
+    return view_func(request, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\DLSne\OneDrive\Desktop\Code\webdev\HygGeo\HygGeo\accounts\views.py", line 426, in analytics_dashboard
+    active_users_7_days = max(bookings_7_days, new_users_7_days * 2)
+                              ^^^^^^^^^^^^^^^
+UnboundLocalError: cannot access local variable 'bookings_7_days' where it is not associated with a value
+ERROR 2025-09-17 20:57:45,027 basehttp 46964 35128 "GET /admin/analytics/ HTTP/1.1" 500 78743
+WARNING 2025-09-17 20:57:45,174 log 46964 35128 Not Found: /favicon.ico
+WARNING 2025-09-17 20:57:45,175 basehttp 46964 35128 "GET /favicon.ico HTTP/1.1" 404 3856
+INFO 2025-09-17 21:10:08,412 autoreload 46964 46340 C:\Users\DLSne\OneDrive\Desktop\Code\webdev\HygGeo\HygGeo\accounts\views.py changed, reloading.
+INFO 2025-09-17 21:10:09,592 autoreload 35672 28868 Watching for file changes with StatReloader
+INFO 2025-09-17 21:10:24,035 autoreload 35672 28868 C:\Users\DLSne\OneDrive\Desktop\Code\webdev\HygGeo\HygGeo\accounts\views.py changed, reloading.
+INFO 2025-09-17 21:10:25,190 autoreload 41968 37696 Watching for file changes with StatReloader
+INFO 2025-09-17 21:10:42,935 autoreload 41968 37696 C:\Users\DLSne\OneDrive\Desktop\Code\webdev\HygGeo\HygGeo\accounts\views.py changed, reloading.
+INFO 2025-09-17 21:10:44,070 autoreload 26804 8996 Watching for file changes with StatReloader
+INFO 2025-09-17 21:13:06,622 autoreload 26804 8996 C:\Users\DLSne\OneDrive\Desktop\Code\webdev\HygGeo\HygGeo\accounts\views.py changed, reloading.
+INFO 2025-09-17 21:13:07,815 autoreload 44136 45580 Watching for file changes with StatReloader
+INFO 2025-09-17 21:13:34,646 autoreload 44136 45580 C:\Users\DLSne\OneDrive\Desktop\Code\webdev\HygGeo\HygGeo\accounts\views.py changed, reloading.
+INFO 2025-09-17 21:13:35,810 autoreload 5468 15928 Watching for file changes with StatReloader
+INFO 2025-09-17 21:14:10,001 autoreload 5468 15928 C:\Users\DLSne\OneDrive\Desktop\Code\webdev\HygGeo\HygGeo\accounts\views.py changed, reloading.
+INFO 2025-09-17 21:14:11,138 autoreload 44180 29360 Watching for file changes with StatReloader
