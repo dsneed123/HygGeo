@@ -356,21 +356,13 @@ def admin_dashboard(request):
 @user_passes_test(lambda u: u.is_staff, login_url='/accounts/login/')
 def analytics_dashboard(request):
     """
-    GDPR/CCPA Compliant Analytics Dashboard
-
-    This dashboard uses only:
-    - Aggregated, anonymized data
-    - No individual user tracking
-    - Public action counts (registrations, bookings)
-    - Estimated metrics based on industry standards
-    - No personal data processing without consent
+    Analytics Dashboard - Real Data Only
     """
     from django.db.models import Count, Avg, Q, F, Sum
     from django.utils import timezone
     from datetime import datetime, timedelta
     from experiences.models import UserRecommendation, BookingTracking, ExperienceReview
     import json
-    from collections import defaultdict
 
     now = timezone.now()
 
@@ -403,7 +395,7 @@ def analytics_dashboard(request):
     else:
         start_date = None  # All time
 
-    # User Analytics - Enhanced with multiple time periods
+    # User Analytics
     total_users = User.objects.count()
 
     # Users for selected period
@@ -421,12 +413,25 @@ def analytics_dashboard(request):
     new_users_6_months = User.objects.filter(date_joined__gte=last_6_months).count()
     new_users_year = User.objects.filter(date_joined__gte=last_year).count()
 
-    # COMPLIANT: Estimate active users without individual tracking
-    # Use booking activity and registration patterns as proxy for engagement
-    active_users_7_days = max(bookings_7_days, new_users_7_days * 2)
-    active_users_24_hours = max(BookingTracking.objects.filter(clicked_at__gte=last_24_hours).count(), 5)
-    active_users_30_days = max(bookings_30_days, new_users_30_days * 3)
-    active_users_90_days = max(bookings_90_days, new_users_90_days * 3)
+    # Booking Analytics
+    total_bookings = BookingTracking.objects.count()
+    bookings_7_days = BookingTracking.objects.filter(clicked_at__gte=last_7_days).count()
+    bookings_30_days = BookingTracking.objects.filter(clicked_at__gte=last_30_days).count()
+    bookings_90_days = BookingTracking.objects.filter(clicked_at__gte=last_90_days).count()
+    bookings_6_months = BookingTracking.objects.filter(clicked_at__gte=last_6_months).count()
+    bookings_year = BookingTracking.objects.filter(clicked_at__gte=last_year).count()
+
+    # Bookings for selected period
+    if start_date:
+        bookings_period = BookingTracking.objects.filter(clicked_at__gte=start_date).count()
+    else:
+        bookings_period = total_bookings
+
+    # Active users based on login activity
+    active_users_7_days = User.objects.filter(last_login__gte=last_7_days).count()
+    active_users_24_hours = User.objects.filter(last_login__gte=last_24_hours).count()
+    active_users_30_days = User.objects.filter(last_login__gte=last_30_days).count()
+    active_users_90_days = User.objects.filter(last_login__gte=last_90_days).count()
 
     # Dynamic chart data based on selected period
     if period == '7d':
@@ -484,158 +489,16 @@ def analytics_dashboard(request):
             'count': count
         })
 
-    # Content Engagement Analytics
+    # Content Analytics
     total_experiences = Experience.objects.count()
     active_experiences = Experience.objects.filter(is_active=True).count()
     featured_experiences = Experience.objects.filter(is_featured=True).count()
-
-    # Enhanced booking and engagement analytics
-    total_bookings = BookingTracking.objects.count()
-    bookings_7_days = BookingTracking.objects.filter(clicked_at__gte=last_7_days).count()
-    bookings_30_days = BookingTracking.objects.filter(clicked_at__gte=last_30_days).count()
-    bookings_90_days = BookingTracking.objects.filter(clicked_at__gte=last_90_days).count()
-    bookings_6_months = BookingTracking.objects.filter(clicked_at__gte=last_6_months).count()
-    bookings_year = BookingTracking.objects.filter(clicked_at__gte=last_year).count()
-
-    # Bookings for selected period
-    if start_date:
-        bookings_period = BookingTracking.objects.filter(clicked_at__gte=start_date).count()
-    else:
-        bookings_period = total_bookings
 
     # Recommendations and user engagement
     total_recommendations = UserRecommendation.objects.count()
     viewed_recommendations = UserRecommendation.objects.filter(viewed=True).count()
     clicked_recommendations = UserRecommendation.objects.filter(clicked=True).count()
     bookmarked_experiences = UserRecommendation.objects.filter(bookmarked=True).count()
-
-    # Enhanced tracking metrics
-    # GDPR/CCPA Compliant Web Analytics
-    # Using only aggregated, anonymized data with no individual user tracking
-
-    # Page views estimation (based on public actions only)
-    page_views_7d = (bookings_7_days * 6) + (new_users_7_days * 10) + 50  # Baseline traffic
-    page_views_30d = (bookings_30_days * 6) + (new_users_30_days * 10) + 200
-    page_views_90d = (bookings_90_days * 6) + (new_users_90_days * 10) + 600
-    page_views_period = (bookings_period * 6) + (new_users_period * 10) + (50 * (chart_days // 7))
-
-    # Session estimation (anonymous, aggregate only)
-    unique_sessions_7d = max(new_users_7_days * 2, bookings_7_days + 20)
-    unique_sessions_30d = max(new_users_30_days * 2, bookings_30_days + 80)
-    unique_sessions_90d = max(new_users_90_days * 2, bookings_90_days + 240)
-    unique_sessions_period = max(new_users_period * 2, bookings_period + (20 * (chart_days // 7)))
-
-    # Engagement metrics (privacy-safe calculations)
-    pages_per_session_7d = (page_views_7d / unique_sessions_7d) if unique_sessions_7d > 0 else 0
-    pages_per_session_30d = (page_views_30d / unique_sessions_30d) if unique_sessions_30d > 0 else 0
-
-    # Session duration (industry average, no tracking required)
-    avg_session_duration = 4.2  # Industry standard for travel sites
-
-    # Traffic sources simulation (you'd implement real tracking for this)
-    traffic_sources = [
-        {'source': 'Direct', 'sessions': int(unique_sessions_30d * 0.35), 'percentage': 35},
-        {'source': 'Google Search', 'sessions': int(unique_sessions_30d * 0.30), 'percentage': 30},
-        {'source': 'Social Media', 'sessions': int(unique_sessions_30d * 0.15), 'percentage': 15},
-        {'source': 'Referral Sites', 'sessions': int(unique_sessions_30d * 0.12), 'percentage': 12},
-        {'source': 'Email', 'sessions': int(unique_sessions_30d * 0.08), 'percentage': 8},
-    ]
-
-    # Top landing pages (based on experience popularity)
-    landing_pages = [
-        {'page': '/', 'views': int(page_views_30d * 0.25), 'bounce_rate': 45},
-        {'page': '/experiences/', 'views': int(page_views_30d * 0.20), 'bounce_rate': 35},
-        {'page': '/experiences/destinations/', 'views': int(page_views_30d * 0.15), 'bounce_rate': 40},
-        {'page': '/accounts/signup/', 'views': int(page_views_30d * 0.10), 'bounce_rate': 60},
-        {'page': '/experiences/about/', 'views': int(page_views_30d * 0.08), 'bounce_rate': 50},
-    ]
-
-    # Most popular content (based on bookings and engagement)
-    popular_content = Experience.objects.annotate(
-        engagement_score=Count('bookingtracking') + Count('userrecommendation')
-    ).order_by('-engagement_score')[:8]
-
-    # Geographic traffic (aggregated, anonymized data only)
-    # Only show country/region level data, no city-level or precise locations
-    geographic_traffic = [
-        {'location': 'United States', 'sessions': int(unique_sessions_30d * 0.45), 'percentage': 45},
-        {'location': 'Canada', 'sessions': int(unique_sessions_30d * 0.15), 'percentage': 15},
-        {'location': 'United Kingdom', 'sessions': int(unique_sessions_30d * 0.12), 'percentage': 12},
-        {'location': 'Germany', 'sessions': int(unique_sessions_30d * 0.08), 'percentage': 8},
-        {'location': 'Other EU', 'sessions': int(unique_sessions_30d * 0.10), 'percentage': 10},
-        {'location': 'Other', 'sessions': int(unique_sessions_30d * 0.10), 'percentage': 10},
-    ]
-
-    # Daily traffic trends (aggregated, non-identifying data only)
-    daily_traffic_data = []
-    traffic_days = min(chart_days, 30)  # Limit to 30 days for daily traffic
-    for i in range(traffic_days):
-        date = now - timedelta(days=traffic_days-1-i)
-        start_of_day = date.replace(hour=0, minute=0, second=0, microsecond=0)
-        end_of_day = start_of_day + timedelta(days=1)
-
-        # Aggregate counts only - no individual user tracking
-        daily_bookings = BookingTracking.objects.filter(
-            clicked_at__gte=start_of_day,
-            clicked_at__lt=end_of_day
-        ).count()
-
-        daily_new_users = User.objects.filter(
-            date_joined__gte=start_of_day,
-            date_joined__lt=end_of_day
-        ).count()
-
-        # Estimate traffic based on anonymized metrics only
-        estimated_views = (daily_bookings * 4) + (daily_new_users * 6) + max(20, daily_bookings * 2)
-        estimated_sessions = (daily_bookings * 2) + (daily_new_users * 2) + max(10, daily_bookings)
-
-        daily_traffic_data.append({
-            'date': start_of_day.strftime('%m/%d'),
-            'page_views': estimated_views,
-            'sessions': estimated_sessions,
-            'new_users': daily_new_users,
-            'bookings': daily_bookings
-        })
-
-    # Mobile vs Desktop traffic estimation
-    device_analytics = [
-        {'device': 'Mobile', 'sessions': int(unique_sessions_30d * 0.55), 'percentage': 55},
-        {'device': 'Desktop', 'sessions': int(unique_sessions_30d * 0.35), 'percentage': 35},
-        {'device': 'Tablet', 'sessions': int(unique_sessions_30d * 0.10), 'percentage': 10},
-    ]
-
-    # Browser analytics estimation
-    browser_analytics = [
-        {'browser': 'Chrome', 'sessions': int(unique_sessions_30d * 0.65), 'percentage': 65},
-        {'browser': 'Safari', 'sessions': int(unique_sessions_30d * 0.20), 'percentage': 20},
-        {'browser': 'Firefox', 'sessions': int(unique_sessions_30d * 0.08), 'percentage': 8},
-        {'browser': 'Edge', 'sessions': int(unique_sessions_30d * 0.05), 'percentage': 5},
-        {'browser': 'Other', 'sessions': int(unique_sessions_30d * 0.02), 'percentage': 2},
-    ]
-
-    # Bounce rate estimation (users who visit but don't bookmark or book)
-    engaged_users = UserRecommendation.objects.filter(
-        Q(bookmarked=True) | Q(clicked=True) | Q(viewed=True)
-    ).values('user').distinct().count()
-    bounce_rate = ((total_users - engaged_users) / total_users * 100) if total_users > 0 else 0
-
-    # Geographic data (from user profiles if available)
-    user_locations = User.objects.filter(
-        userprofile__location__isnull=False
-    ).values('userprofile__location').annotate(count=Count('id')).order_by('-count')[:10]
-
-    # Device/Platform analytics (simulated - would need actual tracking)
-    platform_data = [
-        {'name': 'Desktop', 'count': int(total_users * 0.6)},
-        {'name': 'Mobile', 'count': int(total_users * 0.35)},
-        {'name': 'Tablet', 'count': int(total_users * 0.05)},
-    ]
-
-    # Search terms (if you implement search tracking)
-    # For now, simulate based on category popularity
-    search_terms = Category.objects.annotate(
-        search_count=Count('experiences__bookingtracking')
-    ).order_by('-search_count')[:10]
 
     # Top performing experiences (by bookings)
     top_experiences = Experience.objects.annotate(
@@ -701,7 +564,7 @@ def analytics_dashboard(request):
             ('all', 'All Time')
         ],
         'analytics': {
-            # User metrics - Extended
+            # User metrics
             'total_users': total_users,
             'new_users_period': new_users_period,
             'active_users_period': active_users_period,
@@ -723,7 +586,7 @@ def analytics_dashboard(request):
             'experiences_created_7_days': experiences_created_7_days,
             'destinations_created_7_days': destinations_created_7_days,
 
-            # Enhanced engagement metrics
+            # Booking metrics
             'total_bookings': total_bookings,
             'bookings_period': bookings_period,
             'bookings_7_days': bookings_7_days,
@@ -731,40 +594,25 @@ def analytics_dashboard(request):
             'bookings_90_days': bookings_90_days,
             'bookings_6_months': bookings_6_months,
             'bookings_year': bookings_year,
+
+            # Recommendation metrics
             'total_recommendations': total_recommendations,
             'viewed_recommendations': viewed_recommendations,
             'clicked_recommendations': clicked_recommendations,
             'bookmarked_experiences': bookmarked_experiences,
             'travel_surveys': travel_surveys,
 
-            # Enhanced Web Traffic Metrics (Privacy Compliant)
-            'page_views_7d': page_views_7d,
-            'page_views_30d': page_views_30d,
-            'page_views_90d': page_views_90d,
-            'page_views_period': page_views_period,
-            'unique_sessions_7d': unique_sessions_7d,
-            'unique_sessions_30d': unique_sessions_30d,
-            'unique_sessions_90d': unique_sessions_90d,
-            'unique_sessions_period': unique_sessions_period,
-            'pages_per_session_7d': round(pages_per_session_7d, 1),
-            'pages_per_session_30d': round(pages_per_session_30d, 1),
-            'avg_session_duration': avg_session_duration,
-            'bounce_rate': round(bounce_rate, 1),
-
             # Rates and conversions
             'survey_completion_rate': round(survey_completion_rate, 1),
             'recommendation_view_rate': round(recommendation_view_rate, 1),
             'recommendation_click_rate': round(recommendation_click_rate, 1),
-            'booking_conversion_rate': round((bookings_period / new_users_period * 100) if new_users_period > 0 else 0, 1),
+            'booking_conversion_rate': round(booking_conversion_rate, 1),
             'avg_sustainability_score': round(avg_sustainability_score, 1),
             'avg_hygge_factor': round(avg_hygge_factor, 1),
         },
         'top_experiences': top_experiences,
         'top_destinations': top_destinations,
         'category_stats': category_stats,
-        'user_locations': user_locations,
-        'platform_data': platform_data,
-        'search_terms': search_terms,
         'chart_data': {
             'user_registrations': json.dumps(user_registration_data),
             'hourly_activity': json.dumps(hourly_activity_data),

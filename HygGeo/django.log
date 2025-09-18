@@ -12422,3 +12422,5 @@ INFO 2025-09-17 21:13:34,646 autoreload 44136 45580 C:\Users\DLSne\OneDrive\Desk
 INFO 2025-09-17 21:13:35,810 autoreload 5468 15928 Watching for file changes with StatReloader
 INFO 2025-09-17 21:14:10,001 autoreload 5468 15928 C:\Users\DLSne\OneDrive\Desktop\Code\webdev\HygGeo\HygGeo\accounts\views.py changed, reloading.
 INFO 2025-09-17 21:14:11,138 autoreload 44180 29360 Watching for file changes with StatReloader
+INFO 2025-09-17 23:32:52,115 autoreload 45236 46048 Watching for file changes with StatReloader
+INFO 2025-09-17 23:32:52,681 basehttp 45236 46416 "GET /admin/analytics/ HTTP/1.1" 200 57266
