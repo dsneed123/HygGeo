@@ -265,9 +265,9 @@
                     
                     <!-- Book Now Button -->
                     {% if experience.booking_required and experience.affiliate_link %}
-                    <button class="btn btn-hygge w-100 mb-3 book-now-btn" data-experience-id="{{ experience.id }}" data-affiliate-url="{{ experience.affiliate_link }}">
+                    <a href="{{ experience.affiliate_link }}" target="_blank" class="btn btn-hygge w-100 mb-3 book-now-btn" data-experience-id="{{ experience.id }}" rel="noopener noreferrer">
                         <i class="fas fa-calendar-check me-2"></i>Book This Experience
-                    </button>
+                    </a>
                     {% else %}
                     <div class="card border-0 shadow-sm">
                         <div class="card-body text-center p-4" style="background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);">
@@ -404,46 +404,22 @@ document.addEventListener('DOMContentLoaded', function() {
     const bookNowBtn = document.querySelector('.book-now-btn');
     if (bookNowBtn) {
         bookNowBtn.addEventListener('click', async function(e) {
-            e.preventDefault();
-            
             const experienceId = this.dataset.experienceId;
-            const affiliateUrl = this.dataset.affiliateUrl;
-            
-            // Show loading state
-            const originalText = this.innerHTML;
-            this.innerHTML = '<i class="fas fa-spinner fa-spin me-2"></i>Redirecting...';
-            this.disabled = true;
-            
+
+            // Track the click asynchronously - don't prevent the link from working
             try {
-                // Track the click
-                const response = await fetch(`{% url 'experiences:track_affiliate_click' '00000000-0000-0000-0000-000000000000' %}`.replace('00000000-0000-0000-0000-000000000000', experienceId), {
+                fetch(`{% url 'experiences:track_affiliate_click' '00000000-0000-0000-0000-000000000000' %}`.replace('00000000-0000-0000-0000-000000000000', experienceId), {
                     method: 'POST',
                     headers: {
                         'X-CSRFToken': document.querySelector('[name=csrfmiddlewaretoken]').value,
                         'Content-Type': 'application/json',
                     },
                 });
-                
-                const data = await response.json();
-                
-                if (data.success) {
-                    // Redirect to affiliate link
-                    window.open(affiliateUrl, '_blank');
-                } else {
-                    // Fallback to direct link
-                    window.open(affiliateUrl, '_blank');
-                }
             } catch (error) {
                 console.error('Error tracking click:', error);
-                // Fallback to direct link
-                window.open(affiliateUrl, '_blank');
-            } finally {
-                // Restore button state
-                setTimeout(() => {
-                    this.innerHTML = originalText;
-                    this.disabled = false;
-                }, 1000);
             }
+
+            // Let the link proceed normally
         });
     }
     
