@@ -163,7 +163,7 @@ STATIC_URL = '/static/'
 STATIC_ROOT = BASE_DIR / 'staticfiles'
 
 STATICFILES_DIRS = [
-    BASE_DIR / 'HygGeo' / 'static',
+    BASE_DIR / 'static',
 ]
 
 # Static file storage with WhiteNoise compression

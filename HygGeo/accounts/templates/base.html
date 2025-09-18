@@ -1,32 +1,33 @@
+{% load static %}
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{% block title %}HygGeo - Sustainable Traveling{% endblock %}</title>
-
+    <link rel="icon" type="image/x-icon" href="{% static 'favicon.ico' %}">
     <!-- SEO Meta Tags -->
     <meta name="description" content="{% block description %}Discover sustainable travel experiences with Danish hygge. Eco-friendly adventures, mindful journeys, and responsible tourism for conscious travelers.{% endblock %}">
     <meta name="keywords" content="{% block keywords %}sustainable travel, hygge, eco-friendly, responsible tourism, green travel, mindful travel, sustainable tourism, eco travel{% endblock %}">
-    <meta name="author" content="HygGeo">
+    <meta namh"author" content="HygGeo">
     <meta name="robots" content="index, follow">
 
     <!-- Open Graph Meta Tags for Social Sharing -->
     <meta property="og:title" content="{% block og_title %}HygGeo - Sustainable Traveling{% endblock %}">
     <meta property="og:description" content="{% block og_description %}Discover sustainable travel experiences with Danish hygge. Eco-friendly adventures, mindful journeys, and responsible tourism for conscious travelers.{% endblock %}">
     <meta property="og:type" content="{% block og_type %}website{% endblock %}">
-    <meta property="og:url" content="{% block og_url %}https://yourdomain.com{{ request.path }}{% endblock %}">
-    <meta property="og:image" content="{% block og_image %}https://yourdomain.com/static/images/hyggeo-og-image.jpg{% endblock %}">
+    <meta property="og:url" content="{% block og_url %}https://hyggeo.com{{ request.path }}{% endblock %}">
+    <meta property="og:image" content="{% block og_image %}https://hyggeo.com/static/images/hyggeo-og-image.jpg{% endblock %}">
     <meta property="og:site_name" content="HygGeo">
 
     <!-- Twitter Card Meta Tags -->
     <meta name="twitter:card" content="summary_large_image">
     <meta name="twitter:title" content="{% block twitter_title %}HygGeo - Sustainable Traveling{% endblock %}">
     <meta name="twitter:description" content="{% block twitter_description %}Discover sustainable travel experiences with Danish hygge. Eco-friendly adventures, mindful journeys, and responsible tourism for conscious travelers.{% endblock %}">
-    <meta name="twitter:image" content="{% block twitter_image %}https://yourdomain.com/static/images/hyggeo-twitter-image.jpg{% endblock %}">
+    <meta name="twitter:image" content="{% block twitter_image %}https://hyggeo.com/static/images/hyggeo-twitter-image.jpg{% endblock %}">
 
     <!-- Canonical URL -->
-    <link rel="canonical" href="{% block canonical %}https://yourdomain.com{{ request.path }}{% endblock %}">
+    <link rel="canonical" href="{% block canonical %}https://hyggeo.com{{ request.path }}{% endblock %}">
 
     <!-- Additional SEO -->
     <meta name="theme-color" content="#2d5a3d">

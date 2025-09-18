@@ -12139,3 +12139,246 @@ INFO 2025-09-17 20:21:56,002 basehttp 42520 8044 "GET /accounts/signup/ HTTP/1.1
 INFO 2025-09-17 20:21:57,931 basehttp 42520 8044 "GET / HTTP/1.1" 200 63792
 WARNING 2025-09-17 20:22:06,508 log 42520 8044 Not Found: /.well-known/appspecific/com.chrome.devtools.json
 WARNING 2025-09-17 20:22:06,509 basehttp 42520 8044 "GET /.well-known/appspecific/com.chrome.devtools.json HTTP/1.1" 404 3967
+INFO 2025-09-17 20:28:20,392 autoreload 40128 38432 Watching for file changes with StatReloader
+ERROR 2025-09-17 20:28:21,662 log 40128 32044 Internal Server Error: /
+Traceback (most recent call last):
+  File "C:\Users\DLSne\AppData\Local\Packages\PythonSoftwareFoundation.Python.3.12_qbz5n2kfra8p0\LocalCache\local-packages\Python312\site-packages\django\template\base.py", line 510, in parse
+    compile_func = self.tags[command]
+                   ~~~~~~~~~^^^^^^^^^
+KeyError: 'static'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Users\DLSne\AppData\Local\Packages\PythonSoftwareFoundation.Python.3.12_qbz5n2kfra8p0\LocalCache\local-packages\Python312\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+               ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\DLSne\AppData\Local\Packages\PythonSoftwareFoundation.Python.3.12_qbz5n2kfra8p0\LocalCache\local-packages\Python312\site-packages\django\core\handlers\base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\DLSne\OneDrive\Desktop\Code\webdev\HygGeo\HygGeo\accounts\views.py", line 81, in index
+    return render(request, 'index.html', context)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\DLSne\AppData\Local\Packages\PythonSoftwareFoundation.Python.3.12_qbz5n2kfra8p0\LocalCache\local-packages\Python312\site-packages\django\shortcuts.py", line 25, in render
+    content = loader.render_to_string(template_name, context, request, using=using)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\DLSne\AppData\Local\Packages\PythonSoftwareFoundation.Python.3.12_qbz5n2kfra8p0\LocalCache\local-packages\Python312\site-packages\django\template\loader.py", line 62, in render_to_string
+    return template.render(context, request)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\DLSne\AppData\Local\Packages\PythonSoftwareFoundation.Python.3.12_qbz5n2kfra8p0\LocalCache\local-packages\Python312\site-packages\django\template\backends\django.py", line 107, in render
+    return self.template.render(context)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\DLSne\AppData\Local\Packages\PythonSoftwareFoundation.Python.3.12_qbz5n2kfra8p0\LocalCache\local-packages\Python312\site-packages\django\template\base.py", line 171, in render
+    return self._render(context)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\DLSne\AppData\Local\Packages\PythonSoftwareFoundation.Python.3.12_qbz5n2kfra8p0\LocalCache\local-packages\Python312\site-packages\django\template\base.py", line 163, in _render
+    return self.nodelist.render(context)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\DLSne\AppData\Local\Packages\PythonSoftwareFoundation.Python.3.12_qbz5n2kfra8p0\LocalCache\local-packages\Python312\site-packages\django\template\base.py", line 1016, in render
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+                               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\DLSne\AppData\Local\Packages\PythonSoftwareFoundation.Python.3.12_qbz5n2kfra8p0\LocalCache\local-packages\Python312\site-packages\django\template\base.py", line 977, in render_annotated
+    return self.render(context)
+           ^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\DLSne\AppData\Local\Packages\PythonSoftwareFoundation.Python.3.12_qbz5n2kfra8p0\LocalCache\local-packages\Python312\site-packages\django\template\loader_tags.py", line 134, in render
+    compiled_parent = self.get_parent(context)
+                      ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\DLSne\AppData\Local\Packages\PythonSoftwareFoundation.Python.3.12_qbz5n2kfra8p0\LocalCache\local-packages\Python312\site-packages\django\template\loader_tags.py", line 131, in get_parent
+    return self.find_template(parent, context)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\DLSne\AppData\Local\Packages\PythonSoftwareFoundation.Python.3.12_qbz5n2kfra8p0\LocalCache\local-packages\Python312\site-packages\django\template\loader_tags.py", line 109, in find_template
+    template, origin = context.template.engine.find_template(
+                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\DLSne\AppData\Local\Packages\PythonSoftwareFoundation.Python.3.12_qbz5n2kfra8p0\LocalCache\local-packages\Python312\site-packages\django\template\engine.py", line 159, in find_template
+    template = loader.get_template(name, skip=skip)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\DLSne\AppData\Local\Packages\PythonSoftwareFoundation.Python.3.12_qbz5n2kfra8p0\LocalCache\local-packages\Python312\site-packages\django\template\loaders\cached.py", line 57, in get_template
+    template = super().get_template(template_name, skip)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\DLSne\AppData\Local\Packages\PythonSoftwareFoundation.Python.3.12_qbz5n2kfra8p0\LocalCache\local-packages\Python312\site-packages\django\template\loaders\base.py", line 28, in get_template
+    return Template(
+           ^^^^^^^^^
+  File "C:\Users\DLSne\AppData\Local\Packages\PythonSoftwareFoundation.Python.3.12_qbz5n2kfra8p0\LocalCache\local-packages\Python312\site-packages\django\template\base.py", line 154, in __init__
+    self.nodelist = self.compile_nodelist()
+                    ^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\DLSne\AppData\Local\Packages\PythonSoftwareFoundation.Python.3.12_qbz5n2kfra8p0\LocalCache\local-packages\Python312\site-packages\django\template\base.py", line 196, in compile_nodelist
+    nodelist = parser.parse()
+               ^^^^^^^^^^^^^^
+  File "C:\Users\DLSne\AppData\Local\Packages\PythonSoftwareFoundation.Python.3.12_qbz5n2kfra8p0\LocalCache\local-packages\Python312\site-packages\django\template\base.py", line 512, in parse
+    self.invalid_block_tag(token, command, parse_until)
+  File "C:\Users\DLSne\AppData\Local\Packages\PythonSoftwareFoundation.Python.3.12_qbz5n2kfra8p0\LocalCache\local-packages\Python312\site-packages\django\template\base.py", line 577, in invalid_block_tag
+    raise self.error(
+django.template.exceptions.TemplateSyntaxError: Invalid block tag on line 7: 'static'. Did you forget to register or load this tag?
+ERROR 2025-09-17 20:28:21,665 basehttp 40128 32044 "GET / HTTP/1.1" 500 213653
+WARNING 2025-09-17 20:28:21,909 log 40128 32044 Not Found: /favicon.ico
+WARNING 2025-09-17 20:28:21,910 basehttp 40128 32044 "GET /favicon.ico HTTP/1.1" 404 3856
+ERROR 2025-09-17 20:28:24,029 log 40128 32044 Internal Server Error: /
+Traceback (most recent call last):
+  File "C:\Users\DLSne\AppData\Local\Packages\PythonSoftwareFoundation.Python.3.12_qbz5n2kfra8p0\LocalCache\local-packages\Python312\site-packages\django\template\base.py", line 510, in parse
+    compile_func = self.tags[command]
+                   ~~~~~~~~~^^^^^^^^^
+KeyError: 'static'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Users\DLSne\AppData\Local\Packages\PythonSoftwareFoundation.Python.3.12_qbz5n2kfra8p0\LocalCache\local-packages\Python312\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+               ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\DLSne\AppData\Local\Packages\PythonSoftwareFoundation.Python.3.12_qbz5n2kfra8p0\LocalCache\local-packages\Python312\site-packages\django\core\handlers\base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\DLSne\OneDrive\Desktop\Code\webdev\HygGeo\HygGeo\accounts\views.py", line 81, in index
+    return render(request, 'index.html', context)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\DLSne\AppData\Local\Packages\PythonSoftwareFoundation.Python.3.12_qbz5n2kfra8p0\LocalCache\local-packages\Python312\site-packages\django\shortcuts.py", line 25, in render
+    content = loader.render_to_string(template_name, context, request, using=using)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\DLSne\AppData\Local\Packages\PythonSoftwareFoundation.Python.3.12_qbz5n2kfra8p0\LocalCache\local-packages\Python312\site-packages\django\template\loader.py", line 62, in render_to_string
+    return template.render(context, request)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\DLSne\AppData\Local\Packages\PythonSoftwareFoundation.Python.3.12_qbz5n2kfra8p0\LocalCache\local-packages\Python312\site-packages\django\template\backends\django.py", line 107, in render
+    return self.template.render(context)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\DLSne\AppData\Local\Packages\PythonSoftwareFoundation.Python.3.12_qbz5n2kfra8p0\LocalCache\local-packages\Python312\site-packages\django\template\base.py", line 171, in render
+    return self._render(context)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\DLSne\AppData\Local\Packages\PythonSoftwareFoundation.Python.3.12_qbz5n2kfra8p0\LocalCache\local-packages\Python312\site-packages\django\template\base.py", line 163, in _render
+    return self.nodelist.render(context)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\DLSne\AppData\Local\Packages\PythonSoftwareFoundation.Python.3.12_qbz5n2kfra8p0\LocalCache\local-packages\Python312\site-packages\django\template\base.py", line 1016, in render
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+                               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\DLSne\AppData\Local\Packages\PythonSoftwareFoundation.Python.3.12_qbz5n2kfra8p0\LocalCache\local-packages\Python312\site-packages\django\template\base.py", line 977, in render_annotated
+    return self.render(context)
+           ^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\DLSne\AppData\Local\Packages\PythonSoftwareFoundation.Python.3.12_qbz5n2kfra8p0\LocalCache\local-packages\Python312\site-packages\django\template\loader_tags.py", line 134, in render
+    compiled_parent = self.get_parent(context)
+                      ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\DLSne\AppData\Local\Packages\PythonSoftwareFoundation.Python.3.12_qbz5n2kfra8p0\LocalCache\local-packages\Python312\site-packages\django\template\loader_tags.py", line 131, in get_parent
+    return self.find_template(parent, context)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\DLSne\AppData\Local\Packages\PythonSoftwareFoundation.Python.3.12_qbz5n2kfra8p0\LocalCache\local-packages\Python312\site-packages\django\template\loader_tags.py", line 109, in find_template
+    template, origin = context.template.engine.find_template(
+                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\DLSne\AppData\Local\Packages\PythonSoftwareFoundation.Python.3.12_qbz5n2kfra8p0\LocalCache\local-packages\Python312\site-packages\django\template\engine.py", line 159, in find_template
+    template = loader.get_template(name, skip=skip)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\DLSne\AppData\Local\Packages\PythonSoftwareFoundation.Python.3.12_qbz5n2kfra8p0\LocalCache\local-packages\Python312\site-packages\django\template\loaders\cached.py", line 57, in get_template
+    template = super().get_template(template_name, skip)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\DLSne\AppData\Local\Packages\PythonSoftwareFoundation.Python.3.12_qbz5n2kfra8p0\LocalCache\local-packages\Python312\site-packages\django\template\loaders\base.py", line 28, in get_template
+    return Template(
+           ^^^^^^^^^
+  File "C:\Users\DLSne\AppData\Local\Packages\PythonSoftwareFoundation.Python.3.12_qbz5n2kfra8p0\LocalCache\local-packages\Python312\site-packages\django\template\base.py", line 154, in __init__
+    self.nodelist = self.compile_nodelist()
+                    ^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\DLSne\AppData\Local\Packages\PythonSoftwareFoundation.Python.3.12_qbz5n2kfra8p0\LocalCache\local-packages\Python312\site-packages\django\template\base.py", line 196, in compile_nodelist
+    nodelist = parser.parse()
+               ^^^^^^^^^^^^^^
+  File "C:\Users\DLSne\AppData\Local\Packages\PythonSoftwareFoundation.Python.3.12_qbz5n2kfra8p0\LocalCache\local-packages\Python312\site-packages\django\template\base.py", line 512, in parse
+    self.invalid_block_tag(token, command, parse_until)
+  File "C:\Users\DLSne\AppData\Local\Packages\PythonSoftwareFoundation.Python.3.12_qbz5n2kfra8p0\LocalCache\local-packages\Python312\site-packages\django\template\base.py", line 577, in invalid_block_tag
+    raise self.error(
+django.template.exceptions.TemplateSyntaxError: Invalid block tag on line 7: 'static'. Did you forget to register or load this tag?
+ERROR 2025-09-17 20:28:24,035 basehttp 40128 32044 "GET / HTTP/1.1" 500 213486
+WARNING 2025-09-17 20:28:24,304 log 40128 32044 Not Found: /favicon.ico
+WARNING 2025-09-17 20:28:24,305 basehttp 40128 32044 "GET /favicon.ico HTTP/1.1" 404 3856
+INFO 2025-09-17 20:28:56,525 basehttp 40128 32044 "GET / HTTP/1.1" 200 63909
+WARNING 2025-09-17 20:28:57,017 basehttp 40128 32044 "GET /static/accounts/favicon.ico HTTP/1.1" 404 1987
+INFO 2025-09-17 20:28:57,568 basehttp 40128 7196 "GET / HTTP/1.1" 200 63909
+WARNING 2025-09-17 20:28:57,905 basehttp 40128 7196 "GET /static/accounts/favicon.ico HTTP/1.1" 404 1987
+INFO 2025-09-17 20:29:19,703 autoreload 35680 45556 Watching for file changes with StatReloader
+INFO 2025-09-17 20:29:20,217 basehttp 35680 35024 "GET / HTTP/1.1" 200 63879
+WARNING 2025-09-17 20:29:20,667 basehttp 35680 35024 "GET /static/accounts/favicon.ico HTTP/1.1" 404 1987
+INFO 2025-09-17 20:29:21,851 basehttp 35680 31536 "GET / HTTP/1.1" 200 63883
+WARNING 2025-09-17 20:29:22,149 basehttp 35680 31536 "GET /static/accounts/favicon.ico HTTP/1.1" 404 1987
+INFO 2025-09-17 20:29:22,607 basehttp 35680 21136 "GET / HTTP/1.1" 200 63875
+WARNING 2025-09-17 20:29:23,134 basehttp 35680 21136 "GET /static/accounts/favicon.ico HTTP/1.1" 404 1987
+WARNING 2025-09-17 20:29:36,648 log 35680 33580 Not Found: /.well-known/appspecific/com.chrome.devtools.json
+WARNING 2025-09-17 20:29:36,649 basehttp 35680 33580 "GET /.well-known/appspecific/com.chrome.devtools.json HTTP/1.1" 404 3967
+INFO 2025-09-17 20:30:15,094 autoreload 41048 29232 Watching for file changes with StatReloader
+INFO 2025-09-17 20:30:16,309 basehttp 41048 43324 "GET / HTTP/1.1" 200 63868
+WARNING 2025-09-17 20:30:16,341 log 41048 43324 Not Found: /.well-known/appspecific/com.chrome.devtools.json
+WARNING 2025-09-17 20:30:16,342 basehttp 41048 43324 "GET /.well-known/appspecific/com.chrome.devtools.json HTTP/1.1" 404 3967
+WARNING 2025-09-17 20:30:16,738 basehttp 41048 43324 "GET /static/hyggeo/favicon.ico HTTP/1.1" 404 1981
+INFO 2025-09-17 20:30:40,074 autoreload 45628 46140 Watching for file changes with StatReloader
+INFO 2025-09-17 20:30:42,221 basehttp 45628 7384 "GET / HTTP/1.1" 200 63857
+WARNING 2025-09-17 20:30:42,277 log 45628 7384 Not Found: /.well-known/appspecific/com.chrome.devtools.json
+WARNING 2025-09-17 20:30:42,278 basehttp 45628 7384 "GET /.well-known/appspecific/com.chrome.devtools.json HTTP/1.1" 404 3967
+INFO 2025-09-17 20:30:49,729 basehttp 45628 7384 "GET / HTTP/1.1" 200 63909
+WARNING 2025-09-17 20:30:49,874 log 45628 7384 Not Found: /.well-known/appspecific/com.chrome.devtools.json
+WARNING 2025-09-17 20:30:49,876 basehttp 45628 7384 "GET /.well-known/appspecific/com.chrome.devtools.json HTTP/1.1" 404 3967
+WARNING 2025-09-17 20:30:50,337 basehttp 45628 7384 "GET /static/favicon.ico HTTP/1.1" 404 1960
+INFO 2025-09-17 20:30:56,311 basehttp 45628 40396 "GET /static HTTP/1.1" 301 0
+WARNING 2025-09-17 20:30:56,367 basehttp 45628 32044 "GET /static/ HTTP/1.1" 404 1935
+WARNING 2025-09-17 20:30:56,739 log 45628 18248 Not Found: /favicon.ico
+WARNING 2025-09-17 20:30:56,740 basehttp 45628 18248 "GET /favicon.ico HTTP/1.1" 404 3856
+WARNING 2025-09-17 20:30:56,749 log 45628 18248 Not Found: /.well-known/appspecific/com.chrome.devtools.json
+WARNING 2025-09-17 20:30:56,749 basehttp 45628 18248 "GET /.well-known/appspecific/com.chrome.devtools.json HTTP/1.1" 404 3967
+WARNING 2025-09-17 20:31:01,874 basehttp 45628 18248 "GET /static/favicon.ico HTTP/1.1" 404 1960
+WARNING 2025-09-17 20:31:02,060 log 45628 19988 Not Found: /.well-known/appspecific/com.chrome.devtools.json
+WARNING 2025-09-17 20:31:02,060 basehttp 45628 19988 "GET /.well-known/appspecific/com.chrome.devtools.json HTTP/1.1" 404 3967
+INFO 2025-09-17 20:31:26,817 basehttp 45628 19988 "GET / HTTP/1.1" 200 63885
+WARNING 2025-09-17 20:31:26,949 log 45628 19988 Not Found: /.well-known/appspecific/com.chrome.devtools.json
+WARNING 2025-09-17 20:31:26,950 basehttp 45628 19988 "GET /.well-known/appspecific/com.chrome.devtools.json HTTP/1.1" 404 3967
+WARNING 2025-09-17 20:31:27,539 basehttp 45628 19988 "GET /static/images/favicon.ico HTTP/1.1" 404 1981
+INFO 2025-09-17 20:31:28,339 basehttp 45628 19984 "GET / HTTP/1.1" 200 63886
+WARNING 2025-09-17 20:31:28,366 log 45628 19984 Not Found: /.well-known/appspecific/com.chrome.devtools.json
+WARNING 2025-09-17 20:31:28,367 basehttp 45628 19984 "GET /.well-known/appspecific/com.chrome.devtools.json HTTP/1.1" 404 3967
+WARNING 2025-09-17 20:31:28,828 basehttp 45628 19984 "GET /static/images/favicon.ico HTTP/1.1" 404 1981
+INFO 2025-09-17 20:31:43,065 autoreload 9740 24372 Watching for file changes with StatReloader
+INFO 2025-09-17 20:31:43,564 basehttp 9740 43572 "GET / HTTP/1.1" 200 63881
+WARNING 2025-09-17 20:31:43,613 log 9740 43572 Not Found: /.well-known/appspecific/com.chrome.devtools.json
+WARNING 2025-09-17 20:31:43,614 basehttp 9740 43572 "GET /.well-known/appspecific/com.chrome.devtools.json HTTP/1.1" 404 3967
+WARNING 2025-09-17 20:31:43,973 basehttp 9740 43572 "GET /static/images/favicon.ico HTTP/1.1" 404 1981
+INFO 2025-09-17 20:31:45,124 basehttp 9740 38436 "GET / HTTP/1.1" 200 63889
+WARNING 2025-09-17 20:31:45,168 log 9740 38436 Not Found: /.well-known/appspecific/com.chrome.devtools.json
+WARNING 2025-09-17 20:31:45,169 basehttp 9740 38436 "GET /.well-known/appspecific/com.chrome.devtools.json HTTP/1.1" 404 3967
+WARNING 2025-09-17 20:31:45,540 basehttp 9740 38436 "GET /static/images/favicon.ico HTTP/1.1" 404 1981
+INFO 2025-09-17 20:31:46,531 basehttp 9740 33452 "GET / HTTP/1.1" 200 63877
+WARNING 2025-09-17 20:31:46,574 log 9740 33452 Not Found: /.well-known/appspecific/com.chrome.devtools.json
+WARNING 2025-09-17 20:31:46,575 basehttp 9740 33452 "GET /.well-known/appspecific/com.chrome.devtools.json HTTP/1.1" 404 3967
+WARNING 2025-09-17 20:31:47,393 basehttp 9740 33452 "GET /static/images/favicon.ico HTTP/1.1" 404 1981
+INFO 2025-09-17 20:34:02,915 basehttp 9740 28432 "GET / HTTP/1.1" 200 63847
+WARNING 2025-09-17 20:34:02,946 log 9740 28432 Not Found: /.well-known/appspecific/com.chrome.devtools.json
+WARNING 2025-09-17 20:34:02,947 basehttp 9740 28432 "GET /.well-known/appspecific/com.chrome.devtools.json HTTP/1.1" 404 3967
+WARNING 2025-09-17 20:34:03,309 basehttp 9740 28432 "GET /static/images/favicon.ico HTTP/1.1" 404 1981
+INFO 2025-09-17 20:35:22,979 autoreload 30024 29380 Watching for file changes with StatReloader
+INFO 2025-09-17 20:35:26,294 basehttp 30024 31692 "GET / HTTP/1.1" 200 63857
+WARNING 2025-09-17 20:35:26,353 log 30024 31692 Not Found: /.well-known/appspecific/com.chrome.devtools.json
+WARNING 2025-09-17 20:35:26,353 basehttp 30024 31692 "GET /.well-known/appspecific/com.chrome.devtools.json HTTP/1.1" 404 3967
+WARNING 2025-09-17 20:35:26,804 basehttp 30024 31692 "GET /static/favicon.ico HTTP/1.1" 404 1960
+INFO 2025-09-17 20:36:26,273 autoreload 31624 6108 Watching for file changes with StatReloader
+INFO 2025-09-17 20:36:30,508 basehttp 31624 21344 "GET / HTTP/1.1" 200 63906
+WARNING 2025-09-17 20:36:30,554 log 31624 21344 Not Found: /.well-known/appspecific/com.chrome.devtools.json
+WARNING 2025-09-17 20:36:30,554 basehttp 31624 21344 "GET /.well-known/appspecific/com.chrome.devtools.json HTTP/1.1" 404 3967
+WARNING 2025-09-17 20:36:31,113 basehttp 31624 21344 "GET /static/HygGeo/favicon.ico HTTP/1.1" 404 1981
+INFO 2025-09-17 20:38:16,909 autoreload 7752 35768 Watching for file changes with StatReloader
+INFO 2025-09-17 20:38:17,949 basehttp 7752 12556 "GET / HTTP/1.1" 200 63857
+WARNING 2025-09-17 20:38:17,982 log 7752 12556 Not Found: /.well-known/appspecific/com.chrome.devtools.json
+WARNING 2025-09-17 20:38:17,983 basehttp 7752 12556 "GET /.well-known/appspecific/com.chrome.devtools.json HTTP/1.1" 404 3967
+WARNING 2025-09-17 20:38:18,263 basehttp 7752 12556 "GET /static/favicon.ico HTTP/1.1" 404 1960
+INFO 2025-09-17 20:39:09,210 basehttp 7752 33808 "GET / HTTP/1.1" 200 63861
+WARNING 2025-09-17 20:39:09,334 log 7752 33808 Not Found: /.well-known/appspecific/com.chrome.devtools.json
+WARNING 2025-09-17 20:39:09,334 basehttp 7752 33808 "GET /.well-known/appspecific/com.chrome.devtools.json HTTP/1.1" 404 3967
+WARNING 2025-09-17 20:39:09,834 basehttp 7752 33808 "GET /static/favicon.ico HTTP/1.1" 404 1960
+INFO 2025-09-17 20:40:12,937 autoreload 29436 23732 Watching for file changes with StatReloader
+INFO 2025-09-17 20:40:16,365 basehttp 29436 42900 "GET / HTTP/1.1" 200 63836
+WARNING 2025-09-17 20:40:16,408 log 29436 42900 Not Found: /.well-known/appspecific/com.chrome.devtools.json
+WARNING 2025-09-17 20:40:16,408 basehttp 29436 42900 "GET /.well-known/appspecific/com.chrome.devtools.json HTTP/1.1" 404 3967
+WARNING 2025-09-17 20:40:16,792 basehttp 29436 42900 "GET /static/HygGeo/images/favicon.ico HTTP/1.1" 404 2002
+INFO 2025-09-17 20:42:40,909 autoreload 39028 42668 Watching for file changes with StatReloader
+INFO 2025-09-17 20:42:42,793 basehttp 39028 30244 "GET / HTTP/1.1" 200 63871
+WARNING 2025-09-17 20:42:42,856 log 39028 30244 Not Found: /.well-known/appspecific/com.chrome.devtools.json
+WARNING 2025-09-17 20:42:42,856 basehttp 39028 30244 "GET /.well-known/appspecific/com.chrome.devtools.json HTTP/1.1" 404 3967
+WARNING 2025-09-17 20:42:43,188 basehttp 39028 30244 "GET /static/favicon.ico HTTP/1.1" 404 1960
+INFO 2025-09-17 20:46:23,095 autoreload 37256 8992 Watching for file changes with StatReloader
+INFO 2025-09-17 20:46:27,352 basehttp 37256 36424 "GET / HTTP/1.1" 200 63814
+WARNING 2025-09-17 20:46:27,436 log 37256 36424 Not Found: /.well-known/appspecific/com.chrome.devtools.json
+WARNING 2025-09-17 20:46:27,437 basehttp 37256 36424 "GET /.well-known/appspecific/com.chrome.devtools.json HTTP/1.1" 404 3967
+INFO 2025-09-17 20:46:27,896 basehttp 37256 36424 "GET /static/favicon.ico HTTP/1.1" 200 15406
+INFO 2025-09-17 20:46:36,267 basehttp 37256 36424 "GET /experiences/ HTTP/1.1" 200 39891
+WARNING 2025-09-17 20:46:36,348 log 37256 36424 Not Found: /.well-known/appspecific/com.chrome.devtools.json
+WARNING 2025-09-17 20:46:36,348 basehttp 37256 36424 "GET /.well-known/appspecific/com.chrome.devtools.json HTTP/1.1" 404 3967
+INFO 2025-09-17 20:46:48,476 basehttp 37256 36424 "GET / HTTP/1.1" 200 63892

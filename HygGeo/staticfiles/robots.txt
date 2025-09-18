@@ -1,0 +1,23 @@
+User-agent: *
+Allow: /
+Allow: /experiences/
+Allow: /experiences/experience/
+Allow: /experiences/destinations/
+Allow: /experiences/category/
+Allow: /static/
+
+# Disallow private/admin areas
+Disallow: /admin/
+Disallow: /accounts/profile/
+Disallow: /accounts/survey/
+Disallow: /experiences/bookmarks/
+Disallow: /experiences/recommendations/
+Disallow: /experiences/add/
+Disallow: /experiences/*/edit/
+
+# Allow important public pages
+Allow: /about/
+Allow: /contact/
+
+# Sitemap location
+Sitemap: https://yourdomain.com/sitemap.xml
