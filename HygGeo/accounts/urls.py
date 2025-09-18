@@ -57,4 +57,7 @@ urlpatterns = [
     path('debug-spaces/', views.debug_spaces, name='debug_spaces'),
     path('test-upload/', views.test_upload, name='test_upload'),
     path('debug-storage/', views.debug_storage, name='debug_storage'),
+
+    # Legal pages
+    path('privacy/', views.privacy_policy_view, name='privacy_policy'),
 ]

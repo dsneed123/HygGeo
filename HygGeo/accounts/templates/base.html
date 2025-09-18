@@ -232,8 +232,7 @@
                         </a>
                     </li>
                     
-                    <!-- Experiences Menu - Dual System -->
-                    {% if user.is_authenticated %}
+                    <!-- Experiences Menu - Public Access -->
                     <li class="nav-item dropdown d-none d-lg-block">
                         <!-- Desktop dropdown -->
                         <a class="nav-link dropdown-toggle" href="#" id="experiencesDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
@@ -246,15 +245,18 @@
                             <li><a class="dropdown-item" href="{% url 'experiences:destination_list' %}">
                                 <i class="fas fa-globe-americas me-2"></i>Destinations
                             </a></li>
+                            {% if user.is_authenticated %}
+                            <li><hr class="dropdown-divider"></li>
                             <li><a class="dropdown-item" href="{% url 'experiences:recommendations' %}">
                                 <i class="fas fa-star me-2"></i>My Recommendations
                             </a></li>
                             <li><a class="dropdown-item" href="{% url 'experiences:my_bookmarks' %}">
                                 <i class="fas fa-bookmark me-2"></i>My Bookmarks
                             </a></li>
+                            {% endif %}
                         </ul>
                     </li>
-                    
+
                     <!-- Mobile accordion -->
                     <li class="nav-item d-lg-none">
                         <a class="nav-link mobile-dropdown-toggle" href="#" data-target="experiences-mobile">
@@ -267,14 +269,18 @@
                             <li><a href="{% url 'experiences:destination_list' %}">
                                 <i class="fas fa-globe-americas me-2"></i>Destinations
                             </a></li>
+                            {% if user.is_authenticated %}
                             <li><a href="{% url 'experiences:recommendations' %}">
                                 <i class="fas fa-star me-2"></i>My Recommendations
                             </a></li>
                             <li><a href="{% url 'experiences:my_bookmarks' %}">
                                 <i class="fas fa-bookmark me-2"></i>My Bookmarks
                             </a></li>
+                            {% endif %}
                         </ul>
                     </li>
+
+                    {% if user.is_authenticated %}
                     
                     <li class="nav-item">
                         <a class="nav-link" href="{% url 'survey' %}">
@@ -455,6 +461,14 @@
                     <p class="mb-0">Combining Danish hygge with sustainable travel for mindful adventures.</p>
                 </div>
                 <div class="col-md-6 text-md-end">
+                    <div class="footer-links mb-2">
+                        <a href="{% url 'privacy_policy' %}" class="text-white text-decoration-none me-3">
+                            <i class="fas fa-shield-alt me-1"></i>Privacy Policy
+                        </a>
+                        <a href="{% url 'experiences:about' %}" class="text-white text-decoration-none">
+                            <i class="fas fa-info-circle me-1"></i>About
+                        </a>
+                    </div>
                     <div class="social-links">
                         <a href="#" class="text-white me-3"><i class="fab fa-instagram"></i></a>
                         <a href="#" class="text-white me-3"><i class="fab fa-facebook"></i></a>

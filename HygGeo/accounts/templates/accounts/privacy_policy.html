@@ -1,0 +1,350 @@
+{% extends 'base.html' %}
+
+{% block title %}Privacy Policy - HygGeo{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-10">
+            <div class="text-center mb-5">
+                <i class="fas fa-shield-alt text-primary" style="font-size: 3rem; color: var(--hygge-green)!important;"></i>
+                <h1 class="h2 fw-bold mt-3" style="color: var(--hygge-green);">Privacy Policy</h1>
+                <p class="lead text-muted">How we protect and handle your personal information</p>
+                <p class="text-muted"><strong>Last Updated:</strong> {{ current_date|date:"F d, Y" }}</p>
+            </div>
+
+            <div class="card card-hygge">
+                <div class="card-body p-5">
+
+                    <!-- Introduction -->
+                    <section class="mb-5">
+                        <h2 class="h4 fw-bold mb-3" style="color: var(--hygge-green);">1. Introduction</h2>
+                        <p>HygGeo ("we," "our," or "us") is committed to protecting your privacy and ensuring the security of your personal information. This Privacy Policy explains how we collect, use, disclose, and safeguard your information when you use our sustainable travel platform.</p>
+
+                        <div class="alert alert-info d-flex align-items-start">
+                            <i class="fas fa-info-circle me-2 mt-1"></i>
+                            <div>
+                                <strong>Key Points:</strong> We only collect information necessary to provide our services and improve your travel experience. We never sell your personal data to third parties.
+                            </div>
+                        </div>
+                    </section>
+
+                    <!-- Information We Collect -->
+                    <section class="mb-5">
+                        <h2 class="h4 fw-bold mb-3" style="color: var(--hygge-green);">2. Information We Collect</h2>
+
+                        <h3 class="h5 fw-semibold mb-2">2.1 Information You Provide Directly</h3>
+                        <ul class="mb-3">
+                            <li><strong>Account Information:</strong> Username, email address, first and last name</li>
+                            <li><strong>Profile Information:</strong> Bio, location, avatar/profile picture, sustainability preferences</li>
+                            <li><strong>Travel Survey Data:</strong> Travel preferences, sustainability goals, budget ranges, travel styles</li>
+                            <li><strong>Trip Information:</strong> Travel plans, experiences you're interested in, trip reviews</li>
+                            <li><strong>Communications:</strong> Messages, support requests, feedback you send us</li>
+                        </ul>
+
+                        <h3 class="h5 fw-semibold mb-2">2.2 Information Collected Automatically</h3>
+                        <ul class="mb-3">
+                            <li><strong>Usage Data:</strong> Pages visited, experiences viewed, search queries, click patterns</li>
+                            <li><strong>Device Information:</strong> IP address, browser type, operating system, device identifiers</li>
+                            <li><strong>Cookies and Tracking:</strong> Session cookies, preference settings, analytics data</li>
+                            <li><strong>Location Data:</strong> General location based on IP address (not precise GPS location)</li>
+                        </ul>
+
+                        <div class="alert alert-warning d-flex align-items-start">
+                            <i class="fas fa-exclamation-triangle me-2 mt-1"></i>
+                            <div>
+                                <strong>Important:</strong> We DO NOT collect sensitive personal information such as birth dates, social security numbers, financial information, or precise location data.
+                            </div>
+                        </div>
+                    </section>
+
+                    <!-- How We Use Information -->
+                    <section class="mb-5">
+                        <h2 class="h4 fw-bold mb-3" style="color: var(--hygge-green);">3. How We Use Your Information</h2>
+
+                        <h3 class="h5 fw-semibold mb-2">3.1 Primary Uses</h3>
+                        <ul class="mb-3">
+                            <li>Provide and maintain our travel recommendation service</li>
+                            <li>Personalize travel recommendations based on your preferences</li>
+                            <li>Enable communication between travel community members</li>
+                            <li>Process and respond to your requests and inquiries</li>
+                            <li>Send important account and service-related notifications</li>
+                        </ul>
+
+                        <h3 class="h5 fw-semibold mb-2">3.2 Improvement and Analytics</h3>
+                        <ul class="mb-3">
+                            <li>Analyze usage patterns to improve our platform</li>
+                            <li>Develop new features and services</li>
+                            <li>Monitor and prevent fraud, abuse, or illegal activities</li>
+                            <li>Ensure the security and integrity of our services</li>
+                        </ul>
+
+                        <h3 class="h5 fw-semibold mb-2">3.3 Legal Basis (GDPR)</h3>
+                        <p>Under GDPR, we process your data based on:</p>
+                        <ul>
+                            <li><strong>Consent:</strong> When you voluntarily provide information or opt-in to communications</li>
+                            <li><strong>Contract:</strong> To provide the services you've requested</li>
+                            <li><strong>Legitimate Interest:</strong> To improve our services and prevent fraud</li>
+                            <li><strong>Legal Obligation:</strong> To comply with applicable laws and regulations</li>
+                        </ul>
+                    </section>
+
+                    <!-- Information Sharing -->
+                    <section class="mb-5">
+                        <h2 class="h4 fw-bold mb-3" style="color: var(--hygge-green);">4. Information Sharing and Disclosure</h2>
+
+                        <div class="alert alert-success d-flex align-items-start mb-3">
+                            <i class="fas fa-check-circle me-2 mt-1"></i>
+                            <div>
+                                <strong>We DO NOT sell, rent, or trade your personal information to third parties for marketing purposes.</strong>
+                            </div>
+                        </div>
+
+                        <h3 class="h5 fw-semibold mb-2">4.1 Limited Sharing Situations</h3>
+                        <ul class="mb-3">
+                            <li><strong>Service Providers:</strong> Trusted partners who help us operate our platform (hosting, analytics, email services)</li>
+                            <li><strong>Legal Requirements:</strong> When required by law or to protect our rights and safety</li>
+                            <li><strong>Business Transfers:</strong> In the event of a merger, acquisition, or sale of assets</li>
+                            <li><strong>Public Information:</strong> Profile information you choose to make public</li>
+                        </ul>
+
+                        <h3 class="h5 fw-semibold mb-2">4.2 Affiliate Partners</h3>
+                        <p>When you click on affiliate links to book experiences, you may be redirected to partner websites. These partners have their own privacy policies, and we encourage you to review them.</p>
+                    </section>
+
+                    <!-- Data Security -->
+                    <section class="mb-5">
+                        <h2 class="h4 fw-bold mb-3" style="color: var(--hygge-green);">5. Data Security</h2>
+
+                        <p>We implement industry-standard security measures to protect your information:</p>
+                        <ul class="mb-3">
+                            <li><strong>Encryption:</strong> All data transmission is encrypted using SSL/TLS</li>
+                            <li><strong>Secure Storage:</strong> Data is stored on secure servers with access controls</li>
+                            <li><strong>Password Protection:</strong> Your passwords are hashed and never stored in plain text</li>
+                            <li><strong>Regular Updates:</strong> We regularly update our security measures and software</li>
+                            <li><strong>Access Controls:</strong> Only authorized personnel have access to personal data</li>
+                        </ul>
+
+                        <p>However, no method of transmission over the internet is 100% secure. While we strive to protect your data, we cannot guarantee absolute security.</p>
+                    </section>
+
+                    <!-- Your Rights -->
+                    <section class="mb-5">
+                        <h2 class="h4 fw-bold mb-3" style="color: var(--hygge-green);">6. Your Rights and Choices</h2>
+
+                        <h3 class="h5 fw-semibold mb-2">6.1 GDPR Rights (EU Users)</h3>
+                        <ul class="mb-3">
+                            <li><strong>Access:</strong> Request a copy of your personal data</li>
+                            <li><strong>Rectification:</strong> Correct inaccurate or incomplete data</li>
+                            <li><strong>Erasure:</strong> Request deletion of your data ("right to be forgotten")</li>
+                            <li><strong>Portability:</strong> Receive your data in a portable format</li>
+                            <li><strong>Restriction:</strong> Limit how we process your data</li>
+                            <li><strong>Objection:</strong> Object to certain types of processing</li>
+                            <li><strong>Withdraw Consent:</strong> Withdraw consent for data processing</li>
+                        </ul>
+
+                        <h3 class="h5 fw-semibold mb-2">6.2 CCPA Rights (California Users)</h3>
+                        <ul class="mb-3">
+                            <li><strong>Know:</strong> What personal information we collect and how it's used</li>
+                            <li><strong>Delete:</strong> Request deletion of your personal information</li>
+                            <li><strong>Opt-Out:</strong> Opt-out of the sale of personal information (we don't sell data)</li>
+                            <li><strong>Non-Discrimination:</strong> Equal service regardless of privacy choices</li>
+                        </ul>
+
+                        <h3 class="h5 fw-semibold mb-2">6.3 How to Exercise Your Rights</h3>
+                        <p>To exercise any of these rights, please contact us at:</p>
+                        <div class="bg-light p-3 rounded">
+                            <p class="mb-1"><strong>Email:</strong> privacy@hyggeo.com</p>
+                            <p class="mb-1"><strong>Subject Line:</strong> "Privacy Rights Request"</p>
+                            <p class="mb-0">We will respond to your request within 30 days.</p>
+                        </div>
+                    </section>
+
+                    <!-- Cookies and Tracking -->
+                    <section class="mb-5">
+                        <h2 class="h4 fw-bold mb-3" style="color: var(--hygge-green);">7. Cookies and Tracking Technologies</h2>
+
+                        <h3 class="h5 fw-semibold mb-2">7.1 Types of Cookies We Use</h3>
+                        <ul class="mb-3">
+                            <li><strong>Essential Cookies:</strong> Required for basic site functionality</li>
+                            <li><strong>Preference Cookies:</strong> Remember your settings and choices</li>
+                            <li><strong>Analytics Cookies:</strong> Help us understand how you use our site</li>
+                            <li><strong>Security Cookies:</strong> Protect against fraud and abuse</li>
+                        </ul>
+
+                        <h3 class="h5 fw-semibold mb-2">7.2 Managing Cookies</h3>
+                        <p>You can control cookies through your browser settings. Note that disabling certain cookies may affect site functionality.</p>
+                    </section>
+
+                    <!-- Data Retention -->
+                    <section class="mb-5">
+                        <h2 class="h4 fw-bold mb-3" style="color: var(--hygge-green);">8. Data Retention</h2>
+
+                        <ul class="mb-3">
+                            <li><strong>Account Data:</strong> Retained while your account is active</li>
+                            <li><strong>Analytics Data:</strong> Retained for 2 years for improvement purposes</li>
+                            <li><strong>Support Communications:</strong> Retained for 3 years</li>
+                            <li><strong>Legal Requirements:</strong> Some data may be retained longer if required by law</li>
+                        </ul>
+
+                        <p>When you delete your account, we will delete or anonymize your personal data within 30 days, except where retention is required by law.</p>
+                    </section>
+
+                    <!-- International Transfers -->
+                    <section class="mb-5">
+                        <h2 class="h4 fw-bold mb-3" style="color: var(--hygge-green);">9. International Data Transfers</h2>
+
+                        <p>Your information may be transferred to and processed in countries other than your own. We ensure adequate protection through:</p>
+                        <ul>
+                            <li>Standard Contractual Clauses approved by the European Commission</li>
+                            <li>Adequacy decisions by relevant authorities</li>
+                            <li>Other appropriate safeguards as required by law</li>
+                        </ul>
+                    </section>
+
+                    <!-- Children's Privacy -->
+                    <section class="mb-5">
+                        <h2 class="h4 fw-bold mb-3" style="color: var(--hygge-green);">10. Children's Privacy</h2>
+
+                        <div class="alert alert-warning d-flex align-items-start">
+                            <i class="fas fa-child me-2 mt-1"></i>
+                            <div>
+                                Our service is not intended for children under 16 years of age. We do not knowingly collect personal information from children under 16. If you are a parent or guardian and believe your child has provided us with personal information, please contact us immediately.
+                            </div>
+                        </div>
+                    </section>
+
+                    <!-- Updates to Policy -->
+                    <section class="mb-5">
+                        <h2 class="h4 fw-bold mb-3" style="color: var(--hygge-green);">11. Updates to This Policy</h2>
+
+                        <p>We may update this Privacy Policy from time to time. When we do:</p>
+                        <ul>
+                            <li>We will post the updated policy on this page</li>
+                            <li>We will update the "Last Updated" date</li>
+                            <li>For significant changes, we will notify you via email or prominent notice</li>
+                            <li>Your continued use of our service constitutes acceptance of the updated policy</li>
+                        </ul>
+                    </section>
+
+                    <!-- Contact Information -->
+                    <section class="mb-5">
+                        <h2 class="h4 fw-bold mb-3" style="color: var(--hygge-green);">12. Contact Us</h2>
+
+                        <p>If you have any questions, concerns, or requests regarding this Privacy Policy or our data practices, please contact us:</p>
+
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="bg-light p-4 rounded">
+                                    <h5 class="fw-bold mb-3">General Inquiries</h5>
+                                    <p class="mb-1"><i class="fas fa-envelope me-2"></i>privacy@hyggeo.com</p>
+                                    <p class="mb-1"><i class="fas fa-envelope me-2"></i>support@hyggeo.com</p>
+                                    <p class="mb-0"><i class="fas fa-globe me-2"></i>www.hyggeo.com/contact</p>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="bg-light p-4 rounded">
+                                    <h5 class="fw-bold mb-3">Data Protection Officer</h5>
+                                    <p class="mb-1"><i class="fas fa-envelope me-2"></i>dpo@hyggeo.com</p>
+                                    <p class="mb-1"><i class="fas fa-shield-alt me-2"></i>GDPR Compliance</p>
+                                    <p class="mb-0"><i class="fas fa-clock me-2"></i>Response within 30 days</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="mt-4 p-3 rounded" style="background-color: var(--hygge-cream);">
+                            <h6 class="fw-bold mb-2">EU Representative</h6>
+                            <p class="mb-0 small">For EU users, you may also contact our European representative for data protection matters at eu-representative@hyggeo.com</p>
+                        </div>
+                    </section>
+
+                    <!-- Quick Reference -->
+                    <section>
+                        <h2 class="h4 fw-bold mb-3" style="color: var(--hygge-green);">13. Quick Reference</h2>
+
+                        <div class="row">
+                            <div class="col-md-4 mb-3">
+                                <div class="text-center p-3 bg-light rounded">
+                                    <i class="fas fa-shield-alt text-success mb-2" style="font-size: 2rem;"></i>
+                                    <h6 class="fw-bold">Data Protection</h6>
+                                    <small class="text-muted">Industry-standard security measures</small>
+                                </div>
+                            </div>
+                            <div class="col-md-4 mb-3">
+                                <div class="text-center p-3 bg-light rounded">
+                                    <i class="fas fa-user-check text-primary mb-2" style="font-size: 2rem;"></i>
+                                    <h6 class="fw-bold">Your Rights</h6>
+                                    <small class="text-muted">Full control over your data</small>
+                                </div>
+                            </div>
+                            <div class="col-md-4 mb-3">
+                                <div class="text-center p-3 bg-light rounded">
+                                    <i class="fas fa-heart text-warning mb-2" style="font-size: 2rem;"></i>
+                                    <h6 class="fw-bold">No Data Sales</h6>
+                                    <small class="text-muted">We never sell your information</small>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+
+                    <!-- Back to Top -->
+                    <div class="text-center mt-5">
+                        <a href="#top" class="btn btn-outline-secondary">
+                            <i class="fas fa-arrow-up me-2"></i>Back to Top
+                        </a>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+.card-hygge {
+    border: none;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+    border-radius: 15px;
+}
+
+h2, h3 {
+    scroll-margin-top: 100px;
+}
+
+.alert {
+    border-radius: 10px;
+}
+
+.bg-light {
+    background-color: var(--hygge-warm-white)!important;
+}
+</style>
+
+<script>
+// Smooth scrolling for anchor links
+document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+    anchor.addEventListener('click', function (e) {
+        e.preventDefault();
+        const target = document.querySelector(this.getAttribute('href'));
+        if (target) {
+            target.scrollIntoView({
+                behavior: 'smooth',
+                block: 'start'
+            });
+        }
+    });
+});
+
+// Add scroll-to-top functionality
+window.addEventListener('scroll', function() {
+    const backToTop = document.querySelector('a[href="#top"]');
+    if (backToTop) {
+        if (window.scrollY > 300) {
+            backToTop.style.opacity = '1';
+        } else {
+            backToTop.style.opacity = '0.7';
+        }
+    }
+});
+</script>
+{% endblock %}

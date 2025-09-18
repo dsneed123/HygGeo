@@ -133,10 +133,34 @@
                         </div>
                     </div>
                     
+                    <!-- Privacy Policy Agreement -->
+                    <div class="mb-3">
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" value="" id="privacyAgreement" required>
+                            <label class="form-check-label small" for="privacyAgreement">
+                                I agree to the <a href="{% url 'privacy_policy' %}" target="_blank" class="text-decoration-none fw-bold">Privacy Policy</a> and understand how my data will be processed in accordance with GDPR and CCPA regulations.
+                            </label>
+                        </div>
+                    </div>
+
                     <button type="submit" class="btn btn-hygge w-100 py-3 fw-bold">
                         <i class="fas fa-user-plus me-2"></i>Create My Account
                     </button>
                 </form>
+
+                <!-- Privacy Notice -->
+                <div class="mt-3 p-3 rounded" style="background-color: var(--hygge-cream);">
+                    <div class="d-flex align-items-start">
+                        <i class="fas fa-shield-alt me-2 mt-1" style="color: var(--hygge-green);"></i>
+                        <div>
+                            <p class="small mb-1 fw-semibold">Privacy Protected</p>
+                            <p class="small text-muted mb-0">
+                                We never sell your data. Read our <a href="{% url 'privacy_policy' %}" class="text-decoration-none">Privacy Policy</a>
+                                to learn how we protect your information in compliance with EU GDPR and California CCPA laws.
+                            </p>
+                        </div>
+                    </div>
+                </div>
                 
                 <div class="text-center mt-4">
                     <p class="text-muted">

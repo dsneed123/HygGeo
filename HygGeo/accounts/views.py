@@ -1111,3 +1111,10 @@ def debug_storage(request):
         },
         'if_not_debug_condition': not settings.DEBUG,  # This should be True in production
     })
+
+def privacy_policy_view(request):
+    """Display the privacy policy"""
+    from django.utils import timezone
+    return render(request, 'accounts/privacy_policy.html', {
+        'current_date': timezone.now()
+    })

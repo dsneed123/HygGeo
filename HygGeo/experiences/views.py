@@ -914,3 +914,70 @@ def delete_category(request, slug):
 
     return render(request, 'experiences/delete_category.html', context)
 
+def sitemap_view(request):
+    """Generate XML sitemap for search engines"""
+    from django.http import HttpResponse
+    from django.utils import timezone
+
+    # Get all active experiences and destinations
+    experiences = Experience.objects.filter(is_active=True).select_related('destination')
+    destinations = Destination.objects.all()
+    categories = Category.objects.all()
+
+    # Build sitemap XML
+    sitemap_xml = ['<?xml version="1.0" encoding="UTF-8"?>']
+    sitemap_xml.append('<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">')
+
+    # Add homepage
+    sitemap_xml.append('<url>')
+    sitemap_xml.append('<loc>https://yourdomain.com/</loc>')
+    sitemap_xml.append('<changefreq>daily</changefreq>')
+    sitemap_xml.append('<priority>1.0</priority>')
+    sitemap_xml.append('</url>')
+
+    # Add experience list
+    sitemap_xml.append('<url>')
+    sitemap_xml.append('<loc>https://yourdomain.com/experiences/</loc>')
+    sitemap_xml.append('<changefreq>daily</changefreq>')
+    sitemap_xml.append('<priority>0.8</priority>')
+    sitemap_xml.append('</url>')
+
+    # Add destination list
+    sitemap_xml.append('<url>')
+    sitemap_xml.append('<loc>https://yourdomain.com/experiences/destinations/</loc>')
+    sitemap_xml.append('<changefreq>weekly</changefreq>')
+    sitemap_xml.append('<priority>0.8</priority>')
+    sitemap_xml.append('</url>')
+
+    # Add individual experiences
+    for experience in experiences:
+        sitemap_xml.append('<url>')
+        sitemap_xml.append(f'<loc>https://yourdomain.com/experiences/experience/{experience.slug}/</loc>')
+        sitemap_xml.append('<changefreq>weekly</changefreq>')
+        sitemap_xml.append('<priority>0.9</priority>')
+        if experience.updated_at:
+            sitemap_xml.append(f'<lastmod>{experience.updated_at.strftime("%Y-%m-%d")}</lastmod>')
+        sitemap_xml.append('</url>')
+
+    # Add individual destinations
+    for destination in destinations:
+        sitemap_xml.append('<url>')
+        sitemap_xml.append(f'<loc>https://yourdomain.com/experiences/destinations/{destination.slug}/</loc>')
+        sitemap_xml.append('<changefreq>weekly</changefreq>')
+        sitemap_xml.append('<priority>0.7</priority>')
+        if destination.updated_at:
+            sitemap_xml.append(f'<lastmod>{destination.updated_at.strftime("%Y-%m-%d")}</lastmod>')
+        sitemap_xml.append('</url>')
+
+    # Add categories
+    for category in categories:
+        sitemap_xml.append('<url>')
+        sitemap_xml.append(f'<loc>https://yourdomain.com/experiences/category/{category.slug}/</loc>')
+        sitemap_xml.append('<changefreq>weekly</changefreq>')
+        sitemap_xml.append('<priority>0.6</priority>')
+        sitemap_xml.append('</url>')
+
+    sitemap_xml.append('</urlset>')
+
+    return HttpResponse('\n'.join(sitemap_xml), content_type='application/xml')
+

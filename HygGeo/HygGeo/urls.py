@@ -3,7 +3,9 @@ from django.contrib import admin
 from django.urls import path, include
 from django.conf import settings
 from django.conf.urls.static import static
+from django.http import HttpResponse
 from accounts.views import index, admin_dashboard, analytics_dashboard
+from experiences.views import sitemap_view
 
 urlpatterns = [
     # Admin Dashboard - BEFORE Django admin to avoid conflicts
@@ -20,6 +22,32 @@ urlpatterns = [
     path('accounts/', include('accounts.urls')),
     path('accounts/', include('django.contrib.auth.urls')),  # Built-in auth views
     path('experiences/', include('experiences.urls')),
+
+    # SEO URLs
+    path('sitemap.xml', sitemap_view, name='sitemap'),
+    path('robots.txt', lambda request: HttpResponse("""User-agent: *
+Allow: /
+Allow: /experiences/
+Allow: /experiences/experience/
+Allow: /experiences/destinations/
+Allow: /experiences/category/
+Allow: /static/
+
+# Disallow private/admin areas
+Disallow: /admin/
+Disallow: /accounts/profile/
+Disallow: /accounts/survey/
+Disallow: /experiences/bookmarks/
+Disallow: /experiences/recommendations/
+Disallow: /experiences/add/
+Disallow: /experiences/*/edit/
+
+# Allow important public pages
+Allow: /about/
+Allow: /contact/
+
+# Sitemap location
+Sitemap: https://yourdomain.com/sitemap.xml""", content_type='text/plain')),
 ]
 
 # Serve media files during development

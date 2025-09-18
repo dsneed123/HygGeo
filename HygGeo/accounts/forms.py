@@ -43,9 +43,8 @@ class UserProfileForm(forms.ModelForm):
     """Form for editing user profile"""
     class Meta:
         model = UserProfile
-        fields = ['bio', 'location', 'birth_date', 'avatar', 'sustainability_priority']
+        fields = ['bio', 'location', 'avatar', 'sustainability_priority']
         widgets = {
-            'birth_date': forms.DateInput(attrs={'type': 'date'}),
             'bio': forms.Textarea(attrs={'rows': 4}),
             'sustainability_priority': forms.Select(attrs={'class': 'form-control'}),
         }
