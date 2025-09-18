@@ -1,0 +1,202 @@
+{% extends 'base.html' %}
+
+{% block title %}Edit {{ destination.name }} - HygGeo{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-10">
+            <div class="card card-hygge">
+                <div class="card-body p-4">
+                    <div class="d-flex justify-content-between align-items-center mb-4">
+                        <h2 class="card-title fw-bold mb-0" style="color: var(--hygge-green);">
+                            <i class="fas fa-edit me-2"></i>Edit Destination: {{ destination.name }}
+                        </h2>
+                        <a href="{{ destination.get_absolute_url }}" class="btn btn-outline-hygge">
+                            <i class="fas fa-eye me-1"></i>View Destination
+                        </a>
+                    </div>
+
+                    <form method="post" enctype="multipart/form-data">
+                        {% csrf_token %}
+
+                        <!-- Basic Information -->
+                        <div class="row mb-4">
+                            <div class="col-12">
+                                <h4 class="fw-bold mb-3" style="color: var(--hygge-green);">
+                                    <i class="fas fa-info-circle me-2"></i>Basic Information
+                                </h4>
+                                <p class="text-muted mb-3">Essential details about this destination.</p>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label for="{{ form.name.id_for_label }}" class="form-label fw-bold">
+                                    <i class="fas fa-map-marker-alt text-primary me-1"></i>Destination Name:
+                                </label>
+                                {{ form.name }}
+                                {% if form.name.errors %}
+                                    <div class="text-danger">{{ form.name.errors }}</div>
+                                {% endif %}
+                                <div class="form-text">{{ form.name.help_text }}</div>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label for="{{ form.slug.id_for_label }}" class="form-label fw-bold">
+                                    <i class="fas fa-link text-secondary me-1"></i>URL Slug:
+                                </label>
+                                {{ form.slug }}
+                                {% if form.slug.errors %}
+                                    <div class="text-danger">{{ form.slug.errors }}</div>
+                                {% endif %}
+                                <div class="form-text">{{ form.slug.help_text }}</div>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label for="{{ form.country.id_for_label }}" class="form-label fw-bold">
+                                    <i class="fas fa-flag text-success me-1"></i>Country:
+                                </label>
+                                {{ form.country }}
+                                {% if form.country.errors %}
+                                    <div class="text-danger">{{ form.country.errors }}</div>
+                                {% endif %}
+                                <div class="form-text">{{ form.country.help_text }}</div>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label for="{{ form.region.id_for_label }}" class="form-label fw-bold">
+                                    <i class="fas fa-globe text-info me-1"></i>Region:
+                                </label>
+                                {{ form.region }}
+                                {% if form.region.errors %}
+                                    <div class="text-danger">{{ form.region.errors }}</div>
+                                {% endif %}
+                                <div class="form-text">{{ form.region.help_text }}</div>
+                            </div>
+                            <div class="col-12 mb-3">
+                                <label for="{{ form.description.id_for_label }}" class="form-label fw-bold">
+                                    <i class="fas fa-align-left text-secondary me-1"></i>Description:
+                                </label>
+                                {{ form.description }}
+                                {% if form.description.errors %}
+                                    <div class="text-danger">{{ form.description.errors }}</div>
+                                {% endif %}
+                                <div class="form-text">{{ form.description.help_text }}</div>
+                            </div>
+                            <div class="col-12 mb-3">
+                                <label for="{{ form.image.id_for_label }}" class="form-label fw-bold">
+                                    <i class="fas fa-image text-warning me-1"></i>Destination Image:
+                                </label>
+                                {% if destination.image %}
+                                    <div class="mb-2">
+                                        <img src="{{ destination.image.url }}" alt="{{ destination.name }}" class="img-thumbnail" style="max-height: 150px;">
+                                        <small class="text-muted d-block">Current image</small>
+                                    </div>
+                                {% endif %}
+                                {{ form.image }}
+                                {% if form.image.errors %}
+                                    <div class="text-danger">{{ form.image.errors }}</div>
+                                {% endif %}
+                                <div class="form-text">{{ form.image.help_text }}</div>
+                            </div>
+                        </div>
+
+                        <!-- Ratings -->
+                        <div class="row mb-4">
+                            <div class="col-12">
+                                <h4 class="fw-bold mb-3" style="color: var(--hygge-green);">
+                                    <i class="fas fa-star me-2"></i>Ratings & Appeal
+                                </h4>
+                                <p class="text-muted mb-3">Rate this destination's sustainability and hygge factor.</p>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label for="{{ form.sustainability_score.id_for_label }}" class="form-label fw-bold">
+                                    <i class="fas fa-seedling text-success me-1"></i>Sustainability Score:
+                                </label>
+                                {{ form.sustainability_score }}
+                                {% if form.sustainability_score.errors %}
+                                    <div class="text-danger">{{ form.sustainability_score.errors }}</div>
+                                {% endif %}
+                                <div class="form-text">{{ form.sustainability_score.help_text }}</div>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label for="{{ form.hygge_factor.id_for_label }}" class="form-label fw-bold">
+                                    <i class="fas fa-heart text-danger me-1"></i>Hygge Factor:
+                                </label>
+                                {{ form.hygge_factor }}
+                                {% if form.hygge_factor.errors %}
+                                    <div class="text-danger">{{ form.hygge_factor.errors }}</div>
+                                {% endif %}
+                                <div class="form-text">{{ form.hygge_factor.help_text }}</div>
+                            </div>
+                        </div>
+
+                        <!-- Travel Information -->
+                        <div class="row mb-4">
+                            <div class="col-12">
+                                <h4 class="fw-bold mb-3" style="color: var(--hygge-green);">
+                                    <i class="fas fa-suitcase me-2"></i>Travel Information
+                                </h4>
+                                <p class="text-muted mb-3">Basic travel information for this destination.</p>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label for="{{ form.best_time_to_visit.id_for_label }}" class="form-label fw-bold">
+                                    <i class="fas fa-calendar-alt text-primary me-1"></i>Best Time to Visit:
+                                </label>
+                                {{ form.best_time_to_visit }}
+                                {% if form.best_time_to_visit.errors %}
+                                    <div class="text-danger">{{ form.best_time_to_visit.errors }}</div>
+                                {% endif %}
+                                <div class="form-text">{{ form.best_time_to_visit.help_text }}</div>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label for="{{ form.climate.id_for_label }}" class="form-label fw-bold">
+                                    <i class="fas fa-cloud-sun text-info me-1"></i>Climate:
+                                </label>
+                                {{ form.climate }}
+                                {% if form.climate.errors %}
+                                    <div class="text-danger">{{ form.climate.errors }}</div>
+                                {% endif %}
+                                <div class="form-text">{{ form.climate.help_text }}</div>
+                            </div>
+                        </div>
+
+
+                        <!-- Submit Button -->
+                        <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+                            <a href="{{ destination.get_absolute_url }}" class="btn btn-outline-secondary me-md-2">
+                                <i class="fas fa-times me-1"></i>Cancel
+                            </a>
+                            <button type="submit" class="btn btn-hygge">
+                                <i class="fas fa-save me-1"></i>Update Destination
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+.form-label.fw-bold {
+    color: var(--hygge-green);
+}
+
+.form-select:focus,
+.form-control:focus {
+    border-color: var(--hygge-light-green);
+    box-shadow: 0 0 0 0.2rem rgba(45, 90, 61, 0.25);
+}
+
+h4 {
+    border-bottom: 2px solid #e9ecef;
+    padding-bottom: 0.5rem;
+    margin-bottom: 1rem;
+}
+
+.form-text {
+    color: #6c757d;
+    font-size: 0.875rem;
+}
+
+.img-thumbnail {
+    border: 2px solid var(--hygge-light-green);
+}
+</style>
+{% endblock %}

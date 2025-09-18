@@ -18,10 +18,15 @@
                         <!-- Basic Details -->
                         <div class="row mb-4">
                             <div class="col-12">
-                                <h4 class="fw-bold mb-3">Basic Details</h4>
+                                <h4 class="fw-bold mb-3" style="color: var(--hygge-green);">
+                                    <i class="fas fa-edit me-2"></i>Basic Details
+                                </h4>
+                                <p class="text-muted mb-3">Start with the essential information that describes your experience.</p>
                             </div>
                             <div class="col-12 mb-3">
-                                <label for="{{ form.title.id_for_label }}" class="form-label fw-bold">Title:</label>
+                                <label for="{{ form.title.id_for_label }}" class="form-label fw-bold">
+                                    <i class="fas fa-heading text-primary me-1"></i>Experience Title:
+                                </label>
                                 {{ form.title }}
                                 {% if form.title.errors %}
                                     <div class="text-danger">{{ form.title.errors }}</div>
@@ -29,7 +34,9 @@
                                 <div class="form-text">{{ form.title.help_text }}</div>
                             </div>
                             <div class="col-12 mb-3">
-                                <label for="{{ form.short_description.id_for_label }}" class="form-label fw-bold">Short description:</label>
+                                <label for="{{ form.short_description.id_for_label }}" class="form-label fw-bold">
+                                    <i class="fas fa-comment-dots text-info me-1"></i>Short Summary:
+                                </label>
                                 {{ form.short_description }}
                                 {% if form.short_description.errors %}
                                     <div class="text-danger">{{ form.short_description.errors }}</div>
@@ -37,14 +44,19 @@
                                 <div class="form-text">{{ form.short_description.help_text }}</div>
                             </div>
                             <div class="col-12 mb-3">
-                                <label for="{{ form.description.id_for_label }}" class="form-label fw-bold">Description:</label>
+                                <label for="{{ form.description.id_for_label }}" class="form-label fw-bold">
+                                    <i class="fas fa-align-left text-secondary me-1"></i>Detailed Description:
+                                </label>
                                 {{ form.description }}
                                 {% if form.description.errors %}
                                     <div class="text-danger">{{ form.description.errors }}</div>
                                 {% endif %}
+                                <div class="form-text">{{ form.description.help_text }}</div>
                             </div>
                             <div class="col-12 mb-3">
-                                <label for="{{ form.main_image.id_for_label }}" class="form-label fw-bold">Main image:</label>
+                                <label for="{{ form.main_image.id_for_label }}" class="form-label fw-bold">
+                                    <i class="fas fa-image text-success me-1"></i>Main Image:
+                                </label>
                                 {{ form.main_image }}
                                 {% if form.main_image.errors %}
                                     <div class="text-danger">{{ form.main_image.errors }}</div>
@@ -56,67 +68,90 @@
                       <!-- Categorization Section -->
                         <div class="row mb-4">
                             <div class="col-12">
-                                <h4 class="fw-bold mb-3">Categorization</h4>
+                                <h4 class="fw-bold mb-3" style="color: var(--hygge-green);">
+                                    <i class="fas fa-map-marker-alt me-2"></i>Location & Classification
+                                </h4>
+                                <p class="text-muted mb-3">Tell us where this experience takes place and what type it is.</p>
                             </div>
                             <div class="col-md-6 mb-3">
-                                <label for="{{ form.destination.id_for_label }}" class="form-label fw-bold">Destination:</label>
+                                <label for="{{ form.destination.id_for_label }}" class="form-label fw-bold">{{ form.destination.label }}:</label>
                                 {{ form.destination }}
                                 {% if form.destination.errors %}
                                     <div class="text-danger">{{ form.destination.errors }}</div>
                                 {% endif %}
+                                <div class="form-text">{{ form.destination.help_text }}</div>
                                 <small class="text-muted"><a href="{% url 'experiences:add_destination' %}">+ Add new destination</a></small>
                             </div>
                             <div class="col-md-6 mb-3">
-                                <label for="{{ form.provider.id_for_label }}" class="form-label fw-bold">Provider:</label>
+                                <label for="{{ form.provider.id_for_label }}" class="form-label fw-bold">{{ form.provider.label }}:</label>
                                 {{ form.provider }}
                                 {% if form.provider.errors %}
                                     <div class="text-danger">{{ form.provider.errors }}</div>
                                 {% endif %}
+                                <div class="form-text">{{ form.provider.help_text }}</div>
                                 <small class="text-muted"><a href="{% url 'experiences:add_provider' %}">+ Add new provider</a></small>
                             </div>
                             <div class="col-md-6 mb-3">
-                                <label for="{{ form.experience_type.id_for_label }}" class="form-label fw-bold">Experience type:</label>
+                                <label for="{{ form.experience_type.id_for_label }}" class="form-label fw-bold">
+                                    <i class="fas fa-tag text-primary me-1"></i>{{ form.experience_type.label }}:
+                                </label>
                                 {{ form.experience_type }}
                                 {% if form.experience_type.errors %}
                                     <div class="text-danger">{{ form.experience_type.errors }}</div>
                                 {% endif %}
+                                <div class="form-text">{{ form.experience_type.help_text }}</div>
                                 <small class="text-muted"><a href="{% url 'experiences:add_experience_type' %}">+ Add new experience type</a></small>
                             </div>
                             <div class="col-md-6 mb-3">
-                                <label for="{{ form.categories.id_for_label }}" class="form-label fw-bold">Categories:</label>
+                                <label for="{{ form.categories.id_for_label }}" class="form-label fw-bold">
+                                    <i class="fas fa-layer-group text-info me-1"></i>{{ form.categories.label }}:
+                                </label>
                                 {{ form.categories }}
                                 {% if form.categories.errors %}
                                     <div class="text-danger">{{ form.categories.errors }}</div>
                                 {% endif %}
-                                <div class="form-text"><a href="{% url 'experiences:add_category' %}">+ Add new category</a><br>{{ form.categories.help_text }}</div>
+                                <div class="form-text">{{ form.categories.help_text }}</div>
+                                <small class="text-muted"><a href="{% url 'experiences:add_category' %}">+ Add new category</a></small>
                             </div>
                             <div class="col-12 mb-3">
-                                <label for="{{ form.budget_range.id_for_label }}" class="form-label fw-bold">Budget range:</label>
+                                <label for="{{ form.budget_range.id_for_label }}" class="form-label fw-bold">
+                                    <i class="fas fa-dollar-sign text-success me-1"></i>{{ form.budget_range.label }}:
+                                </label>
                                 {{ form.budget_range }}
                                 {% if form.budget_range.errors %}
                                     <div class="text-danger">{{ form.budget_range.errors }}</div>
                                 {% endif %}
+                                <div class="form-text">{{ form.budget_range.help_text }}</div>
                             </div>
                         </div>
                                                 
                         <!-- Trip Details -->
                         <div class="row mb-4">
                             <div class="col-12">
-                                <h4 class="fw-bold mb-3">Trip Details</h4>
+                                <h4 class="fw-bold mb-3" style="color: var(--hygge-green);">
+                                    <i class="fas fa-info-circle me-2"></i>Experience Details
+                                </h4>
+                                <p class="text-muted mb-3">Provide practical information about group size and timing.</p>
                             </div>
                             <div class="col-md-6 mb-3">
-                                <label for="{{ form.group_size.id_for_label }}" class="form-label fw-bold">Group size:</label>
+                                <label for="{{ form.group_size.id_for_label }}" class="form-label fw-bold">
+                                    <i class="fas fa-users text-primary me-1"></i>{{ form.group_size.label }}:
+                                </label>
                                 {{ form.group_size }}
                                 {% if form.group_size.errors %}
                                     <div class="text-danger">{{ form.group_size.errors }}</div>
                                 {% endif %}
+                                <div class="form-text">{{ form.group_size.help_text }}</div>
                             </div>
                             <div class="col-md-6 mb-3">
-                                <label for="{{ form.duration.id_for_label }}" class="form-label fw-bold">Duration:</label>
+                                <label for="{{ form.duration.id_for_label }}" class="form-label fw-bold">
+                                    <i class="fas fa-clock text-warning me-1"></i>{{ form.duration.label }}:
+                                </label>
                                 {{ form.duration }}
                                 {% if form.duration.errors %}
                                     <div class="text-danger">{{ form.duration.errors }}</div>
                                 {% endif %}
+                                <div class="form-text">{{ form.duration.help_text }}</div>
                             </div>
                         </div>
                         
@@ -148,39 +183,61 @@
                                 <div class="form-text">{{ form.hygge_factor.help_text }}</div>
                             </div>
                         </div>
-                        <div class="mb-4 form-check">
-                            {{ form.booking_required }}
-                            <label class="form-check-label" for="id_booking_required">
-                                Booking Required
-                            </label>
-                        </div>
-
-                        <div class="mb-4">
-                            <label for="id_affiliate_link" class="form-label">Affiliate/Booking Link</label>
-                            {{ form.affiliate_link }}
-                            <div class="form-text">
-                                Leave empty if no booking is required.
+                        <!-- Booking Information -->
+                        <div class="row mb-4">
+                            <div class="col-12">
+                                <h4 class="fw-bold mb-3" style="color: var(--hygge-green);">
+                                    <i class="fas fa-calendar-check me-2"></i>Booking Information
+                                </h4>
+                                <p class="text-muted mb-3">Provide booking details and links for travelers.</p>
+                            </div>
+                            <div class="col-12 mb-3">
+                                <div class="form-check">
+                                    {{ form.booking_required }}
+                                    <label class="form-check-label fw-bold" for="{{ form.booking_required.id_for_label }}">
+                                        <i class="fas fa-clock text-warning me-1"></i>{{ form.booking_required.label }}
+                                    </label>
+                                </div>
+                                <div class="form-text">{{ form.booking_required.help_text }}</div>
+                            </div>
+                            <div class="col-12 mb-3">
+                                <label for="{{ form.affiliate_link.id_for_label }}" class="form-label fw-bold">
+                                    <i class="fas fa-external-link-alt text-info me-1"></i>{{ form.affiliate_link.label }}:
+                                </label>
+                                {{ form.affiliate_link }}
+                                {% if form.affiliate_link.errors %}
+                                    <div class="text-danger">{{ form.affiliate_link.errors }}</div>
+                                {% endif %}
+                                <div class="form-text">{{ form.affiliate_link.help_text }}</div>
                             </div>
                         </div>
 
                         
-                        <!-- Status Options -->
+                        <!-- Publication Settings -->
                         <div class="row mb-4">
-                            <div class="col-md-6">
+                            <div class="col-12">
+                                <h4 class="fw-bold mb-3" style="color: var(--hygge-green);">
+                                    <i class="fas fa-cogs me-2"></i>Publication Settings
+                                </h4>
+                                <p class="text-muted mb-3">Control how and when this experience appears to users.</p>
+                            </div>
+                            <div class="col-md-6 mb-3">
                                 <div class="form-check">
                                     {{ form.is_featured }}
                                     <label class="form-check-label fw-bold" for="{{ form.is_featured.id_for_label }}">
-                                        Is featured
+                                        <i class="fas fa-star text-warning me-1"></i>{{ form.is_featured.label }}
                                     </label>
                                 </div>
+                                <div class="form-text">{{ form.is_featured.help_text }}</div>
                             </div>
-                            <div class="col-md-6">
+                            <div class="col-md-6 mb-3">
                                 <div class="form-check">
                                     {{ form.is_active }}
                                     <label class="form-check-label fw-bold" for="{{ form.is_active.id_for_label }}">
-                                        Is active
+                                        <i class="fas fa-toggle-on text-success me-1"></i>{{ form.is_active.label }}
                                     </label>
                                 </div>
+                                <div class="form-text">{{ form.is_active.help_text }}</div>
                             </div>
                         </div>
                         

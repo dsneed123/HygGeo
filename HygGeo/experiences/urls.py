@@ -19,6 +19,7 @@ urlpatterns = [
     # Destinations - SPECIFIC PATHS FIRST, THEN GENERAL ONES
     path('destinations/', views.destination_list_view, name='destination_list'),
     path('destinations/add/', views.add_destination, name='add_destination'),
+    path('destinations/<slug:slug>/edit/', views.edit_destination, name='edit_destination'),
     path('destinations/<slug:slug>/', views.destination_detail_view, name='destination_detail'),
     
     # Providers, Experience Types, Categories - specific before general

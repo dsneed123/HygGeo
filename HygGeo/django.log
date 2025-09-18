@@ -11488,3 +11488,124 @@ WARNING 2025-09-17 14:01:03,825 log 8960 30208 Not Found: /.well-known/appspecif
 WARNING 2025-09-17 14:01:03,825 basehttp 8960 30208 "GET /.well-known/appspecific/com.chrome.devtools.json HTTP/1.1" 404 3644
 WARNING 2025-09-17 14:01:04,093 log 8960 30208 Not Found: /favicon.ico
 WARNING 2025-09-17 14:01:04,093 basehttp 8960 30208 "GET /favicon.ico HTTP/1.1" 404 3533
+INFO 2025-09-17 18:54:53,560 autoreload 39172 35364 Watching for file changes with StatReloader
+INFO 2025-09-17 18:55:04,383 basehttp 39172 47080 "GET / HTTP/1.1" 200 61643
+WARNING 2025-09-17 18:55:04,526 log 39172 47080 Not Found: /.well-known/appspecific/com.chrome.devtools.json
+WARNING 2025-09-17 18:55:04,527 basehttp 39172 47080 "GET /.well-known/appspecific/com.chrome.devtools.json HTTP/1.1" 404 3644
+WARNING 2025-09-17 18:55:04,934 log 39172 47080 Not Found: /favicon.ico
+WARNING 2025-09-17 18:55:04,935 basehttp 39172 47080 "GET /favicon.ico HTTP/1.1" 404 3533
+INFO 2025-09-17 18:58:06,755 autoreload 39172 35364 C:\Users\DLSne\OneDrive\Desktop\Code\webdev\HygGeo\HygGeo\experiences\forms.py changed, reloading.
+INFO 2025-09-17 18:58:07,907 autoreload 36476 34664 Watching for file changes with StatReloader
+INFO 2025-09-17 18:59:48,458 basehttp 36476 41692 "GET / HTTP/1.1" 200 61726
+WARNING 2025-09-17 18:59:48,925 log 36476 41692 Not Found: /favicon.ico
+WARNING 2025-09-17 18:59:48,926 basehttp 36476 41692 "GET /favicon.ico HTTP/1.1" 404 3533
+INFO 2025-09-17 18:59:54,068 basehttp 36476 41692 "GET /accounts/login/ HTTP/1.1" 200 18946
+INFO 2025-09-17 19:00:03,961 basehttp 36476 41692 "POST /accounts/login/ HTTP/1.1" 200 19177
+INFO 2025-09-17 19:00:08,987 basehttp 36476 41692 "POST /accounts/login/ HTTP/1.1" 200 19177
+INFO 2025-09-17 19:00:14,228 basehttp 36476 41692 "POST /accounts/login/ HTTP/1.1" 302 0
+INFO 2025-09-17 19:00:14,251 basehttp 36476 41692 "GET / HTTP/1.1" 200 70365
+INFO 2025-09-17 19:00:16,563 basehttp 36476 41692 "GET /admin/dashboard/ HTTP/1.1" 200 39559
+INFO 2025-09-17 19:00:19,941 basehttp 36476 41692 "GET /experiences/categories/add/ HTTP/1.1" 200 51073
+INFO 2025-09-17 19:00:27,148 basehttp 36476 41692 "GET /experiences/experience-types/add/ HTTP/1.1" 200 33007
+INFO 2025-09-17 19:00:39,998 basehttp 36476 41692 "POST /experiences/experience-types/add/ HTTP/1.1" 200 33356
+INFO 2025-09-17 19:00:43,382 basehttp 36476 41692 "POST /experiences/experience-types/add/ HTTP/1.1" 302 0
+INFO 2025-09-17 19:00:43,508 basehttp 36476 41692 "GET /experiences/add/ HTTP/1.1" 200 37780
+INFO 2025-09-17 19:03:42,988 autoreload 36476 34664 C:\Users\DLSne\OneDrive\Desktop\Code\webdev\HygGeo\HygGeo\experiences\forms.py changed, reloading.
+INFO 2025-09-17 19:03:44,130 autoreload 41684 11156 Watching for file changes with StatReloader
+INFO 2025-09-17 19:05:14,707 basehttp 41684 27044 "GET / HTTP/1.1" 200 70642
+INFO 2025-09-17 19:05:21,012 basehttp 41684 27044 "GET /admin/dashboard/ HTTP/1.1" 200 39559
+INFO 2025-09-17 19:05:23,966 basehttp 41684 27044 "GET /experiences/add/ HTTP/1.1" 200 42348
+INFO 2025-09-17 19:07:47,732 autoreload 41684 11156 C:\Users\DLSne\OneDrive\Desktop\Code\webdev\HygGeo\HygGeo\experiences\urls.py changed, reloading.
+INFO 2025-09-17 19:07:48,875 autoreload 26796 36100 Watching for file changes with StatReloader
+INFO 2025-09-17 19:08:14,808 autoreload 26796 36100 C:\Users\DLSne\OneDrive\Desktop\Code\webdev\HygGeo\HygGeo\experiences\forms.py changed, reloading.
+INFO 2025-09-17 19:08:15,792 autoreload 12172 37980 Watching for file changes with StatReloader
+INFO 2025-09-17 19:11:50,850 autoreload 12172 37980 C:\Users\DLSne\OneDrive\Desktop\Code\webdev\HygGeo\HygGeo\experiences\models.py changed, reloading.
+INFO 2025-09-17 19:11:51,826 autoreload 42532 44476 Watching for file changes with StatReloader
+INFO 2025-09-17 19:14:43,016 autoreload 45240 45256 Watching for file changes with StatReloader
+INFO 2025-09-17 19:14:45,447 basehttp 45240 35576 "GET / HTTP/1.1" 200 70830
+WARNING 2025-09-17 19:14:46,145 log 45240 35576 Not Found: /favicon.ico
+WARNING 2025-09-17 19:14:46,146 basehttp 45240 35576 "GET /favicon.ico HTTP/1.1" 404 3533
+INFO 2025-09-17 19:14:51,479 basehttp 45240 35576 "GET /admin/dashboard/ HTTP/1.1" 200 39559
+INFO 2025-09-17 19:14:59,190 basehttp 45240 35576 "GET /experiences/experience-types/ HTTP/1.1" 200 29424
+INFO 2025-09-17 19:15:10,931 basehttp 45240 35576 "GET /experiences/destinations/ HTTP/1.1" 200 42728
+INFO 2025-09-17 19:15:13,827 basehttp 45240 35576 "GET /experiences/destinations/seattle/ HTTP/1.1" 200 46851
+ERROR 2025-09-17 19:15:16,749 log 45240 35576 Internal Server Error: /experiences/destinations/seattle/edit/
+Traceback (most recent call last):
+  File "C:\Users\DLSne\AppData\Local\Packages\PythonSoftwareFoundation.Python.3.12_qbz5n2kfra8p0\LocalCache\local-packages\Python312\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+               ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\DLSne\AppData\Local\Packages\PythonSoftwareFoundation.Python.3.12_qbz5n2kfra8p0\LocalCache\local-packages\Python312\site-packages\django\core\handlers\base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\DLSne\AppData\Local\Packages\PythonSoftwareFoundation.Python.3.12_qbz5n2kfra8p0\LocalCache\local-packages\Python312\site-packages\django\contrib\auth\decorators.py", line 59, in _view_wrapper
+    return view_func(request, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\DLSne\OneDrive\Desktop\Code\webdev\HygGeo\HygGeo\experiences\views.py", line 574, in edit_destination
+    form = DestinationForm(instance=destination)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\DLSne\OneDrive\Desktop\Code\webdev\HygGeo\HygGeo\experiences\forms.py", line 227, in __init__
+    self.fields['is_featured'].initial = False
+    ~~~~~~~~~~~^^^^^^^^^^^^^^^
+KeyError: 'is_featured'
+ERROR 2025-09-17 19:15:16,755 basehttp 45240 35576 "GET /experiences/destinations/seattle/edit/ HTTP/1.1" 500 76567
+INFO 2025-09-17 19:18:06,921 autoreload 45240 45256 C:\Users\DLSne\OneDrive\Desktop\Code\webdev\HygGeo\HygGeo\experiences\forms.py changed, reloading.
+INFO 2025-09-17 19:18:07,968 autoreload 42680 39008 Watching for file changes with StatReloader
+INFO 2025-09-17 19:19:32,794 basehttp 42680 1100 "GET /experiences/destinations/seattle/edit/ HTTP/1.1" 200 33523
+INFO 2025-09-17 19:19:48,157 basehttp 42680 3868 "GET / HTTP/1.1" 200 70918
+INFO 2025-09-17 19:19:53,473 basehttp 42680 26448 "GET / HTTP/1.1" 200 70909
+INFO 2025-09-17 19:19:54,959 basehttp 42680 26448 "GET / HTTP/1.1" 200 70948
+INFO 2025-09-17 19:19:56,489 basehttp 42680 26448 "GET / HTTP/1.1" 200 70927
+INFO 2025-09-17 19:19:59,109 basehttp 42680 26448 "GET / HTTP/1.1" 200 70897
+WARNING 2025-09-17 19:19:59,317 log 42680 26448 Not Found: /favicon.ico
+WARNING 2025-09-17 19:19:59,319 basehttp 42680 26448 "GET /favicon.ico HTTP/1.1" 404 3533
+WARNING 2025-09-17 19:19:59,537 log 42680 26448 Not Found: /favicon.ico
+WARNING 2025-09-17 19:19:59,537 basehttp 42680 26448 "GET /favicon.ico HTTP/1.1" 404 3533
+INFO 2025-09-17 19:19:59,908 basehttp 42680 26448 "GET / HTTP/1.1" 200 70909
+WARNING 2025-09-17 19:20:00,169 log 42680 26448 Not Found: /favicon.ico
+WARNING 2025-09-17 19:20:00,171 basehttp 42680 26448 "GET /favicon.ico HTTP/1.1" 404 3533
+INFO 2025-09-17 19:20:00,737 basehttp 42680 26448 "GET / HTTP/1.1" 200 70927
+INFO 2025-09-17 19:20:03,453 basehttp 42680 23612 "GET / HTTP/1.1" 200 70909
+WARNING 2025-09-17 19:20:03,466 log 42680 32512 Not Found: /favicon.ico
+INFO 2025-09-17 19:20:03,467 basehttp 42680 32512 - Broken pipe from ('127.0.0.1', 65196)
+WARNING 2025-09-17 19:20:03,686 log 42680 23612 Not Found: /favicon.ico
+WARNING 2025-09-17 19:20:03,687 basehttp 42680 23612 "GET /favicon.ico HTTP/1.1" 404 3533
+INFO 2025-09-17 19:20:06,726 basehttp 42680 23612 "GET /admin/dashboard/ HTTP/1.1" 200 39559
+INFO 2025-09-17 19:20:15,853 basehttp 42680 23612 "GET /experiences/destinations/ HTTP/1.1" 200 42728
+INFO 2025-09-17 19:20:18,771 basehttp 42680 23612 "GET /experiences/destinations/test/ HTTP/1.1" 200 43700
+INFO 2025-09-17 19:20:20,121 basehttp 42680 23612 "GET /experiences/destinations/test/edit/ HTTP/1.1" 200 33508
+INFO 2025-09-17 19:20:31,304 basehttp 42680 23612 "POST /experiences/destinations/test/edit/ HTTP/1.1" 302 0
+INFO 2025-09-17 19:20:31,319 basehttp 42680 23612 "GET /experiences/destinations/test/ HTTP/1.1" 200 44054
+INFO 2025-09-17 19:20:35,317 basehttp 42680 23612 "GET / HTTP/1.1" 200 70919
+INFO 2025-09-17 19:23:54,744 basehttp 42680 38780 "GET / HTTP/1.1" 200 70865
+INFO 2025-09-17 19:23:56,320 basehttp 42680 38780 "GET / HTTP/1.1" 200 70882
+WARNING 2025-09-17 19:23:56,708 log 42680 38780 Not Found: /favicon.ico
+WARNING 2025-09-17 19:23:56,708 basehttp 42680 38780 "GET /favicon.ico HTTP/1.1" 404 3533
+INFO 2025-09-17 19:24:22,348 basehttp 42680 38780 "GET /admin/dashboard/ HTTP/1.1" 200 39559
+INFO 2025-09-17 19:26:12,924 basehttp 42680 38780 "GET / HTTP/1.1" 200 69304
+INFO 2025-09-17 19:26:13,949 basehttp 42680 38780 "GET / HTTP/1.1" 200 69352
+WARNING 2025-09-17 19:26:14,263 log 42680 38780 Not Found: /favicon.ico
+WARNING 2025-09-17 19:26:14,263 basehttp 42680 38780 "GET /favicon.ico HTTP/1.1" 404 3533
+INFO 2025-09-17 19:27:24,362 basehttp 42680 38780 "GET / HTTP/1.1" 200 69348
+WARNING 2025-09-17 19:27:24,730 log 42680 38780 Not Found: /favicon.ico
+WARNING 2025-09-17 19:27:24,731 basehttp 42680 38780 "GET /favicon.ico HTTP/1.1" 404 3533
+INFO 2025-09-17 19:29:30,399 basehttp 42680 38780 "GET / HTTP/1.1" 200 67214
+WARNING 2025-09-17 19:29:30,981 log 42680 38780 Not Found: /favicon.ico
+WARNING 2025-09-17 19:29:30,982 basehttp 42680 38780 "GET /favicon.ico HTTP/1.1" 404 3533
+INFO 2025-09-17 19:29:32,037 basehttp 42680 38780 "GET / HTTP/1.1" 200 67196
+WARNING 2025-09-17 19:29:32,459 log 42680 38780 Not Found: /favicon.ico
+WARNING 2025-09-17 19:29:32,461 basehttp 42680 38780 "GET /favicon.ico HTTP/1.1" 404 3533
+INFO 2025-09-17 19:32:23,052 basehttp 42680 38780 "GET / HTTP/1.1" 200 67281
+WARNING 2025-09-17 19:32:23,663 log 42680 38780 Not Found: /favicon.ico
+WARNING 2025-09-17 19:32:23,663 basehttp 42680 38780 "GET /favicon.ico HTTP/1.1" 404 3533
+INFO 2025-09-17 19:33:42,273 basehttp 42680 38780 "GET / HTTP/1.1" 200 67283
+WARNING 2025-09-17 19:33:42,561 log 42680 38780 Not Found: /favicon.ico
+WARNING 2025-09-17 19:33:42,561 basehttp 42680 38780 "GET /favicon.ico HTTP/1.1" 404 3533
+INFO 2025-09-17 19:33:43,550 basehttp 42680 38780 "GET / HTTP/1.1" 200 67325
+WARNING 2025-09-17 19:33:43,783 log 42680 38780 Not Found: /favicon.ico
+WARNING 2025-09-17 19:33:43,783 basehttp 42680 38780 "GET /favicon.ico HTTP/1.1" 404 3533
+INFO 2025-09-17 19:33:58,143 basehttp 42680 38780 "GET / HTTP/1.1" 200 67313
+WARNING 2025-09-17 19:33:58,656 log 42680 38780 Not Found: /favicon.ico
+WARNING 2025-09-17 19:33:58,656 basehttp 42680 38780 "GET /favicon.ico HTTP/1.1" 404 3533
+INFO 2025-09-17 19:33:59,357 basehttp 42680 38780 "GET / HTTP/1.1" 200 67307
+WARNING 2025-09-17 19:33:59,683 log 42680 38780 Not Found: /favicon.ico
+WARNING 2025-09-17 19:33:59,684 basehttp 42680 38780 "GET /favicon.ico HTTP/1.1" 404 3533

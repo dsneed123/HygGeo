@@ -7,7 +7,7 @@
             <div class="card card-hygge shadow-lg">
                 <div class="card-header text-white" style="background: linear-gradient(135deg, var(--hygge-green), var(--hygge-light-green)); border-radius: 15px 15px 0 0;">
                     <h2 class="mb-0 fw-bold"><i class="fas fa-tags me-2"></i>Add New Category</h2>
-                    <small class="opacity-75">Create a new category for travel experiences</small>
+                    <small class="opacity-75">Create categories to help organize and filter travel experiences</small>
                 </div>
                 <div class="card-body p-4" style="background: var(--hygge-cream);">
                     <form method="post">
@@ -15,34 +15,45 @@
                         
                         <!-- Name Field -->
                         <div class="mb-3">
-                            <label for="{{ form.name.id_for_label }}" class="form-label">Category Name</label>
+                            <label for="{{ form.name.id_for_label }}" class="form-label fw-bold">
+                                <i class="fas fa-tag text-primary me-1"></i>Category Name
+                            </label>
                             {{ form.name }}
                             {% if form.name.errors %}
                                 <div class="text-danger">{{ form.name.errors }}</div>
                             {% endif %}
+                            <div class="form-text">{{ form.name.help_text }}</div>
                         </div>
                         
                         <!-- Slug Field -->
                         <div class="mb-3">
-                            <label for="{{ form.slug.id_for_label }}" class="form-label">Slug</label>
+                            <label for="{{ form.slug.id_for_label }}" class="form-label fw-bold">
+                                <i class="fas fa-link text-secondary me-1"></i>URL Slug
+                            </label>
                             {{ form.slug }}
                             {% if form.slug.errors %}
                                 <div class="text-danger">{{ form.slug.errors }}</div>
                             {% endif %}
+                            <div class="form-text">Leave blank to auto-generate from name</div>
                         </div>
                         
                         <!-- Description Field -->
                         <div class="mb-3">
-                            <label for="{{ form.description.id_for_label }}" class="form-label">Description</label>
+                            <label for="{{ form.description.id_for_label }}" class="form-label fw-bold">
+                                <i class="fas fa-align-left text-info me-1"></i>Description
+                            </label>
                             {{ form.description }}
                             {% if form.description.errors %}
                                 <div class="text-danger">{{ form.description.errors }}</div>
                             {% endif %}
+                            <div class="form-text">{{ form.description.help_text }}</div>
                         </div>
                         
                         <!-- Icon Field with Custom Selector -->
                         <div class="mb-3">
-                            <label for="{{ form.icon.id_for_label }}" class="form-label">Icon</label>
+                            <label for="{{ form.icon.id_for_label }}" class="form-label fw-bold">
+                                <i class="fas fa-icons text-warning me-1"></i>Category Icon
+                            </label>
                             <div class="row">
                                 <div class="col-md-8">
                                     {{ form.icon }}
@@ -60,11 +71,14 @@
                                 <small class="text-muted">Preview: </small>
                                 <span id="icon-preview"><i class="fas fa-map-marker-alt"></i></span>
                             </div>
+                            <div class="form-text">{{ form.icon.help_text }}</div>
                         </div>
                         
                         <!-- Color Field -->
                         <div class="mb-3">
-                            <label for="{{ form.color.id_for_label }}" class="form-label">Color</label>
+                            <label for="{{ form.color.id_for_label }}" class="form-label fw-bold">
+                                <i class="fas fa-palette text-danger me-1"></i>Category Color
+                            </label>
                             <div class="row">
                                 <div class="col-md-6">
                                     {{ form.color }}
@@ -77,6 +91,8 @@
                                         Color Preview
                                     </div>
                                 </div>
+                            </div>
+                            <div class="form-text">{{ form.color.help_text }}</div>
                             </div>
                         </div>
                         

@@ -240,8 +240,12 @@ class Experience(models.Model):
             return f"${self.price_from} - ${self.price_to}"
         elif self.price_from:
             return f"From ${self.price_from}"
+        elif self.budget_range:
+            # Use budget range instead of "Contact for pricing"
+            budget_display = dict(self.BUDGET_RANGES).get(self.budget_range, self.budget_range)
+            return budget_display
         else:
-            return "Contact for pricing"
+            return "Price varies"
     
     def get_sustainability_badge(self):
         """Return sustainability badge level"""

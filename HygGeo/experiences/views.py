@@ -554,11 +554,28 @@ def add_destination(request):
     if request.method == "POST":
         form = DestinationForm(request.POST, request.FILES)
         if form.is_valid():
-            form.save()
-            return redirect('experiences:destination_list' )  # change to your destination listing view name if different
+            destination = form.save()
+            messages.success(request, f'Destination "{destination.name}" has been created successfully!')
+            return redirect('experiences:destination_list')
     else:
         form = DestinationForm()
     return render(request, 'experiences/add_destination.html', {'form': form})
+
+@user_passes_test(lambda u: u.is_staff)
+def edit_destination(request, slug):
+    destination = get_object_or_404(Destination, slug=slug)
+    if request.method == "POST":
+        form = DestinationForm(request.POST, request.FILES, instance=destination)
+        if form.is_valid():
+            destination = form.save()
+            messages.success(request, f'Destination "{destination.name}" has been updated successfully!')
+            return redirect('experiences:destination_detail', slug=destination.slug)
+    else:
+        form = DestinationForm(instance=destination)
+    return render(request, 'experiences/edit_destination.html', {
+        'form': form,
+        'destination': destination
+    })
 
 @user_passes_test(lambda u: u.is_staff)  # staff/admin only
 def add_provider(request):
