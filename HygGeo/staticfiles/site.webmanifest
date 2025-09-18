@@ -1,0 +1,17 @@
+{
+    "name": "HygGeo - Sustainable Traveling",
+    "short_name": "HygGeo",
+    "description": "Discover sustainable travel experiences with Danish hygge. Eco-friendly adventures, mindful journeys, and responsible tourism for conscious travelers.",
+    "icons": [
+        {
+            "src": "/static/favicon.ico",
+            "sizes": "16x16 32x32 48x48",
+            "type": "image/x-icon"
+        }
+    ],
+    "theme_color": "#2d5a3d",
+    "background_color": "#f8f5f0",
+    "display": "standalone",
+    "start_url": "/",
+    "scope": "/"
+}

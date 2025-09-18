@@ -4,6 +4,7 @@ from django.urls import path, include
 from django.conf import settings
 from django.conf.urls.static import static
 from django.http import HttpResponse
+from django.views.generic import RedirectView
 from accounts.views import index, admin_dashboard, analytics_dashboard
 from experiences.views import sitemap_view
 
@@ -25,6 +26,9 @@ urlpatterns = [
 
     # SEO URLs
     path('sitemap.xml', sitemap_view, name='sitemap'),
+    path('favicon.ico', RedirectView.as_view(url='/static/favicon.ico', permanent=True)),
+    path('site.webmanifest', RedirectView.as_view(url='/static/site.webmanifest', permanent=True)),
+    path('browserconfig.xml', RedirectView.as_view(url='/static/browserconfig.xml', permanent=True)),
     path('robots.txt', lambda request: HttpResponse("""User-agent: *
 Allow: /
 Allow: /experiences/
@@ -32,6 +36,7 @@ Allow: /experiences/experience/
 Allow: /experiences/destinations/
 Allow: /experiences/category/
 Allow: /static/
+Allow: /favicon.ico
 
 # Disallow private/admin areas
 Disallow: /admin/
