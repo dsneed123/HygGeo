@@ -1,0 +1,10 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(python manage.py shell:*)",
+      "Bash(python manage.py collectstatic:*)"
+    ],
+    "deny": [],
+    "ask": []
+  }
+}
