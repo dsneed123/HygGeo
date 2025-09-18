@@ -8,8 +8,8 @@ class ExperienceForm(forms.ModelForm):
             'title', 'short_description', 'description', 'main_image',
             'destination', 'provider', 'experience_type', 'categories',
             'budget_range', 'group_size', 'duration', 'sustainability_score',
-            'hygge_factor', 'is_featured', 'is_active', 'booking_required',
-            'affiliate_link',
+            'hygge_factor', 'meta_title', 'meta_description', 'is_featured',
+            'is_active', 'booking_required', 'affiliate_link',
         ]
         widgets = {
             'title': forms.TextInput(attrs={
@@ -85,6 +85,17 @@ class ExperienceForm(forms.ModelForm):
                 'class': 'form-control',
                 'placeholder': 'https://example.com/book-this-experience'
             }),
+            'meta_title': forms.TextInput(attrs={
+                'class': 'form-control',
+                'placeholder': 'SEO title (leave blank to use main title)',
+                'maxlength': 60
+            }),
+            'meta_description': forms.Textarea(attrs={
+                'class': 'form-control',
+                'rows': 3,
+                'placeholder': 'Brief SEO description for search results (120-160 characters)',
+                'maxlength': 160
+            }),
         }
 
     def __init__(self, *args, **kwargs):
@@ -137,6 +148,12 @@ class ExperienceForm(forms.ModelForm):
 
         self.fields['is_active'].label = 'Currently Available'
         self.fields['is_active'].help_text = 'Uncheck to temporarily hide this experience (e.g., seasonal availability, maintenance). Users won\'t see inactive experiences in search results.'
+
+        self.fields['meta_title'].label = 'SEO Title'
+        self.fields['meta_title'].help_text = 'Custom title for search engines (max 60 chars). Leave blank to use main title. Include your focus keyword near the beginning.'
+
+        self.fields['meta_description'].label = 'SEO Meta Description'
+        self.fields['meta_description'].help_text = 'Description that appears in search results (120-160 chars). Include focus keyword and compelling call-to-action.'
         
         # Make sure we have data for dropdowns
         if not self.fields['destination'].queryset.exists():

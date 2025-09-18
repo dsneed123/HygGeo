@@ -39,6 +39,7 @@ urlpatterns = [
     # AJAX endpoints
     path('api/track-click/<uuid:experience_id>/', views.track_affiliate_click, name='track_affiliate_click'),
     path('api/bookmark/<uuid:experience_id>/', views.bookmark_experience, name='bookmark_experience'),
+    path('api/analyze-seo/', views.analyze_seo_ajax, name='analyze_seo_ajax'),
     path('track-booking/<uuid:experience_id>/', views.track_booking_view, name='track_booking'),
     path('about/', views.about_view, name='about'),
 ]

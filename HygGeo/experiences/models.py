@@ -274,6 +274,30 @@ class Experience(models.Model):
         """Return human-readable budget range"""
         return dict(self.BUDGET_RANGES).get(self.budget_range, self.budget_range)
 
+    def get_seo_analysis(self):
+        """Get SEO analysis using in-memory calculation"""
+        from .seo_analyzer import get_seo_analysis_for_experience
+
+        experience_data = {
+            'title': self.title,
+            'meta_title': self.meta_title,
+            'meta_description': self.meta_description,
+            'description': self.description,
+            'short_description': self.short_description,
+            'destination': str(self.destination),
+            'experience_type': str(self.experience_type) if self.experience_type else ''
+        }
+
+        return get_seo_analysis_for_experience(experience_data)
+
+    def get_seo_grade(self):
+        """Get SEO grade and color based on calculated score"""
+        analysis = self.get_seo_analysis()
+        return analysis['grade']
+
+    def save(self, *args, **kwargs):
+        super().save(*args, **kwargs)
+
 class UserRecommendation(models.Model):
     """Personalized recommendations for users based on their survey"""
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='recommendations')

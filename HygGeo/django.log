@@ -12425,3 +12425,160 @@ INFO 2025-09-17 21:14:11,138 autoreload 44180 29360 Watching for file changes wi
 INFO 2025-09-17 23:32:52,115 autoreload 45236 46048 Watching for file changes with StatReloader
 INFO 2025-09-17 23:32:52,681 basehttp 45236 46416 "GET /admin/analytics/ HTTP/1.1" 200 57266
 INFO 2025-09-17 23:45:43,847 autoreload 36876 14544 Watching for file changes with StatReloader
+INFO 2025-09-18 02:22:40,681 autoreload 28924 29292 Watching for file changes with StatReloader
+INFO 2025-09-18 02:23:00,236 basehttp 28924 17796 "GET / HTTP/1.1" 200 66588
+INFO 2025-09-18 02:23:01,252 basehttp 28924 31648 "GET /static/site.webmanifest HTTP/1.1" 200 560
+INFO 2025-09-18 02:23:01,276 basehttp 28924 17796 "GET /static/favicon.ico HTTP/1.1" 200 15406
+INFO 2025-09-18 02:23:01,708 basehttp 28924 17796 "GET /accounts/login/ HTTP/1.1" 200 25802
+INFO 2025-09-18 02:23:13,926 basehttp 28924 6508 "GET /accounts/login/ HTTP/1.1" 200 25802
+INFO 2025-09-18 02:23:15,571 basehttp 28924 27088 "GET /static/site.webmanifest HTTP/1.1" 200 560
+INFO 2025-09-18 02:23:15,740 basehttp 28924 6508 "GET /static/favicon.ico HTTP/1.1" 200 15406
+INFO 2025-09-18 02:23:22,637 basehttp 28924 6508 "POST /accounts/login/ HTTP/1.1" 200 26033
+INFO 2025-09-18 02:23:31,302 basehttp 28924 25788 "GET /accounts/login/ HTTP/1.1" 200 25802
+INFO 2025-09-18 02:23:32,467 basehttp 28924 31100 "GET /static/site.webmanifest HTTP/1.1" 200 560
+INFO 2025-09-18 02:23:32,577 basehttp 28924 25788 "GET /static/favicon.ico HTTP/1.1" 200 15406
+INFO 2025-09-18 02:23:39,521 basehttp 28924 25788 "POST /accounts/login/ HTTP/1.1" 200 26032
+INFO 2025-09-18 02:23:45,010 basehttp 28924 25788 "POST /accounts/login/ HTTP/1.1" 200 26032
+INFO 2025-09-18 02:23:54,463 basehttp 28924 25788 "POST /accounts/login/ HTTP/1.1" 200 26033
+INFO 2025-09-18 02:24:00,858 basehttp 28924 25788 "POST /accounts/login/ HTTP/1.1" 200 26033
+INFO 2025-09-18 02:24:06,048 basehttp 28924 25788 "POST /accounts/login/ HTTP/1.1" 302 0
+INFO 2025-09-18 02:24:06,070 basehttp 28924 25788 "GET / HTTP/1.1" 200 73517
+ERROR 2025-09-18 02:24:08,760 log 28924 25788 Internal Server Error: /admin/dashboard/
+Traceback (most recent call last):
+  File "C:\Users\DLSne\AppData\Local\Packages\PythonSoftwareFoundation.Python.3.12_qbz5n2kfra8p0\LocalCache\local-packages\Python312\site-packages\django\db\backends\utils.py", line 105, in _execute
+    return self.cursor.execute(sql, params)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\DLSne\AppData\Local\Packages\PythonSoftwareFoundation.Python.3.12_qbz5n2kfra8p0\LocalCache\local-packages\Python312\site-packages\django\db\backends\sqlite3\base.py", line 360, in execute
+    return super().execute(query, params)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+sqlite3.OperationalError: no such column: experiences_experience.seo_score
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "C:\Users\DLSne\AppData\Local\Packages\PythonSoftwareFoundation.Python.3.12_qbz5n2kfra8p0\LocalCache\local-packages\Python312\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+               ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\DLSne\AppData\Local\Packages\PythonSoftwareFoundation.Python.3.12_qbz5n2kfra8p0\LocalCache\local-packages\Python312\site-packages\django\core\handlers\base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\DLSne\AppData\Local\Packages\PythonSoftwareFoundation.Python.3.12_qbz5n2kfra8p0\LocalCache\local-packages\Python312\site-packages\django\contrib\auth\decorators.py", line 59, in _view_wrapper
+    return view_func(request, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\DLSne\OneDrive\Desktop\Code\webdev\HygGeo\HygGeo\accounts\views.py", line 353, in admin_dashboard
+    return render(request, 'admin-dashboard.html', context)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\DLSne\AppData\Local\Packages\PythonSoftwareFoundation.Python.3.12_qbz5n2kfra8p0\LocalCache\local-packages\Python312\site-packages\django\shortcuts.py", line 25, in render
+    content = loader.render_to_string(template_name, context, request, using=using)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\DLSne\AppData\Local\Packages\PythonSoftwareFoundation.Python.3.12_qbz5n2kfra8p0\LocalCache\local-packages\Python312\site-packages\django\template\loader.py", line 62, in render_to_string
+    return template.render(context, request)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\DLSne\AppData\Local\Packages\PythonSoftwareFoundation.Python.3.12_qbz5n2kfra8p0\LocalCache\local-packages\Python312\site-packages\django\template\backends\django.py", line 107, in render
+    return self.template.render(context)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\DLSne\AppData\Local\Packages\PythonSoftwareFoundation.Python.3.12_qbz5n2kfra8p0\LocalCache\local-packages\Python312\site-packages\django\template\base.py", line 171, in render
+    return self._render(context)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\DLSne\AppData\Local\Packages\PythonSoftwareFoundation.Python.3.12_qbz5n2kfra8p0\LocalCache\local-packages\Python312\site-packages\django\template\base.py", line 163, in _render
+    return self.nodelist.render(context)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\DLSne\AppData\Local\Packages\PythonSoftwareFoundation.Python.3.12_qbz5n2kfra8p0\LocalCache\local-packages\Python312\site-packages\django\template\base.py", line 1016, in render
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+                               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\DLSne\AppData\Local\Packages\PythonSoftwareFoundation.Python.3.12_qbz5n2kfra8p0\LocalCache\local-packages\Python312\site-packages\django\template\base.py", line 977, in render_annotated
+    return self.render(context)
+           ^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\DLSne\AppData\Local\Packages\PythonSoftwareFoundation.Python.3.12_qbz5n2kfra8p0\LocalCache\local-packages\Python312\site-packages\django\template\loader_tags.py", line 159, in render
+    return compiled_parent._render(context)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\DLSne\AppData\Local\Packages\PythonSoftwareFoundation.Python.3.12_qbz5n2kfra8p0\LocalCache\local-packages\Python312\site-packages\django\template\base.py", line 163, in _render
+    return self.nodelist.render(context)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\DLSne\AppData\Local\Packages\PythonSoftwareFoundation.Python.3.12_qbz5n2kfra8p0\LocalCache\local-packages\Python312\site-packages\django\template\base.py", line 1016, in render
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+                               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\DLSne\AppData\Local\Packages\PythonSoftwareFoundation.Python.3.12_qbz5n2kfra8p0\LocalCache\local-packages\Python312\site-packages\django\template\base.py", line 977, in render_annotated
+    return self.render(context)
+           ^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\DLSne\AppData\Local\Packages\PythonSoftwareFoundation.Python.3.12_qbz5n2kfra8p0\LocalCache\local-packages\Python312\site-packages\django\template\loader_tags.py", line 65, in render
+    result = block.nodelist.render(context)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\DLSne\AppData\Local\Packages\PythonSoftwareFoundation.Python.3.12_qbz5n2kfra8p0\LocalCache\local-packages\Python312\site-packages\django\template\base.py", line 1016, in render
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+                               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\DLSne\AppData\Local\Packages\PythonSoftwareFoundation.Python.3.12_qbz5n2kfra8p0\LocalCache\local-packages\Python312\site-packages\django\template\base.py", line 977, in render_annotated
+    return self.render(context)
+           ^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\DLSne\AppData\Local\Packages\PythonSoftwareFoundation.Python.3.12_qbz5n2kfra8p0\LocalCache\local-packages\Python312\site-packages\django\template\defaulttags.py", line 326, in render
+    if match:
+       ^^^^^
+  File "C:\Users\DLSne\AppData\Local\Packages\PythonSoftwareFoundation.Python.3.12_qbz5n2kfra8p0\LocalCache\local-packages\Python312\site-packages\django\db\models\query.py", line 398, in __bool__
+    self._fetch_all()
+  File "C:\Users\DLSne\AppData\Local\Packages\PythonSoftwareFoundation.Python.3.12_qbz5n2kfra8p0\LocalCache\local-packages\Python312\site-packages\django\db\models\query.py", line 1935, in _fetch_all
+    self._result_cache = list(self._iterable_class(self))
+                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\DLSne\AppData\Local\Packages\PythonSoftwareFoundation.Python.3.12_qbz5n2kfra8p0\LocalCache\local-packages\Python312\site-packages\django\db\models\query.py", line 91, in __iter__
+    results = compiler.execute_sql(
+              ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\DLSne\AppData\Local\Packages\PythonSoftwareFoundation.Python.3.12_qbz5n2kfra8p0\LocalCache\local-packages\Python312\site-packages\django\db\models\sql\compiler.py", line 1622, in execute_sql
+    cursor.execute(sql, params)
+  File "C:\Users\DLSne\AppData\Local\Packages\PythonSoftwareFoundation.Python.3.12_qbz5n2kfra8p0\LocalCache\local-packages\Python312\site-packages\django\db\backends\utils.py", line 122, in execute
+    return super().execute(sql, params)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\DLSne\AppData\Local\Packages\PythonSoftwareFoundation.Python.3.12_qbz5n2kfra8p0\LocalCache\local-packages\Python312\site-packages\django\db\backends\utils.py", line 79, in execute
+    return self._execute_with_wrappers(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\DLSne\AppData\Local\Packages\PythonSoftwareFoundation.Python.3.12_qbz5n2kfra8p0\LocalCache\local-packages\Python312\site-packages\django\db\backends\utils.py", line 92, in _execute_with_wrappers
+    return executor(sql, params, many, context)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\DLSne\AppData\Local\Packages\PythonSoftwareFoundation.Python.3.12_qbz5n2kfra8p0\LocalCache\local-packages\Python312\site-packages\django\db\backends\utils.py", line 100, in _execute
+    with self.db.wrap_database_errors:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\DLSne\AppData\Local\Packages\PythonSoftwareFoundation.Python.3.12_qbz5n2kfra8p0\LocalCache\local-packages\Python312\site-packages\django\db\utils.py", line 91, in __exit__
+    raise dj_exc_value.with_traceback(traceback) from exc_value
+  File "C:\Users\DLSne\AppData\Local\Packages\PythonSoftwareFoundation.Python.3.12_qbz5n2kfra8p0\LocalCache\local-packages\Python312\site-packages\django\db\backends\utils.py", line 105, in _execute
+    return self.cursor.execute(sql, params)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\DLSne\AppData\Local\Packages\PythonSoftwareFoundation.Python.3.12_qbz5n2kfra8p0\LocalCache\local-packages\Python312\site-packages\django\db\backends\sqlite3\base.py", line 360, in execute
+    return super().execute(query, params)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+django.db.utils.OperationalError: no such column: experiences_experience.seo_score
+ERROR 2025-09-18 02:24:08,767 basehttp 28924 25788 "GET /admin/dashboard/ HTTP/1.1" 500 264517
+INFO 2025-09-18 02:24:08,936 basehttp 28924 25788 "GET /favicon.ico HTTP/1.1" 301 0
+INFO 2025-09-18 02:28:31,692 autoreload 31332 30980 Watching for file changes with StatReloader
+INFO 2025-09-18 02:28:33,868 basehttp 31332 29484 "GET /admin/dashboard/ HTTP/1.1" 200 45395
+INFO 2025-09-18 02:28:34,482 basehttp 31332 29912 "GET /static/site.webmanifest HTTP/1.1" 200 560
+INFO 2025-09-18 02:28:34,496 basehttp 31332 29484 "GET /static/favicon.ico HTTP/1.1" 200 15406
+INFO 2025-09-18 02:28:41,105 basehttp 31332 29484 "GET /experiences/add/ HTTP/1.1" 200 60893
+INFO 2025-09-18 02:28:50,470 basehttp 31332 29484 "POST /experiences/api/analyze-seo/ HTTP/1.1" 200 74
+INFO 2025-09-18 02:28:56,326 basehttp 31332 29484 "POST /experiences/api/analyze-seo/ HTTP/1.1" 200 74
+INFO 2025-09-18 02:31:41,426 autoreload 30484 18420 Watching for file changes with StatReloader
+INFO 2025-09-18 02:31:44,571 basehttp 30484 28120 "GET /experiences/add/ HTTP/1.1" 200 60893
+INFO 2025-09-18 02:31:45,123 basehttp 30484 30960 "GET /static/site.webmanifest HTTP/1.1" 200 560
+INFO 2025-09-18 02:31:45,170 basehttp 30484 28120 "GET /static/favicon.ico HTTP/1.1" 200 15406
+INFO 2025-09-18 02:31:46,685 basehttp 30484 28120 "GET /experiences/add/ HTTP/1.1" 200 60893
+INFO 2025-09-18 02:31:47,271 basehttp 30484 30960 "GET /static/site.webmanifest HTTP/1.1" 200 560
+INFO 2025-09-18 02:31:47,386 basehttp 30484 28120 "GET /static/favicon.ico HTTP/1.1" 200 15406
+INFO 2025-09-18 02:32:23,577 basehttp 30484 28120 "POST /experiences/api/analyze-seo/ HTTP/1.1" 200 1880
+INFO 2025-09-18 02:32:23,577 basehttp 30484 26260 "POST /experiences/api/analyze-seo/ HTTP/1.1" 200 2445
+INFO 2025-09-18 02:32:25,764 basehttp 30484 31648 "POST /experiences/api/analyze-seo/ HTTP/1.1" 200 2244
+INFO 2025-09-18 02:33:51,515 basehttp 30484 33520 "POST /experiences/api/analyze-seo/ HTTP/1.1" 200 2123
+INFO 2025-09-18 02:33:56,015 basehttp 30484 33520 "POST /experiences/api/analyze-seo/ HTTP/1.1" 200 1769
+INFO 2025-09-18 02:34:08,019 basehttp 30484 33520 "POST /experiences/api/analyze-seo/ HTTP/1.1" 200 1821
+INFO 2025-09-18 02:34:45,604 basehttp 30484 33520 "POST /experiences/api/analyze-seo/ HTTP/1.1" 200 2068
+INFO 2025-09-18 02:34:57,751 basehttp 30484 33520 "POST /experiences/api/analyze-seo/ HTTP/1.1" 200 2119
+INFO 2025-09-18 02:35:00,968 basehttp 30484 33520 "POST /experiences/api/analyze-seo/ HTTP/1.1" 200 2051
+INFO 2025-09-18 02:35:54,023 basehttp 30484 33520 "POST /experiences/api/analyze-seo/ HTTP/1.1" 200 1843
+INFO 2025-09-18 02:36:51,296 basehttp 30484 33520 "POST /experiences/api/analyze-seo/ HTTP/1.1" 200 1409
+INFO 2025-09-18 02:37:09,019 basehttp 30484 33520 "POST /experiences/api/analyze-seo/ HTTP/1.1" 200 1188
+INFO 2025-09-18 02:37:23,535 basehttp 30484 33520 "POST /experiences/api/analyze-seo/ HTTP/1.1" 200 1175
+INFO 2025-09-18 02:39:03,300 basehttp 30484 3052 "POST /experiences/add/ HTTP/1.1" 200 65435
+INFO 2025-09-18 02:39:04,380 basehttp 30484 3052 "POST /experiences/api/analyze-seo/ HTTP/1.1" 200 1175
+INFO 2025-09-18 02:39:44,464 basehttp 30484 3052 "POST /experiences/add/ HTTP/1.1" 200 65443
+INFO 2025-09-18 02:39:45,509 basehttp 30484 3052 "POST /experiences/api/analyze-seo/ HTTP/1.1" 200 1175
+INFO 2025-09-18 02:39:58,549 basehttp 30484 3052 "POST /experiences/add/ HTTP/1.1" 302 0
+INFO 2025-09-18 02:39:58,636 basehttp 30484 3052 "GET /experiences/ HTTP/1.1" 200 54334
+INFO 2025-09-18 02:40:01,885 basehttp 30484 3052 "GET /experiences/experience/ultimate-seattle-tbd-test1-white-water-rafting-adventure/ HTTP/1.1" 200 43860
+INFO 2025-09-18 02:40:15,114 basehttp 30484 3052 "GET /admin/dashboard/ HTTP/1.1" 200 47637
+INFO 2025-09-18 02:40:38,269 basehttp 30484 3052 "GET / HTTP/1.1" 200 73458

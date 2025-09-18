@@ -212,7 +212,84 @@
                             </div>
                         </div>
 
-                        
+                        <!-- SEO Optimization -->
+                        <div class="row mb-4">
+                            <div class="col-12">
+                                <h4 class="fw-bold mb-3" style="color: var(--hygge-green);">
+                                    <i class="fas fa-search me-2"></i>SEO Optimization
+                                </h4>
+                                <p class="text-muted mb-3">Optimize your experience for search engines to attract more travelers.</p>
+                            </div>
+
+                            <!-- SEO Score Display -->
+                            <div class="col-12 mb-4">
+                                <div class="card border-0 bg-light">
+                                    <div class="card-body p-3">
+                                        <div class="row align-items-center">
+                                            <div class="col-md-8">
+                                                <div class="d-flex align-items-center">
+                                                    <div class="me-3">
+                                                        <div id="seo-score-circle" class="d-flex align-items-center justify-content-center rounded-circle bg-secondary text-white fw-bold" style="width: 60px; height: 60px; font-size: 18px;">
+                                                            0
+                                                        </div>
+                                                    </div>
+                                                    <div>
+                                                        <h6 class="mb-1">SEO Score: <span id="seo-grade" class="badge bg-secondary">F</span></h6>
+                                                        <p class="mb-0 text-muted" id="seo-description">Fill out the form to see your SEO score</p>
+                                                        <small class="text-muted">Focus keyword: <span id="focus-keyword" class="fw-bold">-</span></small>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-4 text-end">
+                                                <button type="button" class="btn btn-outline-primary btn-sm" id="analyze-seo-btn">
+                                                    <i class="fas fa-analytics me-1"></i>Analyze SEO
+                                                </button>
+                                            </div>
+                                        </div>
+
+                                        <!-- SEO Recommendations -->
+                                        <div id="seo-recommendations" class="mt-3" style="display: none;">
+                                            <h6 class="fw-bold text-primary mb-2">
+                                                <i class="fas fa-lightbulb me-1"></i>Recommendations
+                                            </h6>
+                                            <ul id="seo-recommendations-list" class="list-unstyled mb-0">
+                                                <!-- Recommendations will be populated here -->
+                                            </ul>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-md-6 mb-3">
+                                <label for="{{ form.meta_title.id_for_label }}" class="form-label fw-bold">
+                                    <i class="fas fa-heading text-primary me-1"></i>{{ form.meta_title.label }}:
+                                </label>
+                                {{ form.meta_title }}
+                                {% if form.meta_title.errors %}
+                                    <div class="text-danger">{{ form.meta_title.errors }}</div>
+                                {% endif %}
+                                <div class="form-text">{{ form.meta_title.help_text }}</div>
+                                <div class="progress mt-1" style="height: 4px;">
+                                    <div id="meta-title-progress" class="progress-bar bg-secondary" role="progressbar" style="width: 0%"></div>
+                                </div>
+                                <small class="text-muted">Length: <span id="meta-title-length">0</span>/60 characters</small>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label for="{{ form.meta_description.id_for_label }}" class="form-label fw-bold">
+                                    <i class="fas fa-comment-alt text-info me-1"></i>{{ form.meta_description.label }}:
+                                </label>
+                                {{ form.meta_description }}
+                                {% if form.meta_description.errors %}
+                                    <div class="text-danger">{{ form.meta_description.errors }}</div>
+                                {% endif %}
+                                <div class="form-text">{{ form.meta_description.help_text }}</div>
+                                <div class="progress mt-1" style="height: 4px;">
+                                    <div id="meta-desc-progress" class="progress-bar bg-secondary" role="progressbar" style="width: 0%"></div>
+                                </div>
+                                <small class="text-muted">Length: <span id="meta-desc-length">0</span>/160 characters</small>
+                            </div>
+                        </div>
+
                         <!-- Publication Settings -->
                         <div class="row mb-4">
                             <div class="col-12">
@@ -278,5 +355,197 @@ h4 {
     color: #6c757d;
     font-size: 0.875rem;
 }
+
+/* SEO Score Styling */
+.seo-recommendation {
+    padding: 8px 12px;
+    margin-bottom: 6px;
+    border-radius: 4px;
+    background-color: #f8f9fa;
+    border-left: 3px solid #007bff;
+    font-size: 0.875rem;
+}
+
+.seo-grade-a { background-color: #28a745; }
+.seo-grade-b { background-color: #ffc107; }
+.seo-grade-c { background-color: #fd7e14; }
+.seo-grade-f { background-color: #dc3545; }
 </style>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Get form elements
+    const titleField = document.getElementById('{{ form.title.id_for_label }}');
+    const metaTitleField = document.getElementById('{{ form.meta_title.id_for_label }}');
+    const metaDescField = document.getElementById('{{ form.meta_description.id_for_label }}');
+    const descriptionField = document.getElementById('{{ form.description.id_for_label }}');
+    const shortDescField = document.getElementById('{{ form.short_description.id_for_label }}');
+    const destinationField = document.getElementById('{{ form.destination.id_for_label }}');
+    const experienceTypeField = document.getElementById('{{ form.experience_type.id_for_label }}');
+    const analyzeBtn = document.getElementById('analyze-seo-btn');
+
+    // Character counters
+    function updateCharacterCounter(field, lengthSpan, progressBar, maxLength) {
+        if (!field || !lengthSpan || !progressBar) return;
+
+        const length = field.value.length;
+        lengthSpan.textContent = length;
+
+        const percentage = (length / maxLength) * 100;
+        progressBar.style.width = percentage + '%';
+
+        // Color coding
+        if (length < maxLength * 0.6) {
+            progressBar.className = 'progress-bar bg-danger';
+        } else if (length <= maxLength) {
+            progressBar.className = 'progress-bar bg-success';
+        } else {
+            progressBar.className = 'progress-bar bg-warning';
+        }
+    }
+
+    // Set up character counters
+    if (metaTitleField) {
+        const lengthSpan = document.getElementById('meta-title-length');
+        const progressBar = document.getElementById('meta-title-progress');
+
+        metaTitleField.addEventListener('input', () => {
+            updateCharacterCounter(metaTitleField, lengthSpan, progressBar, 60);
+        });
+        updateCharacterCounter(metaTitleField, lengthSpan, progressBar, 60);
+    }
+
+    if (metaDescField) {
+        const lengthSpan = document.getElementById('meta-desc-length');
+        const progressBar = document.getElementById('meta-desc-progress');
+
+        metaDescField.addEventListener('input', () => {
+            updateCharacterCounter(metaDescField, lengthSpan, progressBar, 160);
+        });
+        updateCharacterCounter(metaDescField, lengthSpan, progressBar, 160);
+    }
+
+    // SEO Analysis function
+    function analyzeSEO() {
+        if (!titleField || !descriptionField) {
+            console.error('Required form fields not found');
+            return;
+        }
+
+        const analyzeBtn = document.getElementById('analyze-seo-btn');
+        const originalText = analyzeBtn.innerHTML;
+
+        // Show loading state
+        analyzeBtn.innerHTML = '<i class="fas fa-spinner fa-spin me-1"></i>Analyzing...';
+        analyzeBtn.disabled = true;
+
+        // Get destination and experience type text
+        const destinationText = destinationField?.selectedOptions[0]?.text || '';
+        const experienceTypeText = experienceTypeField?.selectedOptions[0]?.text || '';
+
+        // Prepare data
+        const data = {
+            title: titleField.value,
+            meta_title: metaTitleField?.value || '',
+            meta_description: metaDescField?.value || '',
+            description: descriptionField.value,
+            short_description: shortDescField?.value || '',
+            destination: destinationText,
+            experience_type: experienceTypeText
+        };
+
+        // Make AJAX request
+        fetch('{% url "experiences:analyze_seo_ajax" %}', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(data)
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                updateSEODisplay(data.analysis);
+            } else {
+                console.error('SEO analysis failed:', data.error);
+                alert('SEO analysis failed: ' + data.error);
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            alert('Error analyzing SEO. Please try again.');
+        })
+        .finally(() => {
+            // Restore button
+            analyzeBtn.innerHTML = originalText;
+            analyzeBtn.disabled = false;
+        });
+    }
+
+    function updateSEODisplay(analysis) {
+        // Update score circle
+        const scoreCircle = document.getElementById('seo-score-circle');
+        const gradeElement = document.getElementById('seo-grade');
+        const descriptionElement = document.getElementById('seo-description');
+        const focusKeywordElement = document.getElementById('focus-keyword');
+        const recommendationsDiv = document.getElementById('seo-recommendations');
+        const recommendationsList = document.getElementById('seo-recommendations-list');
+
+        if (scoreCircle) {
+            scoreCircle.textContent = analysis.overall_score;
+            scoreCircle.className = `d-flex align-items-center justify-content-center rounded-circle text-white fw-bold seo-grade-${analysis.grade.grade.toLowerCase().charAt(0)}`;
+        }
+
+        if (gradeElement) {
+            gradeElement.textContent = analysis.grade.grade;
+            gradeElement.className = `badge seo-grade-${analysis.grade.grade.toLowerCase().charAt(0)}`;
+        }
+
+        if (descriptionElement) {
+            descriptionElement.textContent = analysis.grade.description;
+        }
+
+        if (focusKeywordElement) {
+            focusKeywordElement.textContent = analysis.focus_keyword;
+        }
+
+        // Show recommendations
+        if (recommendationsList && analysis.recommendations.length > 0) {
+            recommendationsList.innerHTML = '';
+            analysis.recommendations.forEach(recommendation => {
+                const li = document.createElement('li');
+                li.className = 'seo-recommendation';
+                li.innerHTML = `<i class="fas fa-lightbulb text-warning me-2"></i>${recommendation}`;
+                recommendationsList.appendChild(li);
+            });
+            recommendationsDiv.style.display = 'block';
+        }
+    }
+
+    // Auto-analyze when key fields change (debounced)
+    let analysisTimeout;
+    function debouncedAnalysis() {
+        clearTimeout(analysisTimeout);
+        analysisTimeout = setTimeout(analyzeSEO, 2000); // Analyze 2 seconds after user stops typing
+    }
+
+    // Add event listeners for auto-analysis
+    if (titleField) titleField.addEventListener('input', debouncedAnalysis);
+    if (metaTitleField) metaTitleField.addEventListener('input', debouncedAnalysis);
+    if (metaDescField) metaDescField.addEventListener('input', debouncedAnalysis);
+    if (descriptionField) descriptionField.addEventListener('input', debouncedAnalysis);
+    if (destinationField) destinationField.addEventListener('change', debouncedAnalysis);
+    if (experienceTypeField) experienceTypeField.addEventListener('change', debouncedAnalysis);
+
+    // Manual analysis button
+    if (analyzeBtn) {
+        analyzeBtn.addEventListener('click', analyzeSEO);
+    }
+
+    // Initial analysis if fields have content
+    if (titleField?.value || descriptionField?.value) {
+        setTimeout(analyzeSEO, 1000);
+    }
+});
+</script>
 {% endblock %}

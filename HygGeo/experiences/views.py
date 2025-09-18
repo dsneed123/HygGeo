@@ -6,6 +6,8 @@ from django.db.models import Q, Avg, Count
 from django.contrib import messages
 from django.http import JsonResponse, HttpResponseRedirect
 from django.views.decorators.http import require_POST
+from django.views.decorators.csrf import csrf_exempt
+import json
 from django.utils import timezone
 from django.contrib.auth.decorators import user_passes_test
 from accounts.models import TravelSurvey
@@ -1009,4 +1011,46 @@ def sitemap_view(request):
     sitemap_xml.append('</urlset>')
 
     return HttpResponse('\n'.join(sitemap_xml), content_type='application/xml')
+
+
+@csrf_exempt
+@require_POST
+def analyze_seo_ajax(request):
+    """
+    AJAX endpoint for real-time SEO analysis
+    Returns comprehensive SEO score and recommendations
+    """
+    try:
+        data = json.loads(request.body)
+
+        # Extract form data
+        experience_data = {
+            'title': data.get('title', ''),
+            'meta_title': data.get('meta_title', ''),
+            'meta_description': data.get('meta_description', ''),
+            'description': data.get('description', ''),
+            'short_description': data.get('short_description', ''),
+            'destination': data.get('destination', ''),
+            'experience_type': data.get('experience_type', '')
+        }
+
+        # Import and use the SEO analyzer
+        from .seo_analyzer import get_seo_analysis_for_experience
+        analysis = get_seo_analysis_for_experience(experience_data)
+
+        return JsonResponse({
+            'success': True,
+            'analysis': analysis
+        })
+
+    except json.JSONDecodeError:
+        return JsonResponse({
+            'success': False,
+            'error': 'Invalid JSON data'
+        })
+    except Exception as e:
+        return JsonResponse({
+            'success': False,
+            'error': f'Analysis failed: {str(e)}'
+        })
 
