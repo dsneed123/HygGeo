@@ -1,6 +1,15 @@
 {% extends 'base.html' %}
 
-{% block title %}{{ experience.title }} - HygGeo{% endblock %}
+{% block title %}{{ experience.title }} - {{ experience.destination.name }} | HygGeo{% endblock %}
+
+{% block description %}{{ experience.short_description|default:experience.description|truncatewords:25 }} Experience sustainable travel in {{ experience.destination.name }}.{% endblock %}
+
+{% block keywords %}{{ experience.title }}, {{ experience.destination.name }}, {{ experience.destination.country }}, sustainable travel, hygge, {{ experience.experience_type.name|default:"travel experience" }}{% if experience.categories.all %}, {% for category in experience.categories.all %}{{ category.name }}{% if not forloop.last %}, {% endif %}{% endfor %}{% endif %}{% endblock %}
+
+{% block og_type %}article{% endblock %}
+{% block og_title %}{{ experience.title }} in {{ experience.destination.name }}{% endblock %}
+{% block og_description %}{{ experience.short_description|default:experience.description|truncatewords:30 }}{% endblock %}
+{% block og_image %}{% if experience.image %}{{ experience.image.url }}{% else %}https://yourdomain.com/static/images/hyggeo-og-image.jpg{% endif %}{% endblock %}
 
 {% block content %}
 <div class="container py-5">
@@ -214,8 +223,22 @@
                         <i class="fas fa-calendar-check me-2"></i>Book This Experience
                     </button>
                     {% else %}
-                    <div class="alert alert-info text-center">
-                        This experience does not require booking.
+                    <div class="card border-0 shadow-sm">
+                        <div class="card-body text-center p-4" style="background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);">
+                            <div class="mb-3">
+                                <i class="fas fa-external-link-alt text-primary" style="font-size: 2rem; color: var(--hygge-green)!important;"></i>
+                            </div>
+                            <h6 class="fw-bold mb-2" style="color: var(--hygge-green);">External Booking Required</h6>
+                            <p class="text-muted mb-3 small">This experience is managed by our trusted partner. You'll be redirected to their secure booking platform to complete your reservation.</p>
+                            <div class="d-flex align-items-center justify-content-center">
+                                <span class="badge bg-success me-2">
+                                    <i class="fas fa-shield-alt me-1"></i>Secure
+                                </span>
+                                <span class="badge" style="background-color: var(--hygge-green);">
+                                    <i class="fas fa-handshake me-1"></i>Trusted Partner
+                                </span>
+                            </div>
+                        </div>
                     </div>
                     {% endif %}
 
