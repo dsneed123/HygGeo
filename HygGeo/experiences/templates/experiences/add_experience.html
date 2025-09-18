@@ -215,13 +215,30 @@
                         <!-- SEO Optimization -->
                         <div class="row mb-4">
                             <div class="col-12">
-                                <h4 class="fw-bold mb-3" style="color: var(--hygge-green);">
-                                    <i class="fas fa-search me-2"></i>SEO Optimization
-                                </h4>
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <h4 class="fw-bold mb-3" style="color: var(--hygge-green);">
+                                        <i class="fas fa-search me-2"></i>SEO Optimization
+                                    </h4>
+                                    <div class="dropdown">
+                                        <button class="btn btn-outline-info btn-sm dropdown-toggle" type="button" id="seoTipsDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+                                            <i class="fas fa-question-circle me-1"></i>SEO Tips
+                                        </button>
+                                        <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="seoTipsDropdown" style="width: 300px;">
+                                            <li><h6 class="dropdown-header"><i class="fas fa-lightbulb text-warning me-1"></i>Quick SEO Tips</h6></li>
+                                            <li><hr class="dropdown-divider"></li>
+                                            <li><a class="dropdown-item small" href="#">✅ Include your destination in the title</a></li>
+                                            <li><a class="dropdown-item small" href="#">📝 Keep meta descriptions 120-155 characters</a></li>
+                                            <li><a class="dropdown-item small" href="#">🔑 Use keywords naturally in content</a></li>
+                                            <li><a class="dropdown-item small" href="#">📖 Aim for 300-1200 words in description</a></li>
+                                            <li><a class="dropdown-item small" href="#">🌱 Mention sustainability features</a></li>
+                                            <li><a class="dropdown-item small" href="#">❤️ Highlight hygge aspects</a></li>
+                                        </ul>
+                                    </div>
+                                </div>
                                 <p class="text-muted mb-3">Optimize your experience for search engines to attract more travelers.</p>
                             </div>
 
-                            <!-- SEO Score Display -->
+                            <!-- Enhanced SEO Score Display -->
                             <div class="col-12 mb-4">
                                 <div class="card border-0 bg-light">
                                     <div class="card-body p-3">
@@ -237,24 +254,53 @@
                                                         <h6 class="mb-1">SEO Score: <span id="seo-grade" class="badge bg-secondary">F</span></h6>
                                                         <p class="mb-0 text-muted" id="seo-description">Fill out the form to see your SEO score</p>
                                                         <small class="text-muted">Focus keyword: <span id="focus-keyword" class="fw-bold">-</span></small>
+                                                        <br><small class="text-muted">Est. reading time: <span id="reading-time" class="fw-bold">0 min</span></small>
                                                     </div>
                                                 </div>
                                             </div>
                                             <div class="col-md-4 text-end">
                                                 <button type="button" class="btn btn-outline-primary btn-sm" id="analyze-seo-btn">
-                                                    <i class="fas fa-analytics me-1"></i>Analyze SEO
+                                                    <i class="fas fa-search me-1"></i>Analyze SEO
                                                 </button>
+                                                <div class="mt-2">
+                                                    <div class="form-check form-switch">
+                                                        <input class="form-check-input" type="checkbox" id="auto-analyze" checked>
+                                                        <label class="form-check-label small" for="auto-analyze">
+                                                            Auto-analyze
+                                                        </label>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <!-- Quick Wins Section -->
+                                        <div id="quick-wins" class="mt-3" style="display: none;">
+                                            <h6 class="fw-bold text-success mb-2">
+                                                <i class="fas fa-rocket me-1"></i>Quick Wins
+                                            </h6>
+                                            <div id="quick-wins-list" class="row">
+                                                <!-- Quick wins will be populated here -->
                                             </div>
                                         </div>
 
                                         <!-- SEO Recommendations -->
                                         <div id="seo-recommendations" class="mt-3" style="display: none;">
                                             <h6 class="fw-bold text-primary mb-2">
-                                                <i class="fas fa-lightbulb me-1"></i>Recommendations
+                                                <i class="fas fa-lightbulb me-1"></i>All Recommendations
                                             </h6>
                                             <ul id="seo-recommendations-list" class="list-unstyled mb-0">
                                                 <!-- Recommendations will be populated here -->
                                             </ul>
+                                        </div>
+
+                                        <!-- Detailed Scores -->
+                                        <div id="detailed-scores" class="mt-3" style="display: none;">
+                                            <h6 class="fw-bold text-info mb-2">
+                                                <i class="fas fa-chart-bar me-1"></i>Detailed Breakdown
+                                            </h6>
+                                            <div class="row" id="score-breakdown">
+                                                <!-- Score breakdown will be populated here -->
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
@@ -488,8 +534,13 @@ document.addEventListener('DOMContentLoaded', function() {
         const gradeElement = document.getElementById('seo-grade');
         const descriptionElement = document.getElementById('seo-description');
         const focusKeywordElement = document.getElementById('focus-keyword');
+        const readingTimeElement = document.getElementById('reading-time');
         const recommendationsDiv = document.getElementById('seo-recommendations');
         const recommendationsList = document.getElementById('seo-recommendations-list');
+        const quickWinsDiv = document.getElementById('quick-wins');
+        const quickWinsList = document.getElementById('quick-wins-list');
+        const detailedScoresDiv = document.getElementById('detailed-scores');
+        const scoreBreakdown = document.getElementById('score-breakdown');
 
         if (scoreCircle) {
             scoreCircle.textContent = analysis.overall_score;
@@ -509,7 +560,27 @@ document.addEventListener('DOMContentLoaded', function() {
             focusKeywordElement.textContent = analysis.focus_keyword;
         }
 
-        // Show recommendations
+        if (readingTimeElement && analysis.content_stats) {
+            readingTimeElement.textContent = `${analysis.content_stats.estimated_reading_time || 0} min`;
+        }
+
+        // Show quick wins
+        if (quickWinsList && analysis.quick_wins && analysis.quick_wins.length > 0) {
+            quickWinsList.innerHTML = '';
+            analysis.quick_wins.forEach(win => {
+                const div = document.createElement('div');
+                div.className = 'col-12 mb-2';
+                div.innerHTML = `
+                    <div class="alert alert-success alert-dismissible py-2 px-3 mb-0">
+                        <i class="fas fa-rocket me-2"></i><small>${win}</small>
+                    </div>
+                `;
+                quickWinsList.appendChild(div);
+            });
+            quickWinsDiv.style.display = 'block';
+        }
+
+        // Show all recommendations
         if (recommendationsList && analysis.recommendations.length > 0) {
             recommendationsList.innerHTML = '';
             analysis.recommendations.forEach(recommendation => {
@@ -520,13 +591,43 @@ document.addEventListener('DOMContentLoaded', function() {
             });
             recommendationsDiv.style.display = 'block';
         }
+
+        // Show detailed score breakdown
+        if (scoreBreakdown && analysis.detailed_scores) {
+            scoreBreakdown.innerHTML = '';
+            const scores = analysis.detailed_scores;
+
+            Object.keys(scores).forEach(category => {
+                const score = scores[category].score;
+                const progressBarClass = score >= 80 ? 'bg-success' : score >= 60 ? 'bg-warning' : 'bg-danger';
+
+                const div = document.createElement('div');
+                div.className = 'col-md-6 mb-2';
+                div.innerHTML = `
+                    <div class="d-flex justify-content-between">
+                        <small class="fw-bold">${category.replace('_', ' ').toUpperCase()}</small>
+                        <small>${score}/100</small>
+                    </div>
+                    <div class="progress" style="height: 8px;">
+                        <div class="progress-bar ${progressBarClass}" style="width: ${score}%"></div>
+                    </div>
+                `;
+                scoreBreakdown.appendChild(div);
+            });
+            detailedScoresDiv.style.display = 'block';
+        }
     }
 
     // Auto-analyze when key fields change (debounced)
     let analysisTimeout;
+    const autoAnalyzeToggle = document.getElementById('auto-analyze');
+
     function debouncedAnalysis() {
+        if (autoAnalyzeToggle && !autoAnalyzeToggle.checked) {
+            return; // Skip if auto-analyze is disabled
+        }
         clearTimeout(analysisTimeout);
-        analysisTimeout = setTimeout(analyzeSEO, 2000); // Analyze 2 seconds after user stops typing
+        analysisTimeout = setTimeout(analyzeSEO, 1500); // Analyze 1.5 seconds after user stops typing
     }
 
     // Add event listeners for auto-analysis
@@ -536,6 +637,33 @@ document.addEventListener('DOMContentLoaded', function() {
     if (descriptionField) descriptionField.addEventListener('input', debouncedAnalysis);
     if (destinationField) destinationField.addEventListener('change', debouncedAnalysis);
     if (experienceTypeField) experienceTypeField.addEventListener('change', debouncedAnalysis);
+
+    // Real-time character counting and progress bars
+    function setupRealTimeCounters() {
+        const updateCounters = () => {
+            // Update character counters
+            if (metaTitleField) {
+                const lengthSpan = document.getElementById('meta-title-length');
+                const progressBar = document.getElementById('meta-title-progress');
+                updateCharacterCounter(metaTitleField, lengthSpan, progressBar, 60);
+            }
+
+            if (metaDescField) {
+                const lengthSpan = document.getElementById('meta-desc-length');
+                const progressBar = document.getElementById('meta-desc-progress');
+                updateCharacterCounter(metaDescField, lengthSpan, progressBar, 160);
+            }
+        };
+
+        // Initial update
+        updateCounters();
+
+        // Real-time updates
+        if (metaTitleField) metaTitleField.addEventListener('input', updateCounters);
+        if (metaDescField) metaDescField.addEventListener('input', updateCounters);
+    }
+
+    setupRealTimeCounters();
 
     // Manual analysis button
     if (analyzeBtn) {

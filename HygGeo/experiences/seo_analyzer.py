@@ -17,20 +17,20 @@ class SEOAnalyzer:
 
     # Industry-standard SEO factor weights (based on Moz, SEMrush studies)
     WEIGHTS = {
-        'title_optimization': 20,      # Title tag optimization
-        'meta_description': 15,        # Meta description quality
+        'title_optimization': 22,      # Title tag optimization (increased weight)
+        'meta_description': 18,        # Meta description quality (increased weight)
         'content_quality': 25,         # Content depth and quality
         'keyword_optimization': 20,    # Keyword usage and density
-        'readability': 10,             # Content readability
-        'structure': 10,               # Content structure and formatting
+        'readability': 8,              # Content readability (decreased weight)
+        'structure': 7,                # Content structure and formatting (decreased weight)
     }
 
-    # Content length recommendations (based on Backlinko studies)
+    # Content length recommendations (based on 2024 SEO studies)
     OPTIMAL_CONTENT_LENGTH = {
         'title': {'min': 30, 'max': 60, 'optimal': 50},
-        'meta_description': {'min': 120, 'max': 160, 'optimal': 145},
-        'content': {'min': 300, 'max': 3000, 'optimal': 1500},
-        'short_description': {'min': 50, 'max': 300, 'optimal': 150}
+        'meta_description': {'min': 120, 'max': 155, 'optimal': 145},  # Updated for Google's 2024 changes
+        'content': {'min': 300, 'max': 2500, 'optimal': 1200},         # Optimized for travel content
+        'short_description': {'min': 80, 'max': 280, 'optimal': 180}   # Better for travel snippets
     }
 
     def __init__(self):
@@ -100,20 +100,22 @@ class SEOAnalyzer:
                 'readability': readability_score,
                 'structure': structure_score
             },
-            'recommendations': recommendations[:8],  # Top 8 recommendations
+            'recommendations': self._prioritize_recommendations(recommendations)[:8],  # Top 8 prioritized recommendations
             'content_stats': {
                 'title_length': len(meta_title),
                 'meta_description_length': len(meta_description),
                 'content_length': len(description),
                 'word_count': len(description.split()),
-                'keyword_density': self._calculate_keyword_density(description, focus_keyword)
-            }
+                'keyword_density': self._calculate_keyword_density(description, focus_keyword),
+                'estimated_reading_time': max(1, len(description.split()) // 200)  # Reading time in minutes
+            },
+            'quick_wins': self._identify_quick_wins(recommendations, overall_score),
+            'keyword_suggestions': self.get_keyword_suggestions(experience_data)
         }
 
     def _extract_focus_keyword(self, title: str, destination: str, experience_type: str) -> str:
         """
-        Extract focus keyword using NLP-inspired approach
-        Simulates how tools like Yoast detect primary keywords
+        Enhanced focus keyword extraction with travel-specific intelligence
         """
 
         # Combine all relevant text
@@ -129,13 +131,33 @@ class SEOAnalyzer:
         # Count word frequencies
         word_freq = Counter(filtered_words)
 
-        # Prefer destination + experience type combinations
+        # Enhanced keyword extraction logic
+        # 1. Prefer destination + experience type combinations
         if destination and experience_type:
-            potential_keyword = f"{destination.lower()} {experience_type.lower()}"
-            if len(potential_keyword.split()) <= 3:
-                return potential_keyword
+            dest_clean = destination.lower().strip()
+            exp_clean = experience_type.lower().strip()
 
-        # Fall back to most common word
+            # Try different combinations
+            combinations = [
+                f"{dest_clean} {exp_clean}",
+                f"{exp_clean} in {dest_clean}",
+                f"{dest_clean} travel"
+            ]
+
+            for combo in combinations:
+                if len(combo.split()) <= 4 and len(combo) <= 50:
+                    return combo
+
+        # 2. Look for travel-specific power keywords in title
+        travel_power_words = ['adventure', 'experience', 'tour', 'guide', 'vacation', 'journey']
+        for word in travel_power_words:
+            if word in title.lower() and destination:
+                return f"{destination.lower()} {word}"
+
+        # 3. Fall back to destination or most common word
+        if destination and len(destination) > 2:
+            return destination.lower()
+
         return word_freq.most_common(1)[0][0] if word_freq else "travel"
 
     def _analyze_title_seo(self, title: str, focus_keyword: str) -> Dict:
@@ -172,12 +194,24 @@ class SEOAnalyzer:
         else:
             recommendations.append(f"Include focus keyword '{focus_keyword}' in your title.")
 
-        # Compelling/clickable (20%)
-        compelling_words = ['best', 'ultimate', 'complete', 'guide', 'amazing', 'stunning', 'unique', 'authentic']
-        if any(word in title.lower() for word in compelling_words):
+        # Compelling/clickable (20%) - Enhanced for travel
+        compelling_words = {
+            'power_words': ['best', 'ultimate', 'complete', 'amazing', 'stunning', 'unique', 'authentic', 'unforgettable'],
+            'travel_specific': ['hidden', 'secret', 'local', 'insider', 'exclusive', 'pristine', 'untouched'],
+            'emotional': ['breathtaking', 'magical', 'enchanting', 'peaceful', 'serene', 'cozy']
+        }
+
+        title_lower = title.lower()
+        compelling_found = False
+        for category, words in compelling_words.items():
+            if any(word in title_lower for word in words):
+                compelling_found = True
+                break
+
+        if compelling_found:
             score += 20
         else:
-            recommendations.append("Consider adding compelling words like 'best', 'ultimate', or 'authentic' to increase click-through rate.")
+            recommendations.append("Add compelling words like 'unique', 'authentic', 'hidden', or 'breathtaking' to increase click-through rate.")
 
         # Brand/location presence (10%)
         location_indicators = ['in', 'at', 'from', 'near', 'around']
@@ -287,11 +321,13 @@ class SEOAnalyzer:
             score += max(0, 25 * (sentences / 10))
             recommendations.append("Add more detailed information to increase content depth.")
 
-        # Semantic keywords (25%)
+        # Enhanced travel semantic keywords for better topical relevance (25%)
         travel_semantic_keywords = [
             'travel', 'trip', 'vacation', 'tourism', 'journey', 'adventure',
             'destination', 'booking', 'hotel', 'restaurant', 'activity',
-            'guide', 'experience', 'culture', 'local', 'authentic'
+            'guide', 'experience', 'culture', 'local', 'authentic',
+            'sustainable', 'eco-friendly', 'hygge', 'mindful', 'unique',
+            'discover', 'explore', 'immersive', 'unforgettable', 'memorable'
         ]
         semantic_count = sum(1 for word in travel_semantic_keywords if word in content.lower())
         if semantic_count >= 5:
@@ -479,6 +515,66 @@ class SEOAnalyzer:
 
         return base_variations[:5]
 
+    def get_keyword_suggestions(self, experience_data: Dict) -> List[str]:
+        """
+        Generate smart keyword suggestions based on content and travel industry trends
+        """
+        title = experience_data.get('title', '')
+        destination = experience_data.get('destination', '')
+        experience_type = experience_data.get('experience_type', '')
+        description = experience_data.get('description', '')
+
+        suggestions = set()
+
+        # Location-based keywords
+        if destination:
+            dest_lower = destination.lower()
+            suggestions.update([
+                f"{dest_lower} travel",
+                f"{dest_lower} tourism",
+                f"{dest_lower} vacation",
+                f"visit {dest_lower}",
+                f"things to do {dest_lower}",
+                f"{dest_lower} guide"
+            ])
+
+        # Experience type keywords
+        if experience_type:
+            exp_lower = experience_type.lower()
+            if destination:
+                suggestions.update([
+                    f"{dest_lower} {exp_lower}",
+                    f"{exp_lower} in {dest_lower}",
+                    f"best {exp_lower} {dest_lower}"
+                ])
+
+        # Content-based keywords (extract key phrases)
+        if description:
+            words = re.findall(r'\b[a-zA-Z]{4,}\b', description.lower())
+            important_words = [w for w in words if w not in self.stop_words and len(w) > 3]
+            word_freq = Counter(important_words)
+
+            for word, freq in word_freq.most_common(5):
+                if destination:
+                    suggestions.add(f"{dest_lower} {word}")
+                suggestions.add(word)
+
+        # Travel industry trending keywords
+        trending_modifiers = [
+            'sustainable', 'eco-friendly', 'authentic', 'local', 'unique',
+            'hidden gems', 'off the beaten path', 'cultural', 'immersive'
+        ]
+
+        for modifier in trending_modifiers[:3]:
+            if destination:
+                suggestions.add(f"{modifier} {dest_lower}")
+            if experience_type:
+                suggestions.add(f"{modifier} {experience_type.lower()}")
+
+        # Filter and return top suggestions
+        filtered_suggestions = [s for s in suggestions if len(s) <= 50 and len(s.split()) <= 4]
+        return list(filtered_suggestions)[:10]
+
     def _calculate_weighted_score(self, scores: Dict) -> int:
         """Calculate weighted overall score"""
         total_score = 0
@@ -492,19 +588,56 @@ class SEOAnalyzer:
         return round(total_score / total_weight) if total_weight > 0 else 0
 
     def _get_seo_grade(self, score: int) -> Dict:
-        """Convert score to letter grade with color"""
+        """Convert score to letter grade with color and actionable description"""
         if score >= 90:
-            return {'grade': 'A+', 'color': '#28a745', 'description': 'Excellent SEO'}
+            return {'grade': 'A+', 'color': '#28a745', 'description': 'Excellent SEO - Ready to rank!'}
         elif score >= 80:
-            return {'grade': 'A', 'color': '#28a745', 'description': 'Very Good SEO'}
+            return {'grade': 'A', 'color': '#28a745', 'description': 'Very Good SEO - Minor tweaks needed'}
         elif score >= 70:
-            return {'grade': 'B+', 'color': '#ffc107', 'description': 'Good SEO'}
+            return {'grade': 'B+', 'color': '#ffc107', 'description': 'Good SEO - Some improvements possible'}
         elif score >= 60:
-            return {'grade': 'B', 'color': '#ffc107', 'description': 'Fair SEO'}
+            return {'grade': 'B', 'color': '#ffc107', 'description': 'Fair SEO - Focus on key areas'}
         elif score >= 50:
-            return {'grade': 'C', 'color': '#fd7e14', 'description': 'Needs Improvement'}
+            return {'grade': 'C', 'color': '#fd7e14', 'description': 'Needs Improvement - Address major issues'}
         else:
-            return {'grade': 'F', 'color': '#dc3545', 'description': 'Poor SEO'}
+            return {'grade': 'F', 'color': '#dc3545', 'description': 'Poor SEO - Requires significant work'}
+
+
+    def _prioritize_recommendations(self, recommendations: List[str]) -> List[str]:
+        """Prioritize recommendations by impact and ease of implementation"""
+        high_priority_keywords = [
+            'title', 'meta description', 'focus keyword', 'keyword'
+        ]
+        medium_priority_keywords = [
+            'content', 'length', 'readability'
+        ]
+
+        high_priority = []
+        medium_priority = []
+        low_priority = []
+
+        for rec in recommendations:
+            rec_lower = rec.lower()
+            if any(keyword in rec_lower for keyword in high_priority_keywords):
+                high_priority.append(rec)
+            elif any(keyword in rec_lower for keyword in medium_priority_keywords):
+                medium_priority.append(rec)
+            else:
+                low_priority.append(rec)
+
+        return high_priority + medium_priority + low_priority
+
+    def _identify_quick_wins(self, recommendations: List[str], score: int) -> List[str]:
+        """Identify quick wins that can immediately improve SEO score"""
+        quick_wins = []
+
+        for rec in recommendations:
+            rec_lower = rec.lower()
+            if any(keyword in rec_lower for keyword in ['title', 'meta description', 'focus keyword']):
+                if 'add' in rec_lower or 'include' in rec_lower:
+                    quick_wins.append(rec)
+
+        return quick_wins[:3]  # Top 3 quick wins
 
 
 def get_seo_analysis_for_experience(experience_data: Dict) -> Dict:

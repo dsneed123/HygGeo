@@ -275,8 +275,18 @@ class Experience(models.Model):
         return dict(self.BUDGET_RANGES).get(self.budget_range, self.budget_range)
 
     def get_seo_analysis(self):
-        """Get SEO analysis using in-memory calculation"""
+        """Get comprehensive SEO analysis with caching for performance"""
+        from django.core.cache import cache
         from .seo_analyzer import get_seo_analysis_for_experience
+
+        # Create cache key based on content hash
+        content_hash = hash(f"{self.title}{self.meta_title}{self.meta_description}{self.description}{self.short_description}{self.updated_at}")
+        cache_key = f"seo_analysis_{self.id}_{content_hash}"
+
+        # Try to get from cache first
+        cached_analysis = cache.get(cache_key)
+        if cached_analysis:
+            return cached_analysis
 
         experience_data = {
             'title': self.title,
@@ -285,10 +295,17 @@ class Experience(models.Model):
             'description': self.description,
             'short_description': self.short_description,
             'destination': str(self.destination),
-            'experience_type': str(self.experience_type) if self.experience_type else ''
+            'experience_type': str(self.experience_type) if self.experience_type else '',
+            'categories': [cat.name for cat in self.categories.all()],
+            'sustainability_score': self.sustainability_score,
+            'hygge_factor': self.hygge_factor
         }
 
-        return get_seo_analysis_for_experience(experience_data)
+        analysis = get_seo_analysis_for_experience(experience_data)
+
+        # Cache for 1 hour
+        cache.set(cache_key, analysis, 3600)
+        return analysis
 
     def get_seo_grade(self):
         """Get SEO grade and color based on calculated score"""
