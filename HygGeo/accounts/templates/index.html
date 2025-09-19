@@ -115,56 +115,176 @@
 </section>
 
 <!-- Hygge Philosophy Section -->
-<section id="hygge-section" class="py-5" style="background-color: var(--hygge-cream);">
+<section id="hygge-section" class="py-4" style="background-color: var(--hygge-cream);">
     <div class="container">
         <div class="row">
-            <div class="col-lg-8 mx-auto text-center mb-5">
-                <h2 class="h1 fw-bold mb-4" style="color: var(--hygge-green);">
+            <div class="col-lg-10 mx-auto text-center mb-4">
+                <h2 class="h3 fw-bold mb-3" style="color: var(--hygge-green);">
                     The Art of Hygge in Travel
                 </h2>
-                <p class="lead text-muted">
-                    <strong>Hygge</strong> (pronounced "hoo-gah") is the Danish concept of creating 
+                <p class="text-muted">
+                    <strong>Hygge</strong> (pronounced "hoo-gah") is the Danish concept of creating
                     atmosphere and enjoying life's simple pleasures with people you care about.
                 </p>
             </div>
         </div>
-        
-        <div class="row g-4 mb-5">
+
+        <div class="row g-3">
             <div class="col-md-4">
-                <div class="card card-hygge h-100 text-center p-4">
-                    <div class="mb-3">
-                        <i class="fas fa-heart text-warning" style="font-size: 3rem;"></i>
+                <div class="hygge-feature text-center p-3">
+                    <div class="mb-2">
+                        <i class="fas fa-heart" style="font-size: 2rem; color: var(--hygge-green);"></i>
                     </div>
-                    <h4 class="fw-bold mb-3" style="color: var(--hygge-green);">Mindful Moments</h4>
-                    <p class="text-muted">
-                        Slow down and savor each experience. Whether it's watching a sunset 
-                        or sharing a meal with locals, hygge is about being present.
+                    <h5 class="fw-bold mb-2" style="color: var(--hygge-green);">Mindful Moments</h5>
+                    <p class="text-muted small mb-0">
+                        Slow down and savor each experience with intention and presence.
                     </p>
                 </div>
             </div>
             <div class="col-md-4">
-                <div class="card card-hygge h-100 text-center p-4">
-                    <div class="mb-3">
-                        <i class="fas fa-users text-success" style="font-size: 3rem;"></i>
+                <div class="hygge-feature text-center p-3">
+                    <div class="mb-2">
+                        <i class="fas fa-users" style="font-size: 2rem; color: var(--hygge-green);"></i>
                     </div>
-                    <h4 class="fw-bold mb-3" style="color: var(--hygge-green);">Connection</h4>
-                    <p class="text-muted">
-                        Build genuine connections with local communities, fellow travelers, 
-                        and the environments you visit. Leave places better than you found them.
+                    <h5 class="fw-bold mb-2" style="color: var(--hygge-green);">Connection</h5>
+                    <p class="text-muted small mb-0">
+                        Build genuine relationships with communities and environments.
                     </p>
                 </div>
             </div>
             <div class="col-md-4">
-                <div class="card card-hygge h-100 text-center p-4">
-                    <div class="mb-3">
-                        <i class="fas fa-leaf text-primary" style="font-size: 3rem;"></i>
+                <div class="hygge-feature text-center p-3">
+                    <div class="mb-2">
+                        <i class="fas fa-leaf" style="font-size: 2rem; color: var(--hygge-green);"></i>
                     </div>
-                    <h4 class="fw-bold mb-3" style="color: var(--hygge-green);">Sustainability</h4>
-                    <p class="text-muted">
-                        Travel responsibly by choosing eco-friendly options, supporting local 
-                        economies, and minimizing your environmental footprint.
+                    <h5 class="fw-bold mb-2" style="color: var(--hygge-green);">Sustainability</h5>
+                    <p class="text-muted small mb-0">
+                        Travel responsibly with eco-friendly choices and local support.
                     </p>
                 </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Featured Experiences Section -->
+<section class="py-4" style="background-color: var(--hygge-warm-white);">
+    <div class="container">
+        <div class="row">
+            <div class="col-12 mb-4">
+                <div class="d-flex justify-content-between align-items-center">
+                    <div>
+                        <h2 class="h3 fw-bold mb-2" style="color: var(--hygge-green);">Featured Experiences</h2>
+                        <p class="text-muted mb-0">Sustainable adventures await</p>
+                    </div>
+                    <a href="{% url 'experiences:experience_list' %}" class="btn btn-outline-primary btn-sm">
+                        View All <i class="fas fa-arrow-right ms-1"></i>
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Mobile-Friendly Experiences Carousel -->
+        <div class="experiences-carousel-wrapper">
+            <div class="experiences-carousel" id="experiencesCarousel">
+                {% for experience in featured_experiences %}
+                <div class="experience-card">
+                    <div class="experience-image">
+                        {% if experience.image %}
+                            <img src="{{ experience.image.url }}" alt="{{ experience.title }}" loading="lazy">
+                        {% else %}
+                            <div class="experience-placeholder">
+                                <i class="fas fa-mountain"></i>
+                            </div>
+                        {% endif %}
+                        <div class="experience-overlay">
+                            <div class="experience-type-badge">
+                                {% if experience.experience_type %}
+                                    {{ experience.experience_type.name }}
+                                {% else %}
+                                    Adventure
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                    <div class="experience-content">
+                        <h4 class="experience-title">{{ experience.title }}</h4>
+                        <p class="experience-location">
+                            <i class="fas fa-map-marker-alt me-2"></i>
+                            {% if experience.destination %}{{ experience.destination.name }}{% else %}Amazing Location{% endif %}
+                        </p>
+                        <p class="experience-description">
+                            {% if experience.description %}
+                                {{ experience.description|truncatewords:15 }}
+                            {% else %}
+                                An incredible sustainable travel experience awaits you.
+                            {% endif %}
+                        </p>
+                        <div class="experience-stats">
+                            <div class="stat">
+                                <i class="fas fa-leaf"></i>
+                                <span>Eco-Friendly</span>
+                            </div>
+                            {% if experience.price %}
+                            <div class="stat">
+                                <i class="fas fa-tag"></i>
+                                <span>${{ experience.price }}</span>
+                            </div>
+                            {% endif %}
+                        </div>
+                        <a href="{{ experience.get_absolute_url }}" class="btn btn-experience">
+                            <i class="fas fa-arrow-right me-2"></i>
+                            Learn More
+                        </a>
+                    </div>
+                </div>
+                {% empty %}
+                <!-- Sample experiences if none exist -->
+                <div class="experience-card">
+                    <div class="experience-image">
+                        <div class="experience-placeholder">
+                            <i class="fas fa-mountain"></i>
+                        </div>
+                        <div class="experience-overlay">
+                            <div class="experience-type-badge">Adventure</div>
+                        </div>
+                    </div>
+                    <div class="experience-content">
+                        <h4 class="experience-title">Mountain Hiking Adventure</h4>
+                        <p class="experience-location">
+                            <i class="fas fa-map-marker-alt me-2"></i>
+                            Norwegian Fjords
+                        </p>
+                        <p class="experience-description">
+                            Explore pristine mountain trails with local guides committed to sustainable tourism practices.
+                        </p>
+                        <div class="experience-stats">
+                            <div class="stat">
+                                <i class="fas fa-leaf"></i>
+                                <span>Eco-Friendly</span>
+                            </div>
+                            <div class="stat">
+                                <i class="fas fa-tag"></i>
+                                <span>$299</span>
+                            </div>
+                        </div>
+                        <a href="#" class="btn btn-experience">
+                            <i class="fas fa-arrow-right me-2"></i>
+                            Learn More
+                        </a>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+
+            <!-- Carousel Navigation -->
+            <div class="experiences-nav">
+                <button class="nav-btn prev-btn" onclick="scrollExperiences('prev')">
+                    <i class="fas fa-chevron-left"></i>
+                </button>
+                <button class="nav-btn next-btn" onclick="scrollExperiences('next')">
+                    <i class="fas fa-chevron-right"></i>
+                </button>
             </div>
         </div>
     </div>
@@ -843,6 +963,313 @@
 
     .scroll-arrow {
         font-size: 1rem;
+    }
+}
+
+/* Hygge Features Styles */
+.hygge-feature {
+    transition: all 0.3s ease;
+    border-radius: 15px;
+}
+
+.hygge-feature:hover {
+    background: rgba(255,255,255,0.7);
+    transform: translateY(-2px);
+}
+
+@media (max-width: 768px) {
+    .hygge-feature {
+        padding: 1.5rem !important;
+    }
+}
+
+@media (max-width: 576px) {
+    .hygge-feature {
+        padding: 1rem !important;
+    }
+
+    .hygge-feature i {
+        font-size: 1.5rem !important;
+    }
+
+    .hygge-feature h5 {
+        font-size: 1rem !important;
+    }
+
+    .hygge-feature p {
+        font-size: 0.8rem !important;
+    }
+}
+
+/* Experiences Carousel Styles */
+.experiences-carousel-wrapper {
+    position: relative;
+    max-width: 100%;
+    overflow: hidden;
+}
+
+.experiences-carousel {
+    display: flex;
+    gap: 2rem;
+    padding: 1rem 0;
+    overflow-x: auto;
+    scroll-behavior: smooth;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+}
+
+.experiences-carousel::-webkit-scrollbar {
+    display: none;
+}
+
+.experience-card {
+    flex: 0 0 240px;
+    background: white;
+    border-radius: 12px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+    overflow: hidden;
+    transition: all 0.3s ease;
+    border: 1px solid rgba(74, 124, 89, 0.05);
+}
+
+.experience-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 8px 25px rgba(0,0,0,0.12);
+}
+
+.experience-image {
+    position: relative;
+    height: 140px;
+    overflow: hidden;
+}
+
+.experience-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.3s ease;
+}
+
+.experience-card:hover .experience-image img {
+    transform: scale(1.05);
+}
+
+.experience-placeholder {
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(135deg, var(--hygge-green), var(--hygge-light-green));
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 2rem;
+    color: white;
+    opacity: 0.9;
+}
+
+.experience-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(
+        to bottom,
+        rgba(0,0,0,0.1) 0%,
+        transparent 50%,
+        rgba(0,0,0,0.3) 100%
+    );
+    display: flex;
+    align-items: flex-start;
+    justify-content: flex-end;
+    padding: 1rem;
+}
+
+.experience-type-badge {
+    background: rgba(74, 124, 89, 0.9);
+    color: white;
+    padding: 0.25rem 0.6rem;
+    border-radius: 12px;
+    font-size: 0.7rem;
+    font-weight: 600;
+    backdrop-filter: blur(10px);
+}
+
+.experience-content {
+    padding: 1rem;
+}
+
+.experience-title {
+    font-size: 1rem;
+    font-weight: 700;
+    color: var(--hygge-green);
+    margin-bottom: 0.5rem;
+    line-height: 1.2;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+
+.experience-location {
+    color: #666;
+    font-size: 0.75rem;
+    margin-bottom: 0.75rem;
+    font-weight: 500;
+}
+
+.experience-description {
+    display: none; /* Hide description for compact design */
+}
+
+.experience-stats {
+    display: flex;
+    gap: 0.5rem;
+    margin-bottom: 0.75rem;
+    flex-wrap: wrap;
+}
+
+.experience-stats .stat {
+    display: flex;
+    align-items: center;
+    font-size: 0.7rem;
+    color: #666;
+    background: var(--hygge-warm-white);
+    padding: 0.25rem 0.5rem;
+    border-radius: 10px;
+    font-weight: 600;
+    border: 1px solid rgba(74, 124, 89, 0.1);
+}
+
+.experience-stats .stat i {
+    margin-right: 0.3rem;
+    color: var(--hygge-green);
+    font-size: 0.7rem;
+}
+
+.btn-experience {
+    background: var(--hygge-green);
+    border: none;
+    color: white;
+    font-weight: 600;
+    padding: 0.5rem 1rem;
+    border-radius: 20px;
+    transition: all 0.3s ease;
+    font-size: 0.8rem;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    width: 100%;
+    justify-content: center;
+    box-shadow: 0 2px 8px rgba(74, 124, 89, 0.2);
+}
+
+.btn-experience:hover {
+    background: var(--hygge-light-green);
+    transform: translateY(-1px);
+    box-shadow: 0 4px 15px rgba(74, 124, 89, 0.3);
+    color: white;
+    text-decoration: none;
+}
+
+/* Carousel Navigation */
+.experiences-nav {
+    display: flex;
+    justify-content: center;
+    gap: 0.75rem;
+    margin-top: 1.5rem;
+}
+
+.nav-btn {
+    width: 42px;
+    height: 42px;
+    border-radius: 50%;
+    border: 1px solid var(--hygge-green);
+    background: white;
+    color: var(--hygge-green);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    font-size: 1rem;
+    box-shadow: 0 2px 8px rgba(74, 124, 89, 0.1);
+}
+
+.nav-btn:hover {
+    background: var(--hygge-green);
+    color: white;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(74, 124, 89, 0.2);
+}
+
+.nav-btn:active {
+    transform: translateY(0);
+}
+
+/* Mobile Optimizations */
+@media (max-width: 768px) {
+    .experience-card {
+        flex: 0 0 200px;
+    }
+
+    .experience-content {
+        padding: 0.75rem;
+    }
+
+    .experience-title {
+        font-size: 0.9rem;
+    }
+
+    .experience-image {
+        height: 120px;
+    }
+}
+
+@media (max-width: 576px) {
+    .experiences-carousel {
+        gap: 1rem;
+        padding: 0.5rem 0;
+    }
+
+    .experience-card {
+        flex: 0 0 180px;
+    }
+
+    .experience-content {
+        padding: 0.75rem;
+    }
+
+    .experience-title {
+        font-size: 0.85rem;
+        margin-bottom: 0.4rem;
+    }
+
+    .experience-location {
+        font-size: 0.7rem;
+        margin-bottom: 0.5rem;
+    }
+
+    .experience-stats {
+        gap: 0.3rem;
+        margin-bottom: 0.5rem;
+    }
+
+    .experience-stats .stat {
+        font-size: 0.65rem;
+        padding: 0.2rem 0.4rem;
+    }
+
+    .btn-experience {
+        font-size: 0.7rem;
+        padding: 0.4rem 0.8rem;
+        width: 100%;
+        justify-content: center;
+    }
+
+    .nav-btn {
+        width: 36px;
+        height: 36px;
+        font-size: 0.85rem;
     }
 }
 
@@ -2095,6 +2522,77 @@ function handleSwipe() {
         }
     }
 }
+
+// Experiences Carousel Functionality
+function scrollExperiences(direction) {
+    const carousel = document.getElementById('experiencesCarousel');
+    if (!carousel) return;
+
+    // Responsive scroll amount based on screen size
+    let cardWidth = 260; // Base card width + gap
+    if (window.innerWidth <= 576) {
+        cardWidth = 200; // Mobile size
+    } else if (window.innerWidth <= 768) {
+        cardWidth = 220; // Tablet size
+    }
+
+    const scrollAmount = direction === 'next' ? cardWidth : -cardWidth;
+
+    carousel.scrollBy({
+        left: scrollAmount,
+        behavior: 'smooth'
+    });
+}
+
+// Touch/swipe support for experiences carousel
+let experiencesTouchStart = 0;
+let experiencesTouchEnd = 0;
+
+document.addEventListener('DOMContentLoaded', function() {
+    const experiencesCarousel = document.getElementById('experiencesCarousel');
+
+    if (experiencesCarousel) {
+        experiencesCarousel.addEventListener('touchstart', function(e) {
+            experiencesTouchStart = e.changedTouches[0].screenX;
+        });
+
+        experiencesCarousel.addEventListener('touchend', function(e) {
+            experiencesTouchEnd = e.changedTouches[0].screenX;
+            handleExperiencesSwipe();
+        });
+    }
+});
+
+function handleExperiencesSwipe() {
+    const swipeThreshold = 50;
+    const swipeDistance = experiencesTouchEnd - experiencesTouchStart;
+
+    if (Math.abs(swipeDistance) > swipeThreshold) {
+        if (swipeDistance > 0) {
+            // Swipe right - go to previous
+            scrollExperiences('prev');
+        } else {
+            // Swipe left - go to next
+            scrollExperiences('next');
+        }
+    }
+}
+
+// Auto-hide navigation on mobile if not needed
+document.addEventListener('DOMContentLoaded', function() {
+    const carousel = document.getElementById('experiencesCarousel');
+    const navButtons = document.querySelector('.experiences-nav');
+
+    if (carousel && navButtons) {
+        function checkScrollability() {
+            const isScrollable = carousel.scrollWidth > carousel.clientWidth;
+            navButtons.style.display = isScrollable ? 'flex' : 'none';
+        }
+
+        checkScrollability();
+        window.addEventListener('resize', checkScrollability);
+    }
+});
 </script>
 
 {% endblock %}

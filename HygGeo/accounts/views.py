@@ -67,6 +67,19 @@ def index(request):
     if not featured_destinations.exists():
         featured_destinations = Destination.objects.all().order_by('-created_at')[:6]
 
+    # Get featured experiences for the carousel
+    featured_experiences = Experience.objects.filter(
+        is_featured=True
+    ).select_related(
+        'destination', 'experience_type', 'provider'
+    ).order_by('-created_at')[:8]
+
+    # If no featured experiences, get the most recent ones
+    if not featured_experiences.exists():
+        featured_experiences = Experience.objects.select_related(
+            'destination', 'experience_type', 'provider'
+        ).order_by('-created_at')[:6]
+
     # Check if user has completed a survey
     has_survey = False
     if request.user.is_authenticated:
@@ -76,6 +89,7 @@ def index(request):
         'sustainability_facts': featured_facts,
         'has_survey': has_survey,
         'featured_destinations': featured_destinations,
+        'featured_experiences': featured_experiences,
     }
 
     return render(request, 'index.html', context)

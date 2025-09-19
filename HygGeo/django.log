@@ -12631,3 +12631,16 @@ INFO 2025-09-19 12:25:20,470 autoreload 18444 23372 Watching for file changes wi
 INFO 2025-09-19 12:26:34,286 basehttp 28800 11132 "GET / HTTP/1.1" 200 82704
 WARNING 2025-09-19 12:26:34,317 log 28800 11132 Not Found: /.well-known/appspecific/com.chrome.devtools.json
 WARNING 2025-09-19 12:26:34,317 basehttp 28800 11132 "GET /.well-known/appspecific/com.chrome.devtools.json HTTP/1.1" 404 4440
+INFO 2025-09-19 14:11:42,016 autoreload 8144 28840 Watching for file changes with StatReloader
+INFO 2025-09-19 14:15:34,455 autoreload 27840 17604 Watching for file changes with StatReloader
+INFO 2025-09-19 14:15:42,661 basehttp 27840 6752 "GET / HTTP/1.1" 200 95151
+WARNING 2025-09-19 14:15:42,688 log 27840 6752 Not Found: /.well-known/appspecific/com.chrome.devtools.json
+WARNING 2025-09-19 14:15:42,688 basehttp 27840 6752 "GET /.well-known/appspecific/com.chrome.devtools.json HTTP/1.1" 404 4440
+INFO 2025-09-19 14:15:43,303 basehttp 27840 6752 "GET /static/favicon.ico HTTP/1.1" 200 15406
+INFO 2025-09-19 14:15:43,493 basehttp 27840 20672 "GET /static/site.webmanifest HTTP/1.1" 200 560
+INFO 2025-09-19 14:18:51,452 autoreload 22612 14024 Watching for file changes with StatReloader
+INFO 2025-09-19 14:19:36,131 basehttp 27840 6752 "GET / HTTP/1.1" 200 95680
+INFO 2025-09-19 14:19:36,527 basehttp 27840 20672 "GET /static/site.webmanifest HTTP/1.1" 200 560
+INFO 2025-09-19 14:19:36,553 basehttp 27840 6752 "GET /static/favicon.ico HTTP/1.1" 200 15406
+WARNING 2025-09-19 14:19:47,194 log 27840 6752 Not Found: /.well-known/appspecific/com.chrome.devtools.json
+WARNING 2025-09-19 14:19:47,195 basehttp 27840 6752 "GET /.well-known/appspecific/com.chrome.devtools.json HTTP/1.1" 404 4440
