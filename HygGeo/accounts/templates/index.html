@@ -190,8 +190,8 @@
                 {% for experience in featured_experiences %}
                 <div class="experience-card">
                     <div class="experience-image">
-                        {% if experience.image %}
-                            <img src="{{ experience.image.url }}" alt="{{ experience.title }}" loading="lazy">
+                        {% if experience.main_image %}
+                            <img src="{{ experience.main_image.url }}" alt="{{ experience.title }}" loading="lazy">
                         {% else %}
                             <div class="experience-placeholder">
                                 <i class="fas fa-mountain"></i>
