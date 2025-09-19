@@ -12582,3 +12582,19 @@ INFO 2025-09-18 02:39:58,636 basehttp 30484 3052 "GET /experiences/ HTTP/1.1" 20
 INFO 2025-09-18 02:40:01,885 basehttp 30484 3052 "GET /experiences/experience/ultimate-seattle-tbd-test1-white-water-rafting-adventure/ HTTP/1.1" 200 43860
 INFO 2025-09-18 02:40:15,114 basehttp 30484 3052 "GET /admin/dashboard/ HTTP/1.1" 200 47637
 INFO 2025-09-18 02:40:38,269 basehttp 30484 3052 "GET / HTTP/1.1" 200 73458
+INFO 2025-09-19 11:56:18,619 autoreload 23392 28060 Watching for file changes with StatReloader
+INFO 2025-09-19 11:57:12,129 autoreload 5936 19276 Watching for file changes with StatReloader
+INFO 2025-09-19 11:57:20,774 basehttp 5936 6900 "GET / HTTP/1.1" 200 66555
+INFO 2025-09-19 11:57:21,452 basehttp 5936 6900 "GET /static/favicon.ico HTTP/1.1" 200 15406
+INFO 2025-09-19 11:57:21,528 basehttp 5936 14100 "GET /static/site.webmanifest HTTP/1.1" 200 560
+INFO 2025-09-19 11:57:24,634 basehttp 5936 6900 "GET /accounts/login/ HTTP/1.1" 200 25798
+INFO 2025-09-19 11:57:35,785 basehttp 5936 17852 "GET / HTTP/1.1" 200 73472
+INFO 2025-09-19 11:57:36,556 basehttp 5936 17852 "GET /static/favicon.ico HTTP/1.1" 200 15406
+INFO 2025-09-19 11:57:36,711 basehttp 5936 18372 "GET /static/site.webmanifest HTTP/1.1" 200 560
+INFO 2025-09-19 11:57:38,627 basehttp 5936 17852 "GET /admin/dashboard/ HTTP/1.1" 200 47633
+INFO 2025-09-19 11:57:44,333 basehttp 5936 17852 "GET /experiences/experience-types/ HTTP/1.1" 200 34660
+INFO 2025-09-19 11:57:47,751 basehttp 5936 17852 "GET /experiences/experience-types/test/delete/ HTTP/1.1" 200 32116
+INFO 2025-09-19 11:57:56,128 basehttp 5936 17852 "GET /experiences/experience-types/ HTTP/1.1" 200 34660
+INFO 2025-09-19 11:57:59,356 basehttp 5936 17852 "GET /experiences/experience-types/test1/delete/ HTTP/1.1" 200 31730
+INFO 2025-09-19 11:58:01,072 basehttp 5936 17852 "POST /experiences/experience-types/test1/delete/ HTTP/1.1" 302 0
+INFO 2025-09-19 11:58:01,082 basehttp 5936 17852 "GET /experiences/experience-types/ HTTP/1.1" 200 32758
