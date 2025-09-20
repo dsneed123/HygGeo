@@ -13,92 +13,29 @@ from django.contrib.auth.decorators import user_passes_test
 from accounts.models import TravelSurvey
 from experiences.forms import ExperienceForm, DestinationForm, ExperienceTypeForm, CategoryForm
 from .forms import ProviderForm  # add this import at top
-from django.utils.text import slugify 
+from django.utils.text import slugify
 from collections import defaultdict
 from .models import (
-    Experience, Destination, Category, Provider, 
+    Experience, Destination, Category, Provider,
     UserRecommendation, ExperienceReview, BookingTracking, ExperienceType
 )
+from .recommendation_engine import RecommendationEngine
 import random
 from decimal import Decimal
 
 def generate_recommendations(user):
-    """Generate personalized recommendations based on user survey"""
-    # Get user's latest survey
-    survey = TravelSurvey.objects.filter(user=user).first()
-    if not survey:
-        return Experience.objects.filter(is_active=True, is_featured=True)[:6]
-    
-    # Start with all active experiences
-    experiences = Experience.objects.filter(is_active=True)
-    scored_experiences = []
-    
-    for experience in experiences:
-        score = 0
-        reasons = []
-        
-        # Travel style matching (30% weight)
-        if hasattr(survey, 'travel_styles') and survey.travel_styles:
-            style_matches = set(survey.travel_styles) & set(experience.travel_styles)
-            if style_matches:
-                score += 30
-                reasons.append(f"Matches your interest in {', '.join(style_matches)}")
-        
-        # Budget matching (20% weight)
-        if survey.budget_range == experience.budget_range:
-            score += 20
-            reasons.append("Fits your budget range")
-        
-        # Group size matching (15% weight)
-        if survey.group_size_preference == experience.group_size:
-            score += 15
-            reasons.append("Perfect for your group size")
-        
-        # Sustainability factors (25% weight)
-        if hasattr(survey, 'sustainability_factors') and survey.sustainability_factors:
-            sustainability_matches = set(survey.sustainability_factors) & set(experience.sustainability_factors)
-            if sustainability_matches:
-                score += 25
-                reasons.append(f"Matches your sustainability priorities: {', '.join(sustainability_matches)}")
-        
-        # Accommodation preferences (10% weight)
-        if hasattr(survey, 'accommodation_preferences') and survey.accommodation_preferences:
-            accommodation_matches = set(survey.accommodation_preferences) & set(experience.accommodation_types)
-            if accommodation_matches:
-                score += 10
-                reasons.append("Matches your accommodation preferences")
-        
-        # Bonus points for high sustainability and hygge scores
-        if experience.sustainability_score >= 8:
-            score += 5
-            reasons.append("Highly sustainable option")
-        
-        if experience.hygge_factor >= 8:
-            score += 5
-            reasons.append("Embodies hygge principles")
-        
-        if score > 0:
-            scored_experiences.append({
-                'experience': experience,
-                'score': score,
-                'reasons': reasons
-            })
-    
-    # Sort by score and return top experiences
-    scored_experiences.sort(key=lambda x: x['score'], reverse=True)
-    
-    # Save recommendations to database
-    for item in scored_experiences[:20]:  # Save top 20
-        recommendation, created = UserRecommendation.objects.get_or_create(
-            user=user,
-            experience=item['experience'],
-            defaults={
-                'match_score': Decimal(str(item['score'])),
-                'reasons': item['reasons']
-            }
-        )
-    
-    return [item['experience'] for item in scored_experiences[:12]]
+    """Generate personalized recommendations using the recommendation engine"""
+    engine = RecommendationEngine()
+
+    # Generate fresh recommendations
+    recommendations = engine.generate_recommendations_for_user(user.id, limit=20)
+
+    if not recommendations:
+        # Fallback to featured experiences if no survey or recommendations
+        return Experience.objects.filter(is_active=True, is_featured=True)[:12]
+
+    # Return the experience objects from the recommendations
+    return [rec.experience for rec in recommendations[:12]]
 
 @login_required
 def recommendations_view(request):
@@ -108,30 +45,46 @@ def recommendations_view(request):
     if not survey:
         messages.info(request, 'Complete your travel survey to get personalized recommendations!')
         return redirect('survey')
-    
-    # Generate recommendations
-    recommended_experiences = generate_recommendations(request.user)
-    
+
+    # Get or generate recommendations
+    user_recommendations = UserRecommendation.objects.filter(
+        user=request.user
+    ).select_related('experience__destination', 'experience__provider', 'experience__experience_type').order_by('-match_score')
+
+    # If no recommendations exist, generate them
+    if not user_recommendations.exists():
+        engine = RecommendationEngine()
+        engine.generate_recommendations_for_user(request.user.id, limit=20)
+        user_recommendations = UserRecommendation.objects.filter(
+            user=request.user
+        ).select_related('experience__destination', 'experience__provider', 'experience__experience_type').order_by('-match_score')
+
+    # Get top recommendations for display
+    top_recommendations = user_recommendations[:12]
+
+    # Get recommended experience IDs for filtering featured experiences
+    recommended_experience_ids = [rec.experience.id for rec in top_recommendations]
+
     # Get some featured experiences for variety
     featured_experiences = Experience.objects.filter(
-        is_active=True, 
+        is_active=True,
         is_featured=True
     ).exclude(
-        id__in=[exp.id for exp in recommended_experiences]
+        id__in=recommended_experience_ids
     )[:4]
-    
+
     # Get popular destinations
     popular_destinations = Destination.objects.annotate(
         experience_count=Count('experiences')
     ).filter(experience_count__gt=0).order_by('-experience_count')[:6]
-    
+
     context = {
         'survey': survey,
-        'recommended_experiences': recommended_experiences,
+        'user_recommendations': top_recommendations,
         'featured_experiences': featured_experiences,
         'popular_destinations': popular_destinations,
     }
-    
+
     return render(request, 'experiences/recommendations.html', context)
 
 def experience_list_view(request):

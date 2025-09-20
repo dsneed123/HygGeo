@@ -12645,3 +12645,99 @@ INFO 2025-09-19 14:19:36,553 basehttp 27840 6752 "GET /static/favicon.ico HTTP/1
 WARNING 2025-09-19 14:19:47,194 log 27840 6752 Not Found: /.well-known/appspecific/com.chrome.devtools.json
 WARNING 2025-09-19 14:19:47,195 basehttp 27840 6752 "GET /.well-known/appspecific/com.chrome.devtools.json HTTP/1.1" 404 4440
 INFO 2025-09-19 14:25:37,955 autoreload 27884 27840 Watching for file changes with StatReloader
+INFO 2025-09-19 14:38:49,625 autoreload 27884 27840 C:\Users\DLSne\OneDrive\Desktop\Code\webdev\HygGeo\HygGeo\experiences\views.py changed, reloading.
+INFO 2025-09-19 14:38:50,366 autoreload 16052 6800 Watching for file changes with StatReloader
+INFO 2025-09-19 14:39:04,907 autoreload 16052 6800 C:\Users\DLSne\OneDrive\Desktop\Code\webdev\HygGeo\HygGeo\experiences\views.py changed, reloading.
+INFO 2025-09-19 14:39:05,711 autoreload 2116 21024 Watching for file changes with StatReloader
+INFO 2025-09-19 14:39:20,245 autoreload 2116 21024 C:\Users\DLSne\OneDrive\Desktop\Code\webdev\HygGeo\HygGeo\experiences\views.py changed, reloading.
+INFO 2025-09-19 14:39:21,138 autoreload 6888 10536 Watching for file changes with StatReloader
+INFO 2025-09-19 14:39:38,877 autoreload 6888 10536 C:\Users\DLSne\OneDrive\Desktop\Code\webdev\HygGeo\HygGeo\experiences\apps.py changed, reloading.
+INFO 2025-09-19 14:39:39,809 autoreload 2404 12848 Watching for file changes with StatReloader
+INFO 2025-09-19 14:47:19,022 autoreload 2404 12848 C:\Users\DLSne\OneDrive\Desktop\Code\webdev\HygGeo\HygGeo\experiences\recommendation_engine.py changed, reloading.
+INFO 2025-09-19 14:47:20,355 autoreload 17120 30652 Watching for file changes with StatReloader
+INFO 2025-09-19 14:50:03,246 autoreload 30084 30500 Watching for file changes with StatReloader
+INFO 2025-09-19 14:50:06,110 basehttp 17120 28152 "GET / HTTP/1.1" 200 95742
+INFO 2025-09-19 14:50:06,745 basehttp 17120 28152 "GET /static/favicon.ico HTTP/1.1" 200 15406
+INFO 2025-09-19 14:50:06,879 basehttp 17120 30624 "GET /static/site.webmanifest HTTP/1.1" 200 560
+INFO 2025-09-19 14:50:10,553 basehttp 17120 28152 "GET /experiences/ HTTP/1.1" 200 53720
+INFO 2025-09-19 14:50:14,256 basehttp 17120 28152 "GET /experiences/recommendations/ HTTP/1.1" 302 0
+INFO 2025-09-19 14:50:14,327 basehttp 17120 28152 "GET /accounts/survey/ HTTP/1.1" 200 74147
+INFO 2025-09-19 14:50:39,379 basehttp 17120 28152 "POST /accounts/survey/ HTTP/1.1" 302 0
+INFO 2025-09-19 14:50:39,395 basehttp 17120 28152 "GET /accounts/survey/success/ HTTP/1.1" 200 35731
+INFO 2025-09-19 14:50:44,113 basehttp 17120 28152 "GET /experiences/recommendations/ HTTP/1.1" 200 36411
+INFO 2025-09-19 14:50:51,403 basehttp 17120 28152 "GET / HTTP/1.1" 200 94679
+INFO 2025-09-20 00:55:53,526 autoreload 17120 30652 C:\Users\DLSne\OneDrive\Desktop\Code\webdev\HygGeo\HygGeo\accounts\admin.py changed, reloading.
+INFO 2025-09-20 00:55:54,001 autoreload 30084 30500 C:\Users\DLSne\OneDrive\Desktop\Code\webdev\HygGeo\HygGeo\accounts\admin.py changed, reloading.
+INFO 2025-09-20 00:56:03,250 autoreload 55192 49132 Watching for file changes with StatReloader
+INFO 2025-09-20 00:56:03,251 autoreload 46448 55272 Watching for file changes with StatReloader
+INFO 2025-09-20 00:56:06,299 autoreload 46448 55272 C:\Users\DLSne\OneDrive\Desktop\Code\webdev\HygGeo\HygGeo\accounts\admin.py changed, reloading.
+INFO 2025-09-20 00:56:06,395 autoreload 55192 49132 C:\Users\DLSne\OneDrive\Desktop\Code\webdev\HygGeo\HygGeo\accounts\admin.py changed, reloading.
+INFO 2025-09-20 00:56:07,361 autoreload 7592 46180 Watching for file changes with StatReloader
+INFO 2025-09-20 00:56:07,377 autoreload 28872 51976 Watching for file changes with StatReloader
+INFO 2025-09-20 00:56:13,612 autoreload 28872 51976 C:\Users\DLSne\OneDrive\Desktop\Code\webdev\HygGeo\HygGeo\accounts\admin.py changed, reloading.
+INFO 2025-09-20 00:56:13,907 autoreload 7592 46180 C:\Users\DLSne\OneDrive\Desktop\Code\webdev\HygGeo\HygGeo\accounts\admin.py changed, reloading.
+INFO 2025-09-20 00:56:14,527 autoreload 54100 54276 Watching for file changes with StatReloader
+INFO 2025-09-20 00:56:14,922 autoreload 27116 47512 Watching for file changes with StatReloader
+INFO 2025-09-20 00:56:20,712 autoreload 54100 54276 C:\Users\DLSne\OneDrive\Desktop\Code\webdev\HygGeo\HygGeo\accounts\admin.py changed, reloading.
+INFO 2025-09-20 00:56:21,353 autoreload 27116 47512 C:\Users\DLSne\OneDrive\Desktop\Code\webdev\HygGeo\HygGeo\accounts\admin.py changed, reloading.
+INFO 2025-09-20 00:56:21,856 autoreload 46140 54404 Watching for file changes with StatReloader
+INFO 2025-09-20 00:56:22,381 autoreload 49312 8804 Watching for file changes with StatReloader
+INFO 2025-09-20 00:56:29,505 autoreload 46140 54404 C:\Users\DLSne\OneDrive\Desktop\Code\webdev\HygGeo\HygGeo\accounts\admin.py changed, reloading.
+INFO 2025-09-20 00:56:29,881 autoreload 49312 8804 C:\Users\DLSne\OneDrive\Desktop\Code\webdev\HygGeo\HygGeo\accounts\admin.py changed, reloading.
+INFO 2025-09-20 00:56:30,634 autoreload 34736 54348 Watching for file changes with StatReloader
+INFO 2025-09-20 00:56:30,978 autoreload 53072 38512 Watching for file changes with StatReloader
+INFO 2025-09-20 00:59:11,228 autoreload 25744 49092 Watching for file changes with StatReloader
+INFO 2025-09-20 00:59:16,128 basehttp 34736 49156 "GET / HTTP/1.1" 200 94680
+INFO 2025-09-20 00:59:16,828 basehttp 34736 53832 "GET /static/site.webmanifest HTTP/1.1" 304 0
+INFO 2025-09-20 00:59:17,478 basehttp 34736 49156 "GET /admin/dashboard/ HTTP/1.1" 200 47633
+INFO 2025-09-20 00:59:23,851 basehttp 34736 49156 "GET /admin/dashboard/ HTTP/1.1" 200 47633
+INFO 2025-09-20 00:59:24,805 basehttp 34736 53832 "GET /static/site.webmanifest HTTP/1.1" 200 560
+INFO 2025-09-20 00:59:24,960 basehttp 34736 49156 "GET /static/favicon.ico HTTP/1.1" 200 15406
+INFO 2025-09-20 00:59:49,439 basehttp 34736 51400 "GET / HTTP/1.1" 200 88764
+INFO 2025-09-20 00:59:50,962 basehttp 34736 51400 "GET /static/favicon.ico HTTP/1.1" 200 15406
+INFO 2025-09-20 00:59:51,009 basehttp 34736 42284 "GET /static/site.webmanifest HTTP/1.1" 200 560
+INFO 2025-09-20 00:59:57,389 basehttp 34736 49156 "GET /admin/dashboard/ HTTP/1.1" 200 47633
+INFO 2025-09-20 00:59:57,823 basehttp 34736 53832 "GET /static/site.webmanifest HTTP/1.1" 200 560
+INFO 2025-09-20 00:59:57,930 basehttp 34736 49156 "GET /static/favicon.ico HTTP/1.1" 200 15406
+INFO 2025-09-20 01:00:01,206 basehttp 34736 49156 "GET /accounts/users/ HTTP/1.1" 200 93521
+INFO 2025-09-20 01:01:20,928 autoreload 34736 54348 C:\Users\DLSne\OneDrive\Desktop\Code\webdev\HygGeo\HygGeo\accounts\views.py changed, reloading.
+INFO 2025-09-20 01:01:21,256 autoreload 25744 49092 C:\Users\DLSne\OneDrive\Desktop\Code\webdev\HygGeo\HygGeo\accounts\views.py changed, reloading.
+INFO 2025-09-20 01:01:22,016 autoreload 52632 40064 Watching for file changes with StatReloader
+INFO 2025-09-20 01:01:22,416 autoreload 50776 52136 Watching for file changes with StatReloader
+INFO 2025-09-20 01:01:38,629 autoreload 52632 40064 C:\Users\DLSne\OneDrive\Desktop\Code\webdev\HygGeo\HygGeo\accounts\views.py changed, reloading.
+INFO 2025-09-20 01:01:39,005 autoreload 50776 52136 C:\Users\DLSne\OneDrive\Desktop\Code\webdev\HygGeo\HygGeo\accounts\views.py changed, reloading.
+INFO 2025-09-20 01:01:39,573 autoreload 50332 53560 Watching for file changes with StatReloader
+INFO 2025-09-20 01:01:39,962 autoreload 51440 49372 Watching for file changes with StatReloader
+INFO 2025-09-20 01:01:51,645 autoreload 50332 53560 C:\Users\DLSne\OneDrive\Desktop\Code\webdev\HygGeo\HygGeo\accounts\views.py changed, reloading.
+INFO 2025-09-20 01:01:52,240 autoreload 51440 49372 C:\Users\DLSne\OneDrive\Desktop\Code\webdev\HygGeo\HygGeo\accounts\views.py changed, reloading.
+INFO 2025-09-20 01:01:52,845 autoreload 44696 17120 Watching for file changes with StatReloader
+INFO 2025-09-20 01:01:53,276 autoreload 47468 53124 Watching for file changes with StatReloader
+INFO 2025-09-20 01:02:03,543 autoreload 44696 17120 C:\Users\DLSne\OneDrive\Desktop\Code\webdev\HygGeo\HygGeo\accounts\urls.py changed, reloading.
+INFO 2025-09-20 01:02:04,339 autoreload 47468 53124 C:\Users\DLSne\OneDrive\Desktop\Code\webdev\HygGeo\HygGeo\accounts\urls.py changed, reloading.
+INFO 2025-09-20 01:02:04,644 autoreload 51224 53924 Watching for file changes with StatReloader
+INFO 2025-09-20 01:02:05,364 autoreload 11544 54996 Watching for file changes with StatReloader
+INFO 2025-09-20 01:05:42,920 basehttp 51224 47432 "GET /admin/dashboard/ HTTP/1.1" 200 52236
+INFO 2025-09-20 01:05:43,728 basehttp 51224 2572 "GET /static/site.webmanifest HTTP/1.1" 200 560
+INFO 2025-09-20 01:05:43,729 basehttp 51224 47432 "GET /static/favicon.ico HTTP/1.1" 200 15406
+INFO 2025-09-20 01:05:51,043 basehttp 51224 47432 "GET /accounts/admin/export/active-emails-txt/ HTTP/1.1" 200 87
+INFO 2025-09-20 01:06:26,641 autoreload 51224 53924 C:\Users\DLSne\OneDrive\Desktop\Code\webdev\HygGeo\HygGeo\accounts\views.py changed, reloading.
+INFO 2025-09-20 01:06:27,053 autoreload 11544 54996 C:\Users\DLSne\OneDrive\Desktop\Code\webdev\HygGeo\HygGeo\accounts\views.py changed, reloading.
+INFO 2025-09-20 01:06:27,763 autoreload 46844 7520 Watching for file changes with StatReloader
+INFO 2025-09-20 01:06:28,110 autoreload 53220 30404 Watching for file changes with StatReloader
+INFO 2025-09-20 01:06:40,632 autoreload 46844 7520 C:\Users\DLSne\OneDrive\Desktop\Code\webdev\HygGeo\HygGeo\accounts\views.py changed, reloading.
+INFO 2025-09-20 01:06:41,300 autoreload 53220 30404 C:\Users\DLSne\OneDrive\Desktop\Code\webdev\HygGeo\HygGeo\accounts\views.py changed, reloading.
+INFO 2025-09-20 01:06:41,635 autoreload 52148 43588 Watching for file changes with StatReloader
+INFO 2025-09-20 01:06:42,353 autoreload 45268 39716 Watching for file changes with StatReloader
+INFO 2025-09-20 01:06:59,409 autoreload 52148 43588 C:\Users\DLSne\OneDrive\Desktop\Code\webdev\HygGeo\HygGeo\accounts\views.py changed, reloading.
+INFO 2025-09-20 01:07:00,442 autoreload 45268 39716 C:\Users\DLSne\OneDrive\Desktop\Code\webdev\HygGeo\HygGeo\accounts\views.py changed, reloading.
+INFO 2025-09-20 01:07:00,848 autoreload 54744 41580 Watching for file changes with StatReloader
+INFO 2025-09-20 01:07:01,580 autoreload 7712 44528 Watching for file changes with StatReloader
+INFO 2025-09-20 01:07:09,251 autoreload 54744 41580 C:\Users\DLSne\OneDrive\Desktop\Code\webdev\HygGeo\HygGeo\accounts\urls.py changed, reloading.
+INFO 2025-09-20 01:07:09,276 autoreload 7712 44528 C:\Users\DLSne\OneDrive\Desktop\Code\webdev\HygGeo\HygGeo\accounts\urls.py changed, reloading.
+INFO 2025-09-20 01:07:10,306 autoreload 49600 54904 Watching for file changes with StatReloader
+INFO 2025-09-20 01:07:10,307 autoreload 31856 43472 Watching for file changes with StatReloader
+INFO 2025-09-20 01:08:48,741 basehttp 31856 53568 "GET /admin/dashboard/ HTTP/1.1" 200 52779
+INFO 2025-09-20 01:08:49,462 basehttp 31856 53568 "GET /static/favicon.ico HTTP/1.1" 200 15406
+INFO 2025-09-20 01:08:49,576 basehttp 31856 18368 "GET /static/site.webmanifest HTTP/1.1" 200 560
+INFO 2025-09-20 01:08:52,505 basehttp 31856 53568 "GET /accounts/admin/export/mail-merge-premium/ HTTP/1.1" 200 1034
+INFO 2025-09-20 01:09:09,594 basehttp 31856 53568 "GET /accounts/admin/export/active-emails-csv/ HTTP/1.1" 200 483

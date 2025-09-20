@@ -4,11 +4,12 @@ from django.contrib.auth.decorators import login_required, user_passes_test
 from django.contrib.auth.models import User
 from django.contrib import messages
 from django.contrib.auth import logout
-
+from django.http import HttpResponse
 
 from django.core.paginator import Paginator
 from django.db.models import Q, Count
 from django.utils import timezone
+import csv
 
 from .forms import (
     CustomUserCreationForm, 
@@ -344,19 +345,29 @@ def admin_dashboard(request):
         'categories_count': Category.objects.count(),
         'experience_types_count': ExperienceType.objects.count(),
     }
-    
+
+    # Email statistics
+    email_stats = {
+        'total_users': User.objects.count(),
+        'users_with_email': User.objects.exclude(email='').count(),
+        'active_users': User.objects.filter(is_active=True).count(),
+        'active_users_with_email': User.objects.filter(is_active=True).exclude(email='').count(),
+    }
+    email_stats['users_without_email'] = email_stats['total_users'] - email_stats['users_with_email']
+
     # Get recent activity (last 6 experiences)
     recent_experiences = Experience.objects.select_related('destination').order_by('-created_at')[:6]
-    
+
     # Get recent destinations
     recent_destinations = Destination.objects.order_by('-created_at')[:5]
-    
+
     # Get active/featured counts
     featured_experiences = Experience.objects.filter(is_featured=True).count()
     active_experiences = Experience.objects.filter(is_active=True).count()
-    
+
     context = {
         'stats': stats,
+        'email_stats': email_stats,
         'recent_experiences': recent_experiences,
         'recent_destinations': recent_destinations,
         'featured_count': featured_experiences,
@@ -366,6 +377,246 @@ def admin_dashboard(request):
     # Updated template path to match your file location
     return render(request, 'admin-dashboard.html', context)
 
+@user_passes_test(lambda u: u.is_staff, login_url='/accounts/login/')
+def export_all_emails_csv(request):
+    """Export all user emails as CSV file with mail merge fields"""
+    response = HttpResponse(content_type='text/csv')
+    response['Content-Disposition'] = 'attachment; filename="user_emails_mail_merge.csv"'
+
+    writer = csv.writer(response)
+    # Mail merge friendly headers
+    writer.writerow([
+        'Email', 'FirstName', 'LastName', 'FullName', 'Username',
+        'DateJoined', 'IsActive', 'Location', 'TravelInterests', 'SustainabilityPriority'
+    ])
+
+    # Get all users with related profile data
+    users = User.objects.select_related('userprofile').prefetch_related('travel_surveys').all()
+
+    for user in users:
+        # Get user profile if it exists
+        profile = getattr(user, 'userprofile', None)
+
+        # Get latest travel survey if it exists
+        latest_survey = user.travel_surveys.first() if user.travel_surveys.exists() else None
+
+        # Prepare names for mail merge
+        first_name = user.first_name or user.username.split('@')[0] if '@' in user.username else user.username
+        last_name = user.last_name or ''
+        full_name = f"{first_name} {last_name}".strip() or user.username
+
+        # Get travel interests from survey
+        travel_interests = ''
+        if latest_survey and latest_survey.travel_styles:
+            travel_interests = ', '.join(latest_survey.travel_styles)
+
+        # Get sustainability priority
+        sustainability_priority = ''
+        if profile and profile.sustainability_priority:
+            priorities = {1: 'Low', 2: 'Medium', 3: 'High', 4: 'Very High', 5: 'Essential'}
+            sustainability_priority = priorities.get(profile.sustainability_priority, 'Medium')
+
+        writer.writerow([
+            user.email,
+            first_name,
+            last_name,
+            full_name,
+            user.username,
+            user.date_joined.strftime('%Y-%m-%d'),
+            'Yes' if user.is_active else 'No',
+            profile.location if profile else '',
+            travel_interests,
+            sustainability_priority
+        ])
+
+    return response
+
+@user_passes_test(lambda u: u.is_staff, login_url='/accounts/login/')
+def export_all_emails_text(request):
+    """Export all user emails as plain text file"""
+    response = HttpResponse(content_type='text/plain')
+    response['Content-Disposition'] = 'attachment; filename="all_user_emails.txt"'
+
+    emails = [user.email for user in User.objects.all() if user.email]
+    response.write(', '.join(emails))
+
+    return response
+
+@user_passes_test(lambda u: u.is_staff, login_url='/accounts/login/')
+def export_active_emails_csv(request):
+    """Export active user emails as CSV file with mail merge fields"""
+    response = HttpResponse(content_type='text/csv')
+    response['Content-Disposition'] = 'attachment; filename="active_users_mail_merge.csv"'
+
+    writer = csv.writer(response)
+    # Mail merge friendly headers
+    writer.writerow([
+        'Email', 'FirstName', 'LastName', 'FullName', 'Username',
+        'DateJoined', 'Location', 'TravelInterests', 'SustainabilityPriority', 'BudgetRange'
+    ])
+
+    # Get active users with related profile data
+    users = User.objects.filter(is_active=True).select_related('userprofile').prefetch_related('travel_surveys')
+
+    for user in users:
+        # Get user profile if it exists
+        profile = getattr(user, 'userprofile', None)
+
+        # Get latest travel survey if it exists
+        latest_survey = user.travel_surveys.first() if user.travel_surveys.exists() else None
+
+        # Prepare names for mail merge
+        first_name = user.first_name or user.username.split('@')[0] if '@' in user.username else user.username
+        last_name = user.last_name or ''
+        full_name = f"{first_name} {last_name}".strip() or user.username
+
+        # Get travel interests from survey
+        travel_interests = ''
+        if latest_survey and latest_survey.travel_styles:
+            travel_interests = ', '.join(latest_survey.travel_styles)
+
+        # Get sustainability priority
+        sustainability_priority = ''
+        if profile and profile.sustainability_priority:
+            priorities = {1: 'Low', 2: 'Medium', 3: 'High', 4: 'Very High', 5: 'Essential'}
+            sustainability_priority = priorities.get(profile.sustainability_priority, 'Medium')
+
+        # Get budget range
+        budget_range = ''
+        if latest_survey and latest_survey.budget_range:
+            budget_ranges = {
+                'budget': 'Budget ($0-50/day)',
+                'mid_range': 'Mid-range ($50-150/day)',
+                'luxury': 'Luxury ($150+/day)',
+                'varies': 'Varies by trip'
+            }
+            budget_range = budget_ranges.get(latest_survey.budget_range, latest_survey.budget_range)
+
+        writer.writerow([
+            user.email,
+            first_name,
+            last_name,
+            full_name,
+            user.username,
+            user.date_joined.strftime('%Y-%m-%d'),
+            profile.location if profile else '',
+            travel_interests,
+            sustainability_priority,
+            budget_range
+        ])
+
+    return response
+
+@user_passes_test(lambda u: u.is_staff, login_url='/accounts/login/')
+def export_active_emails_text(request):
+    """Export active user emails as plain text file"""
+    response = HttpResponse(content_type='text/plain')
+    response['Content-Disposition'] = 'attachment; filename="active_user_emails.txt"'
+
+    emails = [user.email for user in User.objects.filter(is_active=True) if user.email]
+    response.write(', '.join(emails))
+
+    return response
+
+@user_passes_test(lambda u: u.is_staff, login_url='/accounts/login/')
+def export_mail_merge_premium(request):
+    """Export users with comprehensive mail merge data including recommendations"""
+    response = HttpResponse(content_type='text/csv')
+    response['Content-Disposition'] = 'attachment; filename="mail_merge_premium_data.csv"'
+
+    writer = csv.writer(response)
+    # Comprehensive mail merge headers
+    writer.writerow([
+        'Email', 'FirstName', 'LastName', 'FullName', 'Username',
+        'DateJoined', 'Location', 'TravelInterests', 'SustainabilityPriority', 'BudgetRange',
+        'GroupSizePreference', 'TripDurationPreference', 'DreamDestination', 'HasCompletedSurvey',
+        'TopRecommendation', 'RecommendationCount', 'PersonalizedGreeting'
+    ])
+
+    # Get active users with all related data
+    users = User.objects.filter(is_active=True).select_related('userprofile').prefetch_related(
+        'travel_surveys', 'recommendations__experience__destination'
+    )
+
+    for user in users:
+        # Get user profile if it exists
+        profile = getattr(user, 'userprofile', None)
+
+        # Get latest travel survey if it exists
+        latest_survey = user.travel_surveys.first() if user.travel_surveys.exists() else None
+
+        # Prepare names for mail merge
+        first_name = user.first_name or user.username.split('@')[0] if '@' in user.username else user.username
+        last_name = user.last_name or ''
+        full_name = f"{first_name} {last_name}".strip() or user.username
+
+        # Get travel interests from survey
+        travel_interests = ''
+        if latest_survey and latest_survey.travel_styles:
+            travel_interests = ', '.join(latest_survey.travel_styles)
+
+        # Get sustainability priority
+        sustainability_priority = ''
+        if profile and profile.sustainability_priority:
+            priorities = {1: 'Low', 2: 'Medium', 3: 'High', 4: 'Very High', 5: 'Essential'}
+            sustainability_priority = priorities.get(profile.sustainability_priority, 'Medium')
+
+        # Get budget range
+        budget_range = ''
+        if latest_survey and latest_survey.budget_range:
+            budget_ranges = {
+                'budget': 'Budget ($0-50/day)',
+                'mid_range': 'Mid-range ($50-150/day)',
+                'luxury': 'Luxury ($150+/day)',
+                'varies': 'Varies by trip'
+            }
+            budget_range = budget_ranges.get(latest_survey.budget_range, latest_survey.budget_range)
+
+        # Get group size and duration preferences
+        group_size_pref = ''
+        trip_duration_pref = ''
+        dream_destination = ''
+        if latest_survey:
+            group_size_pref = latest_survey.get_group_size_preference_display() if hasattr(latest_survey, 'get_group_size_preference_display') else latest_survey.group_size_preference
+            trip_duration_pref = latest_survey.get_trip_duration_preference_display() if hasattr(latest_survey, 'get_trip_duration_preference_display') else latest_survey.trip_duration_preference
+            dream_destination = latest_survey.dream_destination
+
+        # Get recommendation data
+        recommendations = user.recommendations.all()
+        recommendation_count = recommendations.count()
+        top_recommendation = ''
+        if recommendations.exists():
+            top_rec = recommendations.first()
+            top_recommendation = f"{top_rec.experience.title} in {top_rec.experience.destination.name}"
+
+        # Create personalized greeting
+        personalized_greeting = f"Hi {first_name}!"
+        if travel_interests:
+            personalized_greeting += f" We know you love {travel_interests.lower()}."
+        if dream_destination:
+            personalized_greeting += f" Your dream destination of {dream_destination} awaits!"
+
+        writer.writerow([
+            user.email,
+            first_name,
+            last_name,
+            full_name,
+            user.username,
+            user.date_joined.strftime('%Y-%m-%d'),
+            profile.location if profile else '',
+            travel_interests,
+            sustainability_priority,
+            budget_range,
+            group_size_pref,
+            trip_duration_pref,
+            dream_destination,
+            'Yes' if latest_survey else 'No',
+            top_recommendation,
+            recommendation_count,
+            personalized_greeting
+        ])
+
+    return response
 
 @user_passes_test(lambda u: u.is_staff, login_url='/accounts/login/')
 def analytics_dashboard(request):

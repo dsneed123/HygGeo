@@ -180,6 +180,114 @@
         </div>
     </div>
 
+    <!-- Email Export Section -->
+    <div class="row mb-5">
+        <div class="col-12">
+            <h3 class="fw-bold mb-4" style="color: var(--hygge-green);">
+                <i class="fas fa-envelope me-2"></i>Email Management
+            </h3>
+        </div>
+    </div>
+
+    <!-- Email Statistics and Export -->
+    <div class="row mb-5">
+        <!-- Email Statistics -->
+        <div class="col-lg-6 mb-4">
+            <div class="card card-hygge h-100">
+                <div class="card-header">
+                    <h5 class="fw-bold mb-0">
+                        <i class="fas fa-chart-pie me-2"></i>Email Statistics
+                    </h5>
+                </div>
+                <div class="card-body">
+                    <div class="row text-center">
+                        <div class="col-6 mb-3">
+                            <div class="stat-item">
+                                <h4 class="fw-bold text-primary">{{ email_stats.total_users }}</h4>
+                                <p class="text-muted mb-0 small">Total Users</p>
+                            </div>
+                        </div>
+                        <div class="col-6 mb-3">
+                            <div class="stat-item">
+                                <h4 class="fw-bold text-success">{{ email_stats.users_with_email }}</h4>
+                                <p class="text-muted mb-0 small">With Email</p>
+                            </div>
+                        </div>
+                        <div class="col-6">
+                            <div class="stat-item">
+                                <h4 class="fw-bold text-info">{{ email_stats.active_users }}</h4>
+                                <p class="text-muted mb-0 small">Active Users</p>
+                            </div>
+                        </div>
+                        <div class="col-6">
+                            <div class="stat-item">
+                                <h4 class="fw-bold text-warning">{{ email_stats.active_users_with_email }}</h4>
+                                <p class="text-muted mb-0 small">Active + Email</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Email Export Actions -->
+        <div class="col-lg-6 mb-4">
+            <div class="card card-hygge h-100">
+                <div class="card-header">
+                    <h5 class="fw-bold mb-0">
+                        <i class="fas fa-download me-2"></i>Export User Emails
+                    </h5>
+                </div>
+                <div class="card-body">
+                    <div class="d-grid gap-2">
+                        <h6 class="fw-bold text-muted">All Users</h6>
+                        <div class="row">
+                            <div class="col-6">
+                                <a href="{% url 'export_all_emails_csv' %}" class="btn btn-outline-primary btn-sm w-100">
+                                    <i class="fas fa-file-csv me-1"></i>CSV Format
+                                </a>
+                            </div>
+                            <div class="col-6">
+                                <a href="{% url 'export_all_emails_text' %}" class="btn btn-outline-secondary btn-sm w-100">
+                                    <i class="fas fa-file-alt me-1"></i>Text Format
+                                </a>
+                            </div>
+                        </div>
+
+                        <h6 class="fw-bold text-muted mt-3">Active Users Only</h6>
+                        <div class="row">
+                            <div class="col-6">
+                                <a href="{% url 'export_active_emails_csv' %}" class="btn btn-primary btn-sm w-100">
+                                    <i class="fas fa-file-csv me-1"></i>CSV Format
+                                </a>
+                            </div>
+                            <div class="col-6">
+                                <a href="{% url 'export_active_emails_text' %}" class="btn btn-hygge btn-sm w-100">
+                                    <i class="fas fa-file-alt me-1"></i>Text Format
+                                </a>
+                            </div>
+                        </div>
+
+                        <h6 class="fw-bold text-muted mt-3">Premium Mail Merge</h6>
+                        <div class="d-grid">
+                            <a href="{% url 'export_mail_merge_premium' %}" class="btn btn-success btn-sm w-100">
+                                <i class="fas fa-star me-1"></i>Premium Mail Merge Data
+                            </a>
+                        </div>
+
+                        <div class="alert alert-info mt-3 mb-0">
+                            <small>
+                                <i class="fas fa-info-circle me-1"></i>
+                                <strong>CSV:</strong> Basic details | <strong>Text:</strong> Email list only<br>
+                                <strong>Premium:</strong> Full personalization data with names, interests, recommendations & custom greetings
+                            </small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <!-- Management Section -->
     <div class="row mb-5">
         <div class="col-12">

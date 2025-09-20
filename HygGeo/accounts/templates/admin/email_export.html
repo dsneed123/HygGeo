@@ -1,0 +1,127 @@
+{% extends "admin/base_site.html" %}
+{% load i18n admin_urls static admin_modify %}
+
+{% block title %}Email Export Dashboard{% endblock %}
+
+{% block breadcrumbs %}
+<div class="breadcrumbs">
+    <a href="{% url 'admin:index' %}">Home</a>
+    &rsaquo; <a href="{% url 'admin:auth_user_changelist' %}">Users</a>
+    &rsaquo; Email Export Dashboard
+</div>
+{% endblock %}
+
+{% block content %}
+<div class="object-tools">
+    <ul>
+        <li><a href="{% url 'admin:auth_user_changelist' %}" class="default">Back to Users</a></li>
+    </ul>
+</div>
+
+<h1>Email Export Dashboard</h1>
+
+<div class="module aligned">
+    <h2>User Statistics</h2>
+    <div class="form-row">
+        <table>
+            <tr>
+                <th>Total Users:</th>
+                <td><strong>{{ total_users }}</strong></td>
+            </tr>
+            <tr>
+                <th>Users with Email:</th>
+                <td><strong style="color: green;">{{ users_with_email }}</strong></td>
+            </tr>
+            <tr>
+                <th>Users without Email:</th>
+                <td><strong style="color: red;">{{ users_without_email }}</strong></td>
+            </tr>
+            <tr>
+                <th>Active Users with Email:</th>
+                <td><strong style="color: blue;">{{ active_users_with_email }}</strong></td>
+            </tr>
+        </table>
+    </div>
+</div>
+
+<div class="module aligned">
+    <h2>Quick Email Export</h2>
+    <p>Export user emails in different formats. You can also go to the <a href="{% url 'admin:auth_user_changelist' %}">Users list</a> and use the action dropdown for more options.</p>
+
+    <div class="form-row">
+        <h3>Export All Users</h3>
+        <ul>
+            <li><a href="{% url 'admin:auth_user_changelist' %}?action=export_all_emails_csv" class="button">📄 Download All Emails (CSV)</a></li>
+            <li><a href="{% url 'admin:auth_user_changelist' %}?action=export_all_emails_text" class="button">📝 Download All Emails (Text)</a></li>
+        </ul>
+    </div>
+
+    <div class="form-row">
+        <h3>Export Active Users Only</h3>
+        <ul>
+            <li><a href="{% url 'admin:auth_user_changelist' %}?is_active__exact=1" class="button">👥 View Active Users</a></li>
+        </ul>
+    </div>
+</div>
+
+<div class="module aligned">
+    <h2>How to Export Emails</h2>
+    <ol>
+        <li>Go to the <a href="{% url 'admin:auth_user_changelist' %}">Users list</a></li>
+        <li>Optionally filter users using the filter sidebar (e.g., by active status, staff status, date joined)</li>
+        <li>Select the users you want to export (or leave none selected to export all)</li>
+        <li>Choose an export action from the dropdown:
+            <ul>
+                <li><strong>Export selected user emails as CSV</strong> - Detailed CSV with user info</li>
+                <li><strong>Export ALL user emails as CSV</strong> - All users regardless of selection</li>
+                <li><strong>Export selected emails as text file</strong> - Simple comma-separated list</li>
+                <li><strong>Export ALL emails as text file</strong> - All emails in text format</li>
+            </ul>
+        </li>
+        <li>Click "Go" to download the file</li>
+    </ol>
+</div>
+
+<style>
+.module table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.module table th,
+.module table td {
+    padding: 8px 12px;
+    text-align: left;
+    border-bottom: 1px solid #ddd;
+}
+
+.module table th {
+    background-color: #f8f8f8;
+    font-weight: bold;
+}
+
+.button {
+    display: inline-block;
+    padding: 8px 16px;
+    margin: 4px 8px 4px 0;
+    background-color: #417690;
+    color: white;
+    text-decoration: none;
+    border-radius: 4px;
+    font-weight: bold;
+}
+
+.button:hover {
+    background-color: #205067;
+    color: white;
+}
+
+.form-row ul {
+    margin: 10px 0;
+}
+
+.form-row li {
+    margin: 5px 0;
+}
+</style>
+{% endblock %}

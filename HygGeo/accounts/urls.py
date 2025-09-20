@@ -6,6 +6,13 @@ from . import views
 urlpatterns = [
     # Authentication URLs
     path('admin/analytics/', views.analytics_dashboard, name='analytics'),
+
+    # Email export URLs
+    path('admin/export/emails-csv/', views.export_all_emails_csv, name='export_all_emails_csv'),
+    path('admin/export/emails-txt/', views.export_all_emails_text, name='export_all_emails_text'),
+    path('admin/export/active-emails-csv/', views.export_active_emails_csv, name='export_active_emails_csv'),
+    path('admin/export/active-emails-txt/', views.export_active_emails_text, name='export_active_emails_text'),
+    path('admin/export/mail-merge-premium/', views.export_mail_merge_premium, name='export_mail_merge_premium'),
     path('signup/', views.signup_view, name='signup'),
     path('login/', auth_views.LoginView.as_view(template_name='accounts/login.html'), name='login'),
     path('logout/', views.logout_view, name='logout'),
