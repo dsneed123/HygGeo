@@ -518,6 +518,7 @@ class SEOAnalyzer:
     def get_keyword_suggestions(self, experience_data: Dict) -> List[str]:
         """
         Generate smart keyword suggestions based on content and travel industry trends
+        Enhanced with HygGeo-specific keyword database
         """
         title = experience_data.get('title', '')
         destination = experience_data.get('destination', '')
@@ -525,6 +526,9 @@ class SEOAnalyzer:
         description = experience_data.get('description', '')
 
         suggestions = set()
+
+        # HygGeo-specific keyword database
+        hyggeo_keywords = self._get_hyggeo_keyword_database()
 
         # Location-based keywords
         if destination:
@@ -559,6 +563,17 @@ class SEOAnalyzer:
                     suggestions.add(f"{dest_lower} {word}")
                 suggestions.add(word)
 
+        # HygGeo brand-specific keywords
+        for category, keywords in hyggeo_keywords.items():
+            # Add relevant keywords based on context
+            if category == 'hygge_concepts' and any(word in description.lower() for word in ['cozy', 'comfort', 'mindful', 'peaceful']):
+                suggestions.update(keywords[:3])
+            elif category == 'sustainable_travel' and any(word in description.lower() for word in ['eco', 'green', 'sustainable', 'responsible']):
+                suggestions.update(keywords[:3])
+            elif category == 'experience_types' and experience_type:
+                relevant_keywords = [kw for kw in keywords if exp_lower in kw or any(part in kw for part in exp_lower.split())]
+                suggestions.update(relevant_keywords[:2])
+
         # Travel industry trending keywords
         trending_modifiers = [
             'sustainable', 'eco-friendly', 'authentic', 'local', 'unique',
@@ -571,9 +586,114 @@ class SEOAnalyzer:
             if experience_type:
                 suggestions.add(f"{modifier} {experience_type.lower()}")
 
+        # Add location + HygGeo concepts
+        if destination:
+            for hygge_concept in hyggeo_keywords['hygge_concepts'][:3]:
+                suggestions.add(f"{hygge_concept} {dest_lower}")
+
         # Filter and return top suggestions
         filtered_suggestions = [s for s in suggestions if len(s) <= 50 and len(s.split()) <= 4]
-        return list(filtered_suggestions)[:10]
+        return list(filtered_suggestions)[:15]  # Increased to 15 for more options
+
+    def _get_hyggeo_keyword_database(self) -> Dict[str, List[str]]:
+        """
+        Comprehensive HygGeo-specific keyword database for SEO optimization
+        Contains both niche and general keywords for sustainable travel and hygge concepts
+        """
+        return {
+            # Core HygGeo Brand Keywords
+            'brand_core': [
+                'hyggeo travel', 'hygge travel', 'sustainable hygge', 'mindful travel',
+                'hyggeo experiences', 'danish hygge travel', 'sustainable travel platform',
+                'eco hygge vacation', 'mindful journey'
+            ],
+
+            # Hygge Concept Keywords (Niche)
+            'hygge_concepts': [
+                'hygge vacation', 'cozy travel', 'mindful tourism', 'peaceful journey',
+                'hygge lifestyle travel', 'danish hygge experiences', 'comfort travel',
+                'slow travel hygge', 'hygge inspired trips', 'cozy destinations',
+                'hygge philosophy travel', 'mindful wandering', 'serene travel',
+                'hygge moments abroad', 'contentment travel', 'simple pleasures travel'
+            ],
+
+            # Sustainable Travel Keywords (General + Niche)
+            'sustainable_travel': [
+                'eco friendly travel', 'sustainable tourism', 'responsible travel',
+                'green travel', 'carbon neutral travel', 'eco conscious travel',
+                'sustainable vacation', 'ethical travel', 'eco tourism',
+                'climate friendly travel', 'low impact travel', 'regenerative travel',
+                'conscious travel', 'sustainable adventure', 'green vacation',
+                'eco mindful trips', 'planet friendly travel', 'zero waste travel'
+            ],
+
+            # Experience Type Keywords
+            'experience_types': [
+                'sustainable accommodation', 'eco hotels', 'green lodging',
+                'responsible tours', 'ethical activities', 'local experiences',
+                'cultural immersion', 'authentic travel', 'community based tourism',
+                'sustainable adventures', 'eco activities', 'mindful experiences',
+                'slow travel experiences', 'local community tours', 'ethical dining',
+                'sustainable transportation', 'green mobility', 'eco friendly tours'
+            ],
+
+            # Destination-Related Keywords
+            'destination_keywords': [
+                'sustainable destinations', 'eco friendly places', 'green cities',
+                'responsible destinations', 'ethical travel spots', 'eco conscious locations',
+                'sustainable travel guide', 'green travel destinations', 'eco tourism spots',
+                'climate conscious destinations', 'carbon neutral destinations'
+            ],
+
+            # Travel Style Keywords
+            'travel_styles': [
+                'slow travel', 'mindful travel', 'conscious travel', 'intentional travel',
+                'sustainable wandering', 'eco exploration', 'responsible adventure',
+                'green nomad', 'sustainable backpacking', 'mindful tourism',
+                'eco friendly adventures', 'conscious exploration', 'ethical wandering'
+            ],
+
+            # Long-tail Keywords (High conversion potential)
+            'long_tail': [
+                'best sustainable travel experiences', 'how to travel sustainably',
+                'eco friendly vacation ideas', 'sustainable travel tips',
+                'responsible travel guide', 'green travel planning',
+                'sustainable tourism practices', 'eco conscious travel planning',
+                'mindful travel experiences', 'sustainable travel booking',
+                'ethical travel recommendations', 'eco friendly trip planning'
+            ],
+
+            # Local/Community Keywords
+            'community_focused': [
+                'local community travel', 'support local tourism', 'community based travel',
+                'local economy travel', 'indigenous tourism', 'cultural preservation travel',
+                'local guide experiences', 'community owned tourism', 'grassroots travel',
+                'locally sourced travel', 'fair trade tourism'
+            ],
+
+            # Wellness/Mindfulness Keywords
+            'wellness_mindful': [
+                'wellness travel', 'mindful vacation', 'spiritual travel',
+                'self care travel', 'mental health travel', 'digital detox travel',
+                'mindfulness retreat', 'peaceful getaway', 'tranquil travel',
+                'restorative travel', 'healing journey', 'contemplative travel'
+            ],
+
+            # Seasonal/Trending Keywords
+            'seasonal_trending': [
+                'sustainable travel 2025', 'eco travel trends', 'green tourism 2025',
+                'climate conscious travel', 'post pandemic travel', 'overtourism alternatives',
+                'regenerative tourism', 'nature positive travel', 'biodiversity travel',
+                'conservation travel', 'rewilding tourism'
+            ],
+
+            # Budget/Value Keywords
+            'budget_value': [
+                'affordable sustainable travel', 'budget eco travel', 'cheap green travel',
+                'sustainable travel deals', 'eco budget vacation', 'responsible budget travel',
+                'affordable eco tourism', 'budget conscious travel', 'value sustainable trips'
+            ]
+        }
 
     def _calculate_weighted_score(self, scores: Dict) -> int:
         """Calculate weighted overall score"""
