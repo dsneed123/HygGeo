@@ -9,7 +9,7 @@
 {% block og_type %}place{% endblock %}
 {% block og_title %}Sustainable Travel in {{ destination.name }}, {{ destination.country }}{% endblock %}
 {% block og_description %}{{ destination.description|truncatewords:30 }}{% endblock %}
-{% block og_image %}{% if destination.image %}{{ destination.image.url }}{% else %}https://yourdomain.com/static/images/hyggeo-og-image.jpg{% endif %}{% endblock %}
+{% block og_image %}{% if destination.image %}{{ destination.image.url }}{% else %}https://hyggeo.com{% load static %}{% static 'android-chrome-512x512.png' %}{% endif %}{% endblock %}
 
 {% block content %}
 <div class="destination-detail-page">
