@@ -12942,3 +12942,18 @@ INFO 2025-09-23 01:45:24,898 basehttp 39988 41808 "GET /accounts/signup/ HTTP/1.
 INFO 2025-09-23 01:45:26,012 basehttp 39988 41808 "GET /accounts/login/ HTTP/1.1" 200 29931
 INFO 2025-09-23 01:45:29,490 basehttp 39988 41808 "GET /accounts/google/login/ HTTP/1.1" 302 0
 INFO 2025-09-23 01:45:32,336 basehttp 39988 41808 "GET /accounts/login/ HTTP/1.1" 200 29931
+ERROR 2025-09-23 13:28:39,940 forms 25632 26312 Failed to send password reset email to 5
+Traceback (most recent call last):
+  File "C:\Users\DLSne\AppData\Local\Packages\PythonSoftwareFoundation.Python.3.12_qbz5n2kfra8p0\LocalCache\local-packages\Python312\site-packages\django\contrib\auth\forms.py", line 434, in send_mail
+    email_message.send()
+  File "C:\Users\DLSne\AppData\Local\Packages\PythonSoftwareFoundation.Python.3.12_qbz5n2kfra8p0\LocalCache\local-packages\Python312\site-packages\django\core\mail\message.py", line 307, in send
+    return self.get_connection(fail_silently).send_messages([self])
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\DLSne\AppData\Local\Packages\PythonSoftwareFoundation.Python.3.12_qbz5n2kfra8p0\LocalCache\local-packages\Python312\site-packages\django\core\mail\backends\smtp.py", line 136, in send_messages
+    sent = self._send(message)
+           ^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\DLSne\AppData\Local\Packages\PythonSoftwareFoundation.Python.3.12_qbz5n2kfra8p0\LocalCache\local-packages\Python312\site-packages\django\core\mail\backends\smtp.py", line 155, in _send
+    self.connection.sendmail(
+  File "C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.12_3.12.2800.0_x64__qbz5n2kfra8p0\Lib\smtplib.py", line 876, in sendmail
+    raise SMTPSenderRefused(code, resp, from_addr)
+smtplib.SMTPSenderRefused: (530, b'5.7.0 Authentication Required. For more information, go to\n5.7.0  https://support.google.com/accounts/troubleshooter/2402620. 41be03b00d2f7-b551705bd02sm12747153a12.41 - gsmtp', 'HygGeo <noreply@hyggeo.com>')
