@@ -22,6 +22,7 @@ urlpatterns = [
     # Include app URLs (let each app handle its own URLs)
     path('accounts/', include('accounts.urls')),
     path('accounts/', include('django.contrib.auth.urls')),  # Built-in auth views
+    path('accounts/', include('allauth.urls')),  # Allauth OAuth URLs
     path('experiences/', include('experiences.urls')),
 
     # SEO URLs

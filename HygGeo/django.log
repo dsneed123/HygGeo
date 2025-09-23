@@ -12830,3 +12830,115 @@ INFO 2025-09-20 23:15:59,369 basehttp 24876 19252 "GET /static/favicon.ico HTTP/
 INFO 2025-09-20 23:16:00,492 basehttp 24876 19252 "GET / HTTP/1.1" 200 96681
 INFO 2025-09-20 23:16:00,869 basehttp 24876 35224 "GET /static/site.webmanifest HTTP/1.1" 200 263
 INFO 2025-09-20 23:16:00,939 basehttp 24876 19252 "GET /static/favicon.ico HTTP/1.1" 200 15406
+INFO 2025-09-23 01:24:24,451 autoreload 42100 43512 Watching for file changes with StatReloader
+INFO 2025-09-23 01:26:27,636 autoreload 15800 14492 Watching for file changes with StatReloader
+INFO 2025-09-23 01:26:38,147 autoreload 36536 15200 Watching for file changes with StatReloader
+INFO 2025-09-23 01:26:42,434 basehttp 15800 39544 "GET / HTTP/1.1" 200 96646
+INFO 2025-09-23 01:26:44,113 basehttp 15800 42924 "GET /static/site.webmanifest HTTP/1.1" 304 0
+INFO 2025-09-23 01:26:46,607 basehttp 15800 39544 "GET /accounts/logout/ HTTP/1.1" 302 0
+INFO 2025-09-23 01:26:46,639 basehttp 15800 39544 "GET / HTTP/1.1" 200 91176
+INFO 2025-09-23 01:26:47,818 basehttp 15800 39544 "GET /accounts/login/ HTTP/1.1" 200 28066
+INFO 2025-09-23 01:26:51,080 basehttp 15800 39544 "GET /accounts/password_reset/ HTTP/1.1" 200 4084
+INFO 2025-09-23 01:26:51,374 basehttp 15800 15140 "GET /static/admin/css/dark_mode.css HTTP/1.1" 200 2808
+INFO 2025-09-23 01:26:51,385 basehttp 15800 39544 "GET /static/admin/css/base.css HTTP/1.1" 200 22154
+INFO 2025-09-23 01:26:51,389 basehttp 15800 15140 "GET /static/admin/css/forms.css HTTP/1.1" 200 8525
+INFO 2025-09-23 01:26:51,395 basehttp 15800 15140 "GET /static/admin/js/theme.js HTTP/1.1" 200 1653
+INFO 2025-09-23 01:26:51,401 basehttp 15800 39544 "GET /static/admin/css/responsive.css HTTP/1.1" 200 16632
+INFO 2025-09-23 01:26:51,413 basehttp 15800 15140 "GET /static/admin/css/widgets.css HTTP/1.1" 200 11991
+INFO 2025-09-23 01:26:51,430 basehttp 15800 15140 "GET /favicon.ico HTTP/1.1" 301 0
+INFO 2025-09-23 01:26:51,436 basehttp 15800 15140 "GET /static/favicon.ico HTTP/1.1" 304 0
+ERROR 2025-09-23 01:26:58,006 forms 15800 15140 Failed to send password reset email to 2
+Traceback (most recent call last):
+  File "C:\Users\DLSne\AppData\Local\Packages\PythonSoftwareFoundation.Python.3.12_qbz5n2kfra8p0\LocalCache\local-packages\Python312\site-packages\django\contrib\auth\forms.py", line 434, in send_mail
+    email_message.send()
+  File "C:\Users\DLSne\AppData\Local\Packages\PythonSoftwareFoundation.Python.3.12_qbz5n2kfra8p0\LocalCache\local-packages\Python312\site-packages\django\core\mail\message.py", line 307, in send
+    return self.get_connection(fail_silently).send_messages([self])
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\DLSne\AppData\Local\Packages\PythonSoftwareFoundation.Python.3.12_qbz5n2kfra8p0\LocalCache\local-packages\Python312\site-packages\django\core\mail\backends\console.py", line 37, in send_messages
+    self.write_message(message)
+  File "C:\Users\DLSne\AppData\Local\Packages\PythonSoftwareFoundation.Python.3.12_qbz5n2kfra8p0\LocalCache\local-packages\Python312\site-packages\django\core\mail\backends\console.py", line 24, in write_message
+    self.stream.write("%s\n" % msg_data)
+  File "C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.12_3.12.2800.0_x64__qbz5n2kfra8p0\Lib\encodings\cp1252.py", line 19, in encode
+    return codecs.charmap_encode(input,self.errors,encoding_table)[0]
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+UnicodeEncodeError: 'charmap' codec can't encode character '\U0001f33f' in position 3258: character maps to <undefined>
+ERROR 2025-09-23 01:26:58,094 forms 15800 15140 Failed to send password reset email to 3
+Traceback (most recent call last):
+  File "C:\Users\DLSne\AppData\Local\Packages\PythonSoftwareFoundation.Python.3.12_qbz5n2kfra8p0\LocalCache\local-packages\Python312\site-packages\django\contrib\auth\forms.py", line 434, in send_mail
+    email_message.send()
+  File "C:\Users\DLSne\AppData\Local\Packages\PythonSoftwareFoundation.Python.3.12_qbz5n2kfra8p0\LocalCache\local-packages\Python312\site-packages\django\core\mail\message.py", line 307, in send
+    return self.get_connection(fail_silently).send_messages([self])
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\DLSne\AppData\Local\Packages\PythonSoftwareFoundation.Python.3.12_qbz5n2kfra8p0\LocalCache\local-packages\Python312\site-packages\django\core\mail\backends\console.py", line 37, in send_messages
+    self.write_message(message)
+  File "C:\Users\DLSne\AppData\Local\Packages\PythonSoftwareFoundation.Python.3.12_qbz5n2kfra8p0\LocalCache\local-packages\Python312\site-packages\django\core\mail\backends\console.py", line 24, in write_message
+    self.stream.write("%s\n" % msg_data)
+  File "C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.12_3.12.2800.0_x64__qbz5n2kfra8p0\Lib\encodings\cp1252.py", line 19, in encode
+    return codecs.charmap_encode(input,self.errors,encoding_table)[0]
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+UnicodeEncodeError: 'charmap' codec can't encode character '\U0001f33f' in position 3259: character maps to <undefined>
+ERROR 2025-09-23 01:26:58,097 forms 15800 15140 Failed to send password reset email to 4
+Traceback (most recent call last):
+  File "C:\Users\DLSne\AppData\Local\Packages\PythonSoftwareFoundation.Python.3.12_qbz5n2kfra8p0\LocalCache\local-packages\Python312\site-packages\django\contrib\auth\forms.py", line 434, in send_mail
+    email_message.send()
+  File "C:\Users\DLSne\AppData\Local\Packages\PythonSoftwareFoundation.Python.3.12_qbz5n2kfra8p0\LocalCache\local-packages\Python312\site-packages\django\core\mail\message.py", line 307, in send
+    return self.get_connection(fail_silently).send_messages([self])
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\DLSne\AppData\Local\Packages\PythonSoftwareFoundation.Python.3.12_qbz5n2kfra8p0\LocalCache\local-packages\Python312\site-packages\django\core\mail\backends\console.py", line 37, in send_messages
+    self.write_message(message)
+  File "C:\Users\DLSne\AppData\Local\Packages\PythonSoftwareFoundation.Python.3.12_qbz5n2kfra8p0\LocalCache\local-packages\Python312\site-packages\django\core\mail\backends\console.py", line 24, in write_message
+    self.stream.write("%s\n" % msg_data)
+  File "C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.12_3.12.2800.0_x64__qbz5n2kfra8p0\Lib\encodings\cp1252.py", line 19, in encode
+    return codecs.charmap_encode(input,self.errors,encoding_table)[0]
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+UnicodeEncodeError: 'charmap' codec can't encode character '\U0001f33f' in position 3257: character maps to <undefined>
+INFO 2025-09-23 01:26:58,100 basehttp 15800 15140 "POST /accounts/password_reset/ HTTP/1.1" 302 0
+INFO 2025-09-23 01:26:58,123 basehttp 15800 15140 "GET /accounts/password_reset/done/ HTTP/1.1" 200 3654
+ERROR 2025-09-23 01:27:28,474 forms 15800 15140 Failed to send password reset email to 1
+Traceback (most recent call last):
+  File "C:\Users\DLSne\AppData\Local\Packages\PythonSoftwareFoundation.Python.3.12_qbz5n2kfra8p0\LocalCache\local-packages\Python312\site-packages\django\contrib\auth\forms.py", line 434, in send_mail
+    email_message.send()
+  File "C:\Users\DLSne\AppData\Local\Packages\PythonSoftwareFoundation.Python.3.12_qbz5n2kfra8p0\LocalCache\local-packages\Python312\site-packages\django\core\mail\message.py", line 307, in send
+    return self.get_connection(fail_silently).send_messages([self])
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\DLSne\AppData\Local\Packages\PythonSoftwareFoundation.Python.3.12_qbz5n2kfra8p0\LocalCache\local-packages\Python312\site-packages\django\core\mail\backends\console.py", line 37, in send_messages
+    self.write_message(message)
+  File "C:\Users\DLSne\AppData\Local\Packages\PythonSoftwareFoundation.Python.3.12_qbz5n2kfra8p0\LocalCache\local-packages\Python312\site-packages\django\core\mail\backends\console.py", line 24, in write_message
+    self.stream.write("%s\n" % msg_data)
+  File "C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.12_3.12.2800.0_x64__qbz5n2kfra8p0\Lib\encodings\cp1252.py", line 19, in encode
+    return codecs.charmap_encode(input,self.errors,encoding_table)[0]
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+UnicodeEncodeError: 'charmap' codec can't encode character '\U0001f33f' in position 3259: character maps to <undefined>
+INFO 2025-09-23 01:27:28,477 basehttp 15800 15140 "POST /accounts/password_reset/ HTTP/1.1" 302 0
+INFO 2025-09-23 01:27:28,490 basehttp 15800 15140 "GET /accounts/password_reset/done/ HTTP/1.1" 200 3654
+INFO 2025-09-23 01:28:54,167 autoreload 36436 37448 Watching for file changes with StatReloader
+INFO 2025-09-23 01:34:47,493 autoreload 36436 37448 C:\Users\DLSne\OneDrive\Desktop\Code\webdev\HygGeo\HygGeo\HygGeo\settings.py changed, reloading.
+INFO 2025-09-23 01:34:47,620 autoreload 36536 15200 C:\Users\DLSne\OneDrive\Desktop\Code\webdev\HygGeo\HygGeo\HygGeo\settings.py changed, reloading.
+INFO 2025-09-23 01:34:48,696 autoreload 38432 39108 Watching for file changes with StatReloader
+INFO 2025-09-23 01:34:48,735 autoreload 33536 14128 Watching for file changes with StatReloader
+INFO 2025-09-23 01:40:32,487 autoreload 38432 39108 C:\Users\DLSne\OneDrive\Desktop\Code\webdev\HygGeo\HygGeo\HygGeo\settings.py changed, reloading.
+INFO 2025-09-23 01:40:32,593 autoreload 33536 14128 C:\Users\DLSne\OneDrive\Desktop\Code\webdev\HygGeo\HygGeo\HygGeo\settings.py changed, reloading.
+INFO 2025-09-23 01:40:34,386 autoreload 42676 11532 Watching for file changes with StatReloader
+INFO 2025-09-23 01:40:34,386 autoreload 43388 12500 Watching for file changes with StatReloader
+INFO 2025-09-23 01:40:40,451 autoreload 43388 12500 C:\Users\DLSne\OneDrive\Desktop\Code\webdev\HygGeo\HygGeo\HygGeo\settings.py changed, reloading.
+INFO 2025-09-23 01:40:40,526 autoreload 42676 11532 C:\Users\DLSne\OneDrive\Desktop\Code\webdev\HygGeo\HygGeo\HygGeo\settings.py changed, reloading.
+INFO 2025-09-23 01:40:43,222 autoreload 39728 3692 Watching for file changes with StatReloader
+INFO 2025-09-23 01:40:43,222 autoreload 3616 1480 Watching for file changes with StatReloader
+INFO 2025-09-23 01:40:48,072 autoreload 39728 3692 C:\Users\DLSne\OneDrive\Desktop\Code\webdev\HygGeo\HygGeo\HygGeo\settings.py changed, reloading.
+INFO 2025-09-23 01:40:48,328 autoreload 3616 1480 C:\Users\DLSne\OneDrive\Desktop\Code\webdev\HygGeo\HygGeo\HygGeo\settings.py changed, reloading.
+INFO 2025-09-23 01:40:49,552 autoreload 36620 33448 Watching for file changes with StatReloader
+INFO 2025-09-23 01:40:49,849 autoreload 41496 27380 Watching for file changes with StatReloader
+INFO 2025-09-23 01:41:07,005 autoreload 36620 33448 C:\Users\DLSne\OneDrive\Desktop\Code\webdev\HygGeo\HygGeo\HygGeo\settings.py changed, reloading.
+INFO 2025-09-23 01:41:07,498 autoreload 41496 27380 C:\Users\DLSne\OneDrive\Desktop\Code\webdev\HygGeo\HygGeo\HygGeo\settings.py changed, reloading.
+INFO 2025-09-23 01:41:08,505 autoreload 36412 31300 Watching for file changes with StatReloader
+INFO 2025-09-23 01:41:08,901 autoreload 16944 11384 Watching for file changes with StatReloader
+INFO 2025-09-23 01:42:38,173 autoreload 16944 11384 C:\Users\DLSne\OneDrive\Desktop\Code\webdev\HygGeo\HygGeo\HygGeo\settings.py changed, reloading.
+INFO 2025-09-23 01:42:39,919 autoreload 16156 34964 Watching for file changes with StatReloader
+INFO 2025-09-23 01:43:31,276 autoreload 39988 42240 Watching for file changes with StatReloader
+INFO 2025-09-23 01:45:21,766 basehttp 39988 41808 "GET / HTTP/1.1" 200 90813
+INFO 2025-09-23 01:45:21,856 autoreload 19116 34172 Watching for file changes with StatReloader
+INFO 2025-09-23 01:45:23,473 basehttp 39988 41808 "GET /accounts/login/ HTTP/1.1" 200 29931
+INFO 2025-09-23 01:45:24,898 basehttp 39988 41808 "GET /accounts/signup/ HTTP/1.1" 200 35175
+INFO 2025-09-23 01:45:26,012 basehttp 39988 41808 "GET /accounts/login/ HTTP/1.1" 200 29931
+INFO 2025-09-23 01:45:29,490 basehttp 39988 41808 "GET /accounts/google/login/ HTTP/1.1" 302 0
+INFO 2025-09-23 01:45:32,336 basehttp 39988 41808 "GET /accounts/login/ HTTP/1.1" 200 29931
