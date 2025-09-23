@@ -2,7 +2,8 @@
   "permissions": {
     "allow": [
       "Read(//c/Users/DLSne/OneDrive/Desktop/Code/webdev/HygGeo/**)",
-      "Bash(python manage.py shell:*)"
+      "Bash(python manage.py shell:*)",
+      "Bash(python manage.py:*)"
     ],
     "deny": [],
     "ask": []
