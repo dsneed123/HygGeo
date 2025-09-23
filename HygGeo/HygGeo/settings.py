@@ -204,7 +204,7 @@ EMAIL_USE_HTML = True
 DEFAULT_FROM_EMAIL = config('DEFAULT_FROM_EMAIL', default=f'HygGeo <{config("EMAIL_HOST_USER", default="noreply@hyggeo.com")}>')
 
 # Django Sites Framework (required for allauth)
-SITE_ID = 1
+SITE_ID = 3
 
 # Messages framework configuration
 from django.contrib.messages import constants as messages
