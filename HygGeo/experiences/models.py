@@ -250,11 +250,11 @@ class Experience(models.Model):
     def get_sustainability_badge(self):
         """Return sustainability badge level"""
         if self.sustainability_score >= 8:
-            return {'level': 'excellent', 'color': '#28a745', 'text': 'Excellent'}
+            return {'level': 'excellent', 'color': '#000000', 'text': 'Excellent'}
         elif self.sustainability_score >= 6:
-            return {'level': 'good', 'color': '#ffc107', 'text': 'Good'}
+            return {'level': 'good', 'color': '#000000', 'text': 'Good'}
         else:
-            return {'level': 'fair', 'color': '#fd7e14', 'text': 'Fair'}
+            return {'level': 'fair', 'color': '#000000', 'text': 'Fair'}
 
     def get_experience_type_display(self):
         """Return experience type name or default"""

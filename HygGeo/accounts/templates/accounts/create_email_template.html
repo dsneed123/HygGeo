@@ -1,0 +1,260 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Create Email Template - {{ block.super }}{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <!-- Header Section -->
+    <div class="row mb-5">
+        <div class="col-12">
+            <div class="text-center">
+                <i class="fas fa-file-plus text-primary mb-3" style="font-size: 4rem; color: var(--hygge-green) !important;"></i>
+                <h1 class="h2 fw-bold" style="color: var(--hygge-green);">Create Email Template</h1>
+                <p class="lead text-muted">Design a new email template with personalization fields</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <!-- Form Column -->
+        <div class="col-lg-8">
+            <div class="card card-hygge">
+                <div class="card-header">
+                    <h5 class="fw-bold mb-0">
+                        <i class="fas fa-edit me-2"></i>Template Details
+                    </h5>
+                </div>
+                <div class="card-body">
+                    <form method="post">
+                        {% csrf_token %}
+
+                        <!-- Template Name -->
+                        <div class="mb-4">
+                            <label for="name" class="form-label fw-bold">Template Name <span class="text-danger">*</span></label>
+                            <input type="text" class="form-control" id="name" name="name" required
+                                   placeholder="e.g., Welcome Newsletter, New Experiences Update">
+                            <small class="form-text text-muted">Internal name for organizing your templates</small>
+                        </div>
+
+                        <!-- Category -->
+                        <div class="mb-4">
+                            <label for="category" class="form-label fw-bold">Category <span class="text-danger">*</span></label>
+                            <select class="form-select" id="category" name="category" required>
+                                <option value="">Select a category...</option>
+                                {% for value, label in categories %}
+                                <option value="{{ value }}">{{ label }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+
+                        <!-- Subject Line -->
+                        <div class="mb-4">
+                            <label for="subject" class="form-label fw-bold">Subject Line <span class="text-danger">*</span></label>
+                            <input type="text" class="form-control" id="subject" name="subject" required
+                                   placeholder="e.g., Welcome to HygGeo, {{first_name}}!">
+                            <small class="form-text text-muted">Use merge fields like {{first_name}} for personalization</small>
+                        </div>
+
+                        <!-- HTML Content -->
+                        <div class="mb-4">
+                            <label for="html_content" class="form-label fw-bold">HTML Email Content <span class="text-danger">*</span></label>
+                            <textarea class="form-control" id="html_content" name="html_content" rows="15" required
+                                      placeholder="Enter your HTML email content here..."></textarea>
+                            <small class="form-text text-muted">Full HTML content with styling. Use merge fields for personalization.</small>
+                        </div>
+
+                        <!-- Text Content -->
+                        <div class="mb-4">
+                            <label for="text_content" class="form-label fw-bold">Plain Text Version</label>
+                            <textarea class="form-control" id="text_content" name="text_content" rows="10"
+                                      placeholder="Plain text version (optional - will be auto-generated if empty)"></textarea>
+                            <small class="form-text text-muted">Optional plain text version for email clients that don't support HTML</small>
+                        </div>
+
+                        <!-- Buttons -->
+                        <div class="d-flex gap-3">
+                            <button type="submit" class="btn btn-hygge">
+                                <i class="fas fa-save me-2"></i>Create Template
+                            </button>
+                            <a href="{% url 'email_management' %}" class="btn btn-outline-secondary">
+                                <i class="fas fa-times me-2"></i>Cancel
+                            </a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <!-- Help Column -->
+        <div class="col-lg-4">
+            <!-- Merge Fields Reference -->
+            <div class="card card-hygge mb-4">
+                <div class="card-header">
+                    <h6 class="fw-bold mb-0">
+                        <i class="fas fa-code me-2"></i>Available Merge Fields
+                    </h6>
+                </div>
+                <div class="card-body">
+                    <p class="small text-muted mb-3">Use these fields in your content for personalization:</p>
+                    <div class="merge-fields">
+                        {% for field in merge_fields %}
+                        <div class="merge-field-item mb-2">
+                            <code class="text-primary">{{{{ field }}}}</code>
+                            <button class="btn btn-sm btn-outline-primary copy-merge-field ms-1" data-field="{{ field }}">
+                                <i class="fas fa-copy"></i>
+                            </button>
+                        </div>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+
+            <!-- Email Template Guide -->
+            <div class="card card-hygge">
+                <div class="card-header">
+                    <h6 class="fw-bold mb-0">
+                        <i class="fas fa-lightbulb me-2"></i>Template Tips
+                    </h6>
+                </div>
+                <div class="card-body">
+                    <ul class="small">
+                        <li class="mb-2"><strong>Subject Lines:</strong> Keep under 50 characters for mobile</li>
+                        <li class="mb-2"><strong>Personalization:</strong> Use {{first_name}} to make emails personal</li>
+                        <li class="mb-2"><strong>HTML:</strong> Include inline CSS for best compatibility</li>
+                        <li class="mb-2"><strong>Images:</strong> Use absolute URLs and alt text</li>
+                        <li class="mb-2"><strong>Links:</strong> Use full URLs (https://)</li>
+                        <li class="mb-2"><strong>Testing:</strong> Always send test emails first</li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Sample Template -->
+            <div class="card card-hygge mt-4">
+                <div class="card-header">
+                    <h6 class="fw-bold mb-0">
+                        <i class="fas fa-file-code me-2"></i>Sample Template
+                    </h6>
+                </div>
+                <div class="card-body">
+                    <button class="btn btn-outline-hygge btn-sm w-100" onclick="loadSampleTemplate()">
+                        <i class="fas fa-download me-1"></i>Load Sample Template
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    .merge-field-item {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+    }
+
+    .merge-field-item code {
+        font-size: 0.8rem;
+        flex-grow: 1;
+    }
+
+    .copy-merge-field {
+        opacity: 0.7;
+        transition: opacity 0.2s ease;
+    }
+
+    .copy-merge-field:hover {
+        opacity: 1;
+    }
+</style>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Copy merge field functionality
+    document.querySelectorAll('.copy-merge-field').forEach(button => {
+        button.addEventListener('click', function(e) {
+            e.preventDefault();
+            const field = this.dataset.field;
+            const mergeField = `{{${field}}}`;
+
+            // Copy to clipboard
+            navigator.clipboard.writeText(mergeField).then(() => {
+                // Show feedback
+                const originalIcon = this.querySelector('i');
+                originalIcon.className = 'fas fa-check';
+                this.classList.add('btn-success');
+                this.classList.remove('btn-outline-primary');
+
+                setTimeout(() => {
+                    originalIcon.className = 'fas fa-copy';
+                    this.classList.remove('btn-success');
+                    this.classList.add('btn-outline-primary');
+                }, 1000);
+            });
+        });
+    });
+});
+
+function loadSampleTemplate() {
+    const sampleSubject = "Welcome to HygGeo, {{first_name}}! 🌱";
+    const sampleHTML = `<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>Welcome to HygGeo</title>
+    <style>
+        body { font-family: Arial, sans-serif; line-height: 1.6; color: #333; }
+        .container { max-width: 600px; margin: 0 auto; padding: 20px; }
+        .header { background: #2d5a3d; color: white; padding: 20px; text-align: center; }
+        .content { padding: 30px 20px; }
+        .btn { background: #2d5a3d; color: white; padding: 12px 24px; text-decoration: none; border-radius: 5px; display: inline-block; }
+        .footer { background: #f8f5f0; padding: 20px; text-align: center; color: #666; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>Welcome to HygGeo! 🌱</h1>
+        </div>
+        <div class="content">
+            <h2>Hello {{first_name}}!</h2>
+            <p>Welcome to HygGeo, where sustainable travel meets Danish hygge. We're thrilled to have you join our community of conscious travelers.</p>
+
+            <p><strong>What's next?</strong></p>
+            <ul>
+                <li>Complete your travel survey to get personalized recommendations</li>
+                <li>Explore our curated sustainable experiences</li>
+                <li>Connect with fellow travelers who share your values</li>
+            </ul>
+
+            <p style="text-align: center; margin: 30px 0;">
+                <a href="https://hyggeo.com/survey/" class="btn">Complete Your Travel Survey</a>
+            </p>
+
+            <p>Happy travels!<br>The HygGeo Team</p>
+        </div>
+        <div class="footer">
+            <p><small>You're receiving this because you signed up for HygGeo.
+            <a href="#unsubscribe">Unsubscribe</a> | <a href="https://hyggeo.com">Visit Website</a></small></p>
+        </div>
+    </div>
+</body>
+</html>`;
+
+    document.getElementById('subject').value = sampleSubject;
+    document.getElementById('html_content').value = sampleHTML;
+    document.getElementById('category').value = 'welcome';
+
+    // Show success message
+    const form = document.querySelector('form');
+    if (!document.querySelector('.sample-loaded-alert')) {
+        const alert = document.createElement('div');
+        alert.className = 'alert alert-success sample-loaded-alert';
+        alert.innerHTML = '<i class="fas fa-check-circle me-2"></i>Sample template loaded! You can customize it as needed.';
+        form.insertBefore(alert, form.firstChild);
+
+        setTimeout(() => alert.remove(), 3000);
+    }
+}
+</script>
+{% endblock %}

@@ -1,0 +1,282 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load dict_extras %}
+
+{% block title %}Send Email - {{ template.name }} - {{ block.super }}{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <!-- Header Section -->
+    <div class="row mb-5">
+        <div class="col-12">
+            <div class="text-center">
+                <i class="fas fa-paper-plane text-primary mb-3" style="font-size: 4rem; color: var(--hygge-green) !important;"></i>
+                <h1 class="h2 fw-bold" style="color: var(--hygge-green);">Send Email Campaign</h1>
+                <p class="lead text-muted">Using template: <strong>{{ template.name }}</strong></p>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <!-- Send Form -->
+        <div class="col-lg-8">
+            <div class="card card-hygge">
+                <div class="card-header">
+                    <h5 class="fw-bold mb-0">
+                        <i class="fas fa-cog me-2"></i>Campaign Settings
+                    </h5>
+                </div>
+                <div class="card-body">
+                    <form method="post" id="sendEmailForm">
+                        {% csrf_token %}
+
+                        <!-- Campaign Name -->
+                        <div class="mb-4">
+                            <label for="campaign_name" class="form-label fw-bold">Campaign Name <span class="text-danger">*</span></label>
+                            <input type="text" class="form-control" id="campaign_name" name="campaign_name" required
+                                   placeholder="e.g., Weekly Newsletter - Jan 2024">
+                            <small class="form-text text-muted">Internal name for tracking this campaign</small>
+                        </div>
+
+                        <!-- Recipients -->
+                        <div class="mb-4">
+                            <label for="recipient_type" class="form-label fw-bold">Recipients <span class="text-danger">*</span></label>
+                            <select class="form-select" id="recipient_type" name="recipient_type" required>
+                                <option value="">Select recipient group...</option>
+                                {% for value, label in recipient_choices %}
+                                <option value="{{ value }}" data-count="{{ recipient_counts|get_item:value }}">
+                                    {{ label }} ({{ recipient_counts|get_item:value|default:0 }} recipients)
+                                </option>
+                                {% endfor %}
+                            </select>
+                            <small class="form-text text-muted">Choose who will receive this email</small>
+                        </div>
+
+                        <!-- Mode -->
+                        <div class="mb-4">
+                            <label for="mode" class="form-label fw-bold">Send Mode <span class="text-danger">*</span></label>
+                            <select class="form-select" id="mode" name="mode" required>
+                                <option value="test">Test Mode (Admin users only)</option>
+                                <option value="production">Production Mode (Send to selected recipients)</option>
+                            </select>
+                            <div class="alert alert-warning mt-2">
+                                <i class="fas fa-exclamation-triangle me-2"></i>
+                                <strong>Important:</strong> Test mode will only send to admin users. Use this to verify your email before sending to all users.
+                            </div>
+                        </div>
+
+                        <!-- Preview Section -->
+                        <div class="mb-4">
+                            <h6 class="fw-bold">Email Preview</h6>
+                            <div class="border rounded p-3" style="background-color: #f8f9fa;">
+                                <div class="mb-2">
+                                    <strong>Subject:</strong> <span class="text-muted">{{ template.subject }}</span>
+                                </div>
+                                <div class="mb-2">
+                                    <strong>Category:</strong> <span class="badge bg-primary">{{ template.get_category_display }}</span>
+                                </div>
+                                <div>
+                                    <strong>Content Preview:</strong>
+                                    <div class="mt-2 small text-muted" style="max-height: 100px; overflow-y: auto;">
+                                        {{ template.html_content|truncatechars:200|safe }}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Confirmation -->
+                        <div class="mb-4">
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" id="confirm_send" required>
+                                <label class="form-check-label fw-bold" for="confirm_send">
+                                    I confirm that I want to send this email campaign
+                                </label>
+                            </div>
+                        </div>
+
+                        <!-- Buttons -->
+                        <div class="d-flex gap-3">
+                            <button type="submit" class="btn btn-hygge" id="sendButton">
+                                <i class="fas fa-paper-plane me-2"></i>Send Campaign
+                            </button>
+                            <a href="{% url 'email_management' %}" class="btn btn-outline-secondary">
+                                <i class="fas fa-arrow-left me-2"></i>Back to Email Management
+                            </a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <!-- Help Column -->
+        <div class="col-lg-4">
+            <!-- Recipient Info -->
+            <div class="card card-hygge mb-4">
+                <div class="card-header">
+                    <h6 class="fw-bold mb-0">
+                        <i class="fas fa-users me-2"></i>Recipient Groups
+                    </h6>
+                </div>
+                <div class="card-body">
+                    {% for value, label in recipient_choices %}
+                    <div class="d-flex justify-content-between align-items-center mb-2">
+                        <span class="small">{{ label }}</span>
+                        <span class="badge bg-secondary">{{ recipient_counts|get_item:value|default:0 }}</span>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+
+            <!-- Template Info -->
+            <div class="card card-hygge mb-4">
+                <div class="card-header">
+                    <h6 class="fw-bold mb-0">
+                        <i class="fas fa-info-circle me-2"></i>Template Details
+                    </h6>
+                </div>
+                <div class="card-body">
+                    <div class="mb-2">
+                        <strong>Name:</strong><br>
+                        <span class="text-muted">{{ template.name }}</span>
+                    </div>
+                    <div class="mb-2">
+                        <strong>Category:</strong><br>
+                        <span class="badge bg-primary">{{ template.get_category_display }}</span>
+                    </div>
+                    <div class="mb-2">
+                        <strong>Created:</strong><br>
+                        <span class="text-muted">{{ template.created_at|date:"M d, Y" }}</span>
+                    </div>
+                    <div class="mb-2">
+                        <strong>By:</strong><br>
+                        <span class="text-muted">{{ template.created_by.get_full_name|default:template.created_by.username }}</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Merge Fields -->
+            <div class="card card-hygge">
+                <div class="card-header">
+                    <h6 class="fw-bold mb-0">
+                        <i class="fas fa-code me-2"></i>Merge Fields Used
+                    </h6>
+                </div>
+                <div class="card-body">
+                    <p class="small text-muted mb-2">This template uses these personalization fields:</p>
+                    <div class="merge-fields-list">
+                        {% for field in merge_fields %}
+                        <code class="d-block small mb-1">{{{{ field }}}}</code>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+
+            <!-- Best Practices -->
+            <div class="card card-hygge mt-4">
+                <div class="card-header">
+                    <h6 class="fw-bold mb-0">
+                        <i class="fas fa-lightbulb me-2"></i>Best Practices
+                    </h6>
+                </div>
+                <div class="card-body">
+                    <ul class="small mb-0">
+                        <li class="mb-1">Always test first with admin-only mode</li>
+                        <li class="mb-1">Check spam filters and email formatting</li>
+                        <li class="mb-1">Send during optimal hours (9-11 AM)</li>
+                        <li class="mb-1">Monitor engagement and delivery rates</li>
+                        <li class="mb-1">Follow up with non-openers after 3-5 days</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    .form-check-input:checked {
+        background-color: var(--hygge-green);
+        border-color: var(--hygge-green);
+    }
+
+    .merge-fields-list code {
+        background-color: #f8f9fa;
+        padding: 2px 4px;
+        border-radius: 3px;
+        color: var(--hygge-green);
+    }
+
+    #sendButton:disabled {
+        opacity: 0.6;
+        cursor: not-allowed;
+    }
+</style>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const form = document.getElementById('sendEmailForm');
+    const sendButton = document.getElementById('sendButton');
+    const modeSelect = document.getElementById('mode');
+    const recipientSelect = document.getElementById('recipient_type');
+    const confirmCheck = document.getElementById('confirm_send');
+
+    // Update button state based on form validation
+    function updateButtonState() {
+        const isValid = form.checkValidity() && confirmCheck.checked;
+        sendButton.disabled = !isValid;
+    }
+
+    // Add event listeners
+    [modeSelect, recipientSelect, confirmCheck].forEach(element => {
+        element.addEventListener('change', updateButtonState);
+    });
+
+    // Initial state
+    updateButtonState();
+
+    // Show warning for production mode
+    modeSelect.addEventListener('change', function() {
+        const existingWarning = document.querySelector('.production-warning');
+        if (existingWarning) {
+            existingWarning.remove();
+        }
+
+        if (this.value === 'production') {
+            const warning = document.createElement('div');
+            warning.className = 'alert alert-danger production-warning mt-2';
+            warning.innerHTML = `
+                <i class="fas fa-exclamation-triangle me-2"></i>
+                <strong>Production Mode Selected!</strong> This will send emails to real users. Make sure you've tested first.
+            `;
+            this.parentNode.appendChild(warning);
+        }
+    });
+
+    // Confirmation dialog for production sends
+    form.addEventListener('submit', function(e) {
+        if (modeSelect.value === 'production') {
+            const recipientCount = recipientSelect.selectedOptions[0]?.dataset.count || 0;
+            const confirmed = confirm(
+                `Are you sure you want to send this email to ${recipientCount} recipients in PRODUCTION mode?\n\n` +
+                `This action cannot be undone.`
+            );
+
+            if (!confirmed) {
+                e.preventDefault();
+                return false;
+            }
+        }
+
+        // Show loading state
+        sendButton.innerHTML = '<i class="fas fa-spinner fa-spin me-2"></i>Sending...';
+        sendButton.disabled = true;
+    });
+});
+
+// Custom filter for Django template
+const template = {
+    "get_item": function(dict, key) {
+        return dict[key];
+    }
+};
+</script>
+{% endblock %}

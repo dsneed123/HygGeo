@@ -1340,3 +1340,143 @@ def privacy_policy_view(request):
     return render(request, 'accounts/privacy_policy.html', {
         'current_date': timezone.now()
     })
+
+# Email Management Views
+from .models import EmailTemplate, EmailCampaign, EmailLog
+from django.template import Template, Context
+from django.core.mail import EmailMultiAlternatives
+from django.conf import settings
+import re
+
+@user_passes_test(lambda u: u.is_staff)
+def email_management(request):
+    """Email management dashboard"""
+    templates = EmailTemplate.objects.filter(is_active=True)
+    recent_campaigns = EmailCampaign.objects.all()[:5]
+
+    # Email stats
+    total_templates = EmailTemplate.objects.count()
+    active_campaigns = EmailCampaign.objects.filter(status__in=['draft', 'scheduled', 'sending']).count()
+    completed_campaigns = EmailCampaign.objects.filter(status='completed').count()
+
+    context = {
+        'templates': templates,
+        'recent_campaigns': recent_campaigns,
+        'stats': {
+            'total_templates': total_templates,
+            'active_campaigns': active_campaigns,
+            'completed_campaigns': completed_campaigns,
+        }
+    }
+    return render(request, 'accounts/email_management.html', context)
+
+@user_passes_test(lambda u: u.is_staff)
+def create_email_template(request):
+    """Create a new email template"""
+    if request.method == 'POST':
+        name = request.POST.get('name')
+        subject = request.POST.get('subject')
+        html_content = request.POST.get('html_content')
+        text_content = request.POST.get('text_content')
+        category = request.POST.get('category')
+
+        template = EmailTemplate.objects.create(
+            name=name,
+            subject=subject,
+            html_content=html_content,
+            text_content=text_content,
+            category=category,
+            created_by=request.user,
+            available_merge_fields=get_merge_fields()
+        )
+
+        messages.success(request, f'Email template "{name}" created successfully!')
+        return redirect('email_management')
+
+    return render(request, 'accounts/create_email_template.html', {
+        'categories': EmailTemplate.CATEGORY_CHOICES,
+        'merge_fields': get_merge_fields()
+    })
+
+@user_passes_test(lambda u: u.is_staff)
+def send_template_email(request, template_id):
+    """Send email using a template"""
+    template = get_object_or_404(EmailTemplate, id=template_id)
+
+    if request.method == 'POST':
+        # Create campaign
+        campaign_name = request.POST.get('campaign_name')
+        recipient_type = request.POST.get('recipient_type')
+        mode = request.POST.get('mode', 'test')
+
+        campaign = EmailCampaign.objects.create(
+            name=campaign_name,
+            template=template,
+            recipient_type=recipient_type,
+            mode=mode,
+            created_by=request.user,
+        )
+
+        # Process and send immediately
+        try:
+            from accounts.admin import process_email_campaign
+
+            campaign.status = 'sending'
+            campaign.save()
+
+            sent_count = process_email_campaign(campaign)
+
+            campaign.status = 'completed'
+            campaign.sent_at = timezone.now()
+            campaign.save()
+
+            messages.success(request, f'Email sent to {sent_count} recipients!')
+
+        except Exception as e:
+            campaign.status = 'failed'
+            campaign.save()
+            messages.error(request, f'Failed to send email: {str(e)}')
+
+        return redirect('email_management')
+
+    # Calculate recipient counts
+    recipient_counts = {}
+    for choice, label in EmailCampaign.RECIPIENT_CHOICES:
+        if choice == 'all_users':
+            count = User.objects.filter(is_active=True).count()
+        elif choice == 'active_users':
+            cutoff = timezone.now() - timezone.timedelta(days=30)
+            count = User.objects.filter(is_active=True, last_login__gte=cutoff).count()
+        elif choice == 'survey_completed':
+            count = User.objects.filter(travel_surveys__isnull=False).distinct().count()
+        elif choice == 'trip_creators':
+            count = User.objects.filter(created_trips__isnull=False).distinct().count()
+        elif choice == 'admin_only':
+            count = User.objects.filter(is_staff=True).count()
+        else:
+            count = 0
+        recipient_counts[choice] = count
+
+    return render(request, 'accounts/send_template_email.html', {
+        'template': template,
+        'recipient_choices': EmailCampaign.RECIPIENT_CHOICES,
+        'recipient_counts': recipient_counts,
+        'merge_fields': get_merge_fields()
+    })
+
+def get_merge_fields():
+    """Get available merge fields for email templates"""
+    return [
+        'first_name',
+        'last_name',
+        'username',
+        'email',
+        'experiences_count',
+        'trips_count',
+        'survey_completed',
+        'last_login',
+        'join_date',
+        'sustainability_priority',
+        'dream_destination',
+        'travel_styles'
+    ]

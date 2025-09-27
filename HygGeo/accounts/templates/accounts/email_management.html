@@ -1,0 +1,189 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Email Management - {{ block.super }}{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <!-- Header Section -->
+    <div class="row mb-5">
+        <div class="col-12">
+            <div class="text-center">
+                <i class="fas fa-envelope text-primary mb-3" style="font-size: 4rem; color: var(--hygge-green) !important;"></i>
+                <h1 class="h2 fw-bold" style="color: var(--hygge-green);">Email Management</h1>
+                <p class="lead text-muted">Create and send personalized email campaigns to users</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Email Stats -->
+    <div class="row mb-5">
+        <div class="col-md-4 mb-3">
+            <div class="card card-hygge h-100">
+                <div class="card-body text-center">
+                    <i class="fas fa-file-alt text-primary mb-3" style="font-size: 2.5rem; color: var(--hygge-green) !important;"></i>
+                    <h4 class="fw-bold">{{ stats.total_templates }}</h4>
+                    <p class="text-muted mb-0">Email Templates</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4 mb-3">
+            <div class="card card-hygge h-100">
+                <div class="card-body text-center">
+                    <i class="fas fa-paper-plane text-info mb-3" style="font-size: 2.5rem; color: var(--hygge-soft-blue) !important;"></i>
+                    <h4 class="fw-bold">{{ stats.active_campaigns }}</h4>
+                    <p class="text-muted mb-0">Active Campaigns</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4 mb-3">
+            <div class="card card-hygge h-100">
+                <div class="card-body text-center">
+                    <i class="fas fa-check-circle text-success mb-3" style="font-size: 2.5rem; color: var(--hygge-light-green) !important;"></i>
+                    <h4 class="fw-bold">{{ stats.completed_campaigns }}</h4>
+                    <p class="text-muted mb-0">Completed Campaigns</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Action Buttons -->
+    <div class="row mb-5">
+        <div class="col-12">
+            <div class="text-center">
+                <a href="{% url 'create_email_template' %}" class="btn btn-hygge btn-lg me-3">
+                    <i class="fas fa-plus me-2"></i>Create New Template
+                </a>
+                <a href="/admin/accounts/emailcampaign/" class="btn btn-outline-hygge btn-lg" target="_blank">
+                    <i class="fas fa-cog me-2"></i>Advanced Settings
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Email Templates -->
+    <div class="row mb-5">
+        <div class="col-12">
+            <h3 class="fw-bold mb-4" style="color: var(--hygge-green);">
+                <i class="fas fa-file-alt me-2"></i>Email Templates
+            </h3>
+        </div>
+    </div>
+
+    <div class="row">
+        {% for template in templates %}
+        <div class="col-lg-6 col-xl-4 mb-4">
+            <div class="card card-hygge h-100">
+                <div class="card-header d-flex justify-content-between align-items-center">
+                    <h6 class="fw-bold mb-0">{{ template.name }}</h6>
+                    <span class="badge bg-primary">{{ template.get_category_display }}</span>
+                </div>
+                <div class="card-body">
+                    <p class="text-muted mb-3">{{ template.subject|truncatechars:60 }}</p>
+                    <p class="small text-muted mb-3">
+                        <i class="fas fa-calendar me-1"></i>{{ template.created_at|date:"M d, Y" }}
+                    </p>
+                    <div class="d-grid gap-2">
+                        <a href="{% url 'send_template_email' template.id %}" class="btn btn-hygge">
+                            <i class="fas fa-paper-plane me-1"></i>Send Email
+                        </a>
+                        <a href="/admin/accounts/emailtemplate/{{ template.id }}/change/" class="btn btn-outline-secondary btn-sm" target="_blank">
+                            <i class="fas fa-edit me-1"></i>Edit Template
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% empty %}
+        <div class="col-12">
+            <div class="card card-hygge">
+                <div class="card-body text-center py-5">
+                    <i class="fas fa-file-alt text-muted mb-3" style="font-size: 3rem;"></i>
+                    <h5 class="text-muted">No email templates found</h5>
+                    <p class="text-muted mb-4">Create your first email template to get started</p>
+                    <a href="{% url 'create_email_template' %}" class="btn btn-hygge">
+                        <i class="fas fa-plus me-2"></i>Create Template
+                    </a>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+
+    <!-- Recent Campaigns -->
+    {% if recent_campaigns %}
+    <div class="row mt-5">
+        <div class="col-12">
+            <h3 class="fw-bold mb-4" style="color: var(--hygge-green);">
+                <i class="fas fa-history me-2"></i>Recent Campaigns
+            </h3>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-12">
+            <div class="card card-hygge">
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table table-hover">
+                            <thead>
+                                <tr>
+                                    <th>Campaign Name</th>
+                                    <th>Template</th>
+                                    <th>Recipients</th>
+                                    <th>Status</th>
+                                    <th>Sent</th>
+                                    <th>Date</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for campaign in recent_campaigns %}
+                                <tr>
+                                    <td class="fw-bold">{{ campaign.name }}</td>
+                                    <td>{{ campaign.template.name }}</td>
+                                    <td>{{ campaign.get_recipient_type_display }}</td>
+                                    <td>
+                                        {% if campaign.status == 'completed' %}
+                                            <span class="badge bg-success">{{ campaign.get_status_display }}</span>
+                                        {% elif campaign.status == 'failed' %}
+                                            <span class="badge bg-danger">{{ campaign.get_status_display }}</span>
+                                        {% elif campaign.status == 'sending' %}
+                                            <span class="badge bg-warning">{{ campaign.get_status_display }}</span>
+                                        {% else %}
+                                            <span class="badge bg-secondary">{{ campaign.get_status_display }}</span>
+                                        {% endif %}
+                                    </td>
+                                    <td>{{ campaign.emails_sent }}/{{ campaign.total_recipients }}</td>
+                                    <td>{{ campaign.created_at|date:"M d, Y" }}</td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% endif %}
+
+    <!-- Navigation -->
+    <div class="row mt-5">
+        <div class="col-12 text-center">
+            <a href="{% url 'admin_dashboard' %}" class="btn btn-outline-hygge">
+                <i class="fas fa-arrow-left me-2"></i>Back to Admin Dashboard
+            </a>
+        </div>
+    </div>
+</div>
+
+<style>
+    .card-hygge {
+        transition: all 0.3s ease;
+    }
+
+    .card-hygge:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+    }
+</style>
+{% endblock %}
