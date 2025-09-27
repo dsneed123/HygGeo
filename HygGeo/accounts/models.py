@@ -311,3 +311,143 @@ class Message(models.Model):
         if self.parent_message:
             return self.parent_message.conversation_id
         return self.id
+
+
+class EmailTemplate(models.Model):
+    """Email templates for mass email campaigns"""
+    name = models.CharField(max_length=200, help_text="Template name for admin reference")
+    subject = models.CharField(max_length=300, help_text="Email subject line. Use {{}} for merge fields like {{first_name}}")
+    html_content = models.TextField(help_text="HTML email content. Use {{}} for merge fields like {{first_name}}, {{experiences_count}}")
+    text_content = models.TextField(blank=True, help_text="Plain text version (optional, will be auto-generated if empty)")
+
+    # Template categorization
+    CATEGORY_CHOICES = [
+        ('welcome', 'Welcome/Onboarding'),
+        ('experiences', 'New Experiences'),
+        ('community', 'Community Updates'),
+        ('sustainability', 'Sustainability Tips'),
+        ('newsletter', 'Newsletter'),
+        ('announcement', 'Announcements'),
+        ('other', 'Other'),
+    ]
+    category = models.CharField(max_length=20, choices=CATEGORY_CHOICES, default='other')
+
+    # Merge fields available
+    available_merge_fields = models.JSONField(
+        default=list,
+        help_text="Available merge fields for this template (auto-populated)"
+    )
+
+    is_active = models.BooleanField(default=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+    created_by = models.ForeignKey(User, on_delete=models.SET_NULL, null=True)
+
+    class Meta:
+        ordering = ['category', 'name']
+
+    def __str__(self):
+        return f"{self.get_category_display()}: {self.name}"
+
+
+class EmailCampaign(models.Model):
+    """Mass email campaigns"""
+    name = models.CharField(max_length=200, help_text="Campaign name for tracking")
+    template = models.ForeignKey(EmailTemplate, on_delete=models.CASCADE)
+
+    # Recipients
+    RECIPIENT_CHOICES = [
+        ('all_users', 'All Users'),
+        ('active_users', 'Active Users (logged in last 30 days)'),
+        ('survey_completed', 'Users who completed surveys'),
+        ('trip_creators', 'Users who created trips'),
+        ('admin_only', 'Admin Users Only (for testing)'),
+        ('custom', 'Custom Selection'),
+    ]
+    recipient_type = models.CharField(max_length=20, choices=RECIPIENT_CHOICES, default='all_users')
+    custom_recipients = models.ManyToManyField(User, blank=True, related_name='custom_campaigns', help_text="Used when recipient_type is 'custom'")
+
+    # Campaign settings
+    MODE_CHOICES = [
+        ('test', 'Test Mode (Admin users only)'),
+        ('production', 'Production Mode (Send to selected recipients)'),
+    ]
+    mode = models.CharField(max_length=10, choices=MODE_CHOICES, default='test')
+
+    # Scheduling
+    scheduled_send = models.DateTimeField(null=True, blank=True, help_text="Leave empty to send immediately")
+
+    # Status tracking
+    STATUS_CHOICES = [
+        ('draft', 'Draft'),
+        ('scheduled', 'Scheduled'),
+        ('sending', 'Sending'),
+        ('completed', 'Completed'),
+        ('failed', 'Failed'),
+    ]
+    status = models.CharField(max_length=10, choices=STATUS_CHOICES, default='draft')
+
+    # Statistics
+    total_recipients = models.IntegerField(default=0)
+    emails_sent = models.IntegerField(default=0)
+    emails_failed = models.IntegerField(default=0)
+
+    # Metadata
+    created_at = models.DateTimeField(auto_now_add=True)
+    sent_at = models.DateTimeField(null=True, blank=True)
+    created_by = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, related_name='created_campaigns')
+
+    class Meta:
+        ordering = ['-created_at']
+
+    def __str__(self):
+        return f"{self.name} ({self.get_status_display()})"
+
+    def get_recipient_count(self):
+        """Calculate how many recipients this campaign will reach"""
+        if self.mode == 'test':
+            return User.objects.filter(is_staff=True).count()
+
+        if self.recipient_type == 'all_users':
+            return User.objects.filter(is_active=True).count()
+        elif self.recipient_type == 'active_users':
+            from django.utils import timezone
+            cutoff = timezone.now() - timezone.timedelta(days=30)
+            return User.objects.filter(is_active=True, last_login__gte=cutoff).count()
+        elif self.recipient_type == 'survey_completed':
+            return User.objects.filter(travel_surveys__isnull=False).distinct().count()
+        elif self.recipient_type == 'trip_creators':
+            return User.objects.filter(created_trips__isnull=False).distinct().count()
+        elif self.recipient_type == 'admin_only':
+            return User.objects.filter(is_staff=True).count()
+        elif self.recipient_type == 'custom':
+            return self.custom_recipients.count()
+
+        return 0
+
+
+class EmailLog(models.Model):
+    """Log individual email sends for tracking and debugging"""
+    campaign = models.ForeignKey(EmailCampaign, on_delete=models.CASCADE, related_name='email_logs')
+    recipient = models.ForeignKey(User, on_delete=models.CASCADE)
+
+    STATUS_CHOICES = [
+        ('pending', 'Pending'),
+        ('sent', 'Sent'),
+        ('failed', 'Failed'),
+        ('bounced', 'Bounced'),
+    ]
+    status = models.CharField(max_length=10, choices=STATUS_CHOICES, default='pending')
+
+    subject_sent = models.CharField(max_length=300, help_text="Subject after merge field processing")
+    error_message = models.TextField(blank=True, help_text="Error details if send failed")
+
+    sent_at = models.DateTimeField(null=True, blank=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        ordering = ['-created_at']
+        unique_together = ['campaign', 'recipient']
+
+    def __str__(self):
+        return f"{self.campaign.name} -> {self.recipient.email} ({self.status})"
