@@ -163,16 +163,24 @@
 
                     <!-- Trip Stats -->
                     <div class="row g-2 mb-3">
-                        <div class="col-6">
+                        <div class="col-4">
                             <div class="p-2 rounded" style="background-color: var(--hygge-cream);">
-                                <div class="small text-muted">Budget</div>
-                                <div class="fw-bold small">{{ trip.get_budget_range_display }}</div>
+                                <div class="small text-muted">Experiences</div>
+                                <div class="fw-bold small text-success">
+                                    <i class="fas fa-star"></i> {{ trip.experiences.count }}
+                                </div>
                             </div>
                         </div>
-                        <div class="col-6">
+                        <div class="col-4">
                             <div class="p-2 rounded" style="background-color: var(--hygge-cream);">
-                                <div class="small text-muted">Group Size</div>
-                                <div class="fw-bold small">{{ trip.get_group_size_preference_display }}</div>
+                                <div class="small text-muted">Budget</div>
+                                <div class="fw-bold small">{{ trip.get_budget_range_display|truncatewords:1 }}</div>
+                            </div>
+                        </div>
+                        <div class="col-4">
+                            <div class="p-2 rounded" style="background-color: var(--hygge-cream);">
+                                <div class="small text-muted">Group</div>
+                                <div class="fw-bold small">{{ trip.get_group_size_preference_display|truncatewords:1 }}</div>
                             </div>
                         </div>
                     </div>
