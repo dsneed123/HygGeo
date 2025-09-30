@@ -5,7 +5,8 @@
       "Bash(python manage.py shell:*)",
       "Bash(python manage.py:*)",
       "Bash(mv:*)",
-      "Read(//c/Users/DLSne/**)"
+      "Read(//c/Users/DLSne/**)",
+      "Bash(git log:*)"
     ],
     "deny": [],
     "ask": []
