@@ -20,8 +20,9 @@ from .forms import (
     MessageForm, 
     ReplyForm
 )
-from .models import UserProfile, TravelSurvey, Trip, Message
+from .models import UserProfile, TravelSurvey, Trip, Message, EmailTemplate, EmailCampaign
 from experiences.models import Experience, Destination, Provider, Category, ExperienceType
+from .admin import get_merge_fields
 import random
 
 def index(request):
