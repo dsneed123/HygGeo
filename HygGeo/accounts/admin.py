@@ -15,6 +15,7 @@ from django.core.mail import EmailMultiAlternatives
 from django.conf import settings
 import re
 from .models import UserProfile, TravelSurvey, EmailTemplate, EmailCampaign, EmailLog
+from .views import get_merge_fields
 
 def export_emails_csv(modeladmin, request, queryset):
     """Export user emails as CSV file"""
