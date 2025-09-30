@@ -22,7 +22,7 @@ from .forms import (
 )
 from .models import UserProfile, TravelSurvey, Trip, Message, EmailTemplate, EmailCampaign
 from experiences.models import Experience, Destination, Provider, Category, ExperienceType
-from .admin import get_merge_fields
+from .email_utils import get_merge_fields
 import random
 
 def index(request):
@@ -1464,24 +1464,6 @@ def send_template_email(request, template_id):
         'recipient_counts': recipient_counts,
         'merge_fields': get_merge_fields()
     })
-
-def get_merge_fields():
-    """Get available merge fields for email templates"""
-    return [
-        'first_name',
-        'last_name',
-        'username',
-        'email',
-        'experiences_count',
-        'trips_count',
-        'survey_completed',
-        'last_login',
-        'join_date',
-        'sustainability_priority',
-        'dream_destination',
-        'travel_styles',
-        'unsubscribe_url'
-    ]
 
 def unsubscribe_view(request, token):
     """Handle email unsubscribe requests"""
