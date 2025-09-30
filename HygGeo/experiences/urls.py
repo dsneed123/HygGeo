@@ -32,7 +32,11 @@ urlpatterns = [
     path('categories/add/', views.add_category, name='add_category'),
     path('categories/<slug:slug>/edit/', views.edit_category, name='edit_category'),
     path('categories/<slug:slug>/delete/', views.delete_category, name='delete_category'),
-    
+
+    # Export URLs
+    path('experience-types/export/', views.export_experience_types_csv, name='export_experience_types'),
+    path('categories/export/', views.export_categories_csv, name='export_categories'),
+
     # Categories
     path('category/<slug:slug>/', views.category_detail_view, name='category_detail'),
     

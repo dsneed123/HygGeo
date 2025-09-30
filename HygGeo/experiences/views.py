@@ -869,6 +869,59 @@ def delete_category(request, slug):
 
     return render(request, 'experiences/delete_category.html', context)
 
+# Export Views
+@user_passes_test(lambda u: u.is_staff)
+def export_experience_types_csv(request):
+    """Export experience types to CSV"""
+    import csv
+    from django.http import HttpResponse
+
+    response = HttpResponse(content_type='text/csv')
+    response['Content-Disposition'] = 'attachment; filename="experience_types_export.csv"'
+
+    writer = csv.writer(response)
+    writer.writerow(['Name', 'Slug', 'Description', 'Experience Count', 'Created At'])
+
+    experience_types = ExperienceType.objects.all().order_by('name')
+    for exp_type in experience_types:
+        experience_count = Experience.objects.filter(experience_type=exp_type).count()
+        writer.writerow([
+            exp_type.name,
+            exp_type.slug,
+            exp_type.description,
+            experience_count,
+            exp_type.created_at.strftime('%Y-%m-%d %H:%M:%S')
+        ])
+
+    return response
+
+@user_passes_test(lambda u: u.is_staff)
+def export_categories_csv(request):
+    """Export categories to CSV"""
+    import csv
+    from django.http import HttpResponse
+
+    response = HttpResponse(content_type='text/csv')
+    response['Content-Disposition'] = 'attachment; filename="categories_export.csv"'
+
+    writer = csv.writer(response)
+    writer.writerow(['Name', 'Slug', 'Description', 'Icon', 'Color', 'Experience Count', 'Created At'])
+
+    categories = Category.objects.all().order_by('name')
+    for category in categories:
+        experience_count = category.experiences.count()
+        writer.writerow([
+            category.name,
+            category.slug,
+            category.description,
+            category.icon,
+            category.color,
+            experience_count,
+            category.created_at.strftime('%Y-%m-%d %H:%M:%S')
+        ])
+
+    return response
+
 def sitemap_view(request):
     """Generate comprehensive XML sitemap for search engines with all experiences"""
     from django.http import HttpResponse
