@@ -139,11 +139,11 @@ class UserAdmin(BaseUserAdmin):
 @admin.register(UserProfile)
 class UserProfileAdmin(admin.ModelAdmin):
     """Admin for UserProfile model"""
-    list_display = ('user', 'location', 'sustainability_priority', 'created_at')
-    list_filter = ('sustainability_priority', 'created_at')
+    list_display = ('user', 'location', 'sustainability_priority', 'email_consent', 'created_at')
+    list_filter = ('sustainability_priority', 'email_consent', 'created_at')
     search_fields = ('user__username', 'user__email', 'location')
-    readonly_fields = ('created_at', 'updated_at')
-    
+    readonly_fields = ('created_at', 'updated_at', 'unsubscribe_token')
+
     fieldsets = (
         ('User Information', {
             'fields': ('user',)
@@ -153,6 +153,9 @@ class UserProfileAdmin(admin.ModelAdmin):
         }),
         ('Travel Preferences', {
             'fields': ('sustainability_priority',)
+        }),
+        ('Email Preferences', {
+            'fields': ('email_consent', 'unsubscribe_token')
         }),
         ('Metadata', {
             'fields': ('created_at', 'updated_at'),
@@ -283,7 +286,8 @@ def get_merge_fields():
     return [
         'first_name', 'last_name', 'username', 'email',
         'experiences_count', 'trips_count', 'surveys_count',
-        'sustainability_level', 'member_since', 'last_login_date'
+        'sustainability_level', 'member_since', 'last_login_date',
+        'unsubscribe_url'
     ]
 
 def process_merge_fields(text, user):
@@ -299,8 +303,10 @@ def process_merge_fields(text, user):
             4: 'Eco-Champion', 5: 'Eco-Warrior'
         }
         sustainability_level = sustainability_levels.get(profile.sustainability_priority, 'Eco-Focused')
+        unsubscribe_url = f"{settings.SITE_URL}{profile.get_unsubscribe_url()}"
     except:
         sustainability_level = 'Eco-Focused'
+        unsubscribe_url = f"{settings.SITE_URL}/accounts/unsubscribe/"
 
     # Create context data
     context_data = {
@@ -313,7 +319,8 @@ def process_merge_fields(text, user):
         'surveys_count': getattr(user, 'travel_surveys', []).count() if hasattr(user, 'travel_surveys') else 0,
         'sustainability_level': sustainability_level,
         'member_since': user.date_joined.strftime('%B %Y'),
-        'last_login_date': user.last_login.strftime('%B %d, %Y') if user.last_login else 'Recently'
+        'last_login_date': user.last_login.strftime('%B %d, %Y') if user.last_login else 'Recently',
+        'unsubscribe_url': unsubscribe_url
     }
 
     # Process template
@@ -385,21 +392,28 @@ def process_email_campaign(campaign):
 
     # Get recipients based on campaign settings
     if campaign.mode == 'test':
+        # Test mode: send to staff users regardless of consent (for testing)
         recipients = User.objects.filter(is_staff=True, is_active=True).exclude(email='')
     else:
+        # Production mode: respect email consent
+        base_filter = {
+            'is_active': True,
+            'userprofile__email_consent': True  # Only users who consented to emails
+        }
+
         if campaign.recipient_type == 'all_users':
-            recipients = User.objects.filter(is_active=True).exclude(email='')
+            recipients = User.objects.filter(**base_filter).exclude(email='')
         elif campaign.recipient_type == 'active_users':
             cutoff = timezone.now() - timezone.timedelta(days=30)
-            recipients = User.objects.filter(is_active=True, last_login__gte=cutoff).exclude(email='')
+            recipients = User.objects.filter(last_login__gte=cutoff, **base_filter).exclude(email='')
         elif campaign.recipient_type == 'survey_completed':
-            recipients = User.objects.filter(travel_surveys__isnull=False, is_active=True).distinct().exclude(email='')
+            recipients = User.objects.filter(travel_surveys__isnull=False, **base_filter).distinct().exclude(email='')
         elif campaign.recipient_type == 'trip_creators':
-            recipients = User.objects.filter(created_trips__isnull=False, is_active=True).distinct().exclude(email='')
+            recipients = User.objects.filter(created_trips__isnull=False, **base_filter).distinct().exclude(email='')
         elif campaign.recipient_type == 'admin_only':
             recipients = User.objects.filter(is_staff=True, is_active=True).exclude(email='')
         elif campaign.recipient_type == 'custom':
-            recipients = campaign.custom_recipients.filter(is_active=True).exclude(email='')
+            recipients = campaign.custom_recipients.filter(**base_filter).exclude(email='')
         else:
             recipients = User.objects.none()
 
@@ -434,7 +448,7 @@ class EmailTemplateAdmin(admin.ModelAdmin):
         }),
         ('Email Content', {
             'fields': ('subject', 'html_content', 'text_content'),
-            'description': 'Use {{field_name}} for merge fields. Available: {{first_name}}, {{last_name}}, {{username}}, {{experiences_count}}, {{sustainability_level}}, {{member_since}}'
+            'description': 'Use {{field_name}} for merge fields. Available: {{first_name}}, {{last_name}}, {{username}}, {{experiences_count}}, {{sustainability_level}}, {{member_since}}, {{unsubscribe_url}}'
         }),
         ('Metadata', {
             'fields': ('available_merge_fields', 'created_by', 'created_at', 'updated_at'),

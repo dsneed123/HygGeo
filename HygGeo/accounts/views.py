@@ -1478,5 +1478,86 @@ def get_merge_fields():
         'join_date',
         'sustainability_priority',
         'dream_destination',
-        'travel_styles'
+        'travel_styles',
+        'unsubscribe_url'
     ]
+
+def unsubscribe_view(request, token):
+    """Handle email unsubscribe requests"""
+    try:
+        profile = UserProfile.objects.get(unsubscribe_token=token)
+        user = profile.user
+
+        if request.method == 'POST':
+            profile.email_consent = False
+            profile.save()
+            messages.success(request, f'You have been successfully unsubscribed from HygGeo email communications.')
+            return render(request, 'accounts/unsubscribe_success.html', {'user': user})
+
+        # Show confirmation page
+        return render(request, 'accounts/unsubscribe_confirm.html', {
+            'user': user,
+            'token': token
+        })
+
+    except UserProfile.DoesNotExist:
+        messages.error(request, 'Invalid unsubscribe link. Please contact support if you continue to receive unwanted emails.')
+        return render(request, 'accounts/unsubscribe_error.html')
+
+def resubscribe_view(request, token):
+    """Handle email resubscribe requests"""
+    try:
+        profile = UserProfile.objects.get(unsubscribe_token=token)
+        user = profile.user
+
+        if request.method == 'POST':
+            profile.email_consent = True
+            profile.save()
+            messages.success(request, f'You have been successfully resubscribed to HygGeo email communications.')
+            return render(request, 'accounts/resubscribe_success.html', {'user': user})
+
+        # Show confirmation page
+        return render(request, 'accounts/resubscribe_confirm.html', {
+            'user': user,
+            'token': token
+        })
+
+    except UserProfile.DoesNotExist:
+        messages.error(request, 'Invalid resubscribe link. Please contact support if you need assistance.')
+        return render(request, 'accounts/resubscribe_error.html')
+
+@user_passes_test(lambda u: u.is_staff)
+def export_experience_types_json(request):
+    """Export all experience types as JSON"""
+    from experiences.models import ExperienceType
+    from django.http import JsonResponse
+
+    experience_types = list(ExperienceType.objects.values(
+        'id', 'name', 'description', 'icon_class', 'color_code', 'is_active'
+    ))
+
+    response = JsonResponse({
+        'experience_types': experience_types,
+        'count': len(experience_types),
+        'exported_at': timezone.now().isoformat()
+    })
+    response['Content-Disposition'] = 'attachment; filename="experience_types.json"'
+    return response
+
+@user_passes_test(lambda u: u.is_staff)
+def export_categories_json(request):
+    """Export all categories as JSON"""
+    from experiences.models import Category
+    from django.http import JsonResponse
+
+    categories = list(Category.objects.values(
+        'id', 'name', 'description', 'icon_class', 'color_code', 'is_active'
+    ))
+
+    response = JsonResponse({
+        'categories': categories,
+        'count': len(categories),
+        'exported_at': timezone.now().isoformat()
+    })
+    response['Content-Disposition'] = 'attachment; filename="categories.json"'
+    return response

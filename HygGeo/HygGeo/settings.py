@@ -40,6 +40,12 @@ CSRF_TRUSTED_ORIGINS = [
     'https://www.hyggeo.com',
 ]
 
+# Site URL for email links
+if DEBUG:
+    SITE_URL = 'http://localhost:8000'
+else:
+    SITE_URL = config('SITE_URL', default='https://hyggeo.com')
+
 # Application definition
 INSTALLED_APPS = [
     'django.contrib.admin',

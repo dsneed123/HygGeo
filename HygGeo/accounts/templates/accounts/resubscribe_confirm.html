@@ -1,0 +1,57 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Resubscribe - HygGeo{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-8 col-lg-6">
+            <div class="card shadow">
+                <div class="card-body text-center p-5">
+                    <div class="mb-4">
+                        <i class="fas fa-envelope-open fa-3x text-success mb-3"></i>
+                        <h2 class="h3 mb-3">Welcome Back!</h2>
+                    </div>
+
+                    <p class="text-muted mb-4">
+                        Hi {% if user.first_name %}{{ user.first_name }}{% else %}{{ user.username }}{% endif %},
+                    </p>
+
+                    <p class="mb-4">
+                        Great to see you again! Would you like to resubscribe to HygGeo email communications?
+                    </p>
+
+                    <div class="alert alert-success mb-4">
+                        <small>
+                            <strong>You will receive:</strong><br>
+                            • Personalized sustainable travel recommendations<br>
+                            • Exclusive community updates and new features<br>
+                            • Weekly newsletter with eco-friendly travel tips<br>
+                            • Special offers from eco-conscious travel partners
+                        </small>
+                    </div>
+
+                    <form method="post" class="mb-3">
+                        {% csrf_token %}
+                        <button type="submit" class="btn btn-success btn-lg me-3">
+                            <i class="fas fa-check-circle me-2"></i>
+                            Yes, Resubscribe Me
+                        </button>
+                        <a href="{% url 'index' %}" class="btn btn-secondary btn-lg">
+                            <i class="fas fa-arrow-left me-2"></i>
+                            Maybe Later
+                        </a>
+                    </form>
+
+                    <hr class="my-4">
+
+                    <p class="text-muted small">
+                        You can change your email preferences anytime in your account settings.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -18,6 +18,14 @@ urlpatterns = [
     path('admin/email/', views.email_management, name='email_management'),
     path('admin/email/create-template/', views.create_email_template, name='create_email_template'),
     path('admin/email/send/<int:template_id>/', views.send_template_email, name='send_template_email'),
+
+    # Subscription management URLs
+    path('unsubscribe/<str:token>/', views.unsubscribe_view, name='unsubscribe'),
+    path('resubscribe/<str:token>/', views.resubscribe_view, name='resubscribe'),
+
+    # JSON export URLs
+    path('admin/export/experience-types-json/', views.export_experience_types_json, name='export_experience_types_json'),
+    path('admin/export/categories-json/', views.export_categories_json, name='export_categories_json'),
     path('signup/', views.signup_view, name='signup'),
     path('login/', auth_views.LoginView.as_view(template_name='accounts/login.html'), name='login'),
     path('logout/', views.logout_view, name='logout'),

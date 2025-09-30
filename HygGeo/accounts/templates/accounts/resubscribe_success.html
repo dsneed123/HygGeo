@@ -1,0 +1,56 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Resubscribed Successfully - HygGeo{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-8 col-lg-6">
+            <div class="card shadow">
+                <div class="card-body text-center p-5">
+                    <div class="mb-4">
+                        <i class="fas fa-heart fa-3x text-success mb-3"></i>
+                        <h2 class="h3 mb-3 text-success">Welcome Back!</h2>
+                    </div>
+
+                    <p class="text-muted mb-4">
+                        Hi {% if user.first_name %}{{ user.first_name }}{% else %}{{ user.username }}{% endif %},
+                    </p>
+
+                    <p class="mb-4">
+                        You have been successfully resubscribed to HygGeo email communications.
+                        We're thrilled to have you back in our sustainable travel community!
+                    </p>
+
+                    <div class="alert alert-info mb-4">
+                        <small>
+                            <strong>What's next?</strong><br>
+                            Keep an eye on your inbox for personalized travel recommendations,
+                            community updates, and sustainable travel tips tailored just for you.
+                        </small>
+                    </div>
+
+                    <div class="d-grid gap-2 d-md-flex justify-content-md-center mb-3">
+                        <a href="{% url 'index' %}" class="btn btn-primary btn-lg me-2">
+                            <i class="fas fa-home me-2"></i>
+                            Explore Destinations
+                        </a>
+                        <a href="{% url 'profile' %}" class="btn btn-outline-primary btn-lg">
+                            <i class="fas fa-user-cog me-2"></i>
+                            Manage Preferences
+                        </a>
+                    </div>
+
+                    <hr class="my-4">
+
+                    <p class="text-muted small">
+                        You can always update your email preferences in your
+                        <a href="{% url 'edit_profile' %}">account settings</a>.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

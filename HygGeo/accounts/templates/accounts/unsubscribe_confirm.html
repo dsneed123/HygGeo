@@ -1,0 +1,57 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Unsubscribe - HygGeo{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-8 col-lg-6">
+            <div class="card shadow">
+                <div class="card-body text-center p-5">
+                    <div class="mb-4">
+                        <i class="fas fa-envelope-open-text fa-3x text-warning mb-3"></i>
+                        <h2 class="h3 mb-3">Unsubscribe from HygGeo</h2>
+                    </div>
+
+                    <p class="text-muted mb-4">
+                        Hi {% if user.first_name %}{{ user.first_name }}{% else %}{{ user.username }}{% endif %},
+                    </p>
+
+                    <p class="mb-4">
+                        We're sorry to see you go! Are you sure you want to unsubscribe from all HygGeo email communications?
+                    </p>
+
+                    <div class="alert alert-info mb-4">
+                        <small>
+                            <strong>You will no longer receive:</strong><br>
+                            • Sustainable travel opportunities and recommendations<br>
+                            • Community updates and new features<br>
+                            • Newsletter with eco-friendly travel tips<br>
+                            • Important account and security notifications
+                        </small>
+                    </div>
+
+                    <form method="post" class="mb-3">
+                        {% csrf_token %}
+                        <button type="submit" class="btn btn-danger btn-lg me-3">
+                            <i class="fas fa-times-circle me-2"></i>
+                            Yes, Unsubscribe Me
+                        </button>
+                        <a href="{% url 'index' %}" class="btn btn-secondary btn-lg">
+                            <i class="fas fa-arrow-left me-2"></i>
+                            Cancel
+                        </a>
+                    </form>
+
+                    <hr class="my-4">
+
+                    <p class="text-muted small">
+                        Changed your mind? You can always <a href="{% url 'resubscribe' token %}">resubscribe</a> later.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

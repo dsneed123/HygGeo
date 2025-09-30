@@ -19,19 +19,36 @@ class UserProfile(models.Model):
         null=True,
         blank=True
     )
-    
+
     # Travel preferences
     sustainability_priority = models.IntegerField(
         choices=[(1, 'Low'), (2, 'Medium'), (3, 'High'), (4, 'Very High'), (5, 'Essential')],
         default=3,
         help_text="How important is sustainability in your travel decisions?"
     )
-    
+
+    # Email preferences
+    email_consent = models.BooleanField(
+        default=True,
+        help_text="I consent to receive emails about sustainable travel opportunities, community updates, and newsletters from HygGeo"
+    )
+    unsubscribe_token = models.CharField(max_length=64, blank=True, null=True, unique=True)
+
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
     
     def __str__(self):
         return f"{self.user.username}'s Profile"
+
+    def save(self, *args, **kwargs):
+        if not self.unsubscribe_token:
+            import secrets
+            self.unsubscribe_token = secrets.token_urlsafe(32)
+        super().save(*args, **kwargs)
+
+    def get_unsubscribe_url(self):
+        from django.urls import reverse
+        return reverse('unsubscribe', kwargs={'token': self.unsubscribe_token})
 
 class TravelSurvey(models.Model):
     """Survey responses for travel interests and preferences"""

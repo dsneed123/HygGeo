@@ -12957,3 +12957,37 @@ Traceback (most recent call last):
   File "C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.12_3.12.2800.0_x64__qbz5n2kfra8p0\Lib\smtplib.py", line 876, in sendmail
     raise SMTPSenderRefused(code, resp, from_addr)
 smtplib.SMTPSenderRefused: (530, b'5.7.0 Authentication Required. For more information, go to\n5.7.0  https://support.google.com/accounts/troubleshooter/2402620. 41be03b00d2f7-b551705bd02sm12747153a12.41 - gsmtp', 'HygGeo <noreply@hyggeo.com>')
+INFO 2025-09-27 14:17:58,550 autoreload 25900 38488 Watching for file changes with StatReloader
+INFO 2025-09-29 23:34:34,190 autoreload 25900 38488 C:\Users\DLSne\OneDrive\Desktop\Code\webdev\HygGeo\HygGeo\accounts\models.py changed, reloading.
+INFO 2025-09-29 23:34:36,359 autoreload 27692 32080 Watching for file changes with StatReloader
+INFO 2025-09-29 23:34:40,843 autoreload 27692 32080 C:\Users\DLSne\OneDrive\Desktop\Code\webdev\HygGeo\HygGeo\accounts\models.py changed, reloading.
+INFO 2025-09-29 23:34:42,382 autoreload 1856 32720 Watching for file changes with StatReloader
+INFO 2025-09-29 23:35:28,368 autoreload 1856 32720 C:\Users\DLSne\OneDrive\Desktop\Code\webdev\HygGeo\HygGeo\accounts\forms.py changed, reloading.
+INFO 2025-09-29 23:35:29,850 autoreload 40028 41004 Watching for file changes with StatReloader
+INFO 2025-09-29 23:35:37,568 autoreload 40028 41004 C:\Users\DLSne\OneDrive\Desktop\Code\webdev\HygGeo\HygGeo\accounts\forms.py changed, reloading.
+INFO 2025-09-29 23:35:38,930 autoreload 20496 32820 Watching for file changes with StatReloader
+INFO 2025-09-29 23:35:45,540 autoreload 20496 32820 C:\Users\DLSne\OneDrive\Desktop\Code\webdev\HygGeo\HygGeo\accounts\forms.py changed, reloading.
+INFO 2025-09-29 23:35:46,896 autoreload 26120 26728 Watching for file changes with StatReloader
+INFO 2025-09-29 23:36:14,104 autoreload 26120 26728 C:\Users\DLSne\OneDrive\Desktop\Code\webdev\HygGeo\HygGeo\accounts\views.py changed, reloading.
+INFO 2025-09-29 23:36:15,753 autoreload 32992 36480 Watching for file changes with StatReloader
+INFO 2025-09-29 23:36:25,838 autoreload 32992 36480 C:\Users\DLSne\OneDrive\Desktop\Code\webdev\HygGeo\HygGeo\accounts\urls.py changed, reloading.
+INFO 2025-09-29 23:36:27,331 autoreload 29596 2844 Watching for file changes with StatReloader
+INFO 2025-09-29 23:37:54,787 autoreload 29596 2844 C:\Users\DLSne\OneDrive\Desktop\Code\webdev\HygGeo\HygGeo\accounts\admin.py changed, reloading.
+INFO 2025-09-29 23:37:56,150 autoreload 24444 35856 Watching for file changes with StatReloader
+INFO 2025-09-29 23:38:09,358 autoreload 24444 35856 C:\Users\DLSne\OneDrive\Desktop\Code\webdev\HygGeo\HygGeo\accounts\admin.py changed, reloading.
+INFO 2025-09-29 23:38:10,679 autoreload 41692 36208 Watching for file changes with StatReloader
+INFO 2025-09-29 23:38:19,404 autoreload 41692 36208 C:\Users\DLSne\OneDrive\Desktop\Code\webdev\HygGeo\HygGeo\accounts\admin.py changed, reloading.
+INFO 2025-09-29 23:38:20,781 autoreload 39184 23304 Watching for file changes with StatReloader
+INFO 2025-09-29 23:38:30,645 autoreload 39184 23304 C:\Users\DLSne\OneDrive\Desktop\Code\webdev\HygGeo\HygGeo\accounts\admin.py changed, reloading.
+INFO 2025-09-29 23:38:32,040 autoreload 12664 38144 Watching for file changes with StatReloader
+INFO 2025-09-29 23:39:33,786 autoreload 12664 38144 C:\Users\DLSne\OneDrive\Desktop\Code\webdev\HygGeo\HygGeo\HygGeo\settings.py changed, reloading.
+INFO 2025-09-29 23:39:35,112 autoreload 35508 28064 Watching for file changes with StatReloader
+INFO 2025-09-29 23:40:05,808 autoreload 35508 28064 C:\Users\DLSne\OneDrive\Desktop\Code\webdev\HygGeo\HygGeo\HygGeo\urls.py changed, reloading.
+INFO 2025-09-29 23:40:07,199 autoreload 19284 41844 Watching for file changes with StatReloader
+INFO 2025-09-29 23:40:34,688 autoreload 19284 41844 C:\Users\DLSne\OneDrive\Desktop\Code\webdev\HygGeo\HygGeo\accounts\admin.py changed, reloading.
+INFO 2025-09-29 23:40:36,171 autoreload 1636 34284 Watching for file changes with StatReloader
+INFO 2025-09-29 23:40:48,367 autoreload 1636 34284 C:\Users\DLSne\OneDrive\Desktop\Code\webdev\HygGeo\HygGeo\HygGeo\urls.py changed, reloading.
+INFO 2025-09-29 23:40:49,836 autoreload 14344 20644 Watching for file changes with StatReloader
+INFO 2025-09-29 23:40:58,293 autoreload 14344 20644 C:\Users\DLSne\OneDrive\Desktop\Code\webdev\HygGeo\HygGeo\HygGeo\urls.py changed, reloading.
+INFO 2025-09-29 23:40:59,650 autoreload 16572 42172 Watching for file changes with StatReloader
+INFO 2025-09-29 23:41:13,805 autoreload 42800 40480 Watching for file changes with StatReloader

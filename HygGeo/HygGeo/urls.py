@@ -25,6 +25,8 @@ urlpatterns = [
     path('accounts/', include('allauth.urls')),  # Allauth OAuth URLs
     path('experiences/', include('experiences.urls')),
 
+    # Top-level subscription management is handled in accounts.urls
+
     # SEO URLs
     path('sitemap.xml', sitemap_view, name='sitemap'),
     path('favicon.ico', RedirectView.as_view(url='/static/favicon.ico', permanent=True)),

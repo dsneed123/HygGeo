@@ -13,10 +13,16 @@ class CustomUserCreationForm(UserCreationForm):
     first_name = forms.CharField(max_length=30, required=True)
     last_name = forms.CharField(max_length=30, required=True)
     avatar = forms.ImageField(required=False, help_text="Upload a profile picture (optional)")
+    email_consent = forms.BooleanField(
+        required=True,
+        initial=True,
+        label="Email Communications",
+        help_text="I consent to receive emails about sustainable travel opportunities, community updates, and newsletters from HygGeo. You can unsubscribe at any time."
+    )
 
     class Meta:
         model = User
-        fields = ('username', 'first_name', 'last_name', 'email', 'password1', 'password2', 'avatar')
+        fields = ('username', 'first_name', 'last_name', 'email', 'password1', 'password2', 'avatar', 'email_consent')
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -32,21 +38,29 @@ class CustomUserCreationForm(UserCreationForm):
         user.last_name = self.cleaned_data['last_name']
         if commit:
             user.save()
-            # Create or update user profile with avatar
+            # Create or update user profile with avatar and email consent
             profile, created = UserProfile.objects.get_or_create(user=user)
             if self.cleaned_data.get('avatar'):
                 profile.avatar = self.cleaned_data['avatar']
-                profile.save()
+            profile.email_consent = self.cleaned_data.get('email_consent', True)
+            profile.save()
         return user
 
 class UserProfileForm(forms.ModelForm):
     """Form for editing user profile"""
     class Meta:
         model = UserProfile
-        fields = ['bio', 'location', 'avatar', 'sustainability_priority']
+        fields = ['bio', 'location', 'avatar', 'sustainability_priority', 'email_consent']
         widgets = {
             'bio': forms.Textarea(attrs={'rows': 4}),
             'sustainability_priority': forms.Select(attrs={'class': 'form-control'}),
+            'email_consent': forms.CheckboxInput(attrs={'class': 'form-check-input'}),
+        }
+        labels = {
+            'email_consent': 'Email Communications',
+        }
+        help_texts = {
+            'email_consent': 'Receive emails about sustainable travel opportunities, community updates, and newsletters',
         }
 
 class TravelSurveyForm(forms.ModelForm):
