@@ -1420,7 +1420,8 @@ def send_template_email(request, template_id):
 
         # Process and send immediately
         try:
-            from accounts.admin import process_email_campaign
+            # Import inside function to avoid circular import
+            from .admin import process_email_campaign
 
             campaign.status = 'sending'
             campaign.save()
