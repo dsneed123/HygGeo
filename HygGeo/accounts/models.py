@@ -271,10 +271,10 @@ class Trip(models.Model):
     
     # Media & Privacy
     trip_image = models.ImageField(
+        storage=s3_storage,
         upload_to='trip_images/',
         blank=True,
-        null=True,
-        storage=None  # Will use DEFAULT_FILE_STORAGE (S3 in production)
+        null=True
     )
     visibility = models.CharField(max_length=20, choices=VISIBILITY_CHOICES, default='public')
     allow_messages = models.BooleanField(default=True)
