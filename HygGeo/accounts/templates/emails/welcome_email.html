@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Welcome to HygGeo</title>
+    <style>
+        body, table, td, a { -webkit-text-size-adjust: 100%; -ms-text-size-adjust: 100%; }
+        table, td { mso-table-lspace: 0pt; mso-table-rspace: 0pt; }
+        img { -ms-interpolation-mode: bicubic; border: 0; height: auto; line-height: 100%; outline: none; text-decoration: none; }
+        body {
+            margin: 0 !important;
+            padding: 0 !important;
+            width: 100% !important;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            background-color: #f4f7f6;
+            color: #333333;
+        }
+        .email-container {
+            max-width: 600px;
+            margin: 0 auto;
+            background-color: #ffffff;
+        }
+        .header {
+            background: linear-gradient(135deg, #2d6a4f 0%, #40916c 100%);
+            padding: 40px 20px;
+            text-align: center;
+        }
+        .header h1 {
+            color: #ffffff;
+            font-size: 28px;
+            margin: 0;
+            font-weight: 600;
+        }
+        .header .tagline {
+            color: #b7e4c7;
+            font-size: 14px;
+            margin-top: 8px;
+        }
+        .content {
+            padding: 40px 30px;
+            line-height: 1.6;
+        }
+        .greeting {
+            font-size: 18px;
+            color: #2d6a4f;
+            margin-bottom: 20px;
+            font-weight: 500;
+        }
+        .main-text {
+            font-size: 16px;
+            color: #333333;
+            margin-bottom: 20px;
+        }
+        .button-container {
+            text-align: center;
+            margin: 30px 0;
+        }
+        .button {
+            display: inline-block;
+            padding: 14px 32px;
+            background: linear-gradient(135deg, #2d6a4f 0%, #40916c 100%);
+            color: #ffffff !important;
+            text-decoration: none;
+            border-radius: 6px;
+            font-weight: 500;
+            font-size: 16px;
+        }
+        .features {
+            margin: 30px 0;
+        }
+        .feature-item {
+            padding: 15px;
+            margin-bottom: 15px;
+            background-color: #f8f9fa;
+            border-radius: 8px;
+            border-left: 4px solid #40916c;
+        }
+        .feature-icon {
+            font-size: 24px;
+            margin-bottom: 8px;
+        }
+        .feature-title {
+            font-weight: 600;
+            color: #2d6a4f;
+            margin-bottom: 5px;
+        }
+        .feature-text {
+            font-size: 14px;
+            color: #666666;
+        }
+        .footer {
+            background-color: #f8f9fa;
+            padding: 30px;
+            text-align: center;
+            border-top: 1px solid #e9ecef;
+        }
+        .footer p {
+            margin: 5px 0;
+            font-size: 14px;
+            color: #6c757d;
+        }
+        .social-links {
+            margin: 20px 0;
+        }
+        .social-links a {
+            display: inline-block;
+            margin: 0 10px;
+            color: #40916c;
+            text-decoration: none;
+            font-size: 14px;
+        }
+        .unsubscribe {
+            margin-top: 20px;
+            font-size: 12px;
+            color: #868e96;
+        }
+        .unsubscribe a {
+            color: #40916c;
+            text-decoration: underline;
+        }
+        @media only screen and (max-width: 600px) {
+            .content { padding: 30px 20px; }
+            .header h1 { font-size: 24px; }
+        }
+    </style>
+</head>
+<body>
+    <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0" style="background-color: #f4f7f6;">
+        <tr>
+            <td align="center" style="padding: 20px 0;">
+                <table class="email-container" role="presentation" cellspacing="0" cellpadding="0" border="0" width="600">
+                    <tr>
+                        <td class="header">
+                            <h1>🌿 HygGeo</h1>
+                            <p class="tagline">Sustainable Travel Experiences</p>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="content">
+                            <div class="greeting">Welcome, {{first_name}}! 🎉</div>
+
+                            <p class="main-text">
+                                We're thrilled to have you join the HygGeo community! You're now part of a global network of conscious travelers committed to making a positive impact on our planet.
+                            </p>
+
+                            <div class="button-container">
+                                <a href="https://hyggeo.com/experiences" class="button">Explore Experiences</a>
+                            </div>
+
+                            <p class="main-text">Here's what you can do with HygGeo:</p>
+
+                            <div class="features">
+                                <div class="feature-item">
+                                    <div class="feature-icon">🌍</div>
+                                    <div class="feature-title">Discover Eco-Friendly Experiences</div>
+                                    <div class="feature-text">Browse sustainable travel experiences across the globe, from eco-lodges to local community tours.</div>
+                                </div>
+
+                                <div class="feature-item">
+                                    <div class="feature-icon">✈️</div>
+                                    <div class="feature-title">Plan Your Sustainable Journey</div>
+                                    <div class="feature-text">Create and share your travel plans, find like-minded travel buddies, and get personalized recommendations.</div>
+                                </div>
+
+                                <div class="feature-item">
+                                    <div class="feature-icon">🤝</div>
+                                    <div class="feature-title">Connect with Travelers</div>
+                                    <div class="feature-text">Meet fellow eco-conscious travelers, share tips, and build lasting connections.</div>
+                                </div>
+                            </div>
+
+                            <p class="main-text">
+                                Ready to start your sustainable travel journey? Update your profile and tell us about your travel preferences to get personalized recommendations.
+                            </p>
+
+                            <div class="button-container">
+                                <a href="https://hyggeo.com/profile/edit" class="button">Complete Your Profile</a>
+                            </div>
+
+                            <p class="main-text" style="margin-top: 30px;">
+                                Happy travels,<br>
+                                <strong>The HygGeo Team</strong>
+                            </p>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="footer">
+                            <p style="font-weight: 600; color: #2d6a4f; margin-bottom: 15px;">HygGeo - Sustainable Travel Community</p>
+                            <p>Connecting conscious travelers with eco-friendly experiences worldwide</p>
+                            <div class="social-links">
+                                <a href="https://hyggeo.com">Visit Website</a> |
+                                <a href="https://hyggeo.com/about">About Us</a> |
+                                <a href="https://hyggeo.com/contact">Contact</a>
+                            </div>
+                            <div class="unsubscribe">
+                                <p>You're receiving this email because you joined HygGeo.</p>
+                                <p><a href="{{unsubscribe_url}}">Unsubscribe from emails</a> | <a href="https://hyggeo.com/privacy">Privacy Policy</a></p>
+                            </div>
+                        </td>
+                    </tr>
+                </table>
+            </td>
+        </tr>
+    </table>
+</body>
+</html>

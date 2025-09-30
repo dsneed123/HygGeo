@@ -22,16 +22,26 @@ def export_emails_csv(modeladmin, request, queryset):
     response['Content-Disposition'] = 'attachment; filename="user_emails.csv"'
 
     writer = csv.writer(response)
-    writer.writerow(['Email', 'Username', 'First Name', 'Last Name', 'Date Joined', 'Is Active'])
+    writer.writerow(['Email', 'Username', 'First Name', 'Last Name', 'Date Joined', 'Is Active', 'Unsubscribe Token', 'Unsubscribe URL'])
 
     for user in queryset:
+        try:
+            profile = user.userprofile
+            unsub_token = profile.unsubscribe_token or ''
+            unsub_url = f"{settings.SITE_URL}{profile.get_unsubscribe_url()}" if unsub_token else ''
+        except:
+            unsub_token = ''
+            unsub_url = ''
+
         writer.writerow([
             user.email,
             user.username,
             user.first_name,
             user.last_name,
             user.date_joined.strftime('%Y-%m-%d'),
-            'Yes' if user.is_active else 'No'
+            'Yes' if user.is_active else 'No',
+            unsub_token,
+            unsub_url
         ])
 
     return response
@@ -45,16 +55,26 @@ def export_all_emails_csv(modeladmin, request, queryset):
     response['Content-Disposition'] = 'attachment; filename="all_user_emails.csv"'
 
     writer = csv.writer(response)
-    writer.writerow(['Email', 'Username', 'First Name', 'Last Name', 'Date Joined', 'Is Active'])
+    writer.writerow(['Email', 'Username', 'First Name', 'Last Name', 'Date Joined', 'Is Active', 'Unsubscribe Token', 'Unsubscribe URL'])
 
     for user in all_users:
+        try:
+            profile = user.userprofile
+            unsub_token = profile.unsubscribe_token or ''
+            unsub_url = f"{settings.SITE_URL}{profile.get_unsubscribe_url()}" if unsub_token else ''
+        except:
+            unsub_token = ''
+            unsub_url = ''
+
         writer.writerow([
             user.email,
             user.username,
             user.first_name,
             user.last_name,
             user.date_joined.strftime('%Y-%m-%d'),
-            'Yes' if user.is_active else 'No'
+            'Yes' if user.is_active else 'No',
+            unsub_token,
+            unsub_url
         ])
 
     return response

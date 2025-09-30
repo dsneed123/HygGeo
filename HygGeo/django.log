@@ -12992,3 +12992,4 @@ INFO 2025-09-29 23:40:58,293 autoreload 14344 20644 C:\Users\DLSne\OneDrive\Desk
 INFO 2025-09-29 23:40:59,650 autoreload 16572 42172 Watching for file changes with StatReloader
 INFO 2025-09-29 23:41:13,805 autoreload 42800 40480 Watching for file changes with StatReloader
 INFO 2025-09-29 23:59:41,021 autoreload 38480 42728 Watching for file changes with StatReloader
+INFO 2025-09-30 00:28:10,633 autoreload 38480 42728 C:\Users\DLSne\OneDrive\Desktop\Code\webdev\HygGeo\HygGeo\accounts\admin.py changed, reloading.

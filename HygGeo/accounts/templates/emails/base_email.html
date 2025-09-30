@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HygGeo</title>
+    <style>
+        /* Reset styles */
+        body, table, td, a { -webkit-text-size-adjust: 100%; -ms-text-size-adjust: 100%; }
+        table, td { mso-table-lspace: 0pt; mso-table-rspace: 0pt; }
+        img { -ms-interpolation-mode: bicubic; border: 0; height: auto; line-height: 100%; outline: none; text-decoration: none; }
+
+        /* General styles */
+        body {
+            margin: 0 !important;
+            padding: 0 !important;
+            width: 100% !important;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            background-color: #f4f7f6;
+            color: #333333;
+        }
+
+        /* Container */
+        .email-container {
+            max-width: 600px;
+            margin: 0 auto;
+            background-color: #ffffff;
+        }
+
+        /* Header */
+        .header {
+            background: linear-gradient(135deg, #2d6a4f 0%, #40916c 100%);
+            padding: 40px 20px;
+            text-align: center;
+        }
+
+        .header h1 {
+            color: #ffffff;
+            font-size: 28px;
+            margin: 0;
+            font-weight: 600;
+            letter-spacing: -0.5px;
+        }
+
+        .header .tagline {
+            color: #b7e4c7;
+            font-size: 14px;
+            margin-top: 8px;
+        }
+
+        /* Content */
+        .content {
+            padding: 40px 30px;
+            line-height: 1.6;
+        }
+
+        .greeting {
+            font-size: 18px;
+            color: #2d6a4f;
+            margin-bottom: 20px;
+            font-weight: 500;
+        }
+
+        .main-text {
+            font-size: 16px;
+            color: #333333;
+            margin-bottom: 20px;
+        }
+
+        /* Button */
+        .button-container {
+            text-align: center;
+            margin: 30px 0;
+        }
+
+        .button {
+            display: inline-block;
+            padding: 14px 32px;
+            background: linear-gradient(135deg, #2d6a4f 0%, #40916c 100%);
+            color: #ffffff !important;
+            text-decoration: none;
+            border-radius: 6px;
+            font-weight: 500;
+            font-size: 16px;
+            transition: transform 0.2s;
+        }
+
+        .button:hover {
+            transform: translateY(-2px);
+        }
+
+        /* Stats/Features */
+        .features {
+            display: table;
+            width: 100%;
+            margin: 30px 0;
+        }
+
+        .feature-item {
+            display: table-cell;
+            width: 33.33%;
+            text-align: center;
+            padding: 20px 10px;
+        }
+
+        .feature-icon {
+            font-size: 32px;
+            margin-bottom: 10px;
+        }
+
+        .feature-title {
+            font-weight: 600;
+            color: #2d6a4f;
+            margin-bottom: 5px;
+        }
+
+        .feature-text {
+            font-size: 14px;
+            color: #666666;
+        }
+
+        /* Divider */
+        .divider {
+            border-top: 2px solid #f1f3f5;
+            margin: 30px 0;
+        }
+
+        /* Footer */
+        .footer {
+            background-color: #f8f9fa;
+            padding: 30px;
+            text-align: center;
+            border-top: 1px solid #e9ecef;
+        }
+
+        .footer p {
+            margin: 5px 0;
+            font-size: 14px;
+            color: #6c757d;
+        }
+
+        .social-links {
+            margin: 20px 0;
+        }
+
+        .social-links a {
+            display: inline-block;
+            margin: 0 10px;
+            color: #40916c;
+            text-decoration: none;
+            font-size: 14px;
+        }
+
+        .unsubscribe {
+            margin-top: 20px;
+            font-size: 12px;
+            color: #868e96;
+        }
+
+        .unsubscribe a {
+            color: #40916c;
+            text-decoration: underline;
+        }
+
+        /* Responsive */
+        @media only screen and (max-width: 600px) {
+            .content {
+                padding: 30px 20px;
+            }
+
+            .feature-item {
+                display: block;
+                width: 100%;
+                margin-bottom: 20px;
+            }
+
+            .header h1 {
+                font-size: 24px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0" style="background-color: #f4f7f6;">
+        <tr>
+            <td align="center" style="padding: 20px 0;">
+                <!-- Email Container -->
+                <table class="email-container" role="presentation" cellspacing="0" cellpadding="0" border="0" width="600">
+
+                    <!-- Header -->
+                    <tr>
+                        <td class="header">
+                            <h1>🌿 HygGeo</h1>
+                            <p class="tagline">Sustainable Travel Experiences</p>
+                        </td>
+                    </tr>
+
+                    <!-- Content -->
+                    <tr>
+                        <td class="content">
+                            {% block content %}
+                            <!-- Email content goes here -->
+                            {% endblock %}
+                        </td>
+                    </tr>
+
+                    <!-- Footer -->
+                    <tr>
+                        <td class="footer">
+                            <p style="font-weight: 600; color: #2d6a4f; margin-bottom: 15px;">HygGeo - Sustainable Travel Community</p>
+                            <p>Connecting conscious travelers with eco-friendly experiences worldwide</p>
+
+                            <div class="social-links">
+                                <a href="https://hyggeo.com">Visit Website</a> |
+                                <a href="https://hyggeo.com/about">About Us</a> |
+                                <a href="https://hyggeo.com/contact">Contact</a>
+                            </div>
+
+                            <div class="unsubscribe">
+                                <p>You're receiving this email because you're a valued member of HygGeo.</p>
+                                <p><a href="{{unsubscribe_url}}">Unsubscribe from emails</a> | <a href="https://hyggeo.com/privacy">Privacy Policy</a></p>
+                            </div>
+                        </td>
+                    </tr>
+
+                </table>
+            </td>
+        </tr>
+    </table>
+</body>
+</html>
