@@ -1006,8 +1006,9 @@ def edit_trip_view(request, pk):
     context = {
         'form': form,
         'trip': trip,
+        'experiences': Experience.objects.filter(is_active=True),
     }
-    
+
     return render(request, 'accounts/edit_trip.html', context)
 
 @login_required

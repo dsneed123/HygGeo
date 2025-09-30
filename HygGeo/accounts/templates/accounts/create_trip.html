@@ -299,7 +299,46 @@
                     <div class="card-body p-4">
                         <div class="mb-3">
                             <label class="form-label fw-bold">Select experiences you'd like to include in this trip:</label>
-                            {{ form.experiences }}
+                            <input type="text" class="form-control mb-3" id="experienceSearch" placeholder="Search experiences...">
+
+                            <div id="experiencesGrid" class="row g-3">
+                                {% for experience in experiences %}
+                                <div class="col-md-6 experience-card" data-experience-name="{{ experience.title|lower }}" style="{% if forloop.counter > 10 %}display: none;{% endif %}">
+                                    <div class="card h-100 experience-select-card">
+                                        <input type="checkbox" class="experience-checkbox" name="experiences" value="{{ experience.id }}" id="exp_{{ experience.id }}" style="display: none;">
+                                        <label for="exp_{{ experience.id }}" class="experience-card-label mb-0">
+                                            {% if experience.main_image %}
+                                            <img src="{{ experience.main_image.url }}" class="card-img-top" alt="{{ experience.title }}" style="height: 150px; object-fit: cover;">
+                                            {% else %}
+                                            <div class="card-img-top bg-secondary d-flex align-items-center justify-content-center" style="height: 150px;">
+                                                <i class="fas fa-image fa-3x text-white opacity-50"></i>
+                                            </div>
+                                            {% endif %}
+                                            <div class="card-body p-3">
+                                                <h6 class="card-title mb-2 fw-bold">{{ experience.title }}</h6>
+                                                <p class="card-text small text-muted mb-2">
+                                                    <i class="fas fa-map-marker-alt me-1"></i>{{ experience.destination.name }}
+                                                </p>
+                                                <div class="d-flex justify-content-between align-items-center">
+                                                    <span class="badge bg-success small">{{ experience.get_sustainability_badge.text }}</span>
+                                                    <span class="small text-muted">{{ experience.get_price_display }}</span>
+                                                </div>
+                                            </div>
+                                        </label>
+                                    </div>
+                                </div>
+                                {% endfor %}
+                            </div>
+
+                            <div class="text-center mt-3" id="loadMoreContainer" style="{% if experiences|length <= 10 %}display: none;{% endif %}">
+                                <button type="button" class="btn btn-outline-secondary" id="loadMoreBtn">
+                                    <i class="fas fa-plus me-2"></i>Load More Experiences
+                                </button>
+                                <p class="text-muted small mt-2 mb-0">
+                                    Showing <span id="shownCount">10</span> of <span id="totalCount">{{ experiences|length }}</span> experiences
+                                </p>
+                            </div>
+
                             {% if form.experiences.errors %}
                                 <div class="text-danger mt-2">{{ form.experiences.errors.0 }}</div>
                             {% endif %}
@@ -478,6 +517,50 @@
     border-radius: 12px;
 }
 
+.experience-select-card {
+    cursor: pointer;
+    transition: all 0.3s ease;
+    border: 2px solid transparent;
+}
+
+.experience-select-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+}
+
+.experience-checkbox:checked + .experience-card-label .experience-select-card {
+    border-color: var(--hygge-green);
+    background-color: rgba(74, 124, 89, 0.05);
+}
+
+.experience-card-label {
+    cursor: pointer;
+    display: block;
+    height: 100%;
+}
+
+.experience-checkbox:checked + .experience-card-label::after {
+    content: '\f00c';
+    font-family: 'Font Awesome 5 Free';
+    font-weight: 900;
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    background: var(--hygge-green);
+    color: white;
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 14px;
+}
+
+.experience-card-label {
+    position: relative;
+}
+
 .card-hygge:hover {
     transform: translateY(-2px);
 }
@@ -513,6 +596,78 @@ textarea {
 
 <script>
 document.addEventListener('DOMContentLoaded', function() {
+    // Experience cards load more functionality
+    let shownCount = 10;
+    const experienceCards = document.querySelectorAll('.experience-card');
+    const loadMoreBtn = document.getElementById('loadMoreBtn');
+    const loadMoreContainer = document.getElementById('loadMoreContainer');
+    const shownCountSpan = document.getElementById('shownCount');
+    const totalCountSpan = document.getElementById('totalCount');
+
+    if (loadMoreBtn) {
+        loadMoreBtn.addEventListener('click', function() {
+            let visibleCount = 0;
+            experienceCards.forEach((card, index) => {
+                if (card.style.display !== 'none') {
+                    visibleCount++;
+                }
+            });
+
+            let newVisibleCount = 0;
+            experienceCards.forEach((card, index) => {
+                if (index < visibleCount + 10) {
+                    card.style.display = 'block';
+                    newVisibleCount++;
+                }
+            });
+
+            shownCountSpan.textContent = newVisibleCount;
+
+            if (newVisibleCount >= experienceCards.length) {
+                loadMoreContainer.style.display = 'none';
+            }
+        });
+    }
+
+    // Experience search functionality
+    const searchInput = document.getElementById('experienceSearch');
+    if (searchInput) {
+        searchInput.addEventListener('input', function(e) {
+            const searchTerm = e.target.value.toLowerCase();
+            let visibleCount = 0;
+
+            experienceCards.forEach(card => {
+                const experienceName = card.getAttribute('data-experience-name');
+                if (experienceName.includes(searchTerm)) {
+                    card.style.display = 'block';
+                    visibleCount++;
+                } else {
+                    card.style.display = 'none';
+                }
+            });
+
+            // Hide/show load more based on search
+            if (searchTerm) {
+                loadMoreContainer.style.display = 'none';
+            } else {
+                // Reset to initial state
+                let resetCount = 0;
+                experienceCards.forEach((card, index) => {
+                    if (index < 10) {
+                        card.style.display = 'block';
+                        resetCount++;
+                    } else {
+                        card.style.display = 'none';
+                    }
+                });
+                shownCountSpan.textContent = resetCount;
+                if (experienceCards.length > 10) {
+                    loadMoreContainer.style.display = 'block';
+                }
+            }
+        });
+    }
+
     // Function to update JSON fields
     function updateTravelStyles() {
         const checkedValues = [];
@@ -521,9 +676,8 @@ document.addEventListener('DOMContentLoaded', function() {
         });
         const jsonValue = JSON.stringify(checkedValues.length > 0 ? checkedValues : []);
         document.getElementById('travel_styles_json').value = jsonValue;
-        console.log('Travel Styles JSON:', jsonValue); // Debug log
     }
-    
+
     function updateSustainabilityFactors() {
         const checkedValues = [];
         document.querySelectorAll('.sustainability-factor-checkbox:checked').forEach(cb => {
@@ -531,7 +685,6 @@ document.addEventListener('DOMContentLoaded', function() {
         });
         const jsonValue = JSON.stringify(checkedValues.length > 0 ? checkedValues : []);
         document.getElementById('sustainability_factors_json').value = jsonValue;
-        console.log('Sustainability Factors JSON:', jsonValue); // Debug log
     }
     
     // Add event listeners to checkboxes
