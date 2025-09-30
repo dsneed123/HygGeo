@@ -65,10 +65,15 @@
         {% for trip in trips %}
         <div class="col-lg-6 col-xl-4">
             <div class="card my-trip-card h-100 border-0 shadow-sm" data-trip-status="{{ trip.trip_status }}">
-                {% if trip.trip_image %}
                 <div class="position-relative">
-                    <img src="{{ trip.trip_image.url }}" alt="{{ trip.trip_name }}" 
+                    {% if trip.trip_image %}
+                    <img src="{{ trip.trip_image.url }}" alt="{{ trip.trip_name }}"
                          class="card-img-top" style="height: 200px; object-fit: cover;">
+                    {% else %}
+                    <div class="card-img-top bg-light d-flex align-items-center justify-content-center" style="height: 200px;">
+                        <i class="fas fa-map-marked-alt text-muted" style="font-size: 3rem;"></i>
+                    </div>
+                    {% endif %}
                     <div class="position-absolute top-0 end-0 m-2">
                         {% if trip.trip_status == 'planning' %}
                         <span class="badge bg-warning text-dark">
@@ -104,8 +109,7 @@
                         {% endif %}
                     </div>
                 </div>
-                {% endif %}
-                
+
                 <div class="card-body p-4">
                     <!-- Trip Header -->
                     <div class="d-flex justify-content-between align-items-start mb-3">
