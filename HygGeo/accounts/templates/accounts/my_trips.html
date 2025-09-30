@@ -1,564 +1,278 @@
 {% extends 'base.html' %}
 
-{% block title %}Edit Trip - {{ trip.trip_name }} - HygGeo{% endblock %}
+{% block title %}My Trips - HygGeo{% endblock %}
 
 {% block content %}
 <div class="container py-5">
-    <div class="row justify-content-center">
-        <div class="col-lg-10">
+    <!-- Header -->
+    <div class="row mb-4">
+        <div class="col-12">
             <div class="text-center mb-4">
-                <i class="fas fa-edit" style="font-size: 3rem; color: var(--hygge-green);"></i>
-                <h2 class="h3 fw-bold mt-3" style="color: var(--hygge-green);">Edit Your Journey</h2>
-                <p class="text-muted">Update your sustainable travel experience</p>
+                <i class="fas fa-suitcase" style="font-size: 3rem; color: var(--hygge-green);"></i>
+                <h2 class="h3 fw-bold mt-3" style="color: var(--hygge-green);">My Sustainable Journeys</h2>
+                <p class="text-muted">Manage your mindful travel experiences</p>
             </div>
 
-            <form method="post" enctype="multipart/form-data" id="editTripForm">
-                {% csrf_token %}
-                
-                <!-- Trip Basics -->
-                <div class="card card-hygge mb-4">
-                    <div class="card-header" style="background-color: var(--hygge-cream); border-bottom: none;">
-                        <h5 class="mb-0 fw-bold" style="color: var(--hygge-green);">
-                            <i class="fas fa-info-circle me-2"></i>Trip Basics
-                        </h5>
-                    </div>
-                    <div class="card-body p-4">
-                        <div class="row">
-                            <div class="col-md-8 mb-3">
-                                <label for="trip_name" class="form-label fw-bold">Trip Title</label>
-                                <input type="text" class="form-control" id="trip_name" name="trip_name" 
-                                       value="{{ form.trip_name.value|default:trip.trip_name }}" required>
-                                <div class="form-text">Give your journey a meaningful name that captures its essence</div>
-                            </div>
-                            <div class="col-md-4 mb-3">
-                                <label for="trip_status" class="form-label fw-bold">Trip Status</label>
-                                <select class="form-control" id="trip_status" name="trip_status" required>
-                                    <option value="planning" {% if trip.trip_status == 'planning' %}selected{% endif %}>Planning</option>
-                                    <option value="seeking_buddies" {% if trip.trip_status == 'seeking_buddies' %}selected{% endif %}>Seeking Travel Buddies</option>
-                                    <option value="confirmed" {% if trip.trip_status == 'confirmed' %}selected{% endif %}>Confirmed</option>
-                                    <option value="completed" {% if trip.trip_status == 'completed' %}selected{% endif %}>Completed</option>
-                                </select>
-                            </div>
-                        </div>
-                        
-                        <div class="mb-3">
-                            <label for="destination" class="form-label fw-bold">Destination</label>
-                            <input type="text" class="form-control" id="destination" name="destination" 
-                                   value="{{ form.destination.value|default:trip.destination }}" required>
-                            <div class="form-text">Where will your sustainable adventure take place?</div>
-                        </div>
-                        
-                        <div class="mb-3">
-                            <label for="description" class="form-label fw-bold">Trip Description</label>
-                            <textarea class="form-control" id="description" name="description" rows="4">{{ form.description.value|default:trip.description }}</textarea>
-                        </div>
-                    </div>
+            <div class="d-flex justify-content-between align-items-center flex-wrap gap-3">
+                <div>
+                    <h5 class="mb-0">Your Trips</h5>
+                    <p class="text-muted small mb-0">{{ trips.paginator.count }} trip{{ trips.paginator.count|pluralize }}</p>
                 </div>
+                <a href="{% url 'create_trip' %}" class="btn btn-hygge">
+                    <i class="fas fa-plus me-2"></i>Create New Trip
+                </a>
+            </div>
+        </div>
+    </div>
 
-                <!-- Current Trip Image -->
+    {% if trips %}
+    <!-- Trips Grid -->
+    <div class="row g-4">
+        {% for trip in trips %}
+        <div class="col-lg-6 col-xl-4">
+            <div class="card my-trip-card h-100 border-0 shadow-sm">
                 {% if trip.trip_image %}
-                <div class="card card-hygge mb-4">
-                    <div class="card-header" style="background-color: var(--hygge-cream); border-bottom: none;">
-                        <h5 class="mb-0 fw-bold" style="color: var(--hygge-green);">
-                            <i class="fas fa-image me-2"></i>Current Trip Image
-                        </h5>
+                <div class="position-relative">
+                    <img src="{{ trip.trip_image.url }}" alt="{{ trip.trip_name }}"
+                         class="card-img-top" style="height: 200px; object-fit: cover;">
+                    <div class="position-absolute top-0 end-0 m-2">
+                        {% if trip.trip_status == 'planning' %}
+                        <span class="badge bg-warning text-dark">
+                            <i class="fas fa-clock me-1"></i>Planning
+                        </span>
+                        {% elif trip.trip_status == 'seeking_buddies' %}
+                        <span class="badge bg-success">
+                            <i class="fas fa-users me-1"></i>Seeking Buddies
+                        </span>
+                        {% elif trip.trip_status == 'confirmed' %}
+                        <span class="badge bg-primary">
+                            <i class="fas fa-check me-1"></i>Confirmed
+                        </span>
+                        {% elif trip.trip_status == 'completed' %}
+                        <span class="badge bg-secondary">
+                            <i class="fas fa-flag-checkered me-1"></i>Completed
+                        </span>
+                        {% endif %}
                     </div>
-                    <div class="card-body p-4">
-                        <div class="row align-items-center">
-                            <div class="col-md-4">
-                                <img src="{{ trip.trip_image.url }}" alt="{{ trip.trip_name }}" 
-                                     class="img-fluid rounded" style="max-height: 200px;">
-                            </div>
-                            <div class="col-md-8">
-                                <h6 class="fw-bold">Current Image</h6>
-                                <p class="text-muted">Upload a new image below to replace this one, or leave the field empty to keep the current image.</p>
-                                <div class="form-check">
-                                    <input class="form-check-input" type="checkbox" id="remove_image" name="remove_image">
-                                    <label class="form-check-label text-danger" for="remove_image">
-                                        Remove current image
-                                    </label>
-                                </div>
-                            </div>
-                        </div>
+                    <div class="position-absolute top-0 start-0 m-2">
+                        {% if trip.visibility == 'private' %}
+                        <span class="badge bg-dark bg-opacity-75">
+                            <i class="fas fa-lock me-1"></i>Private
+                        </span>
+                        {% elif trip.visibility == 'community' %}
+                        <span class="badge bg-info">
+                            <i class="fas fa-users me-1"></i>Community
+                        </span>
+                        {% else %}
+                        <span class="badge bg-success">
+                            <i class="fas fa-globe me-1"></i>Public
+                        </span>
+                        {% endif %}
                     </div>
                 </div>
                 {% endif %}
 
-                <!-- Travel Dates & Duration -->
-                <div class="card card-hygge mb-4">
-                    <div class="card-header" style="background-color: var(--hygge-cream); border-bottom: none;">
-                        <h5 class="mb-0 fw-bold" style="color: var(--hygge-green);">
-                            <i class="fas fa-calendar-alt me-2"></i>When & How Long
-                        </h5>
-                    </div>
-                    <div class="card-body p-4">
-                        <div class="row">
-                            <div class="col-md-6 mb-3">
-                                <label for="start_date" class="form-label fw-bold">Start Date</label>
-                                <input type="date" class="form-control" id="start_date" name="start_date" 
-                                       value="{{ form.start_date.value|default:trip.start_date|date:'Y-m-d' }}">
-                            </div>
-                            <div class="col-md-6 mb-3">
-                                <label for="end_date" class="form-label fw-bold">End Date</label>
-                                <input type="date" class="form-control" id="end_date" name="end_date" 
-                                       value="{{ form.end_date.value|default:trip.end_date|date:'Y-m-d' }}">
-                            </div>
+                <div class="card-body p-4">
+                    <!-- Trip Header -->
+                    <div class="d-flex justify-content-between align-items-start mb-3">
+                        <div class="flex-grow-1">
+                            <h5 class="fw-bold mb-1" style="color: var(--hygge-green);">
+                                <a href="{% url 'trip_detail' trip.pk %}" class="text-decoration-none" style="color: inherit;">
+                                    {{ trip.trip_name }}
+                                </a>
+                            </h5>
+                            <p class="text-muted mb-0">
+                                <i class="fas fa-map-marker-alt me-1"></i>{{ trip.destination }}
+                            </p>
                         </div>
-                        
-                        <div class="row">
-                            <div class="col-md-6 mb-3">
-                                <label for="trip_duration_preference" class="form-label fw-bold">Duration Type</label>
-                                <select class="form-control" id="trip_duration_preference" name="trip_duration_preference">
-                                    <option value="short" {% if trip.trip_duration_preference == 'short' %}selected{% endif %}>Short Trip (1-7 days)</option>
-                                    <option value="medium" {% if trip.trip_duration_preference == 'medium' %}selected{% endif %}>Medium Trip (1-2 weeks)</option>
-                                    <option value="long" {% if trip.trip_duration_preference == 'long' %}selected{% endif %}>Long Trip (2-4 weeks)</option>
-                                    <option value="extended" {% if trip.trip_duration_preference == 'extended' %}selected{% endif %}>Extended Journey (1+ months)</option>
-                                </select>
-                            </div>
-                            <div class="col-md-6 mb-3">
-                                <div class="p-3 rounded" style="background-color: var(--hygge-cream);">
-                                    <div class="fw-bold mb-2" style="color: var(--hygge-green);">
-                                        <i class="fas fa-clock me-2"></i>Trip Duration
-                                    </div>
-                                    <div id="duration_display" class="h5 mb-0">
-                                        {% if trip.duration_days %}
-                                            {{ trip.duration_days }} day{{ trip.duration_days|pluralize }}
-                                        {% else %}
-                                            Select dates to calculate duration
-                                        {% endif %}
-                                    </div>
-                                </div>
-                            </div>
+                        <div class="dropdown">
+                            <button class="btn btn-sm btn-outline-secondary" type="button" data-bs-toggle="dropdown">
+                                <i class="fas fa-ellipsis-v"></i>
+                            </button>
+                            <ul class="dropdown-menu">
+                                <li><a class="dropdown-item" href="{% url 'trip_detail' trip.pk %}">
+                                    <i class="fas fa-eye me-2"></i>View Details
+                                </a></li>
+                                <li><a class="dropdown-item" href="{% url 'edit_trip' trip.pk %}">
+                                    <i class="fas fa-edit me-2"></i>Edit Trip
+                                </a></li>
+                                <li><hr class="dropdown-divider"></li>
+                                <li>
+                                    <form method="post" action="{% url 'delete_trip' trip.pk %}" onsubmit="return confirm('Are you sure you want to delete {{ trip.trip_name }}?');">
+                                        {% csrf_token %}
+                                        <button type="submit" class="dropdown-item text-danger">
+                                            <i class="fas fa-trash me-2"></i>Delete Trip
+                                        </button>
+                                    </form>
+                                </li>
+                            </ul>
                         </div>
                     </div>
-                </div>
 
-                <!-- Group & Budget -->
-                <div class="card card-hygge mb-4">
-                    <div class="card-header" style="background-color: var(--hygge-cream); border-bottom: none;">
-                        <h5 class="mb-0 fw-bold" style="color: var(--hygge-green);">
-                            <i class="fas fa-users me-2"></i>Group & Budget
-                        </h5>
-                    </div>
-                    <div class="card-body p-4">
-                        <div class="row">
-                            <div class="col-md-6 mb-3">
-                                <label for="group_size_preference" class="form-label fw-bold">Preferred Group Size</label>
-                                <select class="form-control" id="group_size_preference" name="group_size_preference">
-                                    <option value="solo" {% if trip.group_size_preference == 'solo' %}selected{% endif %}>Solo Adventure</option>
-                                    <option value="small" {% if trip.group_size_preference == 'small' %}selected{% endif %}>Small Group (2-4 people)</option>
-                                    <option value="medium" {% if trip.group_size_preference == 'medium' %}selected{% endif %}>Medium Group (5-8 people)</option>
-                                    <option value="large" {% if trip.group_size_preference == 'large' %}selected{% endif %}>Large Group (9+ people)</option>
-                                </select>
-                            </div>
-                            <div class="col-md-6 mb-3">
-                                <label for="budget_range" class="form-label fw-bold">Budget Range (per person)</label>
-                                <select class="form-control" id="budget_range" name="budget_range">
-                                    <option value="budget" {% if trip.budget_range == 'budget' %}selected{% endif %}>Budget ($0-1,000)</option>
-                                    <option value="moderate" {% if trip.budget_range == 'moderate' %}selected{% endif %}>Moderate ($1,000-3,000)</option>
-                                    <option value="comfortable" {% if trip.budget_range == 'comfortable' %}selected{% endif %}>Comfortable ($3,000-5,000)</option>
-                                    <option value="luxury" {% if trip.budget_range == 'luxury' %}selected{% endif %}>Luxury ($5,000+)</option>
-                                </select>
-                            </div>
-                        </div>
-                        
-                        <div class="row">
-                            <div class="col-md-6 mb-3">
-                                <label for="travel_frequency" class="form-label fw-bold">Travel Style</label>
-                                <select class="form-control" id="travel_frequency" name="travel_frequency">
-                                    <option value="slow" {% if trip.travel_frequency == 'slow' %}selected{% endif %}>Slow & Mindful Travel</option>
-                                    <option value="moderate" {% if trip.travel_frequency == 'moderate' %}selected{% endif %}>Balanced Exploration</option>
-                                    <option value="frequent" {% if trip.travel_frequency == 'frequent' %}selected{% endif %}>Active Adventure</option>
-                                    <option value="intensive" {% if trip.travel_frequency == 'intensive' %}selected{% endif %}>Intensive Experience</option>
-                                </select>
-                            </div>
-                            <div class="col-md-6 mb-3">
-                                <label for="seeking_buddies" class="form-label fw-bold">Looking for Travel Companions?</label>
-                                <select class="form-control" id="seeking_buddies" name="seeking_buddies">
-                                    <option value="yes" {% if trip.seeking_buddies == 'yes' %}selected{% endif %}>Yes, seeking travel buddies</option>
-                                    <option value="maybe" {% if trip.seeking_buddies == 'maybe' %}selected{% endif %}>Open to meeting fellow travelers</option>
-                                    <option value="no" {% if trip.seeking_buddies == 'no' %}selected{% endif %}>Planning solo/with existing group</option>
-                                </select>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+                    <!-- Trip Status Badge (if no image) -->
+                    {% if not trip.trip_image %}
+                    <div class="mb-3">
+                        {% if trip.trip_status == 'planning' %}
+                        <span class="badge bg-warning text-dark">
+                            <i class="fas fa-clock me-1"></i>Planning
+                        </span>
+                        {% elif trip.trip_status == 'seeking_buddies' %}
+                        <span class="badge bg-success">
+                            <i class="fas fa-users me-1"></i>Seeking Buddies
+                        </span>
+                        {% elif trip.trip_status == 'confirmed' %}
+                        <span class="badge bg-primary">
+                            <i class="fas fa-check me-1"></i>Confirmed
+                        </span>
+                        {% elif trip.trip_status == 'completed' %}
+                        <span class="badge bg-secondary">
+                            <i class="fas fa-flag-checkered me-1"></i>Completed
+                        </span>
+                        {% endif %}
 
-                <!-- Travel Interests -->
-                <div class="card card-hygge mb-4">
-                    <div class="card-header" style="background-color: var(--hygge-cream); border-bottom: none;">
-                        <h5 class="mb-0 fw-bold" style="color: var(--hygge-green);">
-                            <i class="fas fa-heart me-2"></i>Travel Interests
-                        </h5>
+                        {% if trip.visibility == 'private' %}
+                        <span class="badge bg-dark bg-opacity-75">
+                            <i class="fas fa-lock me-1"></i>Private
+                        </span>
+                        {% elif trip.visibility == 'community' %}
+                        <span class="badge bg-info">
+                            <i class="fas fa-users me-1"></i>Community
+                        </span>
+                        {% else %}
+                        <span class="badge bg-success">
+                            <i class="fas fa-globe me-1"></i>Public
+                        </span>
+                        {% endif %}
                     </div>
-                    <div class="card-body p-4">
-                        <div class="mb-3">
-                            <label class="form-label fw-bold">What are you excited to experience? (Select all that apply)</label>
-                            <div class="row">
-                                <div class="col-md-4 mb-2">
-                                    <div class="form-check">
-                                        <input class="form-check-input" type="checkbox" id="nature" name="travel_styles" value="nature"
-                                               {% if 'nature' in trip.travel_styles %}checked{% endif %}>
-                                        <label class="form-check-label" for="nature">
-                                            <i class="fas fa-tree me-2"></i>Nature & Outdoors
-                                        </label>
-                                    </div>
-                                </div>
-                                <div class="col-md-4 mb-2">
-                                    <div class="form-check">
-                                        <input class="form-check-input" type="checkbox" id="culture" name="travel_styles" value="culture"
-                                               {% if 'culture' in trip.travel_styles %}checked{% endif %}>
-                                        <label class="form-check-label" for="culture">
-                                            <i class="fas fa-landmark me-2"></i>Culture & History
-                                        </label>
-                                    </div>
-                                </div>
-                                <div class="col-md-4 mb-2">
-                                    <div class="form-check">
-                                        <input class="form-check-input" type="checkbox" id="food" name="travel_styles" value="food"
-                                               {% if 'food' in trip.travel_styles %}checked{% endif %}>
-                                        <label class="form-check-label" for="food">
-                                            <i class="fas fa-utensils me-2"></i>Local Cuisine
-                                        </label>
-                                    </div>
-                                </div>
-                                <div class="col-md-4 mb-2">
-                                    <div class="form-check">
-                                        <input class="form-check-input" type="checkbox" id="wellness" name="travel_styles" value="wellness"
-                                               {% if 'wellness' in trip.travel_styles %}checked{% endif %}>
-                                        <label class="form-check-label" for="wellness">
-                                            <i class="fas fa-spa me-2"></i>Wellness & Relaxation
-                                        </label>
-                                    </div>
-                                </div>
-                                <div class="col-md-4 mb-2">
-                                    <div class="form-check">
-                                        <input class="form-check-input" type="checkbox" id="adventure" name="travel_styles" value="adventure"
-                                               {% if 'adventure' in trip.travel_styles %}checked{% endif %}>
-                                        <label class="form-check-label" for="adventure">
-                                            <i class="fas fa-mountain me-2"></i>Adventure Sports
-                                        </label>
-                                    </div>
-                                </div>
-                                <div class="col-md-4 mb-2">
-                                    <div class="form-check">
-                                        <input class="form-check-input" type="checkbox" id="photography" name="travel_styles" value="photography"
-                                               {% if 'photography' in trip.travel_styles %}checked{% endif %}>
-                                        <label class="form-check-label" for="photography">
-                                            <i class="fas fa-camera me-2"></i>Photography
-                                        </label>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+                    {% endif %}
 
-                <!-- Sustainability Focus -->
-                <div class="card card-hygge mb-4">
-                    <div class="card-header" style="background-color: var(--hygge-cream); border-bottom: none;">
-                        <h5 class="mb-0 fw-bold" style="color: var(--hygge-green);">
-                            <i class="fas fa-leaf me-2"></i>Sustainability Focus
-                        </h5>
-                    </div>
-                    <div class="card-body p-4">
-                        <div class="row">
-                            <div class="col-md-6 mb-3">
-                                <label for="sustainability_priority" class="form-label fw-bold">How important is sustainability for this trip?</label>
-                                <select class="form-control" id="sustainability_priority" name="sustainability_priority" required>
-                                    <option value="1" {% if trip.sustainability_priority == 1 %}selected{% endif %}>Low Priority</option>
-                                    <option value="2" {% if trip.sustainability_priority == 2 %}selected{% endif %}>Medium Priority</option>
-                                    <option value="3" {% if trip.sustainability_priority == 3 %}selected{% endif %}>High Priority</option>
-                                    <option value="4" {% if trip.sustainability_priority == 4 %}selected{% endif %}>Very High Priority</option>
-                                    <option value="5" {% if trip.sustainability_priority == 5 %}selected{% endif %}>Essential - Top Priority</option>
-                                </select>
-                            </div>
-                            <div class="col-md-6 mb-3">
-                                <div class="p-3 rounded" style="background-color: var(--hygge-cream);">
-                                    <div class="fw-bold mb-2" style="color: var(--hygge-green);">
-                                        <i class="fas fa-info-circle me-2"></i>Your Eco Level
-                                    </div>
-                                    <div id="eco_level_display" class="h6 mb-0">
-                                        <span class="badge bg-success">{{ trip.eco_level_display }}</span>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        
-                        <div class="mb-3">
-                            <label class="form-label fw-bold">Key Sustainability Factors (Select what matters most)</label>
-                            <div class="row">
-                                <div class="col-md-6 mb-2">
-                                    <div class="form-check">
-                                        <input class="form-check-input" type="checkbox" id="transport" name="sustainability_factors" value="sustainable_transport"
-                                               {% if 'sustainable_transport' in trip.sustainability_factors %}checked{% endif %}>
-                                        <label class="form-check-label" for="transport">
-                                            <i class="fas fa-train me-2"></i>Sustainable Transportation
-                                        </label>
-                                    </div>
-                                </div>
-                                <div class="col-md-6 mb-2">
-                                    <div class="form-check">
-                                        <input class="form-check-input" type="checkbox" id="accommodation" name="sustainability_factors" value="eco_accommodation"
-                                               {% if 'eco_accommodation' in trip.sustainability_factors %}checked{% endif %}>
-                                        <label class="form-check-label" for="accommodation">
-                                            <i class="fas fa-bed me-2"></i>Eco-Friendly Accommodation
-                                        </label>
-                                    </div>
-                                </div>
-                                <div class="col-md-6 mb-2">
-                                    <div class="form-check">
-                                        <input class="form-check-input" type="checkbox" id="local_economy" name="sustainability_factors" value="local_economy"
-                                               {% if 'local_economy' in trip.sustainability_factors %}checked{% endif %}>
-                                        <label class="form-check-label" for="local_economy">
-                                            <i class="fas fa-handshake me-2"></i>Supporting Local Economy
-                                        </label>
-                                    </div>
-                                </div>
-                                <div class="col-md-6 mb-2">
-                                    <div class="form-check">
-                                        <input class="form-check-input" type="checkbox" id="waste_reduction" name="sustainability_factors" value="waste_reduction"
-                                               {% if 'waste_reduction' in trip.sustainability_factors %}checked{% endif %}>
-                                        <label class="form-check-label" for="waste_reduction">
-                                            <i class="fas fa-recycle me-2"></i>Waste Reduction
-                                        </label>
-                                    </div>
-                                </div>
-                            </div>
+                    <!-- Trip Details -->
+                    {% if trip.start_date and trip.end_date %}
+                    <div class="mb-3">
+                        <div class="small text-muted">
+                            <i class="fas fa-calendar me-1"></i>
+                            {{ trip.start_date|date:"M j" }} - {{ trip.end_date|date:"M j, Y" }}
+                            <span class="ms-2">({{ trip.duration_days }} day{{ trip.duration_days|pluralize }})</span>
                         </div>
                     </div>
-                </div>
+                    {% endif %}
 
-                <!-- Update Trip Image -->
-                <div class="card card-hygge mb-4">
-                    <div class="card-header" style="background-color: var(--hygge-cream); border-bottom: none;">
-                        <h5 class="mb-0 fw-bold" style="color: var(--hygge-green);">
-                            <i class="fas fa-camera me-2"></i>{% if trip.trip_image %}Update{% else %}Add{% endif %} Trip Image
-                        </h5>
-                    </div>
-                    <div class="card-body p-4">
-                        <div class="mb-3">
-                            <label for="trip_image" class="form-label fw-bold">
-                                {% if trip.trip_image %}Upload new image{% else %}Upload an inspiring image for your trip{% endif %}
-                            </label>
-                            <input type="file" class="form-control" id="trip_image" name="trip_image" accept="image/*">
-                            <div class="form-text">
-                                {% if trip.trip_image %}Leave empty to keep current image{% else %}Choose an image that captures the essence of your journey{% endif %}
-                            </div>
-                        </div>
-                        <div id="image_preview" style="display: none;">
-                            <img id="preview_img" class="img-fluid rounded" style="max-height: 200px;">
-                        </div>
-                    </div>
-                </div>
+                    {% if trip.description %}
+                    <p class="text-muted small mb-3">{{ trip.description|truncatewords:20 }}</p>
+                    {% endif %}
 
-                <!-- Privacy & Sharing -->
-                <div class="card card-hygge mb-4">
-                    <div class="card-header" style="background-color: var(--hygge-cream); border-bottom: none;">
-                        <h5 class="mb-0 fw-bold" style="color: var(--hygge-green);">
-                            <i class="fas fa-shield-alt me-2"></i>Privacy & Sharing
-                        </h5>
-                    </div>
-                    <div class="card-body p-4">
-                        <div class="row">
-                            <div class="col-md-6 mb-3">
-                                <label for="visibility" class="form-label fw-bold">Who can see this trip?</label>
-                                <select class="form-control" id="visibility" name="visibility">
-                                    <option value="public" {% if trip.visibility == 'public' %}selected{% endif %}>Public - All HygGeo users</option>
-                                    <option value="community" {% if trip.visibility == 'community' %}selected{% endif %}>Community - Members only</option>
-                                    <option value="private" {% if trip.visibility == 'private' %}selected{% endif %}>Private - Only me</option>
-                                </select>
+                    <!-- Trip Stats -->
+                    <div class="row g-2 mb-3">
+                        <div class="col-6">
+                            <div class="p-2 rounded" style="background-color: var(--hygge-cream);">
+                                <div class="small text-muted">Budget</div>
+                                <div class="fw-bold small">{{ trip.get_budget_range_display }}</div>
                             </div>
-                            <div class="col-md-6 mb-3">
-                                <div class="form-check mt-4">
-                                    <input class="form-check-input" type="checkbox" id="allow_messages" name="allow_messages" 
-                                           {% if trip.allow_messages %}checked{% endif %}>
-                                    <label class="form-check-label fw-bold" for="allow_messages">
-                                        Allow other users to message me about this trip
-                                    </label>
-                                </div>
+                        </div>
+                        <div class="col-6">
+                            <div class="p-2 rounded" style="background-color: var(--hygge-cream);">
+                                <div class="small text-muted">Group Size</div>
+                                <div class="fw-bold small">{{ trip.get_group_size_preference_display }}</div>
                             </div>
                         </div>
                     </div>
-                </div>
 
-                <!-- Action Buttons -->
-                <div class="text-center">
-                    <button type="submit" class="btn btn-hygge btn-lg px-5 py-3 me-3">
-                        <i class="fas fa-save me-2"></i>Save Changes
-                    </button>
-                    <a href="{% url 'trip_detail' trip.pk %}" class="btn btn-outline-secondary btn-lg px-5 py-3">
-                        <i class="fas fa-arrow-left me-2"></i>Back to Trip
-                    </a>
+                    <!-- Sustainability Badge -->
+                    <div class="mb-3">
+                        <span class="badge bg-success">
+                            <i class="fas fa-leaf me-1"></i>{{ trip.eco_level_display }}
+                        </span>
+                    </div>
+
+                    <!-- Action Buttons -->
+                    <div class="d-grid gap-2">
+                        <a href="{% url 'trip_detail' trip.pk %}" class="btn btn-outline-hygge btn-sm">
+                            <i class="fas fa-eye me-1"></i>View Details
+                        </a>
+                    </div>
                 </div>
-            </form>
+            </div>
         </div>
+        {% endfor %}
     </div>
+
+    <!-- Pagination -->
+    {% if trips.has_other_pages %}
+    <nav class="mt-5">
+        <ul class="pagination justify-content-center">
+            {% if trips.has_previous %}
+            <li class="page-item">
+                <a class="page-link" href="?page={{ trips.previous_page_number }}">
+                    <i class="fas fa-chevron-left"></i>
+                </a>
+            </li>
+            {% endif %}
+
+            {% for num in trips.paginator.page_range %}
+                {% if trips.number == num %}
+                <li class="page-item active">
+                    <span class="page-link">{{ num }}</span>
+                </li>
+                {% elif num > trips.number|add:'-3' and num < trips.number|add:'3' %}
+                <li class="page-item">
+                    <a class="page-link" href="?page={{ num }}">{{ num }}</a>
+                </li>
+                {% endif %}
+            {% endfor %}
+
+            {% if trips.has_next %}
+            <li class="page-item">
+                <a class="page-link" href="?page={{ trips.next_page_number }}">
+                    <i class="fas fa-chevron-right"></i>
+                </a>
+            </li>
+            {% endif %}
+        </ul>
+    </nav>
+    {% endif %}
+
+    {% else %}
+    <!-- Empty State -->
+    <div class="text-center py-5">
+        <div class="mb-4">
+            <i class="fas fa-map-marked-alt" style="font-size: 5rem; color: var(--hygge-cream);"></i>
+        </div>
+        <h4 class="mb-3" style="color: var(--hygge-green);">No Trips Yet</h4>
+        <p class="text-muted mb-4">Start planning your first sustainable journey!</p>
+        <a href="{% url 'create_trip' %}" class="btn btn-hygge btn-lg">
+            <i class="fas fa-plus me-2"></i>Create Your First Trip
+        </a>
+    </div>
+    {% endif %}
 </div>
 
 <style>
-.form-control:focus {
-    border-color: var(--hygge-light-green);
-    box-shadow: 0 0 0 0.2rem rgba(74, 124, 89, 0.25);
-}
-
-.card-hygge {
-    transition: transform 0.3s ease;
+.my-trip-card {
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
     border-radius: 12px;
+    overflow: hidden;
 }
 
-.card-hygge:hover {
+.my-trip-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 25px rgba(0,0,0,0.1) !important;
+}
+
+.card-img-top {
+    border-radius: 12px 12px 0 0;
+}
+
+.btn-hygge:hover, .btn-outline-hygge:hover {
     transform: translateY(-2px);
 }
 
-textarea {
-    resize: vertical;
+.page-link {
+    color: var(--hygge-green);
 }
 
-.form-check-input:checked {
+.page-item.active .page-link {
     background-color: var(--hygge-green);
     border-color: var(--hygge-green);
 }
-
-.badge {
-    font-size: 0.8rem;
-}
-
-#preview_img {
-    transition: opacity 0.3s ease;
-}
-
-@media (max-width: 768px) {
-    .text-center .btn {
-        width: 100%;
-        margin-bottom: 0.5rem;
-    }
-    
-    .text-center .btn:last-child {
-        margin-bottom: 0;
-    }
-}
 </style>
-
-<script>
-document.addEventListener('DOMContentLoaded', function() {
-    // Add animation to cards
-    const cards = document.querySelectorAll('.card-hygge');
-    cards.forEach((card, index) => {
-        card.style.opacity = '0';
-        card.style.transform = 'translateY(30px)';
-        
-        setTimeout(() => {
-            card.style.transition = 'all 0.6s ease';
-            card.style.opacity = '1';
-            card.style.transform = 'translateY(0)';
-        }, index * 100);
-    });
-    
-    // Duration calculation (same as create form)
-    const startDate = document.getElementById('start_date');
-    const endDate = document.getElementById('end_date');
-    const durationDisplay = document.getElementById('duration_display');
-    
-    function calculateDuration() {
-        if (startDate.value && endDate.value) {
-            const start = new Date(startDate.value);
-            const end = new Date(endDate.value);
-            const diffTime = Math.abs(end - start);
-            const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24)) + 1;
-            
-            if (diffDays > 0) {
-                durationDisplay.textContent = `${diffDays} day${diffDays !== 1 ? 's' : ''}`;
-                durationDisplay.style.color = 'var(--hygge-green)';
-            } else {
-                durationDisplay.textContent = 'Invalid date range';
-                durationDisplay.style.color = '#dc3545';
-            }
-        }
-    }
-    
-    startDate.addEventListener('change', calculateDuration);
-    endDate.addEventListener('change', calculateDuration);
-    
-    // Set minimum date to today for future trips
-    const today = new Date().toISOString().split('T')[0];
-    startDate.min = today;
-    
-    startDate.addEventListener('change', function() {
-        endDate.min = this.value;
-        if (endDate.value && endDate.value < this.value) {
-            endDate.value = this.value;
-        }
-        calculateDuration();
-    });
-    
-    // Sustainability level display
-    const sustainabilitySelect = document.getElementById('sustainability_priority');
-    const ecoLevelDisplay = document.getElementById('eco_level_display');
-    
-    function updateEcoLevel() {
-        const value = sustainabilitySelect.value;
-        const levels = {
-            '1': { text: 'Eco-Aware', class: 'bg-secondary' },
-            '2': { text: 'Eco-Friendly', class: 'bg-info' },
-            '3': { text: 'Eco-Focused', class: 'bg-success' },
-            '4': { text: 'Eco-Champion', class: 'bg-primary' },
-            '5': { text: 'Eco-Warrior', class: 'bg-warning text-dark' }
-        };
-        
-        const level = levels[value] || levels['3'];
-        ecoLevelDisplay.innerHTML = `<span class="badge ${level.class}">${level.text}</span>`;
-    }
-    
-    sustainabilitySelect.addEventListener('change', updateEcoLevel);
-    
-    // Image preview
-    const imageInput = document.getElementById('trip_image');
-    const imagePreview = document.getElementById('image_preview');
-    const previewImg = document.getElementById('preview_img');
-    
-    imageInput.addEventListener('change', function(e) {
-        const file = e.target.files[0];
-        if (file && file.type.startsWith('image/')) {
-            const reader = new FileReader();
-            reader.onload = function(e) {
-                previewImg.src = e.target.result;
-                imagePreview.style.display = 'block';
-                previewImg.style.opacity = '0';
-                setTimeout(() => {
-                    previewImg.style.opacity = '1';
-                }, 100);
-            };
-            reader.readAsDataURL(file);
-        } else {
-            imagePreview.style.display = 'none';
-        }
-    });
-    
-    // Form validation
-    document.getElementById('editTripForm').addEventListener('submit', function(e) {
-        const tripName = document.getElementById('trip_name').value.trim();
-        const destination = document.getElementById('destination').value.trim();
-        
-        if (!tripName) {
-            e.preventDefault();
-            alert('Please enter a trip name.');
-            document.getElementById('trip_name').focus();
-            return false;
-        }
-        
-        if (!destination) {
-            e.preventDefault();
-            alert('Please enter a destination.');
-            document.getElementById('destination').focus();
-            return false;
-        }
-        
-        // Show loading state
-        const submitBtn = this.querySelector('button[type="submit"]');
-        submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin me-2"></i>Saving Changes...';
-        submitBtn.disabled = true;
-    });
-});
-</script>
 {% endblock %}
