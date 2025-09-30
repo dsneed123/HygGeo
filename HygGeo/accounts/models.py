@@ -270,7 +270,12 @@ class Trip(models.Model):
     sustainability_factors = models.JSONField(default=list, blank=True)
     
     # Media & Privacy
-    trip_image = models.ImageField(upload_to='trip_images/', blank=True, null=True)
+    trip_image = models.ImageField(
+        upload_to='trip_images/',
+        blank=True,
+        null=True,
+        storage=None  # Will use DEFAULT_FILE_STORAGE (S3 in production)
+    )
     visibility = models.CharField(max_length=20, choices=VISIBILITY_CHOICES, default='public')
     allow_messages = models.BooleanField(default=True)
     
