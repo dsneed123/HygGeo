@@ -3,6 +3,7 @@
 {% block title %}Browse Trips - HygGeo{% endblock %}
 
 {% block content %}
+{% csrf_token %}
 <div class="container py-5">
     <!-- Hero Header -->
     <div class="row mb-5">
@@ -231,14 +232,42 @@
                         </div>
                     </div>
 
+                    <!-- Creator Info -->
+                    <div class="d-flex align-items-center mb-3 pb-3 border-bottom">
+                        <div class="me-2">
+                            {% if trip.creator.userprofile.avatar %}
+                            <img src="{{ trip.creator.userprofile.avatar.url }}" class="rounded-circle" style="width: 32px; height: 32px; object-fit: cover;" alt="{{ trip.creator.username }}">
+                            {% else %}
+                            <div class="rounded-circle bg-secondary d-flex align-items-center justify-content-center" style="width: 32px; height: 32px;">
+                                <i class="fas fa-user text-white small"></i>
+                            </div>
+                            {% endif %}
+                        </div>
+                        <div class="flex-grow-1">
+                            <div class="small fw-bold">{{ trip.creator.first_name|default:trip.creator.username }}</div>
+                            <div class="text-muted" style="font-size: 0.75rem;">Trip Organizer</div>
+                        </div>
+                    </div>
+
                     <!-- Quick Actions -->
-                    <div class="d-flex gap-2">
-                        <a href="{% url 'trip_detail' trip.pk %}" class="btn btn-outline-hygge btn-sm flex-grow-1">
-                            <i class="fas fa-eye me-1"></i>View
+                    <div class="d-grid gap-2">
+                        <a href="{% url 'trip_detail' trip.pk %}" class="btn btn-hygge btn-sm">
+                            <i class="fas fa-eye me-1"></i>View Details
                         </a>
-                        <a href="{% url 'edit_trip' trip.pk %}" class="btn btn-hygge btn-sm flex-grow-1">
-                            <i class="fas fa-edit me-1"></i>Edit
+                        {% if user == trip.creator %}
+                        <div class="btn-group" role="group">
+                            <a href="{% url 'edit_trip' trip.pk %}" class="btn btn-outline-secondary btn-sm">
+                                <i class="fas fa-edit me-1"></i>Edit
+                            </a>
+                            <button type="button" class="btn btn-outline-danger btn-sm" onclick="confirmDelete({{ trip.pk }}, '{{ trip.trip_name|escapejs }}')">
+                                <i class="fas fa-trash me-1"></i>Delete
+                            </button>
+                        </div>
+                        {% elif user.is_authenticated and trip.allow_messages %}
+                        <a href="{% url 'send_message' trip.creator.username %}?trip={{ trip.pk }}" class="btn btn-outline-secondary btn-sm">
+                            <i class="fas fa-envelope me-1"></i>Message Organizer
                         </a>
+                        {% endif %}
                     </div>
                 </div>
             </div>
@@ -356,13 +385,22 @@
 
 <style>
 .my-trip-card {
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
-    border-radius: 12px;
+    transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 0.3s ease;
+    border-radius: 16px;
+    overflow: hidden;
 }
 
 .my-trip-card:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 15px 35px rgba(0,0,0,0.1);
+    transform: translateY(-8px);
+    box-shadow: 0 20px 40px rgba(0,0,0,0.15);
+}
+
+.my-trip-card img {
+    transition: transform 0.3s ease;
+}
+
+.my-trip-card:hover img {
+    transform: scale(1.05);
 }
 
 .bg-outline-secondary {
@@ -442,9 +480,21 @@ function confirmDelete(tripId, tripName) {
 
 function deleteTrip() {
     if (tripToDelete) {
-        // This would make an AJAX request to delete the trip
-        // For now, we'll just redirect to a delete URL
-        window.location.href = `/trips/${tripToDelete}/delete/`;
+        const form = document.createElement('form');
+        form.method = 'POST';
+        form.action = `/trips/${tripToDelete}/delete/`;
+
+        const csrfToken = document.querySelector('[name=csrfmiddlewaretoken]');
+        if (csrfToken) {
+            const csrfInput = document.createElement('input');
+            csrfInput.type = 'hidden';
+            csrfInput.name = 'csrfmiddlewaretoken';
+            csrfInput.value = csrfToken.value;
+            form.appendChild(csrfInput);
+        }
+
+        document.body.appendChild(form);
+        form.submit();
     }
 }
 

@@ -8,10 +8,15 @@
     <div class="row mb-4">
         <div class="col-12">
             <div class="card card-hygge">
-                {% if trip.trip_image %}
                 <div class="position-relative">
-                    <img src="{{ trip.trip_image.url }}" alt="{{ trip.trip_name }}" 
+                    {% if trip.trip_image %}
+                    <img src="{{ trip.trip_image.url }}" alt="{{ trip.trip_name }}"
                          class="card-img-top" style="height: 300px; object-fit: cover;">
+                    {% else %}
+                    <div class="card-img-top bg-light d-flex align-items-center justify-content-center" style="height: 300px;">
+                        <i class="fas fa-map-marked-alt text-muted" style="font-size: 4rem;"></i>
+                    </div>
+                    {% endif %}
                     <div class="position-absolute top-0 end-0 m-3">
                         <span class="badge bg-primary px-3 py-2">
                             {% if trip.trip_status == 'planning' %}
@@ -26,7 +31,6 @@
                         </span>
                     </div>
                 </div>
-                {% endif %}
                 
                 <div class="card-body p-4">
                     <div class="row align-items-start">
