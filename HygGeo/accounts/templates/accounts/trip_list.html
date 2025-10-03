@@ -482,7 +482,7 @@ function deleteTrip() {
     if (tripToDelete) {
         const form = document.createElement('form');
         form.method = 'POST';
-        form.action = `/trips/${tripToDelete}/delete/`;
+        form.action = `/accounts/trips/${tripToDelete}/delete/`;
 
         const csrfToken = document.querySelector('[name=csrfmiddlewaretoken]');
         if (csrfToken) {
