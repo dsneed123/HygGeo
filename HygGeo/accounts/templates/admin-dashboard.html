@@ -4,768 +4,583 @@
 {% block title %}Admin Dashboard - {{ block.super }}{% endblock %}
 
 {% block content %}
-<div class="container py-5">
+<div class="container-fluid py-4">
     <!-- Header Section -->
-    <div class="row mb-5">
+    <div class="row mb-4">
         <div class="col-12">
-            <div class="text-center">
-                <i class="fas fa-cogs text-primary mb-3" style="font-size: 4rem; color: var(--hygge-green) !important;"></i>
-                <h1 class="h2 fw-bold" style="color: var(--hygge-green);">HygGeo Admin Dashboard</h1>
-                <p class="lead text-muted">Manage experiences, destinations, and content</p>
+            <div class="d-flex justify-content-between align-items-center">
+                <div>
+                    <h1 class="h2 fw-bold mb-2" style="color: var(--hygge-green);">
+                        <i class="fas fa-tachometer-alt me-2"></i>HygGeo Admin Dashboard
+                    </h1>
+                    <p class="text-muted mb-0">Centralized platform management</p>
+                </div>
+                <div>
+                    <a href="/admin/" class="btn btn-outline-secondary" target="_blank">
+                        <i class="fas fa-cog me-1"></i>Django Admin
+                    </a>
+                </div>
             </div>
         </div>
     </div>
 
     <!-- Quick Stats Row -->
-    <div class="row mb-5">
-        <div class="col-md-3 mb-3">
-            <div class="card card-hygge h-100">
-                <div class="card-body text-center">
-                    <i class="fas fa-map-marked-alt text-primary mb-3" style="font-size: 2.5rem; color: var(--hygge-green) !important;"></i>
-                    <h4 class="fw-bold">{{ stats.experiences_count }}</h4>
-                    <p class="text-muted mb-0">Total Experiences</p>
+    <div class="row mb-4">
+        <div class="col-md-3 col-sm-6 mb-3">
+            <div class="card card-hygge h-100 border-start border-primary border-4">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <h3 class="fw-bold mb-0">{{ stats.experiences_count }}</h3>
+                            <p class="text-muted mb-0 small">Experiences</p>
+                        </div>
+                        <i class="fas fa-map-marked-alt" style="font-size: 2rem; color: var(--hygge-green); opacity: 0.3;"></i>
+                    </div>
                 </div>
             </div>
         </div>
-        <div class="col-md-3 mb-3">
-            <div class="card card-hygge h-100">
-                <div class="card-body text-center">
-                    <i class="fas fa-globe-americas text-info mb-3" style="font-size: 2.5rem; color: var(--hygge-soft-blue) !important;"></i>
-                    <h4 class="fw-bold">{{ stats.destinations_count }}</h4>
-                    <p class="text-muted mb-0">Destinations</p>
+        <div class="col-md-3 col-sm-6 mb-3">
+            <div class="card card-hygge h-100 border-start border-info border-4">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <h3 class="fw-bold mb-0">{{ stats.destinations_count }}</h3>
+                            <p class="text-muted mb-0 small">Destinations</p>
+                        </div>
+                        <i class="fas fa-globe-americas" style="font-size: 2rem; color: var(--hygge-soft-blue); opacity: 0.3;"></i>
+                    </div>
                 </div>
             </div>
         </div>
-        <div class="col-md-3 mb-3">
-            <div class="card card-hygge h-100">
-                <div class="card-body text-center">
-                    <i class="fas fa-building text-warning mb-3" style="font-size: 2.5rem; color: var(--hygge-gold) !important;"></i>
-                    <h4 class="fw-bold">{{ stats.providers_count }}</h4>
-                    <p class="text-muted mb-0">Providers</p>
+        <div class="col-md-3 col-sm-6 mb-3">
+            <div class="card card-hygge h-100 border-start border-warning border-4">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <h3 class="fw-bold mb-0">{{ stats.providers_count }}</h3>
+                            <p class="text-muted mb-0 small">Providers</p>
+                        </div>
+                        <i class="fas fa-building" style="font-size: 2rem; color: var(--hygge-gold); opacity: 0.3;"></i>
+                    </div>
                 </div>
             </div>
         </div>
-        <div class="col-md-3 mb-3">
-            <div class="card card-hygge h-100">
-                <div class="card-body text-center">
-                    <i class="fas fa-users text-success mb-3" style="font-size: 2.5rem; color: var(--hygge-light-green) !important;"></i>
-                    <h4 class="fw-bold">{{ stats.users_count }}</h4>
-                    <p class="text-muted mb-0">Registered Users</p>
+        <div class="col-md-3 col-sm-6 mb-3">
+            <div class="card card-hygge h-100 border-start border-success border-4">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <h3 class="fw-bold mb-0">{{ stats.users_count }}</h3>
+                            <p class="text-muted mb-0 small">Users</p>
+                        </div>
+                        <i class="fas fa-users" style="font-size: 2rem; color: var(--hygge-light-green); opacity: 0.3;"></i>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
 
-    <!-- Main Actions Section -->
-    <div class="row mb-5">
-        <div class="col-12">
-            <h3 class="fw-bold mb-4" style="color: var(--hygge-green);">
-                <i class="fas fa-plus-circle me-2"></i>Add New Content
-            </h3>
-        </div>
-    </div>
-
-    <!-- Add Content Cards -->
-    <div class="row mb-5">
-        <!-- Add Experience -->
-        <div class="col-lg-6 col-xl-4 mb-4">
-            <div class="card card-hygge h-100 admin-action-card">
-                <div class="card-body text-center p-4">
-                    <div class="action-icon mb-3">
-                        <i class="fas fa-star" style="font-size: 3rem; color: var(--hygge-green);"></i>
-                    </div>
-                    <h5 class="fw-bold mb-3">Add Experience</h5>
-                    <p class="text-muted mb-4">Create a new travel experience with full details, pricing, and categorization.</p>
-                    <a href="{% url 'experiences:add_experience' %}" class="btn btn-hygge btn-lg w-100">
-                        <i class="fas fa-plus me-2"></i>Add Experience
-                    </a>
-                </div>
-            </div>
-        </div>
-
-        <!-- Add Destination -->
-        <div class="col-lg-6 col-xl-4 mb-4">
-            <div class="card card-hygge h-100 admin-action-card">
-                <div class="card-body text-center p-4">
-                    <div class="action-icon mb-3">
-                        <i class="fas fa-map-marker-alt" style="font-size: 3rem; color: var(--hygge-soft-blue);"></i>
-                    </div>
-                    <h5 class="fw-bold mb-3">Add Destination</h5>
-                    <p class="text-muted mb-4">Add a new travel destination with location details and sustainability information.</p>
-                    <a href="{% url 'experiences:add_destination' %}" class="btn btn-outline-hygge btn-lg w-100">
-                        <i class="fas fa-plus me-2"></i>Add Destination
-                    </a>
-                </div>
-            </div>
-        </div>
-
-        <!-- Add Provider -->
-        <div class="col-lg-6 col-xl-4 mb-4">
-            <div class="card card-hygge h-100 admin-action-card">
-                <div class="card-body text-center p-4">
-                    <div class="action-icon mb-3">
-                        <i class="fas fa-handshake" style="font-size: 3rem; color: var(--hygge-gold);"></i>
-                    </div>
-                    <h5 class="fw-bold mb-3">Add Provider</h5>
-                    <p class="text-muted mb-4">Register a new service provider with contact details and certifications.</p>
-                    <a href="{% url 'experiences:add_provider' %}" class="btn btn-outline-hygge btn-lg w-100">
-                        <i class="fas fa-plus me-2"></i>Add Provider
-                    </a>
-                </div>
-            </div>
-        </div>
-
-        <!-- Add Category -->
-        <div class="col-lg-6 col-xl-4 mb-4">
-            <div class="card card-hygge h-100 admin-action-card">
-                <div class="card-body text-center p-4">
-                    <div class="action-icon mb-3">
-                        <i class="fas fa-tags" style="font-size: 3rem; color: var(--hygge-light-green);"></i>
-                    </div>
-                    <h5 class="fw-bold mb-3">Add Category</h5>
-                    <p class="text-muted mb-4">Create a new experience category with custom icons and descriptions.</p>
-                    <a href="{% url 'experiences:add_category' %}" class="btn btn-outline-hygge btn-lg w-100">
-                        <i class="fas fa-plus me-2"></i>Add Category
-                    </a>
-                </div>
-            </div>
-        </div>
-
-        <!-- Add Experience Type -->
-        <div class="col-lg-6 col-xl-4 mb-4">
-            <div class="card card-hygge h-100 admin-action-card">
-                <div class="card-body text-center p-4">
-                    <div class="action-icon mb-3">
-                        <i class="fas fa-list-ul" style="font-size: 3rem; color: #e74c3c;"></i>
-                    </div>
-                    <h5 class="fw-bold mb-3">Add Experience Type</h5>
-                    <p class="text-muted mb-4">Define a new type of travel experience for better categorization.</p>
-                    <a href="{% url 'experiences:add_experience_type' %}" class="btn btn-outline-hygge btn-lg w-100">
-                        <i class="fas fa-plus me-2"></i>Add Type
-                    </a>
-                </div>
-            </div>
-        </div>
-
-        <!-- Analytics Dashboard -->
-        <div class="col-lg-6 col-xl-4 mb-4">
-            <div class="card card-hygge h-100 admin-action-card">
-                <div class="card-body text-center p-4">
-                    <div class="action-icon mb-3">
-                        <i class="fas fa-chart-line" style="font-size: 3rem; color: var(--hygge-light-green);"></i>
-                    </div>
-                    <h5 class="fw-bold mb-3">Analytics Dashboard</h5>
-                    <p class="text-muted mb-4">Track user engagement, content performance, and platform growth metrics.</p>
-                    <a href="{% url 'analytics_dashboard' %}" class="btn btn-hygge btn-lg w-100">
-                        <i class="fas fa-chart-bar me-2"></i>View Analytics
-                    </a>
-                </div>
-            </div>
-        </div>
-
-        <!-- Django Admin -->
-        <div class="col-lg-6 col-xl-4 mb-4">
-            <div class="card card-hygge h-100 admin-action-card">
-                <div class="card-body text-center p-4">
-                    <div class="action-icon mb-3">
-                        <i class="fas fa-cog" style="font-size: 3rem; color: #6f42c1;"></i>
-                    </div>
-                    <h5 class="fw-bold mb-3">Django Admin</h5>
-                    <p class="text-muted mb-4">Access the full Django admin interface for advanced management.</p>
-                    <a href="/admin/" class="btn btn-outline-hygge btn-lg w-100" target="_blank">
-                        <i class="fas fa-external-link-alt me-2"></i>Open Admin
-                    </a>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- AI Content Creation Tools Section -->
-    <div class="row mb-5">
-        <div class="col-12">
-            <h3 class="fw-bold mb-4" style="color: var(--hygge-green);">
-                <i class="fas fa-robot me-2"></i>AI Content Creation Tools
-            </h3>
-            <p class="text-muted mb-4">AI-powered prompts for creating SEO-optimized travel experiences</p>
-        </div>
-    </div>
-
-    <!-- AI Prompts Cards -->
-    <div class="row mb-5">
-        <!-- Experience Title Generator -->
-        <div class="col-lg-6 mb-4">
-            <div class="card card-hygge h-100">
-                <div class="card-header">
-                    <h5 class="fw-bold mb-0">
-                        <i class="fas fa-magic me-2" style="color: var(--hygge-green);"></i>SEO-Optimized Experience Titles
-                    </h5>
-                </div>
-                <div class="card-body">
-                    <p class="text-muted small mb-3">Generate compelling, SEO-friendly titles for travel experiences</p>
-                    <div class="border rounded p-3 mb-3" style="background-color: #f8f9fa;">
-                        <strong>AI Prompt:</strong>
-                        <div class="mt-2" style="font-family: monospace; font-size: 0.9em;">
-                            <div class="ai-prompt-text">Create 5 SEO-optimized titles for a [EXPERIENCE_TYPE] experience in [DESTINATION]. Each title should:
-- Include the destination name
-- Be 30-60 characters long
-- Include power words like "authentic", "unique", "sustainable", "hidden gem"
-- Appeal to eco-conscious travelers
-- Include hygge elements when relevant
-- Focus on emotional benefits
-
-Example format: "Authentic [EXPERIENCE] in [DESTINATION]: Sustainable [ACTIVITY] Experience"</div>
-                        </div>
-                    </div>
-                    <button class="btn btn-outline-hygge btn-sm copy-prompt-btn" data-prompt="experience-titles">
-                        <i class="fas fa-copy me-1"></i>Copy Prompt
-                    </button>
-                </div>
-            </div>
-        </div>
-
-        <!-- Meta Description Generator -->
-        <div class="col-lg-6 mb-4">
-            <div class="card card-hygge h-100">
-                <div class="card-header">
-                    <h5 class="fw-bold mb-0">
-                        <i class="fas fa-search me-2" style="color: var(--hygge-soft-blue);"></i>Meta Descriptions
-                    </h5>
-                </div>
-                <div class="card-body">
-                    <p class="text-muted small mb-3">Create compelling meta descriptions that improve click-through rates</p>
-                    <div class="border rounded p-3 mb-3" style="background-color: #f8f9fa;">
-                        <strong>AI Prompt:</strong>
-                        <div class="mt-2" style="font-family: monospace; font-size: 0.9em;">
-                            <div class="ai-prompt-text">Write a meta description for a travel experience titled "[TITLE]" in [DESTINATION]. Requirements:
-- Exactly 140-155 characters
-- Include the focus keyword "[KEYWORD]"
-- Include a clear call-to-action (book, discover, explore)
-- Mention sustainability/eco-friendly aspects
-- Create urgency or exclusivity
-- Appeal to hygge philosophy (mindful, authentic, peaceful travel)
-
-Example: "Discover authentic [keyword] in [destination]. Book sustainable, locally-guided experiences that support communities. Mindful travel starts here."</div>
-                        </div>
-                    </div>
-                    <button class="btn btn-outline-hygge btn-sm copy-prompt-btn" data-prompt="meta-descriptions">
-                        <i class="fas fa-copy me-1"></i>Copy Prompt
-                    </button>
-                </div>
-            </div>
-        </div>
-
-        <!-- Content Generator -->
-        <div class="col-lg-6 mb-4">
-            <div class="card card-hygge h-100">
-                <div class="card-header">
-                    <h5 class="fw-bold mb-0">
-                        <i class="fas fa-file-alt me-2" style="color: var(--hygge-gold);"></i>Experience Descriptions
-                    </h5>
-                </div>
-                <div class="card-body">
-                    <p class="text-muted small mb-3">Generate detailed, SEO-optimized experience descriptions</p>
-                    <div class="border rounded p-3 mb-3" style="background-color: #f8f9fa;">
-                        <strong>AI Prompt:</strong>
-                        <div class="mt-2" style="font-family: monospace; font-size: 0.9em;">
-                            <div class="ai-prompt-text">Create a comprehensive description for a [EXPERIENCE_TYPE] in [DESTINATION]. Include:
-
-**Structure (400-800 words):**
-1. Hook opening with emotional appeal
-2. Detailed activity description
-3. Sustainability/local impact benefits
-4. Hygge elements (comfort, mindfulness, simplicity)
-5. Practical details (duration, group size, difficulty)
-6. What's included/excluded
-7. Call-to-action ending
-
-**SEO Requirements:**
-- Use keyword "[KEYWORD]" 3-5 times naturally
-- Include related keywords: sustainable travel, eco-friendly, authentic, local community
-- Use headers and bullet points
-- Write for 8th-grade reading level
-- Include questions to boost engagement
-
-**Tone:** Inspiring, authentic, informative, appealing to conscious travelers</div>
-                        </div>
-                    </div>
-                    <button class="btn btn-outline-hygge btn-sm copy-prompt-btn" data-prompt="descriptions">
-                        <i class="fas fa-copy me-1"></i>Copy Prompt
-                    </button>
-                </div>
-            </div>
-        </div>
-
-        <!-- Keyword Research Assistant -->
-        <div class="col-lg-6 mb-4">
-            <div class="card card-hygge h-100">
-                <div class="card-header">
-                    <h5 class="fw-bold mb-0">
-                        <i class="fas fa-key me-2" style="color: var(--hygge-light-green);"></i>Keyword Research
-                    </h5>
-                </div>
-                <div class="card-body">
-                    <p class="text-muted small mb-3">Research and suggest relevant keywords for travel experiences</p>
-                    <div class="border rounded p-3 mb-3" style="background-color: #f8f9fa;">
-                        <strong>AI Prompt:</strong>
-                        <div class="mt-2" style="font-family: monospace; font-size: 0.9em;">
-                            <div class="ai-prompt-text">Generate a comprehensive keyword list for a [EXPERIENCE_TYPE] experience in [DESTINATION]. Provide:
-
-**Primary Keywords (3-5):**
-- Main focus keywords with destination + activity
-- Consider search volume and competition
-
-**Long-tail Keywords (8-10):**
-- Specific phrases travelers would search
-- Include sustainability, hygge, and authenticity angles
-
-**Local SEO Keywords (5-7):**
-- Location-specific terms
-- "Near me" variations
-- Regional/cultural terms
-
-**Competitor Analysis:**
-- Research what similar experiences rank for
-- Identify keyword gaps and opportunities
-
-**Semantic Keywords:**
-- Related terms Google associates with your main keywords
-- Include synonyms and related concepts
-
-Format as a prioritized list with estimated search difficulty (low/medium/high).</div>
-                        </div>
-                    </div>
-                    <button class="btn btn-outline-hygge btn-sm copy-prompt-btn" data-prompt="keywords">
-                        <i class="fas fa-copy me-1"></i>Copy Prompt
-                    </button>
-                </div>
-            </div>
-        </div>
-
-        <!-- Content Calendar Generator -->
-        <div class="col-lg-6 mb-4">
-            <div class="card card-hygge h-100">
-                <div class="card-header">
-                    <h5 class="fw-bold mb-0">
-                        <i class="fas fa-calendar-alt me-2" style="color: #e74c3c;"></i>Content Calendar
-                    </h5>
-                </div>
-                <div class="card-body">
-                    <p class="text-muted small mb-3">Plan strategic content creation around seasonal trends</p>
-                    <div class="border rounded p-3 mb-3" style="background-color: #f8f9fa;">
-                        <strong>AI Prompt:</strong>
-                        <div class="mt-2" style="font-family: monospace; font-size: 0.9em;">
-                            <div class="ai-prompt-text">Create a 12-month content calendar for HygGeo focusing on [DESTINATION/REGION]. Include:
-
-**Monthly Themes:**
-- Seasonal travel opportunities
-- Cultural events and festivals
-- Weather-appropriate activities
-- Holiday and vacation periods
-
-**Content Types per Month:**
-- 2-3 experience highlights
-- 1-2 destination guides
-- Seasonal travel tips
-- Sustainability focus areas
-
-**SEO Opportunities:**
-- Trending seasonal keywords
-- Local event-based content
-- Weather/climate-related searches
-- Holiday travel planning
-
-**Hygge Integration:**
-- Cozy indoor activities (winter)
-- Outdoor mindfulness (summer)
-- Cultural immersion opportunities
-- Seasonal comfort experiences
-
-Format: Month | Theme | Content Ideas | Key Keywords | Publishing Schedule</div>
-                        </div>
-                    </div>
-                    <button class="btn btn-outline-hygge btn-sm copy-prompt-btn" data-prompt="calendar">
-                        <i class="fas fa-copy me-1"></i>Copy Prompt
-                    </button>
-                </div>
-            </div>
-        </div>
-
-        <!-- Social Media Content -->
-        <div class="col-lg-6 mb-4">
-            <div class="card card-hygge h-100">
-                <div class="card-header">
-                    <h5 class="fw-bold mb-0">
-                        <i class="fas fa-share-alt me-2" style="color: #6f42c1;"></i>Social Media Content
-                    </h5>
-                </div>
-                <div class="card-body">
-                    <p class="text-muted small mb-3">Create engaging social media content for experiences</p>
-                    <div class="border rounded p-3 mb-3" style="background-color: #f8f9fa;">
-                        <strong>AI Prompt:</strong>
-                        <div class="mt-2" style="font-family: monospace; font-size: 0.9em;">
-                            <div class="ai-prompt-text">Create social media content for a [EXPERIENCE_TYPE] in [DESTINATION]:
-
-**Instagram Post (3 variations):**
-- Caption: 150-200 words, storytelling approach
-- Include 15-20 relevant hashtags
-- Call-to-action for link in bio
-- Hygge and sustainability messaging
-
-**TikTok Ideas (5 concepts):**
-- Quick experience highlights
-- Behind-the-scenes content
-- Local culture moments
-- Sustainability tips
-- Before/after transformation
-
-**Facebook Post:**
-- Longer format (300-400 words)
-- Community engagement questions
-- Share personal stories
-- Include booking link
-
-**Pinterest Descriptions:**
-- SEO-optimized for Pinterest search
-- Include keywords in first 100 characters
-- Create intrigue and wanderlust
-
-**LinkedIn (B2B angle):**
-- Focus on sustainable tourism impact
-- Business/networking opportunities
-- Professional development through travel</div>
-                        </div>
-                    </div>
-                    <button class="btn btn-outline-hygge btn-sm copy-prompt-btn" data-prompt="social-media">
-                        <i class="fas fa-copy me-1"></i>Copy Prompt
-                    </button>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- Quick SEO Reference -->
-    <div class="row mb-5">
+    <!-- Quick Actions Navigation -->
+    <div class="row mb-4">
         <div class="col-12">
             <div class="card card-hygge">
-                <div class="card-header">
-                    <h5 class="fw-bold mb-0">
-                        <i class="fas fa-lightbulb me-2"></i>Quick SEO Reference for HygGeo Content
-                    </h5>
-                </div>
-                <div class="card-body">
-                    <div class="row">
-                        <div class="col-md-4">
-                            <h6 class="fw-bold text-success">High-Value Keywords</h6>
-                            <ul class="small text-muted">
-                                <li>sustainable travel + [destination]</li>
-                                <li>eco-friendly [activity]</li>
-                                <li>authentic [destination] experience</li>
-                                <li>mindful travel + [location]</li>
-                                <li>hygge vacation + [country]</li>
-                                <li>responsible tourism + [region]</li>
-                                <li>local community + [activity]</li>
-                            </ul>
-                        </div>
-                        <div class="col-md-4">
-                            <h6 class="fw-bold text-info">Content Structure</h6>
-                            <ul class="small text-muted">
-                                <li>Hook opening (emotional appeal)</li>
-                                <li>Problem/desire identification</li>
-                                <li>Solution presentation</li>
-                                <li>Benefits and unique value</li>
-                                <li>Social proof/testimonials</li>
-                                <li>Clear call-to-action</li>
-                                <li>FAQ section for long-tail SEO</li>
-                            </ul>
-                        </div>
-                        <div class="col-md-4">
-                            <h6 class="fw-bold text-warning">HygGeo Brand Voice</h6>
-                            <ul class="small text-muted">
-                                <li>Authentic and genuine</li>
-                                <li>Environmentally conscious</li>
-                                <li>Mindful and intentional</li>
-                                <li>Community-focused</li>
-                                <li>Peaceful and calming</li>
-                                <li>Educational but accessible</li>
-                                <li>Inspiring and aspirational</li>
-                            </ul>
-                        </div>
+                <div class="card-body p-2">
+                    <div class="d-flex flex-wrap gap-2 justify-content-center">
+                        <a href="#content-section" class="btn btn-sm btn-outline-hygge">
+                            <i class="fas fa-folder me-1"></i>Content
+                        </a>
+                        <a href="#user-section" class="btn btn-sm btn-outline-hygge">
+                            <i class="fas fa-users me-1"></i>Users & Email
+                        </a>
+                        <a href="#ai-section" class="btn btn-sm btn-outline-hygge">
+                            <i class="fas fa-robot me-1"></i>AI Tools
+                        </a>
+                        <a href="#analytics-section" class="btn btn-sm btn-outline-hygge">
+                            <i class="fas fa-chart-line me-1"></i>Analytics
+                        </a>
+                        <a href="#recent-section" class="btn btn-sm btn-outline-hygge">
+                            <i class="fas fa-clock me-1"></i>Recent
+                        </a>
                     </div>
                 </div>
             </div>
         </div>
     </div>
 
-    <!-- Email Export Section -->
-    <div class="row mb-5">
+    <!-- ============================================ -->
+    <!-- CONTENT MANAGEMENT SECTION -->
+    <!-- ============================================ -->
+    <div id="content-section" class="row mb-4">
         <div class="col-12">
-            <h3 class="fw-bold mb-4" style="color: var(--hygge-green);">
-                <i class="fas fa-envelope me-2"></i>Email Management
+            <h3 class="fw-bold mb-3 section-header">
+                <i class="fas fa-folder-open me-2"></i>Content Management
             </h3>
         </div>
     </div>
 
-    <!-- Email Statistics and Export -->
+    <!-- Content Management Grid -->
     <div class="row mb-5">
-        <!-- Email Statistics -->
-        <div class="col-lg-6 mb-4">
+        <!-- Experiences -->
+        <div class="col-lg-4 col-md-6 mb-3">
             <div class="card card-hygge h-100">
-                <div class="card-header">
-                    <h5 class="fw-bold mb-0">
-                        <i class="fas fa-chart-pie me-2"></i>Email Statistics
-                    </h5>
-                </div>
                 <div class="card-body">
-                    <div class="row text-center">
-                        <div class="col-6 mb-3">
-                            <div class="stat-item">
-                                <h4 class="fw-bold text-primary">{{ email_stats.total_users }}</h4>
-                                <p class="text-muted mb-0 small">Total Users</p>
-                            </div>
+                    <div class="d-flex align-items-center mb-3">
+                        <div class="icon-box bg-primary bg-opacity-10 p-2 rounded me-3">
+                            <i class="fas fa-star" style="font-size: 1.5rem; color: var(--hygge-green);"></i>
                         </div>
-                        <div class="col-6 mb-3">
-                            <div class="stat-item">
-                                <h4 class="fw-bold text-success">{{ email_stats.users_with_email }}</h4>
-                                <p class="text-muted mb-0 small">With Email</p>
-                            </div>
-                        </div>
-                        <div class="col-6">
-                            <div class="stat-item">
-                                <h4 class="fw-bold text-info">{{ email_stats.active_users }}</h4>
-                                <p class="text-muted mb-0 small">Active Users</p>
-                            </div>
-                        </div>
-                        <div class="col-6">
-                            <div class="stat-item">
-                                <h4 class="fw-bold text-warning">{{ email_stats.active_users_with_email }}</h4>
-                                <p class="text-muted mb-0 small">Active + Email</p>
-                            </div>
-                        </div>
+                        <h5 class="fw-bold mb-0">Experiences</h5>
                     </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- Email Management -->
-        <div class="col-lg-6 mb-4">
-            <div class="card card-hygge h-100">
-                <div class="card-header">
-                    <h5 class="fw-bold mb-0">
-                        <i class="fas fa-envelope me-2"></i>Email Management
-                    </h5>
-                </div>
-                <div class="card-body">
-                    <div class="text-center mb-3">
-                        <i class="fas fa-paper-plane" style="font-size: 3rem; color: var(--hygge-green);"></i>
-                    </div>
-                    <h6 class="fw-bold text-center mb-3">Send Template Emails</h6>
-                    <p class="text-muted small text-center mb-3">Create and send personalized email campaigns to your users</p>
-                    <div class="d-grid">
-                        <a href="{% url 'email_management' %}" class="btn btn-hygge">
-                            <i class="fas fa-envelope me-2"></i>Manage Email Templates
+                    <div class="d-grid gap-2">
+                        <a href="{% url 'experiences:add_experience' %}" class="btn btn-hygge btn-sm">
+                            <i class="fas fa-plus me-1"></i>Add New
+                        </a>
+                        <a href="{% url 'experiences:experience_list' %}" class="btn btn-outline-hygge btn-sm">
+                            <i class="fas fa-list me-1"></i>View All
                         </a>
                     </div>
                 </div>
             </div>
         </div>
 
-        <!-- Email Export Actions -->
-        <div class="col-lg-6 mb-4">
+        <!-- Destinations -->
+        <div class="col-lg-4 col-md-6 mb-3">
             <div class="card card-hygge h-100">
-                <div class="card-header">
-                    <h5 class="fw-bold mb-0">
-                        <i class="fas fa-download me-2"></i>Export User Emails
-                    </h5>
-                </div>
                 <div class="card-body">
+                    <div class="d-flex align-items-center mb-3">
+                        <div class="icon-box bg-info bg-opacity-10 p-2 rounded me-3">
+                            <i class="fas fa-map-marker-alt" style="font-size: 1.5rem; color: var(--hygge-soft-blue);"></i>
+                        </div>
+                        <h5 class="fw-bold mb-0">Destinations</h5>
+                    </div>
                     <div class="d-grid gap-2">
-                        <h6 class="fw-bold text-muted">All Users</h6>
-                        <div class="row">
-                            <div class="col-6">
-                                <a href="{% url 'export_all_emails_csv' %}" class="btn btn-outline-primary btn-sm w-100">
-                                    <i class="fas fa-file-csv me-1"></i>CSV Format
-                                </a>
-                            </div>
-                            <div class="col-6">
-                                <a href="{% url 'export_all_emails_text' %}" class="btn btn-outline-secondary btn-sm w-100">
-                                    <i class="fas fa-file-alt me-1"></i>Text Format
-                                </a>
-                            </div>
-                        </div>
+                        <a href="{% url 'experiences:add_destination' %}" class="btn btn-hygge btn-sm">
+                            <i class="fas fa-plus me-1"></i>Add New
+                        </a>
+                        <a href="{% url 'experiences:destination_list' %}" class="btn btn-outline-hygge btn-sm">
+                            <i class="fas fa-list me-1"></i>View All
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
 
-                        <h6 class="fw-bold text-muted mt-3">Active Users Only</h6>
-                        <div class="row">
-                            <div class="col-6">
-                                <a href="{% url 'export_active_emails_csv' %}" class="btn btn-primary btn-sm w-100">
-                                    <i class="fas fa-file-csv me-1"></i>CSV Format
-                                </a>
-                            </div>
-                            <div class="col-6">
-                                <a href="{% url 'export_active_emails_text' %}" class="btn btn-hygge btn-sm w-100">
-                                    <i class="fas fa-file-alt me-1"></i>Text Format
-                                </a>
-                            </div>
+        <!-- Providers -->
+        <div class="col-lg-4 col-md-6 mb-3">
+            <div class="card card-hygge h-100">
+                <div class="card-body">
+                    <div class="d-flex align-items-center mb-3">
+                        <div class="icon-box bg-warning bg-opacity-10 p-2 rounded me-3">
+                            <i class="fas fa-handshake" style="font-size: 1.5rem; color: var(--hygge-gold);"></i>
                         </div>
+                        <h5 class="fw-bold mb-0">Providers</h5>
+                    </div>
+                    <div class="d-grid gap-2">
+                        <a href="{% url 'experiences:add_provider' %}" class="btn btn-hygge btn-sm">
+                            <i class="fas fa-plus me-1"></i>Add New
+                        </a>
+                        <a href="{% url 'experiences:provider_list' %}" class="btn btn-outline-hygge btn-sm">
+                            <i class="fas fa-list me-1"></i>View All
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
 
-                        <h6 class="fw-bold text-muted mt-3">Premium Mail Merge</h6>
-                        <div class="d-grid">
-                            <a href="{% url 'export_mail_merge_premium' %}" class="btn btn-success btn-sm w-100">
-                                <i class="fas fa-star me-1"></i>Premium Mail Merge Data
-                            </a>
+        <!-- Categories -->
+        <div class="col-lg-4 col-md-6 mb-3">
+            <div class="card card-hygge h-100">
+                <div class="card-body">
+                    <div class="d-flex align-items-center mb-3">
+                        <div class="icon-box bg-success bg-opacity-10 p-2 rounded me-3">
+                            <i class="fas fa-tags" style="font-size: 1.5rem; color: var(--hygge-light-green);"></i>
                         </div>
+                        <h5 class="fw-bold mb-0">Categories</h5>
+                    </div>
+                    <div class="d-grid gap-2">
+                        <a href="{% url 'experiences:add_category' %}" class="btn btn-hygge btn-sm">
+                            <i class="fas fa-plus me-1"></i>Add New
+                        </a>
+                        <a href="{% url 'experiences:category_list' %}" class="btn btn-outline-hygge btn-sm">
+                            <i class="fas fa-list me-1"></i>View All
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
 
-                        <div class="alert alert-info mt-3 mb-0">
-                            <small>
-                                <i class="fas fa-info-circle me-1"></i>
-                                <strong>CSV:</strong> Basic details | <strong>Text:</strong> Email list only<br>
-                                <strong>Premium:</strong> Full personalization data with names, interests, recommendations & custom greetings
-                            </small>
+        <!-- Experience Types -->
+        <div class="col-lg-4 col-md-6 mb-3">
+            <div class="card card-hygge h-100">
+                <div class="card-body">
+                    <div class="d-flex align-items-center mb-3">
+                        <div class="icon-box bg-danger bg-opacity-10 p-2 rounded me-3">
+                            <i class="fas fa-list-ul" style="font-size: 1.5rem; color: #e74c3c;"></i>
                         </div>
+                        <h5 class="fw-bold mb-0">Experience Types</h5>
+                    </div>
+                    <div class="d-grid gap-2">
+                        <a href="{% url 'experiences:add_experience_type' %}" class="btn btn-hygge btn-sm">
+                            <i class="fas fa-plus me-1"></i>Add New
+                        </a>
+                        <a href="{% url 'experiences:experience_type_list' %}" class="btn btn-outline-hygge btn-sm">
+                            <i class="fas fa-list me-1"></i>View All
+                        </a>
                     </div>
                 </div>
             </div>
         </div>
     </div>
 
-    <!-- Management Section -->
-    <div class="row mb-5">
+    <!-- ============================================ -->
+    <!-- USER & EMAIL MANAGEMENT SECTION -->
+    <!-- ============================================ -->
+    <div id="user-section" class="row mb-4">
         <div class="col-12">
-            <h3 class="fw-bold mb-4" style="color: var(--hygge-green);">
-                <i class="fas fa-list me-2"></i>Manage Existing Content
+            <h3 class="fw-bold mb-3 section-header">
+                <i class="fas fa-users me-2"></i>User & Email Management
             </h3>
         </div>
     </div>
 
-    <!-- Management Cards -->
     <div class="row mb-5">
-        <!-- View All Experiences -->
-        <div class="col-lg-6 col-xl-2 mb-4">
-            <div class="card card-hygge h-100">
-                <div class="card-body text-center p-3">
-                    <i class="fas fa-eye mb-2" style="font-size: 2rem; color: var(--hygge-green);"></i>
-                    <h6 class="fw-bold mb-2 small">View Experiences</h6>
-                    <a href="{% url 'experiences:experience_list' %}" class="btn btn-sm btn-outline-hygge">
-                        <i class="fas fa-arrow-right me-1"></i>View All
-                    </a>
-                </div>
-            </div>
-        </div>
-
-        <!-- Edit Experiences -->
-        <div class="col-lg-6 col-xl-2 mb-4">
-            <div class="card card-hygge h-100">
-                <div class="card-body text-center p-3">
-                    <i class="fas fa-edit mb-2" style="font-size: 2rem; color: var(--hygge-gold);"></i>
-                    <h6 class="fw-bold mb-2 small">Edit Experiences</h6>
-                    <a href="{% url 'experiences:experience_list' %}" class="btn btn-sm btn-outline-hygge">
-                        <i class="fas fa-arrow-right me-1"></i>Manage
-                    </a>
-                </div>
-            </div>
-        </div>
-
-        <!-- View All Destinations -->
-        <div class="col-lg-6 col-xl-2 mb-4">
-            <div class="card card-hygge h-100">
-                <div class="card-body text-center p-3">
-                    <i class="fas fa-globe mb-2" style="font-size: 2rem; color: var(--hygge-soft-blue);"></i>
-                    <h6 class="fw-bold mb-2 small">View Destinations</h6>
-                    <a href="{% url 'experiences:destination_list' %}" class="btn btn-sm btn-outline-hygge">
-                        <i class="fas fa-arrow-right me-1"></i>View All
-                    </a>
-                </div>
-            </div>
-        </div>
-
-        <!-- Edit Destinations -->
-        <div class="col-lg-6 col-xl-2 mb-4">
-            <div class="card card-hygge h-100">
-                <div class="card-body text-center p-3">
-                    <i class="fas fa-map-marker-alt mb-2" style="font-size: 2rem; color: var(--hygge-gold);"></i>
-                    <h6 class="fw-bold mb-2 small">Edit Destinations</h6>
-                    <a href="{% url 'experiences:destination_list' %}" class="btn btn-sm btn-outline-hygge">
-                        <i class="fas fa-edit me-1"></i>Manage
-                    </a>
-                </div>
-            </div>
-        </div>
-
         <!-- User Management -->
-        <div class="col-lg-6 col-xl-3 mb-4">
+        <div class="col-lg-6 mb-3">
             <div class="card card-hygge h-100">
-                <div class="card-body text-center p-3">
-                    <i class="fas fa-users-cog mb-2" style="font-size: 2rem; color: var(--hygge-gold);"></i>
-                    <h6 class="fw-bold mb-2 small">User Management</h6>
-                    <a href="{% url 'user_list' %}" class="btn btn-sm btn-outline-hygge">
-                        <i class="fas fa-arrow-right me-1"></i>Manage Users
-                    </a>
+                <div class="card-header bg-light">
+                    <h5 class="fw-bold mb-0">
+                        <i class="fas fa-users-cog me-2"></i>User Management
+                    </h5>
+                </div>
+                <div class="card-body">
+                    <p class="text-muted small">Manage user accounts and permissions</p>
+                    <div class="d-grid gap-2">
+                        <a href="{% url 'user_list' %}" class="btn btn-hygge btn-sm">
+                            <i class="fas fa-users me-1"></i>View All Users
+                        </a>
+                        <a href="/admin/auth/user/" class="btn btn-outline-secondary btn-sm" target="_blank">
+                            <i class="fas fa-user-shield me-1"></i>Django User Admin
+                        </a>
+                    </div>
                 </div>
             </div>
         </div>
 
-        <!-- Edit Categories -->
-        <div class="col-lg-6 col-xl-2 mb-4">
+        <!-- Email Management -->
+        <div class="col-lg-6 mb-3">
             <div class="card card-hygge h-100">
-                <div class="card-body text-center p-3">
-                    <i class="fas fa-tags mb-2" style="font-size: 2rem; color: var(--hygge-light-green);"></i>
-                    <h6 class="fw-bold mb-2 small">Edit Categories</h6>
-                    <a href="{% url 'experiences:category_list' %}" class="btn btn-sm btn-outline-hygge">
-                        <i class="fas fa-edit me-1"></i>Manage
-                    </a>
+                <div class="card-header bg-light">
+                    <h5 class="fw-bold mb-0">
+                        <i class="fas fa-envelope me-2"></i>Email Campaigns
+                    </h5>
+                </div>
+                <div class="card-body">
+                    <p class="text-muted small">Send template emails to users</p>
+                    <div class="d-grid gap-2">
+                        <a href="{% url 'email_management' %}" class="btn btn-hygge btn-sm">
+                            <i class="fas fa-paper-plane me-1"></i>Email Templates
+                        </a>
+                        <a href="/admin/accounts/emailcampaign/" class="btn btn-outline-secondary btn-sm" target="_blank">
+                            <i class="fas fa-chart-bar me-1"></i>Campaign Manager
+                        </a>
+                    </div>
                 </div>
             </div>
         </div>
 
-        <!-- Edit Experience Types -->
-        <div class="col-lg-6 col-xl-2 mb-4">
+        <!-- Email Statistics -->
+        <div class="col-lg-6 mb-3">
             <div class="card card-hygge h-100">
-                <div class="card-body text-center p-3">
-                    <i class="fas fa-list-ul mb-2" style="font-size: 2rem; color: #e74c3c;"></i>
-                    <h6 class="fw-bold mb-2 small">Edit Types</h6>
-                    <a href="{% url 'experiences:experience_type_list' %}" class="btn btn-sm btn-outline-hygge">
-                        <i class="fas fa-edit me-1"></i>Manage
-                    </a>
+                <div class="card-header bg-light">
+                    <h5 class="fw-bold mb-0">
+                        <i class="fas fa-chart-pie me-2"></i>Email Statistics
+                    </h5>
+                </div>
+                <div class="card-body">
+                    <div class="row text-center mb-3">
+                        <div class="col-6">
+                            <h4 class="fw-bold text-primary mb-0">{{ email_stats.total_users }}</h4>
+                            <p class="text-muted mb-0 small">Total Users</p>
+                        </div>
+                        <div class="col-6">
+                            <h4 class="fw-bold text-success mb-0">{{ email_stats.users_with_email }}</h4>
+                            <p class="text-muted mb-0 small">With Email</p>
+                        </div>
+                    </div>
+                    <div class="row text-center">
+                        <div class="col-6">
+                            <h4 class="fw-bold text-info mb-0">{{ email_stats.active_users }}</h4>
+                            <p class="text-muted mb-0 small">Active</p>
+                        </div>
+                        <div class="col-6">
+                            <h4 class="fw-bold text-warning mb-0">{{ email_stats.active_users_with_email }}</h4>
+                            <p class="text-muted mb-0 small">Active + Email</p>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
 
-        <!-- Analytics -->
-        <div class="col-lg-6 col-xl-3 mb-4">
+        <!-- Email Export -->
+        <div class="col-lg-6 mb-3">
             <div class="card card-hygge h-100">
-                <div class="card-body text-center p-3">
-                    <i class="fas fa-chart-bar mb-2" style="font-size: 2rem; color: var(--hygge-light-green);"></i>
-                    <h6 class="fw-bold mb-2 small">Analytics</h6>
-                    <a href="{% url 'analytics_dashboard' %}" class="btn btn-sm btn-outline-hygge">
-                        <i class="fas fa-chart-line me-1"></i>View Analytics
+                <div class="card-header bg-light">
+                    <h5 class="fw-bold mb-0">
+                        <i class="fas fa-download me-2"></i>Export Emails
+                    </h5>
+                </div>
+                <div class="card-body">
+                    <p class="text-muted small mb-3">Export user emails in various formats</p>
+                    <div class="d-flex flex-wrap gap-2">
+                        <a href="{% url 'export_all_emails_csv' %}" class="btn btn-outline-primary btn-sm">
+                            <i class="fas fa-file-csv me-1"></i>All CSV
+                        </a>
+                        <a href="{% url 'export_active_emails_csv' %}" class="btn btn-primary btn-sm">
+                            <i class="fas fa-file-csv me-1"></i>Active CSV
+                        </a>
+                        <a href="{% url 'export_mail_merge_premium' %}" class="btn btn-success btn-sm">
+                            <i class="fas fa-star me-1"></i>Premium
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ============================================ -->
+    <!-- AI TOOLS SECTION -->
+    <!-- ============================================ -->
+    <div id="ai-section" class="row mb-4">
+        <div class="col-12">
+            <h3 class="fw-bold mb-3 section-header">
+                <i class="fas fa-robot me-2"></i>AI Content Tools
+            </h3>
+            <p class="text-muted small">SEO-optimized prompts for content creation</p>
+        </div>
+    </div>
+
+    <!-- AI Prompts Accordion -->
+    <div class="row mb-5">
+        <div class="col-12">
+            <div class="accordion" id="aiToolsAccordion">
+
+                <!-- Experience Title Generator -->
+                <div class="accordion-item">
+                    <h2 class="accordion-header">
+                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#aiTitles">
+                            <i class="fas fa-magic me-2"></i>SEO-Optimized Experience Titles
+                        </button>
+                    </h2>
+                    <div id="aiTitles" class="accordion-collapse collapse" data-bs-parent="#aiToolsAccordion">
+                        <div class="accordion-body">
+                            <div class="bg-light p-3 rounded mb-3">
+                                <code class="ai-prompt-text" style="white-space: pre-wrap; font-size: 0.85em;">Create 5 SEO-optimized titles for a [EXPERIENCE_TYPE] experience in [DESTINATION]. Include destination name, 30-60 chars, power words (authentic, unique, sustainable), eco-conscious appeal, hygge elements, emotional benefits.
+
+Example: "Authentic [EXPERIENCE] in [DESTINATION]: Sustainable [ACTIVITY] Experience"</code>
+                            </div>
+                            <button class="btn btn-outline-hygge btn-sm copy-prompt-btn">
+                                <i class="fas fa-copy me-1"></i>Copy Prompt
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Meta Descriptions -->
+                <div class="accordion-item">
+                    <h2 class="accordion-header">
+                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#aiMeta">
+                            <i class="fas fa-search me-2"></i>SEO Meta Descriptions
+                        </button>
+                    </h2>
+                    <div id="aiMeta" class="accordion-collapse collapse" data-bs-parent="#aiToolsAccordion">
+                        <div class="accordion-body">
+                            <div class="bg-light p-3 rounded mb-3">
+                                <code class="ai-prompt-text" style="white-space: pre-wrap; font-size: 0.85em;">Write meta description for "[TITLE]" in [DESTINATION]. 140-155 chars, include keyword "[KEYWORD]", clear CTA, mention sustainability, create urgency, hygge philosophy (mindful, authentic, peaceful travel).</code>
+                            </div>
+                            <button class="btn btn-outline-hygge btn-sm copy-prompt-btn">
+                                <i class="fas fa-copy me-1"></i>Copy Prompt
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Full Descriptions -->
+                <div class="accordion-item">
+                    <h2 class="accordion-header">
+                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#aiDesc">
+                            <i class="fas fa-file-alt me-2"></i>Full Experience Descriptions
+                        </button>
+                    </h2>
+                    <div id="aiDesc" class="accordion-collapse collapse" data-bs-parent="#aiToolsAccordion">
+                        <div class="accordion-body">
+                            <div class="bg-light p-3 rounded mb-3">
+                                <code class="ai-prompt-text" style="white-space: pre-wrap; font-size: 0.85em;">Create 400-800 word description for [EXPERIENCE_TYPE] in [DESTINATION]: Hook opening, detailed activity, sustainability benefits, hygge elements, practical details, inclusions/exclusions, CTA. Use "[KEYWORD]" 3-5x naturally. Include: sustainable travel, eco-friendly, authentic, local community. 8th-grade reading level.</code>
+                            </div>
+                            <button class="btn btn-outline-hygge btn-sm copy-prompt-btn">
+                                <i class="fas fa-copy me-1"></i>Copy Prompt
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Keywords -->
+                <div class="accordion-item">
+                    <h2 class="accordion-header">
+                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#aiKeywords">
+                            <i class="fas fa-key me-2"></i>Keyword Research
+                        </button>
+                    </h2>
+                    <div id="aiKeywords" class="accordion-collapse collapse" data-bs-parent="#aiToolsAccordion">
+                        <div class="accordion-body">
+                            <div class="bg-light p-3 rounded mb-3">
+                                <code class="ai-prompt-text" style="white-space: pre-wrap; font-size: 0.85em;">Generate keyword list for [EXPERIENCE_TYPE] in [DESTINATION]: Primary keywords (3-5), long-tail (8-10) with sustainability/hygge angles, local SEO (5-7), competitor analysis, semantic keywords. Format as prioritized list with difficulty (low/medium/high).</code>
+                            </div>
+                            <button class="btn btn-outline-hygge btn-sm copy-prompt-btn">
+                                <i class="fas fa-copy me-1"></i>Copy Prompt
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Content Calendar -->
+                <div class="accordion-item">
+                    <h2 class="accordion-header">
+                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#aiCalendar">
+                            <i class="fas fa-calendar-alt me-2"></i>Content Calendar
+                        </button>
+                    </h2>
+                    <div id="aiCalendar" class="accordion-collapse collapse" data-bs-parent="#aiToolsAccordion">
+                        <div class="accordion-body">
+                            <div class="bg-light p-3 rounded mb-3">
+                                <code class="ai-prompt-text" style="white-space: pre-wrap; font-size: 0.85em;">Create 12-month content calendar for [DESTINATION/REGION]: Monthly themes (seasonal, cultural events, weather, holidays), 2-3 experiences/month, destination guides, sustainability focus, SEO opportunities, hygge integration. Format: Month | Theme | Content Ideas | Keywords | Schedule</code>
+                            </div>
+                            <button class="btn btn-outline-hygge btn-sm copy-prompt-btn">
+                                <i class="fas fa-copy me-1"></i>Copy Prompt
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Social Media -->
+                <div class="accordion-item">
+                    <h2 class="accordion-header">
+                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#aiSocial">
+                            <i class="fas fa-share-alt me-2"></i>Social Media Content
+                        </button>
+                    </h2>
+                    <div id="aiSocial" class="accordion-collapse collapse" data-bs-parent="#aiToolsAccordion">
+                        <div class="accordion-body">
+                            <div class="bg-light p-3 rounded mb-3">
+                                <code class="ai-prompt-text" style="white-space: pre-wrap; font-size: 0.85em;">Create social content for [EXPERIENCE_TYPE] in [DESTINATION]: Instagram (3 variations, 150-200 words, 15-20 hashtags), TikTok (5 ideas), Facebook (300-400 words), Pinterest (SEO-optimized), LinkedIn (B2B sustainability angle). Include hygge & sustainability messaging.</code>
+                            </div>
+                            <button class="btn btn-outline-hygge btn-sm copy-prompt-btn">
+                                <i class="fas fa-copy me-1"></i>Copy Prompt
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- SEO Reference -->
+                <div class="accordion-item">
+                    <h2 class="accordion-header">
+                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#aiReference">
+                            <i class="fas fa-lightbulb me-2"></i>Quick SEO Reference
+                        </button>
+                    </h2>
+                    <div id="aiReference" class="accordion-collapse collapse" data-bs-parent="#aiToolsAccordion">
+                        <div class="accordion-body">
+                            <div class="row small">
+                                <div class="col-md-4 mb-3">
+                                    <h6 class="fw-bold">High-Value Keywords</h6>
+                                    <ul class="text-muted mb-0">
+                                        <li>sustainable travel + [destination]</li>
+                                        <li>eco-friendly [activity]</li>
+                                        <li>authentic [destination] experience</li>
+                                        <li>mindful travel + [location]</li>
+                                        <li>hygge vacation + [country]</li>
+                                    </ul>
+                                </div>
+                                <div class="col-md-4 mb-3">
+                                    <h6 class="fw-bold">Content Structure</h6>
+                                    <ul class="text-muted mb-0">
+                                        <li>Hook opening (emotional)</li>
+                                        <li>Problem/desire ID</li>
+                                        <li>Solution presentation</li>
+                                        <li>Benefits & value</li>
+                                        <li>Clear CTA</li>
+                                    </ul>
+                                </div>
+                                <div class="col-md-4 mb-3">
+                                    <h6 class="fw-bold">Brand Voice</h6>
+                                    <ul class="text-muted mb-0">
+                                        <li>Authentic & genuine</li>
+                                        <li>Environmentally conscious</li>
+                                        <li>Mindful & intentional</li>
+                                        <li>Community-focused</li>
+                                        <li>Inspiring</li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <!-- ============================================ -->
+    <!-- ANALYTICS SECTION -->
+    <!-- ============================================ -->
+    <div id="analytics-section" class="row mb-4">
+        <div class="col-12">
+            <h3 class="fw-bold mb-3 section-header">
+                <i class="fas fa-chart-line me-2"></i>Analytics & Insights
+            </h3>
+        </div>
+    </div>
+
+    <div class="row mb-5">
+        <div class="col-md-12">
+            <div class="card card-hygge">
+                <div class="card-body text-center py-4">
+                    <i class="fas fa-chart-bar mb-3" style="font-size: 3rem; color: var(--hygge-green);"></i>
+                    <h5 class="fw-bold mb-3">View Analytics Dashboard</h5>
+                    <p class="text-muted mb-3">Track user engagement, content performance, and platform growth metrics</p>
+                    <a href="{% url 'analytics_dashboard' %}" class="btn btn-hygge btn-lg">
+                        <i class="fas fa-chart-line me-2"></i>Open Analytics
                     </a>
                 </div>
             </div>
         </div>
     </div>
 
-    <!-- Recent Activity Section -->
+    <!-- ============================================ -->
+    <!-- RECENT ACTIVITY SECTION -->
+    <!-- ============================================ -->
     {% if recent_experiences %}
-    <div class="row">
+    <div id="recent-section" class="row mb-4">
         <div class="col-12">
-            <h3 class="fw-bold mb-4" style="color: var(--hygge-green);">
+            <h3 class="fw-bold mb-3 section-header">
                 <i class="fas fa-clock me-2"></i>Recent Activity
             </h3>
         </div>
     </div>
 
-    <div class="row">
+    <div class="row mb-5">
         <div class="col-12">
             <div class="card card-hygge">
+                <div class="card-header bg-light">
+                    <h5 class="fw-bold mb-0">Recently Added Experiences</h5>
+                </div>
                 <div class="card-body">
-                    <h5 class="fw-bold mb-3">Recently Added Experiences</h5>
                     <div class="row">
                         {% for experience in recent_experiences %}
                         <div class="col-md-6 col-lg-4 mb-3">
-                            <div class="border rounded p-3 h-100" style="background: var(--hygge-warm-white);">
+                            <div class="border rounded p-3 h-100 hover-shadow">
                                 <div class="d-flex justify-content-between align-items-start mb-2">
-                                    <h6 class="fw-bold mb-0">{{ experience.title }}</h6>
+                                    <h6 class="fw-bold mb-0 small">{{ experience.title }}</h6>
                                     <div class="dropdown">
-                                        <button class="btn btn-sm btn-outline-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                        <button class="btn btn-sm btn-outline-secondary dropdown-toggle py-0 px-2" type="button" data-bs-toggle="dropdown">
                                             <i class="fas fa-ellipsis-v"></i>
                                         </button>
                                         <ul class="dropdown-menu">
@@ -782,9 +597,9 @@ Format: Month | Theme | Content Ideas | Key Keywords | Publishing Schedule</div>
                                     <i class="fas fa-map-marker-alt me-1"></i>{{ experience.destination.name }}
                                 </p>
                                 <div class="d-flex justify-content-between align-items-center small text-muted">
-                                    <span><i class="fas fa-calendar me-1"></i>{{ experience.created_at|date:"M d, Y" }}</span>
+                                    <span><i class="fas fa-calendar me-1"></i>{{ experience.created_at|date:"M d" }}</span>
                                     {% if experience.is_featured %}
-                                    <span class="badge bg-warning">Featured</span>
+                                    <span class="badge bg-warning text-dark">Featured</span>
                                     {% endif %}
                                 </div>
                             </div>
@@ -796,78 +611,70 @@ Format: Month | Theme | Content Ideas | Key Keywords | Publishing Schedule</div>
         </div>
     </div>
     {% endif %}
-
-    <!-- Quick Links Footer -->
-    <div class="row mt-5">
-        <div class="col-12">
-            <div class="text-center py-4">
-                <p class="text-muted">
-                    <i class="fas fa-info-circle me-2"></i>
-                    Need help? Check the <a href="#" class="text-decoration-none">Admin Documentation</a> or 
-                    <a href="mailto:admin@hyggeo.com" class="text-decoration-none">contact support</a>.
-                </p>
-            </div>
-        </div>
-    </div>
 </div>
 
 <style>
-    .admin-action-card {
+    .section-header {
+        color: var(--hygge-green);
+        padding-bottom: 10px;
+        border-bottom: 3px solid var(--hygge-green);
+    }
+
+    .icon-box {
+        width: 50px;
+        height: 50px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .hover-shadow {
+        transition: box-shadow 0.3s ease, transform 0.2s ease;
+    }
+
+    .hover-shadow:hover {
+        box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+        transform: translateY(-2px);
+    }
+
+    .card-hygge {
         transition: all 0.3s ease;
-        cursor: pointer;
     }
-    
-    .admin-action-card:hover {
-        transform: translateY(-10px);
-        box-shadow: 0 15px 35px rgba(0,0,0,0.1);
+
+    /* Smooth scrolling for anchor links */
+    html {
+        scroll-behavior: smooth;
     }
-    
-    .action-icon {
-        transition: transform 0.3s ease;
+
+    /* Accordion styling */
+    .accordion-button:not(.collapsed) {
+        background-color: var(--hygge-green);
+        color: white;
     }
-    
-    .admin-action-card:hover .action-icon {
-        transform: scale(1.1);
+
+    .accordion-button:focus {
+        box-shadow: none;
+        border-color: var(--hygge-green);
     }
-    
-    .card-hygge .btn {
-        transition: all 0.3s ease;
+
+    /* Stats cards */
+    .card.border-start {
+        transition: transform 0.2s ease;
     }
-    
-    .stats-card {
-        background: linear-gradient(135deg, var(--hygge-cream), var(--hygge-warm-white));
+
+    .card.border-start:hover {
+        transform: translateY(-3px);
     }
 </style>
 
 <script>
 document.addEventListener('DOMContentLoaded', function() {
-    // Add click handlers to make entire cards clickable
-    document.querySelectorAll('.admin-action-card').forEach(card => {
-        card.addEventListener('click', function(e) {
-            if (e.target.tagName !== 'A' && e.target.tagName !== 'BUTTON') {
-                const link = this.querySelector('a');
-                if (link) {
-                    link.click();
-                }
-            }
-        });
-    });
-
-    // Add loading states to buttons
-    document.querySelectorAll('.btn').forEach(btn => {
-        btn.addEventListener('click', function() {
-            if (this.href && !this.classList.contains('copy-prompt-btn')) {
-                this.innerHTML = '<i class="fas fa-spinner fa-spin me-2"></i>Loading...';
-            }
-        });
-    });
-
     // AI Prompt Copy Functionality
     document.querySelectorAll('.copy-prompt-btn').forEach(btn => {
         btn.addEventListener('click', function(e) {
             e.preventDefault();
-            const promptCard = this.closest('.card');
-            const promptText = promptCard.querySelector('.ai-prompt-text').textContent;
+            const accordionBody = this.closest('.accordion-body');
+            const promptText = accordionBody.querySelector('.ai-prompt-text').textContent.trim();
 
             // Copy to clipboard
             navigator.clipboard.writeText(promptText).then(() => {
@@ -886,10 +693,10 @@ document.addEventListener('DOMContentLoaded', function() {
             }).catch(err => {
                 // Fallback for older browsers
                 console.error('Failed to copy: ', err);
-
-                // Create a temporary textarea
                 const textarea = document.createElement('textarea');
                 textarea.value = promptText;
+                textarea.style.position = 'fixed';
+                textarea.style.opacity = 0;
                 document.body.appendChild(textarea);
                 textarea.select();
                 document.execCommand('copy');
@@ -910,12 +717,6 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     });
 
-    // Add tooltips to copy buttons
-    document.querySelectorAll('.copy-prompt-btn').forEach(btn => {
-        btn.setAttribute('title', 'Click to copy prompt to clipboard');
-        btn.setAttribute('data-bs-toggle', 'tooltip');
-    });
-
     // Initialize Bootstrap tooltips
     if (typeof bootstrap !== 'undefined') {
         var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
@@ -923,19 +724,29 @@ document.addEventListener('DOMContentLoaded', function() {
             return new bootstrap.Tooltip(tooltipTriggerEl);
         });
     }
-});
 
-// Function to customize prompts with specific values
-function customizePrompt(promptType, destination, experienceType, keyword) {
-    const promptCards = document.querySelectorAll('.ai-prompt-text');
-    promptCards.forEach(card => {
-        let text = card.textContent;
-        if (destination) text = text.replace(/\[DESTINATION\]/g, destination);
-        if (experienceType) text = text.replace(/\[EXPERIENCE_TYPE\]/g, experienceType);
-        if (keyword) text = text.replace(/\[KEYWORD\]/g, keyword);
-        card.textContent = text;
+    // Highlight active section on scroll (optional)
+    const sections = document.querySelectorAll('[id$="-section"]');
+    const navLinks = document.querySelectorAll('a[href^="#"]');
+
+    window.addEventListener('scroll', () => {
+        let current = '';
+        sections.forEach(section => {
+            const sectionTop = section.offsetTop;
+            const sectionHeight = section.clientHeight;
+            if (pageYOffset >= (sectionTop - 200)) {
+                current = section.getAttribute('id');
+            }
+        });
+
+        navLinks.forEach(link => {
+            link.classList.remove('active');
+            if (link.getAttribute('href') === '#' + current) {
+                link.classList.add('active');
+            }
+        });
     });
-}
+});
 </script>
 {% endblock %}
 
