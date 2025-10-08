@@ -61,22 +61,54 @@
                     <h3 class="h5 fw-bold mb-3">About This Accommodation</h3>
                     <p>{{ accommodation.description|linebreaks }}</p>
 
-                    <!-- Amenities -->
-                    {% if accommodation.amenities %}
-                    <h3 class="h5 fw-bold mb-3 mt-4">Amenities</h3>
-                    <div class="row">
-                        {% for amenity in accommodation.amenities %}
-                        <div class="col-md-6 mb-2">
-                            <i class="fas fa-check-circle text-success me-2"></i>{{ amenity }}
-                        </div>
-                        {% endfor %}
-                    </div>
-                    {% endif %}
-
                     <!-- Policies -->
                     {% if accommodation.cancellation_policy %}
                     <h3 class="h5 fw-bold mb-3 mt-4">Cancellation Policy</h3>
                     <p>{{ accommodation.cancellation_policy|linebreaks }}</p>
+                    {% endif %}
+
+                    <!-- Linked Travel Blogs -->
+                    {% if accommodation.blog_posts.exists %}
+                    <div class="mt-4 pt-4 border-top">
+                        <h3 class="h5 fw-bold mb-3">
+                            <i class="fas fa-book-open me-2"></i>Travel Blogs About This Accommodation
+                        </h3>
+
+                        <div class="row">
+                            {% for blog in accommodation.blog_posts.all|slice:":4" %}
+                            <div class="col-md-6 mb-3">
+                                <div class="card h-100">
+                                    {% if blog.featured_image %}
+                                    <img src="{{ blog.featured_image.url }}" class="card-img-top" alt="{{ blog.title }}"
+                                         style="height: 120px; object-fit: cover;">
+                                    {% else %}
+                                    <div style="height: 120px; background: var(--hygge-cream); display: flex; align-items: center; justify-content: center;">
+                                        <i class="fas fa-book-open fa-2x text-muted"></i>
+                                    </div>
+                                    {% endif %}
+                                    <div class="card-body p-3">
+                                        <h6 class="card-title fw-bold small">{{ blog.title|truncatewords:8 }}</h6>
+                                        <p class="text-muted small mb-2">
+                                            <i class="fas fa-user me-1"></i>{{ blog.author.username }}
+                                        </p>
+                                        <p class="card-text small">{{ blog.excerpt|truncatewords:10|striptags }}</p>
+                                        <a href="{% url 'experiences:blog_detail' blog.slug %}" class="btn btn-sm btn-outline-hygge">
+                                            Read More
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                            {% endfor %}
+                        </div>
+
+                        {% if accommodation.blog_posts.count > 4 %}
+                        <div class="text-center mt-3">
+                            <a href="{% url 'experiences:blog_feed' %}?accommodation={{ accommodation.slug }}" class="btn btn-sm btn-outline-hygge">
+                                View All Blogs <i class="fas fa-arrow-right ms-1"></i>
+                            </a>
+                        </div>
+                        {% endif %}
+                    </div>
                     {% endif %}
 
                     <!-- Admin Actions -->

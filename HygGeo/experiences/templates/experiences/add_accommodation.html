@@ -196,14 +196,6 @@
                                 {% endif %}
                             </div>
                             <div class="col-12 mb-3">
-                                <label class="form-label fw-bold">Amenities (JSON array):</label>
-                                {{ form.amenities }}
-                                {% if form.amenities.errors %}
-                                    <div class="text-danger">{{ form.amenities.errors }}</div>
-                                {% endif %}
-                                <div class="form-text">Example: ["WiFi", "Breakfast", "Parking", "Pool"]</div>
-                            </div>
-                            <div class="col-12 mb-3">
                                 <label class="form-label fw-bold">Cancellation Policy:</label>
                                 {{ form.cancellation_policy }}
                                 {% if form.cancellation_policy.errors %}

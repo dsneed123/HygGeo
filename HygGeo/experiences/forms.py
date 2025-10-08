@@ -418,7 +418,7 @@ class AccommodationForm(forms.ModelForm):
             'price_per_night_from', 'price_per_night_to', 'currency',
             'booking_link', 'sustainability_score', 'hygge_factor',
             'carbon_neutral', 'supports_local_community', 'eco_certified',
-            'address', 'amenities', 'total_rooms', 'max_guests',
+            'address', 'total_rooms', 'max_guests',
             'cancellation_policy',
             'meta_title', 'meta_description', 'is_featured', 'is_active'
         ]
@@ -438,7 +438,7 @@ class AccommodationForm(forms.ModelForm):
                 'rows': 6,
                 'placeholder': 'Detailed description of the accommodation...'
             }),
-            'main_image': forms.FileInput(attrs={
+            'main_image': forms.ClearableFileInput(attrs={
                 'class': 'form-control',
                 'accept': 'image/*'
             }),
@@ -505,11 +505,6 @@ class AccommodationForm(forms.ModelForm):
                 'rows': 2,
                 'placeholder': 'Street address'
             }),
-            'amenities': forms.Textarea(attrs={
-                'class': 'form-control',
-                'rows': 3,
-                'placeholder': 'Enter amenities as JSON array, e.g., ["WiFi", "Breakfast", "Parking"]'
-            }),
             'total_rooms': forms.NumberInput(attrs={
                 'class': 'form-control',
                 'placeholder': '0'
@@ -566,7 +561,6 @@ class AccommodationForm(forms.ModelForm):
         self.fields['carbon_neutral'].help_text = 'Check if carbon neutral certified'
         self.fields['supports_local_community'].help_text = 'Check if supports local community'
         self.fields['eco_certified'].help_text = 'Check if has environmental certification'
-        self.fields['amenities'].help_text = 'List amenities as JSON array'
         self.fields['total_rooms'].help_text = 'Total number of rooms available'
         self.fields['max_guests'].help_text = 'Maximum guests per room'
         self.fields['cancellation_policy'].help_text = 'Describe the cancellation terms'
@@ -605,13 +599,16 @@ class TravelBlogForm(forms.ModelForm):
                 'accept': 'image/*'
             }),
             'experience': forms.Select(attrs={
-                'class': 'form-select'
+                'class': 'form-select autocomplete-select',
+                'data-placeholder': 'Type to search experiences...'
             }),
             'accommodation': forms.Select(attrs={
-                'class': 'form-select'
+                'class': 'form-select autocomplete-select',
+                'data-placeholder': 'Type to search accommodations...'
             }),
             'destination': forms.Select(attrs={
-                'class': 'form-select'
+                'class': 'form-select autocomplete-select',
+                'data-placeholder': 'Type to search destinations...'
             }),
             'is_published': forms.CheckboxInput(attrs={
                 'class': 'form-check-input'

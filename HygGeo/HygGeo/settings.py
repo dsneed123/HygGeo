@@ -394,14 +394,14 @@ AWS_S3_CUSTOM_DOMAIN = config('SPACES_CDN_ENDPOINT',
 # Media files served from CDN
 MEDIA_URL = f'https://{AWS_S3_CUSTOM_DOMAIN}/{AWS_LOCATION}/'
 
-print(f"✅ DigitalOcean Spaces configured:")
+print(f"DigitalOcean Spaces configured:")
 print(f"   - Bucket: {AWS_STORAGE_BUCKET_NAME}")
 print(f"   - Endpoint: {AWS_S3_ENDPOINT_URL}")
 print(f"   - Media URL: {MEDIA_URL}")
 
 # Fallback for local development if S3 credentials are not set
 if not AWS_ACCESS_KEY_ID or not AWS_SECRET_ACCESS_KEY:
-    print("⚠️  WARNING: S3 credentials not found, falling back to local storage")
+    print("WARNING: S3 credentials not found, falling back to local storage")
     MEDIA_URL = '/media/'
     MEDIA_ROOT = BASE_DIR / 'media'
 
@@ -409,7 +409,7 @@ print(f"Django DEBUG: {DEBUG}, Storage: Spaces")
 
 # Set DEFAULT_FILE_STORAGE setting for all environments
 DEFAULT_FILE_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
-print(f"🔧 Set DEFAULT_FILE_STORAGE = {DEFAULT_FILE_STORAGE}")
+print(f"Set DEFAULT_FILE_STORAGE = {DEFAULT_FILE_STORAGE}")
 
 # =============================================================================
 # DJANGO ALLAUTH CONFIGURATION

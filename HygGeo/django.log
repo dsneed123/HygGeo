@@ -13600,3 +13600,52 @@ INFO 2025-10-08 01:42:46,759 basehttp 556 73012 "GET /static/site.webmanifest HT
 INFO 2025-10-08 01:42:46,941 basehttp 556 53288 "GET /static/favicon.ico HTTP/1.1" 200 15406
 INFO 2025-10-08 01:43:29,687 basehttp 556 53288 "POST /experiences/blogs/create/ HTTP/1.1" 302 0
 INFO 2025-10-08 01:43:29,714 basehttp 556 53288 "GET /experiences/blogs/wef/ HTTP/1.1" 200 39951
+INFO 2025-10-08 12:58:50,007 autoreload 57908 13276 Watching for file changes with StatReloader
+INFO 2025-10-08 12:58:52,446 basehttp 57908 20732 "GET / HTTP/1.1" 200 99556
+INFO 2025-10-08 12:58:59,399 basehttp 57908 20732 "GET /experiences/blogs/my-blogs/ HTTP/1.1" 200 47075
+INFO 2025-10-08 12:59:01,697 basehttp 57908 20732 "GET /experiences/blogs/create/ HTTP/1.1" 200 57628
+INFO 2025-10-08 12:59:15,519 basehttp 57908 20732 "GET /accounts/trips/create/ HTTP/1.1" 200 74968
+INFO 2025-10-08 12:59:28,992 basehttp 57908 20732 "GET /admin/dashboard/ HTTP/1.1" 200 78685
+ERROR 2025-10-08 12:59:31,369 log 57908 20732 Internal Server Error: /experiences/accommodations/add/
+Traceback (most recent call last):
+  File "C:\Users\DLSne\AppData\Local\Packages\PythonSoftwareFoundation.Python.3.12_qbz5n2kfra8p0\LocalCache\local-packages\Python312\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+               ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\DLSne\AppData\Local\Packages\PythonSoftwareFoundation.Python.3.12_qbz5n2kfra8p0\LocalCache\local-packages\Python312\site-packages\django\core\handlers\base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\DLSne\AppData\Local\Packages\PythonSoftwareFoundation.Python.3.12_qbz5n2kfra8p0\LocalCache\local-packages\Python312\site-packages\django\contrib\auth\decorators.py", line 59, in _view_wrapper
+    return view_func(request, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\DLSne\OneDrive\Desktop\Code\webdev\HygGeo\HygGeo\experiences\views.py", line 1216, in add_accommodation
+    form = AccommodationForm()
+           ^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\DLSne\OneDrive\Desktop\Code\webdev\HygGeo\HygGeo\experiences\forms.py", line 564, in __init__
+    self.fields['amenities'].help_text = 'List amenities as JSON array'
+    ~~~~~~~~~~~^^^^^^^^^^^^^
+KeyError: 'amenities'
+ERROR 2025-10-08 12:59:31,371 basehttp 57908 20732 "GET /experiences/accommodations/add/ HTTP/1.1" 500 85191
+INFO 2025-10-08 12:59:31,474 basehttp 57908 20732 "GET /favicon.ico HTTP/1.1" 301 0
+INFO 2025-10-08 12:59:31,577 basehttp 57908 20732 "GET /static/favicon.ico HTTP/1.1" 200 15406
+ERROR 2025-10-08 12:59:33,269 log 57908 20732 Internal Server Error: /experiences/accommodations/add/
+Traceback (most recent call last):
+  File "C:\Users\DLSne\AppData\Local\Packages\PythonSoftwareFoundation.Python.3.12_qbz5n2kfra8p0\LocalCache\local-packages\Python312\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+               ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\DLSne\AppData\Local\Packages\PythonSoftwareFoundation.Python.3.12_qbz5n2kfra8p0\LocalCache\local-packages\Python312\site-packages\django\core\handlers\base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\DLSne\AppData\Local\Packages\PythonSoftwareFoundation.Python.3.12_qbz5n2kfra8p0\LocalCache\local-packages\Python312\site-packages\django\contrib\auth\decorators.py", line 59, in _view_wrapper
+    return view_func(request, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\DLSne\OneDrive\Desktop\Code\webdev\HygGeo\HygGeo\experiences\views.py", line 1216, in add_accommodation
+    form = AccommodationForm()
+           ^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\DLSne\OneDrive\Desktop\Code\webdev\HygGeo\HygGeo\experiences\forms.py", line 564, in __init__
+    self.fields['amenities'].help_text = 'List amenities as JSON array'
+    ~~~~~~~~~~~^^^^^^^^^^^^^
+KeyError: 'amenities'
+ERROR 2025-10-08 12:59:33,270 basehttp 57908 20732 "GET /experiences/accommodations/add/ HTTP/1.1" 500 85456
+INFO 2025-10-08 12:59:33,344 basehttp 57908 20732 "GET /favicon.ico HTTP/1.1" 301 0
+INFO 2025-10-08 12:59:33,346 basehttp 57908 20732 "GET /static/favicon.ico HTTP/1.1" 200 15406
+INFO 2025-10-08 13:01:19,309 autoreload 80284 51988 Watching for file changes with StatReloader
