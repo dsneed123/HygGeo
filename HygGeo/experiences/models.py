@@ -3,10 +3,21 @@ from django.db import models
 from django.contrib.auth.models import User
 from django.urls import reverse
 from django.core.validators import MinValueValidator, MaxValueValidator
+from django.conf import settings
 import uuid
-from storages.backends.s3boto3 import S3Boto3Storage
 
-s3_storage = S3Boto3Storage()
+# Lazy S3 storage import - defers initialization until first use
+def get_s3_storage():
+    from storages.backends.s3boto3 import S3Boto3Storage
+    return S3Boto3Storage()
+
+# Use a callable for storage to avoid early initialization
+class LazyS3Storage:
+    def __call__(self):
+        from storages.backends.s3boto3 import S3Boto3Storage
+        return S3Boto3Storage()
+
+s3_storage = LazyS3Storage()()
 class Category(models.Model):
     """Categories for travel experiences"""
     name = models.CharField(max_length=100, unique=True)
@@ -392,9 +403,278 @@ class ExperienceType(models.Model):
     slug = models.SlugField(max_length=100, unique=True)
     description = models.TextField(blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
-    
+
     class Meta:
         ordering = ['name']
-    
+
     def __str__(self):
         return self.name
+
+class Accommodation(models.Model):
+    """Accommodation options (hotels, hostels, eco-lodges, etc.)"""
+
+    ACCOMMODATION_TYPES = [
+        ('hotel', 'Hotel'),
+        ('hostel', 'Hostel'),
+        ('eco_lodge', 'Eco-Lodge'),
+        ('guesthouse', 'Guesthouse'),
+        ('boutique', 'Boutique Hotel'),
+        ('resort', 'Resort'),
+        ('airbnb', 'Airbnb/Vacation Rental'),
+        ('camping', 'Camping/Glamping'),
+        ('homestay', 'Homestay'),
+        ('cabin', 'Cabin/Cottage'),
+    ]
+
+    BUDGET_RANGES = [
+        ('budget', 'Budget ($0-50/night)'),
+        ('mid_range', 'Mid-range ($50-150/night)'),
+        ('luxury', 'Luxury ($150+/night)'),
+    ]
+
+    # Basic Info
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    name = models.CharField(max_length=200)
+    slug = models.SlugField(max_length=200, unique=True)
+    description = models.TextField()
+    short_description = models.CharField(max_length=300, help_text="Brief description for cards")
+
+    # Relationships
+    destination = models.ForeignKey(Destination, on_delete=models.CASCADE, related_name='accommodations')
+    provider = models.ForeignKey(Provider, on_delete=models.CASCADE, related_name='accommodations')
+
+    # Accommodation Details
+    accommodation_type = models.CharField(max_length=20, choices=ACCOMMODATION_TYPES)
+    budget_range = models.CharField(max_length=20, choices=BUDGET_RANGES)
+
+    # Pricing
+    price_per_night_from = models.DecimalField(max_digits=10, decimal_places=2, null=True, blank=True)
+    price_per_night_to = models.DecimalField(max_digits=10, decimal_places=2, null=True, blank=True)
+    currency = models.CharField(max_length=3, default='USD')
+
+    # Booking
+    booking_link = models.URLField(blank=True, help_text="Booking/affiliate link")
+
+    # Sustainability & Hygge
+    sustainability_score = models.IntegerField(
+        validators=[MinValueValidator(1), MaxValueValidator(10)],
+        default=5,
+        help_text="Sustainability rating from 1-10"
+    )
+    hygge_factor = models.IntegerField(
+        validators=[MinValueValidator(1), MaxValueValidator(10)],
+        default=5,
+        help_text="How well this accommodation embodies hygge principles (1-10)"
+    )
+    carbon_neutral = models.BooleanField(default=False)
+    supports_local_community = models.BooleanField(default=False)
+    eco_certified = models.BooleanField(default=False, help_text="Has environmental certification")
+
+    # Location
+    address = models.TextField(blank=True)
+    latitude = models.DecimalField(max_digits=9, decimal_places=6, null=True, blank=True)
+    longitude = models.DecimalField(max_digits=9, decimal_places=6, null=True, blank=True)
+
+    # Media
+    main_image = models.ImageField(
+        storage=s3_storage,
+        upload_to='accommodations/',
+        null=True,
+        blank=True
+    )
+    gallery_images = models.JSONField(default=list, blank=True, help_text="List of image URLs")
+
+    # Amenities & Features
+    amenities = models.JSONField(default=list, help_text="List of amenities (wifi, breakfast, parking, etc.)")
+    room_types = models.JSONField(default=list, help_text="Types of rooms available")
+
+    # Capacity
+    total_rooms = models.IntegerField(null=True, blank=True, help_text="Total number of rooms")
+    max_guests = models.IntegerField(null=True, blank=True, help_text="Maximum guests per room")
+
+    # Policies
+    check_in_time = models.TimeField(null=True, blank=True)
+    check_out_time = models.TimeField(null=True, blank=True)
+    cancellation_policy = models.TextField(blank=True)
+
+    # SEO & Meta
+    meta_title = models.CharField(max_length=60, blank=True)
+    meta_description = models.CharField(max_length=160, blank=True)
+
+    # Status & Admin
+    is_featured = models.BooleanField(default=False)
+    is_active = models.BooleanField(default=True)
+    admin_notes = models.TextField(blank=True, help_text="Internal notes for admin")
+
+    # Timestamps
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        ordering = ['-created_at']
+
+    def __str__(self):
+        return f"{self.name} - {self.destination.name}"
+
+    def get_absolute_url(self):
+        return reverse('experiences:accommodation_detail', kwargs={'slug': self.slug})
+
+    def get_price_display(self):
+        """Return formatted price range"""
+        if self.price_per_night_from and self.price_per_night_to:
+            return f"${self.price_per_night_from} - ${self.price_per_night_to}/night"
+        elif self.price_per_night_from:
+            return f"From ${self.price_per_night_from}/night"
+        elif self.budget_range:
+            budget_display = dict(self.BUDGET_RANGES).get(self.budget_range, self.budget_range)
+            return budget_display
+        else:
+            return "Price varies"
+
+    def get_sustainability_badge(self):
+        """Return sustainability badge level"""
+        if self.sustainability_score >= 8:
+            return {'level': 'excellent', 'color': '#000000', 'text': 'Excellent'}
+        elif self.sustainability_score >= 6:
+            return {'level': 'good', 'color': '#000000', 'text': 'Good'}
+        else:
+            return {'level': 'fair', 'color': '#000000', 'text': 'Fair'}
+
+    def get_accommodation_type_display(self):
+        """Return human-readable accommodation type"""
+        return dict(self.ACCOMMODATION_TYPES).get(self.accommodation_type, self.accommodation_type)
+
+
+class TravelBlog(models.Model):
+    """User-generated travel blog posts"""
+
+    # Basic Info
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    title = models.CharField(max_length=200)
+    slug = models.SlugField(max_length=200, unique=True)
+    content = models.TextField(help_text="Main blog content - supports markdown")
+    excerpt = models.CharField(max_length=300, help_text="Short excerpt for cards and previews")
+
+    # Author & Relationships
+    author = models.ForeignKey('auth.User', on_delete=models.CASCADE, related_name='travel_blogs')
+    experience = models.ForeignKey(
+        Experience,
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True,
+        related_name='blog_posts',
+        help_text="Link to a specific experience"
+    )
+    accommodation = models.ForeignKey(
+        Accommodation,
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True,
+        related_name='blog_posts',
+        help_text="Link to a specific accommodation"
+    )
+    destination = models.ForeignKey(
+        Destination,
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True,
+        related_name='blog_posts',
+        help_text="Main destination featured in this post"
+    )
+
+    # Media
+    featured_image = models.ImageField(
+        storage=s3_storage,
+        upload_to='blog/',
+        null=True,
+        blank=True,
+        help_text="Main image for the blog post"
+    )
+    gallery_images = models.JSONField(
+        default=list,
+        blank=True,
+        help_text="Additional images for the post"
+    )
+
+    # Tags & Categories
+    tags = models.JSONField(
+        default=list,
+        blank=True,
+        help_text="Tags for this post (e.g., ['adventure', 'solo travel', 'budget'])"
+    )
+
+    # Engagement
+    views_count = models.IntegerField(default=0)
+    likes_count = models.IntegerField(default=0)
+    liked_by = models.ManyToManyField(
+        'auth.User',
+        related_name='liked_blogs',
+        blank=True
+    )
+
+    # SEO
+    meta_title = models.CharField(max_length=60, blank=True)
+    meta_description = models.CharField(max_length=160, blank=True)
+
+    # Publishing
+    is_published = models.BooleanField(
+        default=False,
+        help_text="Publish this post to make it visible to others"
+    )
+    is_featured = models.BooleanField(
+        default=False,
+        help_text="Feature this post on the blog homepage"
+    )
+    published_at = models.DateTimeField(null=True, blank=True)
+
+    # Timestamps
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        ordering = ['-created_at']
+        indexes = [
+            models.Index(fields=['-created_at']),
+            models.Index(fields=['author', '-created_at']),
+            models.Index(fields=['is_published', '-published_at']),
+        ]
+
+    def __str__(self):
+        return self.title
+
+    def get_absolute_url(self):
+        return reverse('experiences:blog_detail', kwargs={'slug': self.slug})
+
+    def save(self, *args, **kwargs):
+        # Auto-publish timestamp
+        if self.is_published and not self.published_at:
+            from django.utils import timezone
+            self.published_at = timezone.now()
+        elif not self.is_published:
+            self.published_at = None
+        super().save(*args, **kwargs)
+
+    def get_reading_time(self):
+        """Estimate reading time in minutes"""
+        word_count = len(self.content.split())
+        reading_time = word_count // 200  # Assume 200 words per minute
+        return max(1, reading_time)  # Minimum 1 minute
+
+
+class BlogComment(models.Model):
+    """Comments on travel blog posts"""
+
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    blog_post = models.ForeignKey(TravelBlog, on_delete=models.CASCADE, related_name='comments')
+    author = models.ForeignKey('auth.User', on_delete=models.CASCADE, related_name='blog_comments')
+    content = models.TextField()
+
+    # Timestamps
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        ordering = ['created_at']
+
+    def __str__(self):
+        return f"Comment by {self.author.username} on {self.blog_post.title}"

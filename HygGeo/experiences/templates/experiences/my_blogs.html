@@ -1,0 +1,102 @@
+{% extends 'base.html' %}
+
+{% block title %}My Blogs - HygGeo{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <!-- Header -->
+    <div class="row mb-4">
+        <div class="col-12">
+            <h1 class="h2 fw-bold" style="color: var(--hygge-green);">
+                <i class="fas fa-pen-fancy me-2"></i>My Travel Blogs
+            </h1>
+            <p class="lead text-muted">Manage your travel stories</p>
+        </div>
+    </div>
+
+    <!-- Action Button -->
+    <div class="row mb-4">
+        <div class="col-12">
+            <a href="{% url 'experiences:create_blog' %}" class="btn btn-hygge">
+                <i class="fas fa-plus-circle me-2"></i>Write New Blog Post
+            </a>
+            <a href="{% url 'experiences:blog_feed' %}" class="btn btn-outline-hygge">
+                <i class="fas fa-book-open me-2"></i>View All Blogs
+            </a>
+        </div>
+    </div>
+
+    <!-- Blog Posts -->
+    <div class="row">
+        {% if blogs %}
+            {% for blog in blogs %}
+            <div class="col-md-6 col-lg-4 mb-4">
+                <div class="card card-hygge h-100">
+                    {% if blog.featured_image %}
+                    <img src="{{ blog.featured_image.url }}" class="card-img-top" alt="{{ blog.title }}"
+                         style="height: 200px; object-fit: cover;">
+                    {% else %}
+                    <div style="height: 200px; background: var(--hygge-cream); display: flex; align-items: center; justify-content: center;">
+                        <i class="fas fa-book-open fa-3x text-muted"></i>
+                    </div>
+                    {% endif %}
+
+                    <!-- Status Badge -->
+                    <div class="position-absolute top-0 end-0 m-3">
+                        {% if blog.is_published %}
+                        <span class="badge bg-success">Published</span>
+                        {% else %}
+                        <span class="badge bg-warning text-dark">Draft</span>
+                        {% endif %}
+                    </div>
+
+                    <div class="card-body">
+                        <h5 class="card-title fw-bold">{{ blog.title }}</h5>
+                        <p class="card-text">{{ blog.excerpt|truncatewords:15|striptags }}</p>
+
+                        <!-- Stats -->
+                        <div class="mb-3 text-muted small">
+                            <i class="fas fa-eye me-1"></i>{{ blog.views_count }} views
+                            <span class="ms-2"><i class="fas fa-heart me-1"></i>{{ blog.likes_count }} likes</span>
+                            <span class="ms-2"><i class="fas fa-comment me-1"></i>{{ blog.comments.count }} comments</span>
+                        </div>
+
+                        <p class="small text-muted mb-0">
+                            {% if blog.is_published %}
+                            Published {{ blog.published_at|date:"M d, Y" }}
+                            {% else %}
+                            Created {{ blog.created_at|date:"M d, Y" }}
+                            {% endif %}
+                        </p>
+                    </div>
+
+                    <div class="card-footer bg-transparent border-0 p-3 pt-0">
+                        <div class="d-grid gap-2">
+                            {% if blog.is_published %}
+                            <a href="{% url 'experiences:blog_detail' blog.slug %}" class="btn btn-outline-hygge btn-sm">
+                                <i class="fas fa-eye me-1"></i>View
+                            </a>
+                            {% endif %}
+                            <a href="{% url 'experiences:edit_blog' blog.slug %}" class="btn btn-warning btn-sm">
+                                <i class="fas fa-edit me-1"></i>Edit
+                            </a>
+                            <a href="{% url 'experiences:delete_blog' blog.slug %}" class="btn btn-outline-danger btn-sm">
+                                <i class="fas fa-trash me-1"></i>Delete
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        {% else %}
+            <div class="col-12">
+                <div class="alert alert-info text-center">
+                    <i class="fas fa-info-circle me-2"></i>
+                    You haven't written any blog posts yet.
+                    <a href="{% url 'experiences:create_blog' %}" class="alert-link">Start writing now!</a>
+                </div>
+            </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

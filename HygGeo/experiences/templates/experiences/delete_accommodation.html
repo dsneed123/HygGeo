@@ -1,0 +1,48 @@
+{% extends 'base.html' %}
+
+{% block title %}Delete {{ accommodation.name }} - HygGeo{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-6">
+            <div class="card card-hygge">
+                <div class="card-body p-4">
+                    <h2 class="card-title fw-bold text-center mb-4 text-danger">
+                        <i class="fas fa-exclamation-triangle me-2"></i>Delete Accommodation
+                    </h2>
+
+                    <div class="alert alert-danger">
+                        <i class="fas fa-warning me-2"></i>
+                        <strong>Warning:</strong> This action cannot be undone!
+                    </div>
+
+                    <p class="text-center mb-4">
+                        Are you sure you want to delete the accommodation:<br>
+                        <strong class="h5">{{ accommodation.name }}</strong>?
+                    </p>
+
+                    {% if accommodation.main_image %}
+                    <div class="text-center mb-4">
+                        <img src="{{ accommodation.main_image.url }}" alt="{{ accommodation.name }}"
+                             style="max-width: 200px; height: auto;">
+                    </div>
+                    {% endif %}
+
+                    <form method="post">
+                        {% csrf_token %}
+                        <div class="d-grid gap-2">
+                            <button type="submit" class="btn btn-danger btn-lg">
+                                <i class="fas fa-trash me-2"></i>Yes, Delete Accommodation
+                            </button>
+                            <a href="{% url 'experiences:accommodation_detail' accommodation.slug %}" class="btn btn-outline-secondary">
+                                <i class="fas fa-times me-2"></i>Cancel
+                            </a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

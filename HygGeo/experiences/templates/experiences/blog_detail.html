@@ -1,0 +1,281 @@
+{% extends 'base.html' %}
+
+{% block title %}{{ blog.title }} - HygGeo{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <!-- Breadcrumb -->
+    <div class="row mb-4">
+        <div class="col-12">
+            <nav aria-label="breadcrumb">
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item"><a href="{% url 'index' %}">Home</a></li>
+                    <li class="breadcrumb-item"><a href="{% url 'experiences:blog_feed' %}">Travel Blogs</a></li>
+                    <li class="breadcrumb-item active">{{ blog.title }}</li>
+                </ol>
+            </nav>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-lg-8">
+            <!-- Blog Post -->
+            <article class="card card-hygge mb-4">
+                <div class="card-body p-4">
+                    <!-- Featured Image -->
+                    {% if blog.featured_image %}
+                    <img src="{{ blog.featured_image.url }}" class="img-fluid rounded mb-4" alt="{{ blog.title }}">
+                    {% endif %}
+
+                    <!-- Title & Meta -->
+                    <h1 class="h2 fw-bold mb-3" style="color: var(--hygge-green);">{{ blog.title }}</h1>
+
+                    <div class="mb-4 text-muted">
+                        <span class="me-3">
+                            <i class="fas fa-user me-1"></i>
+                            <a href="{% url 'experiences:blog_feed' %}?author={{ blog.author.username }}">{{ blog.author.username }}</a>
+                        </span>
+                        <span class="me-3">
+                            <i class="fas fa-calendar me-1"></i>{{ blog.published_at|date:"F d, Y" }}
+                        </span>
+                        <span class="me-3">
+                            <i class="fas fa-clock me-1"></i>{{ blog.get_reading_time }} min read
+                        </span>
+                        <span class="me-3">
+                            <i class="fas fa-eye me-1"></i>{{ blog.views_count }} views
+                        </span>
+                    </div>
+
+                    <!-- Tags -->
+                    {% if blog.tags %}
+                    <div class="mb-4">
+                        {% for tag in blog.tags %}
+                        <a href="{% url 'experiences:blog_feed' %}?tag={{ tag }}" class="badge bg-secondary me-1">{{ tag }}</a>
+                        {% endfor %}
+                    </div>
+                    {% endif %}
+
+                    <!-- Content -->
+                    <div class="blog-content mb-4">
+                        {{ blog.content|safe }}
+                    </div>
+
+                    <!-- Linked Content -->
+                    {% if blog.experience or blog.accommodation or blog.destination %}
+                    <div class="border-top pt-4 mt-4">
+                        <h3 class="h5 fw-bold mb-3">Related To:</h3>
+                        <div class="row">
+                            {% if blog.experience %}
+                            <div class="col-md-6 mb-3">
+                                <div class="card">
+                                    <div class="card-body">
+                                        <p class="small text-muted mb-1">Experience</p>
+                                        <a href="{% url 'experiences:experience_detail' blog.experience.slug %}" class="fw-bold">
+                                            {{ blog.experience.title }}
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                            {% endif %}
+                            {% if blog.accommodation %}
+                            <div class="col-md-6 mb-3">
+                                <div class="card">
+                                    <div class="card-body">
+                                        <p class="small text-muted mb-1">Accommodation</p>
+                                        <a href="{% url 'experiences:accommodation_detail' blog.accommodation.slug %}" class="fw-bold">
+                                            {{ blog.accommodation.name }}
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                            {% endif %}
+                            {% if blog.destination %}
+                            <div class="col-md-6 mb-3">
+                                <div class="card">
+                                    <div class="card-body">
+                                        <p class="small text-muted mb-1">Destination</p>
+                                        <a href="{% url 'experiences:destination_detail' blog.destination.slug %}" class="fw-bold">
+                                            {{ blog.destination.name }}
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                            {% endif %}
+                        </div>
+                    </div>
+                    {% endif %}
+
+                    <!-- Author Actions -->
+                    {% if user == blog.author %}
+                    <div class="border-top pt-4 mt-4">
+                        <h3 class="h5 fw-bold mb-3">Manage Post</h3>
+                        <a href="{% url 'experiences:edit_blog' blog.slug %}" class="btn btn-warning me-2">
+                            <i class="fas fa-edit me-1"></i>Edit
+                        </a>
+                        <a href="{% url 'experiences:delete_blog' blog.slug %}" class="btn btn-danger">
+                            <i class="fas fa-trash me-1"></i>Delete
+                        </a>
+                    </div>
+                    {% endif %}
+                </div>
+            </article>
+
+            <!-- Comments Section -->
+            <div class="card card-hygge">
+                <div class="card-body p-4">
+                    <h3 class="h4 fw-bold mb-4" style="color: var(--hygge-green);">
+                        Comments ({{ comments.count }})
+                    </h3>
+
+                    <!-- Comment Form -->
+                    {% if user.is_authenticated %}
+                    <form method="post" class="mb-4">
+                        {% csrf_token %}
+                        <div class="mb-3">
+                            {{ comment_form.content }}
+                            {% if comment_form.content.errors %}
+                                <div class="text-danger">{{ comment_form.content.errors }}</div>
+                            {% endif %}
+                        </div>
+                        <button type="submit" class="btn btn-hygge">
+                            <i class="fas fa-comment me-2"></i>Post Comment
+                        </button>
+                    </form>
+                    {% else %}
+                    <p class="alert alert-info">
+                        <a href="{% url 'login' %}">Log in</a> to leave a comment.
+                    </p>
+                    {% endif %}
+
+                    <!-- Comments List -->
+                    {% for comment in comments %}
+                    <div class="border-top pt-3 mt-3">
+                        <div class="d-flex align-items-start">
+                            <div class="flex-grow-1">
+                                <strong>{{ comment.author.username }}</strong>
+                                <small class="text-muted ms-2">{{ comment.created_at|timesince }} ago</small>
+                                <p class="mt-2 mb-0">{{ comment.content }}</p>
+                            </div>
+                        </div>
+                    </div>
+                    {% empty %}
+                    <p class="text-muted text-center py-4">No comments yet. Be the first to comment!</p>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+
+        <!-- Sidebar -->
+        <div class="col-lg-4">
+            <!-- Like Button -->
+            <div class="card card-hygge mb-4">
+                <div class="card-body p-4 text-center">
+                    {% if user.is_authenticated %}
+                    <form action="{% url 'experiences:like_blog' blog.slug %}" method="post">
+                        {% csrf_token %}
+                        <button type="submit" class="btn {% if user_liked %}btn-hygge{% else %}btn-outline-hygge{% endif %} btn-lg w-100">
+                            <i class="fas fa-heart me-2"></i>
+                            {% if user_liked %}Liked{% else %}Like this post{% endif %}
+                        </button>
+                    </form>
+                    <p class="mt-2 mb-0 text-muted">{{ blog.likes_count }} people liked this</p>
+                    {% else %}
+                    <p class="mb-0"><i class="fas fa-heart me-2"></i>{{ blog.likes_count }} likes</p>
+                    {% endif %}
+                </div>
+            </div>
+
+            <!-- Author Info -->
+            <div class="card card-hygge mb-4">
+                <div class="card-body p-4">
+                    <h3 class="h5 fw-bold mb-3">About the Author</h3>
+                    <p><strong>{{ blog.author.username }}</strong></p>
+                    <a href="{% url 'experiences:blog_feed' %}?author={{ blog.author.username }}" class="btn btn-outline-hygge btn-sm">
+                        <i class="fas fa-book-open me-1"></i>More from {{ blog.author.username }}
+                    </a>
+                </div>
+            </div>
+
+            <!-- Related Blogs -->
+            {% if related_blogs %}
+            <div class="card card-hygge">
+                <div class="card-body p-4">
+                    <h3 class="h5 fw-bold mb-3">Related Posts</h3>
+                    {% for related in related_blogs %}
+                    <div class="mb-3 {% if not forloop.last %}border-bottom pb-3{% endif %}">
+                        <h6 class="fw-bold">
+                            <a href="{% url 'experiences:blog_detail' related.slug %}">{{ related.title }}</a>
+                        </h6>
+                        <p class="small text-muted mb-0">By {{ related.author.username }}</p>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+
+<style>
+/* Blog content styling */
+.blog-content {
+    font-size: 1.1rem;
+    line-height: 1.8;
+}
+
+.blog-content h2 {
+    color: var(--hygge-green);
+    font-size: 1.75rem;
+    font-weight: bold;
+    margin-top: 2rem;
+    margin-bottom: 1rem;
+}
+
+.blog-content h3 {
+    color: var(--hygge-green);
+    font-size: 1.5rem;
+    font-weight: bold;
+    margin-top: 1.5rem;
+    margin-bottom: 0.75rem;
+}
+
+.blog-content strong {
+    font-weight: bold;
+    color: #333;
+}
+
+.blog-content em {
+    font-style: italic;
+}
+
+.blog-content u {
+    text-decoration: underline;
+}
+
+.blog-content ul, .blog-content ol {
+    margin-left: 2rem;
+    margin-bottom: 1rem;
+}
+
+.blog-content li {
+    margin-bottom: 0.5rem;
+}
+
+.blog-content blockquote {
+    border-left: 4px solid var(--hygge-green);
+    padding-left: 1.5rem;
+    margin: 1.5rem 0;
+    font-style: italic;
+    color: #666;
+}
+
+.blog-content a {
+    color: var(--hygge-green);
+    text-decoration: underline;
+}
+
+.blog-content a:hover {
+    color: var(--hygge-dark-green);
+}
+</style>
+{% endblock %}

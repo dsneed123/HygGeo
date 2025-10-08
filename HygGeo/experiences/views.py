@@ -10,18 +10,54 @@ from django.views.decorators.csrf import csrf_exempt
 import json
 from django.utils import timezone
 from django.contrib.auth.decorators import user_passes_test
+from django.utils.html import escape
+import re
 from accounts.models import TravelSurvey
-from experiences.forms import ExperienceForm, DestinationForm, ExperienceTypeForm, CategoryForm
+from experiences.forms import ExperienceForm, DestinationForm, ExperienceTypeForm, CategoryForm, AccommodationForm, TravelBlogForm, BlogCommentForm
 from .forms import ProviderForm  # add this import at top
 from django.utils.text import slugify
 from collections import defaultdict
 from .models import (
     Experience, Destination, Category, Provider,
-    UserRecommendation, ExperienceReview, BookingTracking, ExperienceType
+    UserRecommendation, ExperienceReview, BookingTracking, ExperienceType, Accommodation, TravelBlog, BlogComment
 )
 from .recommendation_engine import RecommendationEngine
 import random
 from decimal import Decimal
+
+# HTML Sanitization function
+def sanitize_html(content):
+    """
+    Sanitize HTML content to only allow safe tags and attributes.
+    Prevents XSS attacks while allowing basic formatting.
+    """
+    # Remove script tags and their content
+    content = re.sub(r'<script[^>]*>.*?</script>', '', content, flags=re.DOTALL | re.IGNORECASE)
+
+    # Remove on* event handlers (onclick, onload, etc.)
+    content = re.sub(r'\son\w+\s*=\s*["\'][^"\']*["\']', '', content, flags=re.IGNORECASE)
+    content = re.sub(r'\son\w+\s*=\s*[^\s>]*', '', content, flags=re.IGNORECASE)
+
+    # Remove javascript: protocol from links
+    content = re.sub(r'href\s*=\s*["\']javascript:[^"\']*["\']', 'href="#"', content, flags=re.IGNORECASE)
+
+    # Remove style tags and their content
+    content = re.sub(r'<style[^>]*>.*?</style>', '', content, flags=re.DOTALL | re.IGNORECASE)
+
+    # Remove iframe, object, embed tags
+    content = re.sub(r'<(iframe|object|embed)[^>]*>.*?</\1>', '', content, flags=re.DOTALL | re.IGNORECASE)
+
+    # Remove any other potentially dangerous tags
+    dangerous_tags = ['script', 'style', 'iframe', 'object', 'embed', 'form', 'input', 'button']
+    for tag in dangerous_tags:
+        content = re.sub(f'<{tag}[^>]*>.*?</{tag}>', '', content, flags=re.DOTALL | re.IGNORECASE)
+        content = re.sub(f'<{tag}[^>]*/?>', '', content, flags=re.IGNORECASE)
+
+    # Convert plain text newlines to <br> tags (preserve line breaks)
+    # But don't convert newlines that are already inside HTML tags
+    content = re.sub(r'\n(?![^<>]*>)', '<br>\n', content)
+
+    return content
 
 def generate_recommendations(user):
     """Generate personalized recommendations using the recommendation engine"""
@@ -304,9 +340,9 @@ def destination_list_view(request):
 def destination_detail_view(request, slug):
     """Detailed view of a destination"""
     destination = get_object_or_404(Destination, slug=slug)
-    
+
     experiences = destination.experiences.filter(is_active=True).order_by('-created_at')
-    
+
     # Group experiences by type
     experiences_by_type = {}
     for experience in experiences:
@@ -314,14 +350,28 @@ def destination_detail_view(request, slug):
         if exp_type not in experiences_by_type:
             experiences_by_type[exp_type] = []
         experiences_by_type[exp_type].append(experience)
-    
+
+    # Get accommodations for this destination
+    accommodations = destination.accommodations.filter(is_active=True).order_by('-created_at')
+
+    # Group accommodations by type
+    accommodations_by_type = {}
+    for accommodation in accommodations:
+        acc_type = accommodation.get_accommodation_type_display()
+        if acc_type not in accommodations_by_type:
+            accommodations_by_type[acc_type] = []
+        accommodations_by_type[acc_type].append(accommodation)
+
     context = {
         'destination': destination,
         'experiences': experiences,
         'experiences_by_type': experiences_by_type,
         'total_experiences': experiences.count(),
+        'accommodations': accommodations,
+        'accommodations_by_type': accommodations_by_type,
+        'total_accommodations': accommodations.count(),
     }
-    
+
     return render(request, 'experiences/destination_detail.html', context)
 
 def category_detail_view(request, slug):
@@ -1039,3 +1089,432 @@ def analyze_seo_ajax(request):
             'error': f'Analysis failed: {str(e)}'
         })
 
+# ============= ACCOMMODATIONS VIEWS =============
+
+def accommodation_list_view(request):
+    """Browse all accommodations with filtering"""
+    accommodations = Accommodation.objects.filter(is_active=True).select_related(
+        'destination', 'provider'
+    )
+
+    # Filtering
+    destination_slug = request.GET.get('destination')
+    accommodation_type = request.GET.get('type')
+    budget_range = request.GET.get('budget')
+    search_query = request.GET.get('search')
+
+    if destination_slug:
+        accommodations = accommodations.filter(destination__slug=destination_slug)
+    if accommodation_type:
+        accommodations = accommodations.filter(accommodation_type=accommodation_type)
+    if budget_range:
+        accommodations = accommodations.filter(budget_range=budget_range)
+    if search_query:
+        accommodations = accommodations.filter(
+            Q(name__icontains=search_query) |
+            Q(description__icontains=search_query) |
+            Q(destination__name__icontains=search_query)
+        )
+
+    # Sorting
+    sort_by = request.GET.get('sort', 'newest')
+    if sort_by == 'price_low':
+        accommodations = accommodations.order_by('price_per_night_from')
+    elif sort_by == 'price_high':
+        accommodations = accommodations.order_by('-price_per_night_from')
+    elif sort_by == 'sustainability':
+        accommodations = accommodations.order_by('-sustainability_score')
+    elif sort_by == 'hygge':
+        accommodations = accommodations.order_by('-hygge_factor')
+    else:
+        accommodations = accommodations.order_by('-created_at')
+
+    # Pagination
+    paginator = Paginator(accommodations, 12)
+    page_number = request.GET.get('page')
+    page_obj = paginator.get_page(page_number)
+
+    context = {
+        'accommodations': page_obj,
+        'destinations': Destination.objects.all(),
+        'accommodation_types': Accommodation.ACCOMMODATION_TYPES,
+        'budget_ranges': Accommodation.BUDGET_RANGES,
+        'active_filters': {
+            'destination': destination_slug or '',
+            'type': accommodation_type or '',
+            'budget': budget_range or '',
+            'search': search_query or '',
+            'sort': sort_by or 'newest',
+        }
+    }
+
+    return render(request, 'experiences/accommodation_list.html', context)
+
+def accommodation_detail_view(request, slug):
+    """Detailed view of an accommodation"""
+    accommodation = get_object_or_404(
+        Accommodation.objects.select_related('destination', 'provider'),
+        slug=slug,
+        is_active=True
+    )
+
+    # Get similar accommodations
+    similar_accommodations = Accommodation.objects.filter(
+        is_active=True,
+        destination=accommodation.destination
+    ).exclude(id=accommodation.id)[:4]
+
+    context = {
+        'accommodation': accommodation,
+        'similar_accommodations': similar_accommodations,
+    }
+
+    return render(request, 'experiences/accommodation_detail.html', context)
+
+@user_passes_test(lambda u: u.is_staff)
+def add_accommodation(request):
+    """Add a new accommodation"""
+    if request.method == "POST":
+        form = AccommodationForm(request.POST, request.FILES)
+        if form.is_valid():
+            try:
+                accommodation = form.save(commit=False)
+
+                # Auto-generate slug if not provided
+                if not accommodation.slug:
+                    base_slug = slugify(accommodation.name)
+                    slug = base_slug
+                    counter = 1
+
+                    # Ensure slug is unique
+                    while Accommodation.objects.filter(slug=slug).exists():
+                        slug = f"{base_slug}-{counter}"
+                        counter += 1
+
+                    accommodation.slug = slug
+
+                # Handle amenities JSON
+                amenities_str = request.POST.get('amenities', '[]')
+                try:
+                    accommodation.amenities = json.loads(amenities_str)
+                except json.JSONDecodeError:
+                    # If not valid JSON, convert comma-separated to list
+                    accommodation.amenities = [a.strip() for a in amenities_str.split(',') if a.strip()]
+
+                accommodation.save()
+
+                messages.success(request, f'✅ Accommodation "{accommodation.name}" created successfully!')
+                return redirect('experiences:accommodation_list')
+
+            except Exception as e:
+                messages.error(request, f'❌ Error creating accommodation: {str(e)}')
+                print(f"Error details: {e}")
+        else:
+            messages.error(request, '⚠️ Please correct the errors below.')
+            print(f"Form errors: {form.errors}")
+    else:
+        form = AccommodationForm()
+
+    # Fetch data for dropdowns
+    destinations = Destination.objects.all()
+    providers = Provider.objects.all()
+
+    return render(request, 'experiences/add_accommodation.html', {
+        'form': form,
+        'page_title': 'Add New Accommodation',
+        'destinations': destinations,
+        'providers': providers,
+    })
+
+@user_passes_test(lambda u: u.is_staff)
+def edit_accommodation(request, slug):
+    """Edit an existing accommodation"""
+    accommodation = get_object_or_404(Accommodation, slug=slug)
+
+    if request.method == "POST":
+        form = AccommodationForm(request.POST, request.FILES, instance=accommodation)
+        if form.is_valid():
+            try:
+                accommodation = form.save(commit=False)
+
+                # Handle amenities JSON
+                amenities_str = request.POST.get('amenities', '[]')
+                try:
+                    accommodation.amenities = json.loads(amenities_str)
+                except json.JSONDecodeError:
+                    # If not valid JSON, convert comma-separated to list
+                    accommodation.amenities = [a.strip() for a in amenities_str.split(',') if a.strip()]
+
+                accommodation.save()
+
+                messages.success(request, f'✅ Accommodation "{accommodation.name}" updated successfully!')
+                return redirect('experiences:accommodation_detail', slug=accommodation.slug)
+
+            except Exception as e:
+                messages.error(request, f'❌ Error updating accommodation: {str(e)}')
+                print(f"Error details: {e}")
+        else:
+            messages.error(request, '⚠️ Please correct the errors below.')
+            print(f"Form errors: {form.errors}")
+    else:
+        # Pre-populate amenities as JSON string for the form
+        initial_data = {
+            'amenities': json.dumps(accommodation.amenities) if accommodation.amenities else '[]'
+        }
+        form = AccommodationForm(instance=accommodation, initial=initial_data)
+
+    destinations = Destination.objects.all()
+    providers = Provider.objects.all()
+
+    return render(request, 'experiences/edit_accommodation.html', {
+        'form': form,
+        'accommodation': accommodation,
+        'page_title': f'Edit {accommodation.name}',
+        'destinations': destinations,
+        'providers': providers,
+    })
+
+@user_passes_test(lambda u: u.is_staff)
+def delete_accommodation(request, slug):
+    """Delete an accommodation"""
+    accommodation = get_object_or_404(Accommodation, slug=slug)
+
+    if request.method == "POST":
+        accommodation_name = accommodation.name
+        accommodation.delete()
+        messages.success(request, f'✅ Accommodation "{accommodation_name}" has been deleted.')
+        return redirect('experiences:accommodation_list')
+
+    return render(request, 'experiences/delete_accommodation.html', {
+        'accommodation': accommodation
+    })
+
+# ============= TRAVEL BLOG VIEWS =============
+
+def blog_feed(request):
+    """Public feed of all published travel blogs"""
+    blogs = TravelBlog.objects.filter(is_published=True).select_related(
+        'author', 'destination', 'experience', 'accommodation'
+    ).order_by('-published_at')
+
+    # Filtering
+    tag = request.GET.get('tag')
+    destination_slug = request.GET.get('destination')
+    author_username = request.GET.get('author')
+
+    if tag:
+        blogs = blogs.filter(tags__contains=[tag])
+    if destination_slug:
+        blogs = blogs.filter(destination__slug=destination_slug)
+    if author_username:
+        blogs = blogs.filter(author__username=author_username)
+
+    # Pagination
+    paginator = Paginator(blogs, 12)
+    page_number = request.GET.get('page')
+    page_obj = paginator.get_page(page_number)
+
+    context = {
+        'blogs': page_obj,
+        'destinations': Destination.objects.all(),
+    }
+
+    return render(request, 'experiences/blog_feed.html', context)
+
+def blog_detail(request, slug):
+    """Detailed view of a blog post with comments"""
+    blog = get_object_or_404(
+        TravelBlog.objects.select_related('author', 'destination', 'experience', 'accommodation'),
+        slug=slug,
+        is_published=True
+    )
+
+    # Increment view count
+    blog.views_count += 1
+    blog.save(update_fields=['views_count'])
+
+    # Get comments
+    comments = blog.comments.select_related('author').all()
+
+    # Check if user liked this blog
+    user_liked = False
+    if request.user.is_authenticated:
+        user_liked = blog.liked_by.filter(id=request.user.id).exists()
+
+    # Handle comment submission
+    if request.method == 'POST' and request.user.is_authenticated:
+        comment_form = BlogCommentForm(request.POST)
+        if comment_form.is_valid():
+            comment = comment_form.save(commit=False)
+            comment.blog_post = blog
+            comment.author = request.user
+            comment.save()
+            messages.success(request, 'Comment added successfully!')
+            return redirect('experiences:blog_detail', slug=slug)
+    else:
+        comment_form = BlogCommentForm()
+
+    # Get related blogs
+    related_blogs = TravelBlog.objects.filter(
+        is_published=True
+    ).exclude(id=blog.id)
+
+    if blog.destination:
+        related_blogs = related_blogs.filter(destination=blog.destination)[:3]
+    else:
+        related_blogs = related_blogs[:3]
+
+    context = {
+        'blog': blog,
+        'comments': comments,
+        'comment_form': comment_form,
+        'user_liked': user_liked,
+        'related_blogs': related_blogs,
+    }
+
+    return render(request, 'experiences/blog_detail.html', context)
+
+@login_required
+def my_blogs(request):
+    """View user's own blogs (published and drafts)"""
+    blogs = request.user.travel_blogs.all().order_by('-created_at')
+
+    context = {
+        'blogs': blogs,
+    }
+
+    return render(request, 'experiences/my_blogs.html', context)
+
+@login_required
+def create_blog(request):
+    """Create a new travel blog post"""
+    if request.method == 'POST':
+        form = TravelBlogForm(request.POST, request.FILES)
+        if form.is_valid():
+            try:
+                blog = form.save(commit=False)
+                blog.author = request.user
+
+                # Sanitize HTML content
+                blog.content = sanitize_html(blog.content)
+
+                # Auto-generate slug
+                if not blog.slug:
+                    base_slug = slugify(blog.title)
+                    slug = base_slug
+                    counter = 1
+
+                    while TravelBlog.objects.filter(slug=slug).exists():
+                        slug = f"{base_slug}-{counter}"
+                        counter += 1
+
+                    blog.slug = slug
+
+                blog.save()
+
+                if blog.is_published:
+                    messages.success(request, f'✅ Blog post "{blog.title}" published successfully!')
+                else:
+                    messages.success(request, f'✅ Blog post "{blog.title}" saved as draft!')
+
+                return redirect('experiences:blog_detail', slug=blog.slug) if blog.is_published else redirect('experiences:my_blogs')
+
+            except Exception as e:
+                messages.error(request, f'❌ Error creating blog post: {str(e)}')
+        else:
+            messages.error(request, '⚠️ Please correct the errors below.')
+    else:
+        form = TravelBlogForm()
+
+    destinations = Destination.objects.all()
+    experiences = Experience.objects.filter(is_active=True)
+    accommodations = Accommodation.objects.filter(is_active=True)
+
+    return render(request, 'experiences/create_blog.html', {
+        'form': form,
+        'destinations': destinations,
+        'experiences': experiences,
+        'accommodations': accommodations,
+    })
+
+@login_required
+def edit_blog(request, slug):
+    """Edit an existing blog post"""
+    blog = get_object_or_404(TravelBlog, slug=slug, author=request.user)
+
+    if request.method == 'POST':
+        form = TravelBlogForm(request.POST, request.FILES, instance=blog)
+        if form.is_valid():
+            try:
+                blog = form.save(commit=False)
+
+                # Sanitize HTML content
+                blog.content = sanitize_html(blog.content)
+
+                blog.save()
+
+                messages.success(request, f'✅ Blog post "{blog.title}" updated successfully!')
+                return redirect('experiences:blog_detail', slug=blog.slug) if blog.is_published else redirect('experiences:my_blogs')
+
+            except Exception as e:
+                messages.error(request, f'❌ Error updating blog post: {str(e)}')
+        else:
+            messages.error(request, '⚠️ Please correct the errors below.')
+    else:
+        form = TravelBlogForm(instance=blog)
+
+    destinations = Destination.objects.all()
+    experiences = Experience.objects.filter(is_active=True)
+    accommodations = Accommodation.objects.filter(is_active=True)
+
+    return render(request, 'experiences/edit_blog.html', {
+        'form': form,
+        'blog': blog,
+        'destinations': destinations,
+        'experiences': experiences,
+        'accommodations': accommodations,
+    })
+
+@login_required
+def delete_blog(request, slug):
+    """Delete a blog post"""
+    blog = get_object_or_404(TravelBlog, slug=slug, author=request.user)
+
+    if request.method == 'POST':
+        blog_title = blog.title
+        blog.delete()
+        messages.success(request, f'✅ Blog post "{blog_title}" has been deleted.')
+        return redirect('experiences:my_blogs')
+
+    return render(request, 'experiences/delete_blog.html', {
+        'blog': blog
+    })
+
+def blogger_terms(request):
+    """Display blogger terms and conditions"""
+    from datetime import datetime
+    return render(request, 'experiences/blogger_terms.html', {
+        'current_date': datetime.now().strftime('%B %Y')
+    })
+
+@login_required
+@require_POST
+def like_blog(request, slug):
+    """Toggle like on a blog post"""
+    blog = get_object_or_404(TravelBlog, slug=slug, is_published=True)
+
+    if request.user in blog.liked_by.all():
+        blog.liked_by.remove(request.user)
+        blog.likes_count = max(0, blog.likes_count - 1)
+        liked = False
+    else:
+        blog.liked_by.add(request.user)
+        blog.likes_count += 1
+        liked = True
+
+    blog.save(update_fields=['likes_count'])
+
+    if request.headers.get('X-Requested-With') == 'XMLHttpRequest':
+        return JsonResponse({'liked': liked, 'likes_count': blog.likes_count})
+
+    return redirect('experiences:blog_detail', slug=slug)

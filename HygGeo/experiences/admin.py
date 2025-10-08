@@ -4,8 +4,8 @@ from django.utils.html import format_html
 from django.urls import reverse
 from django.utils.safestring import mark_safe
 from .models import (
-    Category, Destination, Provider, Experience, 
-    UserRecommendation, ExperienceReview, BookingTracking
+    Category, Destination, Provider, Experience,
+    UserRecommendation, ExperienceReview, BookingTracking, Accommodation, TravelBlog, BlogComment
 )
 
 @admin.register(Category)
@@ -327,6 +327,145 @@ class BookingTrackingAdmin(admin.ModelAdmin):
             return obj.user.username
         return f"Anonymous ({obj.session_id[:8]})"
     user_display.short_description = 'User'
+
+@admin.register(Accommodation)
+class AccommodationAdmin(admin.ModelAdmin):
+    """Admin for accommodations"""
+    list_display = (
+        'name', 'destination', 'provider', 'accommodation_type',
+        'sustainability_badge', 'hygge_factor', 'price_display',
+        'is_featured', 'is_active', 'created_at'
+    )
+    list_filter = (
+        'accommodation_type', 'budget_range', 'sustainability_score',
+        'hygge_factor', 'is_featured', 'is_active', 'carbon_neutral',
+        'eco_certified', 'supports_local_community', 'created_at',
+        'destination__country'
+    )
+    search_fields = ('name', 'description', 'destination__name', 'provider__name', 'address')
+    prepopulated_fields = {'slug': ('name',)}
+    readonly_fields = ('id', 'created_at', 'updated_at')
+
+    fieldsets = (
+        ('Basic Information', {
+            'fields': ('name', 'slug', 'short_description', 'description')
+        }),
+        ('Relationships', {
+            'fields': ('destination', 'provider')
+        }),
+        ('Accommodation Details', {
+            'fields': ('accommodation_type', 'budget_range', 'total_rooms', 'max_guests')
+        }),
+        ('Pricing', {
+            'fields': ('price_per_night_from', 'price_per_night_to', 'currency')
+        }),
+        ('Sustainability & Hygge', {
+            'fields': ('sustainability_score', 'hygge_factor', 'carbon_neutral', 'supports_local_community', 'eco_certified')
+        }),
+        ('Location', {
+            'fields': ('address', 'latitude', 'longitude')
+        }),
+        ('Media', {
+            'fields': ('main_image', 'gallery_images')
+        }),
+        ('Booking', {
+            'fields': ('booking_link',)
+        }),
+        ('Amenities & Features', {
+            'fields': ('amenities', 'room_types'),
+            'classes': ('collapse',)
+        }),
+        ('Policies', {
+            'fields': ('check_in_time', 'check_out_time', 'cancellation_policy'),
+            'classes': ('collapse',)
+        }),
+        ('SEO & Meta', {
+            'fields': ('meta_title', 'meta_description'),
+            'classes': ('collapse',)
+        }),
+        ('Status & Admin', {
+            'fields': ('is_featured', 'is_active', 'admin_notes')
+        }),
+        ('Metadata', {
+            'fields': ('id', 'created_at', 'updated_at'),
+            'classes': ('collapse',)
+        }),
+    )
+
+    def sustainability_badge(self, obj):
+        badge = obj.get_sustainability_badge()
+        return format_html(
+            '<span style="background-color: {}; color: white; padding: 2px 8px; border-radius: 4px; font-size: 0.8em;">{}</span>',
+            badge['color'],
+            badge['text']
+        )
+    sustainability_badge.short_description = 'Sustainability'
+
+    def price_display(self, obj):
+        return obj.get_price_display()
+    price_display.short_description = 'Price'
+
+@admin.register(TravelBlog)
+class TravelBlogAdmin(admin.ModelAdmin):
+    """Admin for travel blog posts"""
+    list_display = (
+        'title', 'author', 'destination', 'is_published', 'views_count',
+        'likes_count', 'comment_count', 'published_at', 'created_at'
+    )
+    list_filter = ('is_published', 'is_featured', 'created_at', 'published_at', 'destination')
+    search_fields = ('title', 'content', 'author__username', 'destination__name')
+    prepopulated_fields = {'slug': ('title',)}
+    readonly_fields = ('id', 'views_count', 'likes_count', 'created_at', 'updated_at')
+    filter_horizontal = ('liked_by',)
+
+    fieldsets = (
+        ('Basic Information', {
+            'fields': ('title', 'slug', 'excerpt', 'content')
+        }),
+        ('Author & Relationships', {
+            'fields': ('author', 'experience', 'accommodation', 'destination')
+        }),
+        ('Media', {
+            'fields': ('featured_image', 'gallery_images')
+        }),
+        ('Tags & SEO', {
+            'fields': ('tags', 'meta_title', 'meta_description')
+        }),
+        ('Publishing', {
+            'fields': ('is_published', 'is_featured', 'published_at')
+        }),
+        ('Engagement', {
+            'fields': ('views_count', 'likes_count', 'liked_by'),
+            'classes': ('collapse',)
+        }),
+        ('Metadata', {
+            'fields': ('id', 'created_at', 'updated_at'),
+            'classes': ('collapse',)
+        }),
+    )
+
+    def comment_count(self, obj):
+        count = obj.comments.count()
+        if count > 0:
+            return f"{count} comments"
+        return "No comments"
+    comment_count.short_description = 'Comments'
+
+@admin.register(BlogComment)
+class BlogCommentAdmin(admin.ModelAdmin):
+    """Admin for blog comments"""
+    list_display = ('author', 'blog_title', 'content_preview', 'created_at')
+    list_filter = ('created_at',)
+    search_fields = ('author__username', 'blog_post__title', 'content')
+    readonly_fields = ('created_at', 'updated_at')
+
+    def blog_title(self, obj):
+        return obj.blog_post.title
+    blog_title.short_description = 'Blog Post'
+
+    def content_preview(self, obj):
+        return obj.content[:50] + '...' if len(obj.content) > 50 else obj.content
+    content_preview.short_description = 'Comment'
 
 # Customize admin site
 admin.site.site_header = "HygGeo Experiences Administration"

@@ -21,7 +21,7 @@ from .forms import (
     ReplyForm
 )
 from .models import UserProfile, TravelSurvey, Trip, Message, EmailTemplate, EmailCampaign
-from experiences.models import Experience, Destination, Provider, Category, ExperienceType
+from experiences.models import Experience, Destination, Provider, Category, ExperienceType, Accommodation
 from .email_utils import get_merge_fields
 import random
 
@@ -344,6 +344,7 @@ def admin_dashboard(request):
         'users_count': User.objects.count(),
         'categories_count': Category.objects.count(),
         'experience_types_count': ExperienceType.objects.count(),
+        'accommodations_count': Accommodation.objects.count(),
     }
 
     # Email statistics

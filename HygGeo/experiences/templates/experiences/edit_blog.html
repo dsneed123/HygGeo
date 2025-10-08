@@ -1,0 +1,344 @@
+{% extends 'base.html' %}
+
+{% block title %}Edit {{ blog.title }} - HygGeo{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-10">
+            <div class="card card-hygge">
+                <div class="card-body p-4">
+                    <h2 class="card-title fw-bold text-center mb-4" style="color: var(--hygge-green);">
+                        <i class="fas fa-edit me-2"></i>Edit Blog Post
+                    </h2>
+                    <p class="text-center text-muted mb-4">Editing: <strong>{{ blog.title }}</strong></p>
+
+                    <form method="post" enctype="multipart/form-data">
+                        {% csrf_token %}
+
+                        <!-- Title & Excerpt -->
+                        <div class="row mb-4">
+                            <div class="col-12">
+                                <h4 class="fw-bold mb-3" style="color: var(--hygge-green);">
+                                    <i class="fas fa-heading me-2"></i>Title & Summary
+                                </h4>
+                            </div>
+                            <div class="col-12 mb-3">
+                                <label class="form-label fw-bold">Blog Title:</label>
+                                {{ form.title }}
+                                {% if form.title.errors %}
+                                    <div class="text-danger">{{ form.title.errors }}</div>
+                                {% endif %}
+                            </div>
+                            <div class="col-12 mb-3">
+                                <label class="form-label fw-bold">Short Excerpt:</label>
+                                {{ form.excerpt }}
+                                {% if form.excerpt.errors %}
+                                    <div class="text-danger">{{ form.excerpt.errors }}</div>
+                                {% endif %}
+                            </div>
+                        </div>
+
+                        <!-- Content -->
+                        <div class="row mb-4">
+                            <div class="col-12">
+                                <h4 class="fw-bold mb-3" style="color: var(--hygge-green);">
+                                    <i class="fas fa-file-alt me-2"></i>Your Story
+                                </h4>
+                            </div>
+                            <div class="col-12 mb-3">
+                                <label class="form-label fw-bold">Content:</label>
+
+                                <!-- Rich Text Editor Toolbar -->
+                                <div class="editor-toolbar mb-2 p-2 bg-light border rounded">
+                                    <button type="button" class="btn btn-sm btn-outline-secondary me-1" data-command="bold" title="Bold">
+                                        <i class="fas fa-bold"></i>
+                                    </button>
+                                    <button type="button" class="btn btn-sm btn-outline-secondary me-1" data-command="italic" title="Italic">
+                                        <i class="fas fa-italic"></i>
+                                    </button>
+                                    <button type="button" class="btn btn-sm btn-outline-secondary me-1" data-command="underline" title="Underline">
+                                        <i class="fas fa-underline"></i>
+                                    </button>
+                                    <span class="mx-2">|</span>
+                                    <button type="button" class="btn btn-sm btn-outline-secondary me-1" data-command="h2" title="Heading 2">
+                                        <strong>H2</strong>
+                                    </button>
+                                    <button type="button" class="btn btn-sm btn-outline-secondary me-1" data-command="h3" title="Heading 3">
+                                        <strong>H3</strong>
+                                    </button>
+                                    <span class="mx-2">|</span>
+                                    <button type="button" class="btn btn-sm btn-outline-secondary me-1" data-command="insertUnorderedList" title="Bullet List">
+                                        <i class="fas fa-list-ul"></i>
+                                    </button>
+                                    <button type="button" class="btn btn-sm btn-outline-secondary me-1" data-command="insertOrderedList" title="Numbered List">
+                                        <i class="fas fa-list-ol"></i>
+                                    </button>
+                                    <span class="mx-2">|</span>
+                                    <button type="button" class="btn btn-sm btn-outline-secondary me-1" data-command="createLink" title="Insert Link">
+                                        <i class="fas fa-link"></i>
+                                    </button>
+                                </div>
+
+                                <!-- WYSIWYG Editor -->
+                                <div id="editor" contenteditable="true" class="form-control" style="min-height: 400px; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif; font-size: 16px; line-height: 1.6;">
+                                </div>
+
+                                <!-- Hidden textarea for form submission -->
+                                <textarea name="content" id="id_content" style="display: none;">{{ form.content.value|default:'' }}</textarea>
+
+                                {% if form.content.errors %}
+                                    <div class="text-danger">{{ form.content.errors }}</div>
+                                {% endif %}
+                                <div class="form-text">Use the toolbar above to format your text. What you see is what you get!</div>
+                            </div>
+                        </div>
+
+                        <!-- Media -->
+                        <div class="row mb-4">
+                            <div class="col-12">
+                                <h4 class="fw-bold mb-3" style="color: var(--hygge-green);">
+                                    <i class="fas fa-image me-2"></i>Featured Image
+                                </h4>
+                            </div>
+                            <div class="col-12 mb-3">
+                                {% if blog.featured_image %}
+                                <div class="mb-2">
+                                    <img src="{{ blog.featured_image.url }}" alt="{{ blog.title }}" style="max-width: 300px; height: auto;">
+                                </div>
+                                {% endif %}
+                                <label class="form-label fw-bold">Upload New Image:</label>
+                                {{ form.featured_image }}
+                                {% if form.featured_image.errors %}
+                                    <div class="text-danger">{{ form.featured_image.errors }}</div>
+                                {% endif %}
+                            </div>
+                        </div>
+
+                        <!-- Links -->
+                        <div class="row mb-4">
+                            <div class="col-12">
+                                <h4 class="fw-bold mb-3" style="color: var(--hygge-green);">
+                                    <i class="fas fa-link me-2"></i>Link to Content (Optional)
+                                </h4>
+                            </div>
+                            <div class="col-md-4 mb-3">
+                                <label class="form-label fw-bold">Destination:</label>
+                                {{ form.destination }}
+                                {% if form.destination.errors %}
+                                    <div class="text-danger">{{ form.destination.errors }}</div>
+                                {% endif %}
+                            </div>
+                            <div class="col-md-4 mb-3">
+                                <label class="form-label fw-bold">Experience:</label>
+                                {{ form.experience }}
+                                {% if form.experience.errors %}
+                                    <div class="text-danger">{{ form.experience.errors }}</div>
+                                {% endif %}
+                            </div>
+                            <div class="col-md-4 mb-3">
+                                <label class="form-label fw-bold">Accommodation:</label>
+                                {{ form.accommodation }}
+                                {% if form.accommodation.errors %}
+                                    <div class="text-danger">{{ form.accommodation.errors }}</div>
+                                {% endif %}
+                            </div>
+                        </div>
+
+                        <!-- Publishing -->
+                        <div class="row mb-4">
+                            <div class="col-12">
+                                <h4 class="fw-bold mb-3" style="color: var(--hygge-green);">
+                                    <i class="fas fa-globe me-2"></i>Publishing
+                                </h4>
+                            </div>
+                            <div class="col-12 mb-3">
+                                <div class="form-check">
+                                    {{ form.is_published }}
+                                    <label class="form-check-label fw-bold">
+                                        Published (uncheck to save as draft)
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Submit Buttons -->
+                        <div class="d-grid gap-2">
+                            <button type="submit" class="btn btn-hygge btn-lg">
+                                <i class="fas fa-save me-2"></i>Save Changes
+                            </button>
+                            <a href="{% url 'experiences:my_blogs' %}" class="btn btn-outline-secondary">
+                                <i class="fas fa-times me-2"></i>Cancel
+                            </a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const editor = document.getElementById('editor');
+    const hiddenTextarea = document.getElementById('id_content');
+
+    // Load initial content if editing
+    if (hiddenTextarea.value) {
+        editor.innerHTML = hiddenTextarea.value;
+    }
+
+    // Sync editor content to hidden textarea on input
+    editor.addEventListener('input', function() {
+        hiddenTextarea.value = editor.innerHTML;
+    });
+
+    // Sync before form submission
+    const form = editor.closest('form');
+    form.addEventListener('submit', function() {
+        hiddenTextarea.value = editor.innerHTML;
+    });
+
+    // Handle toolbar button clicks
+    document.querySelectorAll('.editor-toolbar button[data-command]').forEach(button => {
+        button.addEventListener('mousedown', function(e) {
+            e.preventDefault(); // Prevent editor from losing focus
+        });
+
+        button.addEventListener('click', function(e) {
+            e.preventDefault();
+
+            const command = this.getAttribute('data-command');
+
+            // Focus editor before executing command
+            editor.focus();
+
+            if (command === 'h2') {
+                document.execCommand('formatBlock', false, 'h2');
+            } else if (command === 'h3') {
+                document.execCommand('formatBlock', false, 'h3');
+            } else if (command === 'createLink') {
+                const url = prompt('Enter URL:', 'https://');
+                if (url) {
+                    document.execCommand('createLink', false, url);
+                    // Set target="_blank" on the newly created link
+                    const selection = window.getSelection();
+                    if (selection.anchorNode) {
+                        let element = selection.anchorNode.parentElement;
+                        if (element.tagName === 'A') {
+                            element.setAttribute('target', '_blank');
+                        }
+                    }
+                }
+                return;
+            } else {
+                document.execCommand(command, false, null);
+            }
+
+            // Toggle button active state for formatting commands
+            updateButtonStates();
+        });
+    });
+
+    // Update button active states based on current selection
+    function updateButtonStates() {
+        document.querySelectorAll('.editor-toolbar button[data-command]').forEach(button => {
+            const command = button.getAttribute('data-command');
+
+            if (command === 'bold' || command === 'italic' || command === 'underline') {
+                if (document.queryCommandState(command)) {
+                    button.classList.add('active');
+                    button.classList.remove('btn-outline-secondary');
+                    button.classList.add('btn-secondary');
+                } else {
+                    button.classList.remove('active');
+                    button.classList.add('btn-outline-secondary');
+                    button.classList.remove('btn-secondary');
+                }
+            }
+        });
+    }
+
+    // Update button states on selection change
+    editor.addEventListener('mouseup', updateButtonStates);
+    editor.addEventListener('keyup', updateButtonStates);
+
+    // Focus editor on load
+    editor.focus();
+});
+</script>
+
+<style>
+.editor-toolbar {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.25rem;
+    align-items: center;
+}
+
+.editor-toolbar button {
+    min-width: 36px;
+    height: 36px;
+    padding: 0.25rem 0.5rem;
+}
+
+.editor-toolbar button:hover {
+    background-color: var(--hygge-light-green);
+    border-color: var(--hygge-green);
+    color: var(--hygge-green);
+}
+
+/* WYSIWYG Editor styling */
+#editor {
+    overflow-y: auto;
+}
+
+#editor:focus {
+    outline: none;
+    border-color: var(--hygge-green);
+    box-shadow: 0 0 0 0.2rem rgba(45, 90, 61, 0.25);
+}
+
+#editor h2 {
+    color: var(--hygge-green);
+    font-size: 1.75rem;
+    font-weight: bold;
+    margin-top: 1.5rem;
+    margin-bottom: 1rem;
+}
+
+#editor h3 {
+    color: var(--hygge-green);
+    font-size: 1.5rem;
+    font-weight: bold;
+    margin-top: 1rem;
+    margin-bottom: 0.75rem;
+}
+
+#editor ul, #editor ol {
+    margin-left: 2rem;
+    margin-bottom: 1rem;
+}
+
+#editor li {
+    margin-bottom: 0.5rem;
+}
+
+#editor a {
+    color: var(--hygge-green);
+    text-decoration: underline;
+}
+
+#editor a:hover {
+    color: var(--hygge-dark-green);
+}
+
+#editor blockquote {
+    border-left: 4px solid var(--hygge-green);
+    padding-left: 1.5rem;
+    margin: 1.5rem 0;
+    font-style: italic;
+    color: #666;
+}
+</style>
+{% endblock %}

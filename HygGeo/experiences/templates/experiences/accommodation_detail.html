@@ -1,0 +1,175 @@
+{% extends 'base.html' %}
+
+{% block title %}{{ accommodation.name }} - HygGeo{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <!-- Header -->
+    <div class="row mb-4">
+        <div class="col-12">
+            <nav aria-label="breadcrumb">
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item"><a href="{% url 'index' %}">Home</a></li>
+                    <li class="breadcrumb-item"><a href="{% url 'experiences:accommodation_list' %}">Accommodations</a></li>
+                    <li class="breadcrumb-item active">{{ accommodation.name }}</li>
+                </ol>
+            </nav>
+        </div>
+    </div>
+
+    <!-- Main Content -->
+    <div class="row">
+        <div class="col-lg-8">
+            <!-- Accommodation Image -->
+            {% if accommodation.main_image %}
+            <img src="{{ accommodation.main_image.url }}" class="img-fluid rounded mb-4" alt="{{ accommodation.name }}">
+            {% else %}
+            <div class="mb-4 rounded" style="height: 400px; background: var(--hygge-cream); display: flex; align-items: center; justify-content: center;">
+                <i class="fas fa-bed fa-5x text-muted"></i>
+            </div>
+            {% endif %}
+
+            <!-- Accommodation Details -->
+            <div class="card card-hygge mb-4">
+                <div class="card-body p-4">
+                    <h1 class="h2 fw-bold mb-3" style="color: var(--hygge-green);">{{ accommodation.name }}</h1>
+                    <p class="text-muted mb-3">
+                        <i class="fas fa-map-marker-alt me-1"></i>
+                        <a href="{% url 'experiences:destination_detail' accommodation.destination.slug %}">
+                            {{ accommodation.destination.name }}, {{ accommodation.destination.country }}
+                        </a>
+                    </p>
+
+                    <!-- Badges -->
+                    <div class="mb-4">
+                        <span class="badge bg-secondary me-2">{{ accommodation.get_accommodation_type_display }}</span>
+                        <span class="badge me-2" style="background-color: {% if accommodation.sustainability_score >= 8 %}var(--hygge-green){% elif accommodation.sustainability_score >= 6 %}var(--hygge-gold){% else %}#6c757d{% endif %};">
+                            <i class="fas fa-leaf me-1"></i>Sustainability: {{ accommodation.sustainability_score }}/10
+                        </span>
+                        <span class="badge" style="background-color: var(--hygge-soft-blue);">
+                            <i class="fas fa-heart me-1"></i>Hygge Factor: {{ accommodation.hygge_factor }}/10
+                        </span>
+                        {% if accommodation.eco_certified %}
+                        <span class="badge bg-success"><i class="fas fa-certificate me-1"></i>Eco Certified</span>
+                        {% endif %}
+                        {% if accommodation.carbon_neutral %}
+                        <span class="badge bg-info"><i class="fas fa-tree me-1"></i>Carbon Neutral</span>
+                        {% endif %}
+                    </div>
+
+                    <!-- Description -->
+                    <h3 class="h5 fw-bold mb-3">About This Accommodation</h3>
+                    <p>{{ accommodation.description|linebreaks }}</p>
+
+                    <!-- Amenities -->
+                    {% if accommodation.amenities %}
+                    <h3 class="h5 fw-bold mb-3 mt-4">Amenities</h3>
+                    <div class="row">
+                        {% for amenity in accommodation.amenities %}
+                        <div class="col-md-6 mb-2">
+                            <i class="fas fa-check-circle text-success me-2"></i>{{ amenity }}
+                        </div>
+                        {% endfor %}
+                    </div>
+                    {% endif %}
+
+                    <!-- Policies -->
+                    {% if accommodation.cancellation_policy %}
+                    <h3 class="h5 fw-bold mb-3 mt-4">Cancellation Policy</h3>
+                    <p>{{ accommodation.cancellation_policy|linebreaks }}</p>
+                    {% endif %}
+
+                    <!-- Admin Actions -->
+                    {% if user.is_staff %}
+                    <div class="mt-4 pt-4 border-top">
+                        <h3 class="h5 fw-bold mb-3">Admin Actions</h3>
+                        <a href="{% url 'experiences:edit_accommodation' accommodation.slug %}" class="btn btn-warning me-2">
+                            <i class="fas fa-edit me-1"></i>Edit
+                        </a>
+                        <a href="{% url 'experiences:delete_accommodation' accommodation.slug %}" class="btn btn-danger">
+                            <i class="fas fa-trash me-1"></i>Delete
+                        </a>
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+
+        <!-- Sidebar -->
+        <div class="col-lg-4">
+            <!-- Booking Card -->
+            <div class="card card-hygge mb-4 sticky-top" style="top: 20px;">
+                <div class="card-body p-4">
+                    <h3 class="h5 fw-bold mb-3">{{ accommodation.get_price_display }}</h3>
+
+                    {% if accommodation.total_rooms %}
+                    <p class="mb-2"><i class="fas fa-door-open me-2"></i>{{ accommodation.total_rooms }} rooms available</p>
+                    {% endif %}
+                    {% if accommodation.max_guests %}
+                    <p class="mb-3"><i class="fas fa-users me-2"></i>Max {{ accommodation.max_guests }} guests per room</p>
+                    {% endif %}
+
+                    {% if accommodation.booking_link %}
+                    <a href="{{ accommodation.booking_link }}" target="_blank" rel="noopener" class="btn btn-hygge btn-lg w-100 mb-3">
+                        <i class="fas fa-external-link-alt me-2"></i>Book Now
+                    </a>
+                    {% endif %}
+
+                    <div class="small text-muted text-center">
+                        <i class="fas fa-info-circle me-1"></i>Affiliate link - supports HygGeo
+                    </div>
+                </div>
+            </div>
+
+            <!-- Provider Info -->
+            <div class="card card-hygge mb-4">
+                <div class="card-body p-4">
+                    <h3 class="h5 fw-bold mb-3">Provided By</h3>
+                    <p class="mb-2"><strong>{{ accommodation.provider.name }}</strong></p>
+                    {% if accommodation.provider.website %}
+                    <a href="{{ accommodation.provider.website }}" target="_blank" rel="noopener" class="btn btn-outline-hygge btn-sm">
+                        <i class="fas fa-globe me-1"></i>Visit Website
+                    </a>
+                    {% endif %}
+                </div>
+            </div>
+
+            <!-- Location -->
+            {% if accommodation.address %}
+            <div class="card card-hygge">
+                <div class="card-body p-4">
+                    <h3 class="h5 fw-bold mb-3">Location</h3>
+                    <p>{{ accommodation.address|linebreaks }}</p>
+                </div>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+
+    <!-- Similar Accommodations -->
+    {% if similar_accommodations %}
+    <div class="row mt-5">
+        <div class="col-12">
+            <h2 class="h3 fw-bold mb-4" style="color: var(--hygge-green);">More Accommodations in {{ accommodation.destination.name }}</h2>
+        </div>
+        {% for similar in similar_accommodations %}
+        <div class="col-md-6 col-lg-3 mb-4">
+            <div class="card card-hygge h-100">
+                {% if similar.main_image %}
+                <img src="{{ similar.main_image.url }}" class="card-img-top" alt="{{ similar.name }}"
+                     style="height: 150px; object-fit: cover;">
+                {% endif %}
+                <div class="card-body">
+                    <h5 class="card-title">{{ similar.name }}</h5>
+                    <p class="card-text small">{{ similar.short_description|truncatewords:15 }}</p>
+                    <a href="{% url 'experiences:accommodation_detail' similar.slug %}" class="btn btn-outline-hygge btn-sm">
+                        View Details
+                    </a>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+    {% endif %}
+</div>
+{% endblock %}

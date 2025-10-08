@@ -1,0 +1,211 @@
+{% extends 'base.html' %}
+
+{% block title %}Blogger Terms & Conditions - HygGeo{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-9">
+            <div class="card card-hygge">
+                <div class="card-body p-5">
+                    <h1 class="text-center mb-4" style="color: var(--hygge-green);">
+                        <i class="fas fa-file-contract me-2"></i>Blogger Terms & Conditions
+                    </h1>
+
+                    <p class="text-muted text-center mb-5">
+                        Last Updated: {{ current_date|default:"January 2025" }}
+                    </p>
+
+                    <div class="terms-content">
+                        <section class="mb-5">
+                            <h3 style="color: var(--hygge-green);">1. Acceptance of Terms</h3>
+                            <p>
+                                By creating and publishing content on HygGeo ("the Platform"), you agree to be bound by these
+                                Blogger Terms & Conditions. If you do not agree to these terms, please do not publish content
+                                on our platform.
+                            </p>
+                        </section>
+
+                        <section class="mb-5">
+                            <h3 style="color: var(--hygge-green);">2. Content Ownership & License</h3>
+                            <p><strong>Your Rights:</strong></p>
+                            <ul>
+                                <li>You retain full ownership of all content you create and publish on HygGeo.</li>
+                                <li>You are solely responsible for your content and the consequences of posting it.</li>
+                            </ul>
+
+                            <p class="mt-3"><strong>License to HygGeo:</strong></p>
+                            <ul>
+                                <li>By publishing content, you grant HygGeo a non-exclusive, worldwide, royalty-free license to use, display, reproduce, and distribute your content on the Platform.</li>
+                                <li>This license allows us to showcase your content across HygGeo, including on destination pages, experience listings, and promotional materials.</li>
+                                <li>You may delete your content at any time, which will terminate this license.</li>
+                            </ul>
+                        </section>
+
+                        <section class="mb-5">
+                            <h3 style="color: var(--hygge-green);">3. Content Guidelines</h3>
+                            <p>All blog content must:</p>
+                            <ul>
+                                <li><strong>Be Original:</strong> Content must be your own work or properly attributed/licensed.</li>
+                                <li><strong>Be Honest:</strong> Provide truthful, accurate information about your travel experiences.</li>
+                                <li><strong>Be Respectful:</strong> No hate speech, harassment, discrimination, or offensive content.</li>
+                                <li><strong>Be Legal:</strong> Must not violate any laws or third-party rights.</li>
+                                <li><strong>Be Safe:</strong> No promotion of dangerous, illegal, or harmful activities.</li>
+                            </ul>
+
+                            <p class="mt-3"><strong>Prohibited Content:</strong></p>
+                            <ul>
+                                <li>Spam, misleading, or deceptive content</li>
+                                <li>Explicit sexual content or nudity</li>
+                                <li>Violence, gore, or graphic content</li>
+                                <li>Copyrighted material without proper authorization</li>
+                                <li>Personal information of others without consent</li>
+                                <li>Malware, viruses, or malicious code</li>
+                            </ul>
+                        </section>
+
+                        <section class="mb-5">
+                            <h3 style="color: var(--hygge-green);">4. Image Rights & Permissions</h3>
+                            <ul>
+                                <li>You confirm that you own or have permission to use all images you upload.</li>
+                                <li>Images must not infringe on anyone's copyright, trademark, or privacy rights.</li>
+                                <li>If images include recognizable people, you must have their consent to publish.</li>
+                                <li>Properly credit photographers and sources when using licensed images.</li>
+                            </ul>
+                        </section>
+
+                        <section class="mb-5">
+                            <h3 style="color: var(--hygge-green);">5. Affiliate Links & Disclosures</h3>
+                            <ul>
+                                <li>You may include affiliate links in your blog posts.</li>
+                                <li><strong>Disclosure Required:</strong> You must clearly disclose any affiliate relationships or sponsored content.</li>
+                                <li>Use clear language like "This post contains affiliate links" or "Sponsored by [Brand]".</li>
+                                <li>Disclosures must be prominent and easy to understand.</li>
+                            </ul>
+                        </section>
+
+                        <section class="mb-5">
+                            <h3 style="color: var(--hygge-green);">6. Accuracy & Updates</h3>
+                            <ul>
+                                <li>Strive to provide accurate, current information about destinations and experiences.</li>
+                                <li>Update your posts if significant information changes (e.g., a place closes, prices change significantly).</li>
+                                <li>Clearly mark opinions vs. facts.</li>
+                                <li>Include dates of your travel experience when relevant.</li>
+                            </ul>
+                        </section>
+
+                        <section class="mb-5">
+                            <h3 style="color: var(--hygge-green);">7. Community Engagement</h3>
+                            <ul>
+                                <li>Engage respectfully with readers in comments.</li>
+                                <li>Respond to legitimate questions and feedback professionally.</li>
+                                <li>Do not engage in arguments or harassment.</li>
+                                <li>Report abusive comments to HygGeo moderators.</li>
+                            </ul>
+                        </section>
+
+                        <section class="mb-5">
+                            <h3 style="color: var(--hygge-green);">8. Moderation & Removal</h3>
+                            <p>HygGeo reserves the right to:</p>
+                            <ul>
+                                <li>Review and moderate all content published on the Platform.</li>
+                                <li>Remove content that violates these terms without notice.</li>
+                                <li>Suspend or terminate accounts that repeatedly violate these terms.</li>
+                                <li>Edit or remove content to comply with legal requirements.</li>
+                            </ul>
+
+                            <p class="mt-3">
+                                <strong>Appeals:</strong> If your content is removed, you may contact us at
+                                <a href="mailto:support@hyggeo.com">support@hyggeo.com</a> to appeal the decision.
+                            </p>
+                        </section>
+
+                        <section class="mb-5">
+                            <h3 style="color: var(--hygge-green);">9. Liability & Indemnification</h3>
+                            <ul>
+                                <li>You are solely responsible for your content and any consequences arising from it.</li>
+                                <li>You agree to indemnify and hold HygGeo harmless from any claims, damages, or expenses arising from your content.</li>
+                                <li>HygGeo is not liable for any user-generated content on the Platform.</li>
+                            </ul>
+                        </section>
+
+                        <section class="mb-5">
+                            <h3 style="color: var(--hygge-green);">10. Data & Privacy</h3>
+                            <ul>
+                                <li>Your use of the Platform is subject to our <a href="{% url 'privacy_policy' %}" style="color: var(--hygge-green);">Privacy Policy</a>.</li>
+                                <li>Published blog posts are public and visible to all users.</li>
+                                <li>Your author name and profile information will be displayed with your posts.</li>
+                            </ul>
+                        </section>
+
+                        <section class="mb-5">
+                            <h3 style="color: var(--hygge-green);">11. Changes to Terms</h3>
+                            <p>
+                                HygGeo may update these terms at any time. Continued use of the blogging features after
+                                changes constitutes acceptance of the updated terms. We will notify bloggers of significant
+                                changes via email or platform notification.
+                            </p>
+                        </section>
+
+                        <section class="mb-5">
+                            <h3 style="color: var(--hygge-green);">12. Contact & Support</h3>
+                            <p>
+                                Questions about these terms? Contact us at:
+                            </p>
+                            <ul class="list-unstyled">
+                                <li><i class="fas fa-envelope me-2" style="color: var(--hygge-green);"></i>
+                                    <a href="mailto:bloggers@hyggeo.com">bloggers@hyggeo.com</a>
+                                </li>
+                                <li><i class="fas fa-globe me-2" style="color: var(--hygge-green);"></i>
+                                    <a href="/">www.hyggeo.com</a>
+                                </li>
+                            </ul>
+                        </section>
+
+                        <div class="alert alert-info mt-5">
+                            <i class="fas fa-heart me-2"></i>
+                            <strong>Thank you for being part of the HygGeo community!</strong>
+                            We're excited to share your sustainable travel stories with the world.
+                            Happy blogging!
+                        </div>
+
+                        <div class="text-center mt-4">
+                            <a href="{% url 'experiences:create_blog' %}" class="btn btn-hygge">
+                                <i class="fas fa-pen-fancy me-2"></i>Start Writing Your Blog
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+.terms-content h3 {
+    font-size: 1.5rem;
+    font-weight: bold;
+    margin-bottom: 1rem;
+    padding-bottom: 0.5rem;
+    border-bottom: 2px solid var(--hygge-light-green);
+}
+
+.terms-content ul {
+    padding-left: 1.5rem;
+}
+
+.terms-content li {
+    margin-bottom: 0.75rem;
+    line-height: 1.6;
+}
+
+.terms-content p {
+    line-height: 1.8;
+    margin-bottom: 1rem;
+}
+
+.terms-content section {
+    padding-bottom: 1.5rem;
+}
+</style>
+{% endblock %}

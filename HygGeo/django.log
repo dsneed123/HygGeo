@@ -13194,3 +13194,409 @@ Traceback (most recent call last):
     raise self.model.DoesNotExist(
 django.contrib.sites.models.Site.DoesNotExist: Site matching query does not exist.
 ERROR 2025-10-04 01:07:55,289 basehttp 32088 29232 "GET /accounts/login/ HTTP/1.1" 500 156084
+INFO 2025-10-08 00:48:31,651 autoreload 5628 72560 Watching for file changes with StatReloader
+INFO 2025-10-08 00:48:43,487 basehttp 5628 72420 "GET / HTTP/1.1" 200 90815
+INFO 2025-10-08 00:48:44,606 basehttp 5628 72420 "GET /static/favicon.ico HTTP/1.1" 200 15406
+INFO 2025-10-08 00:48:44,623 basehttp 5628 70288 "GET /static/site.webmanifest HTTP/1.1" 200 263
+INFO 2025-10-08 00:48:45,159 basehttp 5628 72420 "GET /accounts/login/ HTTP/1.1" 200 28010
+INFO 2025-10-08 00:48:53,736 basehttp 5628 72420 "POST /accounts/login/ HTTP/1.1" 200 28241
+INFO 2025-10-08 00:49:00,658 basehttp 5628 72420 "POST /accounts/login/ HTTP/1.1" 200 28241
+INFO 2025-10-08 00:49:05,081 basehttp 5628 72420 "POST /accounts/login/ HTTP/1.1" 302 0
+INFO 2025-10-08 00:49:05,099 basehttp 5628 72420 "GET / HTTP/1.1" 200 96449
+INFO 2025-10-08 00:49:11,846 basehttp 5628 72420 "GET /admin/dashboard/ HTTP/1.1" 200 75591
+ERROR 2025-10-08 00:49:16,753 log 5628 72420 Internal Server Error: /experiences/accommodations/add/
+Traceback (most recent call last):
+  File "C:\Users\DLSne\AppData\Local\Packages\PythonSoftwareFoundation.Python.3.12_qbz5n2kfra8p0\LocalCache\local-packages\Python312\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+               ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\DLSne\AppData\Local\Packages\PythonSoftwareFoundation.Python.3.12_qbz5n2kfra8p0\LocalCache\local-packages\Python312\site-packages\django\core\handlers\base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\DLSne\AppData\Local\Packages\PythonSoftwareFoundation.Python.3.12_qbz5n2kfra8p0\LocalCache\local-packages\Python312\site-packages\django\contrib\auth\decorators.py", line 59, in _view_wrapper
+    return view_func(request, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\DLSne\OneDrive\Desktop\Code\webdev\HygGeo\HygGeo\experiences\views.py", line 1186, in add_accommodation
+    return render(request, 'experiences/add_accommodation.html', {
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\DLSne\AppData\Local\Packages\PythonSoftwareFoundation.Python.3.12_qbz5n2kfra8p0\LocalCache\local-packages\Python312\site-packages\django\shortcuts.py", line 25, in render
+    content = loader.render_to_string(template_name, context, request, using=using)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\DLSne\AppData\Local\Packages\PythonSoftwareFoundation.Python.3.12_qbz5n2kfra8p0\LocalCache\local-packages\Python312\site-packages\django\template\loader.py", line 61, in render_to_string
+    template = get_template(template_name, using=using)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\DLSne\AppData\Local\Packages\PythonSoftwareFoundation.Python.3.12_qbz5n2kfra8p0\LocalCache\local-packages\Python312\site-packages\django\template\loader.py", line 19, in get_template
+    raise TemplateDoesNotExist(template_name, chain=chain)
+django.template.exceptions.TemplateDoesNotExist: experiences/add_accommodation.html
+ERROR 2025-10-08 00:49:16,758 basehttp 5628 72420 "GET /experiences/accommodations/add/ HTTP/1.1" 500 95434
+INFO 2025-10-08 00:49:17,193 basehttp 5628 72420 "GET /favicon.ico HTTP/1.1" 301 0
+INFO 2025-10-08 00:53:56,654 basehttp 5628 49660 "GET /admin/dashboard/ HTTP/1.1" 200 75621
+INFO 2025-10-08 00:53:57,673 basehttp 5628 49660 "GET /static/favicon.ico HTTP/1.1" 200 15406
+INFO 2025-10-08 00:53:57,757 basehttp 5628 36524 "GET /static/site.webmanifest HTTP/1.1" 200 263
+INFO 2025-10-08 00:53:58,657 basehttp 5628 49660 "GET /admin/dashboard/ HTTP/1.1" 200 75621
+INFO 2025-10-08 00:53:59,113 basehttp 5628 36524 "GET /static/site.webmanifest HTTP/1.1" 200 263
+INFO 2025-10-08 00:53:59,230 basehttp 5628 49660 "GET /static/favicon.ico HTTP/1.1" 200 15406
+INFO 2025-10-08 00:54:00,446 basehttp 5628 49660 "GET /admin/dashboard/ HTTP/1.1" 200 75621
+INFO 2025-10-08 00:54:00,888 basehttp 5628 36524 "GET /static/site.webmanifest HTTP/1.1" 200 263
+INFO 2025-10-08 00:54:01,069 basehttp 5628 49660 "GET /static/favicon.ico HTTP/1.1" 200 15406
+INFO 2025-10-08 00:54:01,787 basehttp 5628 49660 "GET /experiences/accommodations/ HTTP/1.1" 200 35228
+INFO 2025-10-08 00:54:03,402 basehttp 5628 49660 "GET /experiences/accommodations/ HTTP/1.1" 200 35228
+INFO 2025-10-08 00:54:03,839 basehttp 5628 36524 "GET /static/site.webmanifest HTTP/1.1" 200 263
+INFO 2025-10-08 00:54:04,065 basehttp 5628 49660 "GET /static/favicon.ico HTTP/1.1" 200 15406
+INFO 2025-10-08 00:54:06,034 basehttp 5628 49660 "GET /admin/dashboard/ HTTP/1.1" 200 75621
+INFO 2025-10-08 00:54:14,401 basehttp 5628 49660 "GET /experiences/accommodations/add/ HTTP/1.1" 200 46733
+INFO 2025-10-08 00:55:16,721 basehttp 5628 49660 - Broken pipe from ('127.0.0.1', 15465)
+INFO 2025-10-08 00:55:16,721 basehttp 5628 72412 "POST /experiences/accommodations/add/ HTTP/1.1" 200 47264
+INFO 2025-10-08 00:55:26,606 basehttp 5628 72412 "POST /experiences/accommodations/add/ HTTP/1.1" 302 0
+INFO 2025-10-08 00:55:26,621 basehttp 5628 72412 "GET /experiences/accommodations/ HTTP/1.1" 200 37082
+INFO 2025-10-08 00:55:28,336 basehttp 5628 72412 "GET /experiences/accommodations/test1/ HTTP/1.1" 200 34505
+INFO 2025-10-08 00:55:34,220 basehttp 5628 72412 "GET /admin/dashboard/ HTTP/1.1" 200 75621
+INFO 2025-10-08 00:55:41,669 basehttp 5628 72412 "GET /experiences/accommodations/ HTTP/1.1" 200 36709
+INFO 2025-10-08 00:55:46,112 basehttp 5628 72412 "GET /experiences/accommodations/test1/ HTTP/1.1" 200 34505
+INFO 2025-10-08 00:57:32,592 autoreload 5628 72560 C:\Users\DLSne\OneDrive\Desktop\Code\webdev\HygGeo\HygGeo\experiences\forms.py changed, reloading.
+INFO 2025-10-08 00:57:48,124 autoreload 65212 71468 Watching for file changes with StatReloader
+INFO 2025-10-08 00:57:51,722 autoreload 65212 71468 C:\Users\DLSne\OneDrive\Desktop\Code\webdev\HygGeo\HygGeo\experiences\forms.py changed, reloading.
+INFO 2025-10-08 00:57:53,259 autoreload 32860 73664 Watching for file changes with StatReloader
+INFO 2025-10-08 00:59:24,600 autoreload 32860 73664 C:\Users\DLSne\OneDrive\Desktop\Code\webdev\HygGeo\HygGeo\experiences\models.py changed, reloading.
+INFO 2025-10-08 00:59:26,066 autoreload 67904 73772 Watching for file changes with StatReloader
+INFO 2025-10-08 00:59:57,621 basehttp 67904 52816 "GET /experiences/accommodations/test1/ HTTP/1.1" 200 35003
+INFO 2025-10-08 00:59:58,921 basehttp 67904 52816 "GET /static/favicon.ico HTTP/1.1" 200 15406
+INFO 2025-10-08 00:59:59,048 basehttp 67904 73620 "GET /static/site.webmanifest HTTP/1.1" 200 263
+INFO 2025-10-08 01:00:03,347 basehttp 67904 52816 "GET /accounts/users/ HTTP/1.1" 200 101174
+INFO 2025-10-08 01:00:08,319 basehttp 67904 52816 "GET /experiences/accommodations/ HTTP/1.1" 200 37318
+INFO 2025-10-08 01:00:14,348 basehttp 67904 52816 "GET /accounts/profile/ HTTP/1.1" 200 42232
+INFO 2025-10-08 01:00:17,275 basehttp 67904 52816 "GET /admin/dashboard/ HTTP/1.1" 200 76230
+INFO 2025-10-08 01:00:25,686 basehttp 67904 52816 "GET /admin/dashboard/ HTTP/1.1" 200 76230
+INFO 2025-10-08 01:00:27,424 basehttp 67904 52816 "GET /admin/dashboard/ HTTP/1.1" 200 76230
+INFO 2025-10-08 01:01:17,505 autoreload 67904 73772 C:\Users\DLSne\OneDrive\Desktop\Code\webdev\HygGeo\HygGeo\experiences\models.py changed, reloading.
+INFO 2025-10-08 01:01:19,031 autoreload 74768 73296 Watching for file changes with StatReloader
+INFO 2025-10-08 01:01:25,766 autoreload 74768 73296 C:\Users\DLSne\OneDrive\Desktop\Code\webdev\HygGeo\HygGeo\experiences\forms.py changed, reloading.
+INFO 2025-10-08 01:01:27,433 autoreload 68876 56960 Watching for file changes with StatReloader
+INFO 2025-10-08 01:01:59,304 autoreload 68876 56960 C:\Users\DLSne\OneDrive\Desktop\Code\webdev\HygGeo\HygGeo\experiences\forms.py changed, reloading.
+INFO 2025-10-08 01:02:00,870 autoreload 69636 58780 Watching for file changes with StatReloader
+INFO 2025-10-08 01:02:22,012 autoreload 69636 58780 C:\Users\DLSne\OneDrive\Desktop\Code\webdev\HygGeo\HygGeo\experiences\views.py changed, reloading.
+INFO 2025-10-08 01:02:23,657 autoreload 70056 24780 Watching for file changes with StatReloader
+INFO 2025-10-08 01:02:54,500 autoreload 70056 24780 C:\Users\DLSne\OneDrive\Desktop\Code\webdev\HygGeo\HygGeo\experiences\views.py changed, reloading.
+INFO 2025-10-08 01:02:56,050 autoreload 74604 67544 Watching for file changes with StatReloader
+INFO 2025-10-08 01:03:06,647 autoreload 74604 67544 C:\Users\DLSne\OneDrive\Desktop\Code\webdev\HygGeo\HygGeo\experiences\urls.py changed, reloading.
+INFO 2025-10-08 01:03:08,116 autoreload 42712 71576 Watching for file changes with StatReloader
+INFO 2025-10-08 01:04:10,645 autoreload 42712 71576 C:\Users\DLSne\OneDrive\Desktop\Code\webdev\HygGeo\HygGeo\experiences\admin.py changed, reloading.
+INFO 2025-10-08 01:04:12,290 autoreload 73684 61900 Watching for file changes with StatReloader
+INFO 2025-10-08 01:04:27,868 autoreload 73684 61900 C:\Users\DLSne\OneDrive\Desktop\Code\webdev\HygGeo\HygGeo\experiences\admin.py changed, reloading.
+INFO 2025-10-08 01:04:29,373 autoreload 62140 61664 Watching for file changes with StatReloader
+INFO 2025-10-08 01:04:52,790 basehttp 62140 70372 "GET /admin/dashboard/ HTTP/1.1" 200 78685
+INFO 2025-10-08 01:04:53,774 basehttp 62140 70372 "GET /static/favicon.ico HTTP/1.1" 200 15406
+INFO 2025-10-08 01:04:53,775 basehttp 62140 75204 "GET /static/site.webmanifest HTTP/1.1" 200 263
+ERROR 2025-10-08 01:04:56,612 log 62140 70372 Internal Server Error: /experiences/blogs/
+Traceback (most recent call last):
+  File "C:\Users\DLSne\AppData\Local\Packages\PythonSoftwareFoundation.Python.3.12_qbz5n2kfra8p0\LocalCache\local-packages\Python312\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+               ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\DLSne\AppData\Local\Packages\PythonSoftwareFoundation.Python.3.12_qbz5n2kfra8p0\LocalCache\local-packages\Python312\site-packages\django\core\handlers\base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\DLSne\OneDrive\Desktop\Code\webdev\HygGeo\HygGeo\experiences\views.py", line 1286, in blog_feed
+    return render(request, 'experiences/blog_feed.html', context)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\DLSne\AppData\Local\Packages\PythonSoftwareFoundation.Python.3.12_qbz5n2kfra8p0\LocalCache\local-packages\Python312\site-packages\django\shortcuts.py", line 25, in render
+    content = loader.render_to_string(template_name, context, request, using=using)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\DLSne\AppData\Local\Packages\PythonSoftwareFoundation.Python.3.12_qbz5n2kfra8p0\LocalCache\local-packages\Python312\site-packages\django\template\loader.py", line 61, in render_to_string
+    template = get_template(template_name, using=using)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\DLSne\AppData\Local\Packages\PythonSoftwareFoundation.Python.3.12_qbz5n2kfra8p0\LocalCache\local-packages\Python312\site-packages\django\template\loader.py", line 19, in get_template
+    raise TemplateDoesNotExist(template_name, chain=chain)
+django.template.exceptions.TemplateDoesNotExist: experiences/blog_feed.html
+ERROR 2025-10-08 01:04:56,615 basehttp 62140 70372 "GET /experiences/blogs/ HTTP/1.1" 500 89469
+ERROR 2025-10-08 01:04:57,689 log 62140 70372 Internal Server Error: /experiences/blogs/
+Traceback (most recent call last):
+  File "C:\Users\DLSne\AppData\Local\Packages\PythonSoftwareFoundation.Python.3.12_qbz5n2kfra8p0\LocalCache\local-packages\Python312\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+               ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\DLSne\AppData\Local\Packages\PythonSoftwareFoundation.Python.3.12_qbz5n2kfra8p0\LocalCache\local-packages\Python312\site-packages\django\core\handlers\base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\DLSne\OneDrive\Desktop\Code\webdev\HygGeo\HygGeo\experiences\views.py", line 1286, in blog_feed
+    return render(request, 'experiences/blog_feed.html', context)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\DLSne\AppData\Local\Packages\PythonSoftwareFoundation.Python.3.12_qbz5n2kfra8p0\LocalCache\local-packages\Python312\site-packages\django\shortcuts.py", line 25, in render
+    content = loader.render_to_string(template_name, context, request, using=using)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\DLSne\AppData\Local\Packages\PythonSoftwareFoundation.Python.3.12_qbz5n2kfra8p0\LocalCache\local-packages\Python312\site-packages\django\template\loader.py", line 61, in render_to_string
+    template = get_template(template_name, using=using)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\DLSne\AppData\Local\Packages\PythonSoftwareFoundation.Python.3.12_qbz5n2kfra8p0\LocalCache\local-packages\Python312\site-packages\django\template\loader.py", line 19, in get_template
+    raise TemplateDoesNotExist(template_name, chain=chain)
+django.template.exceptions.TemplateDoesNotExist: experiences/blog_feed.html
+ERROR 2025-10-08 01:04:57,690 basehttp 62140 70372 "GET /experiences/blogs/ HTTP/1.1" 500 89734
+INFO 2025-10-08 01:04:57,846 basehttp 62140 70372 "GET /favicon.ico HTTP/1.1" 301 0
+INFO 2025-10-08 01:04:57,848 basehttp 62140 70372 "GET /static/favicon.ico HTTP/1.1" 200 15406
+INFO 2025-10-08 01:04:59,207 basehttp 62140 70372 "GET /admin/dashboard/ HTTP/1.1" 200 78685
+ERROR 2025-10-08 01:05:01,089 log 62140 70372 Internal Server Error: /experiences/blogs/my-blogs/
+Traceback (most recent call last):
+  File "C:\Users\DLSne\AppData\Local\Packages\PythonSoftwareFoundation.Python.3.12_qbz5n2kfra8p0\LocalCache\local-packages\Python312\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+               ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\DLSne\AppData\Local\Packages\PythonSoftwareFoundation.Python.3.12_qbz5n2kfra8p0\LocalCache\local-packages\Python312\site-packages\django\core\handlers\base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\DLSne\AppData\Local\Packages\PythonSoftwareFoundation.Python.3.12_qbz5n2kfra8p0\LocalCache\local-packages\Python312\site-packages\django\contrib\auth\decorators.py", line 59, in _view_wrapper
+    return view_func(request, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\DLSne\OneDrive\Desktop\Code\webdev\HygGeo\HygGeo\experiences\views.py", line 1350, in my_blogs
+    return render(request, 'experiences/my_blogs.html', context)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\DLSne\AppData\Local\Packages\PythonSoftwareFoundation.Python.3.12_qbz5n2kfra8p0\LocalCache\local-packages\Python312\site-packages\django\shortcuts.py", line 25, in render
+    content = loader.render_to_string(template_name, context, request, using=using)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\DLSne\AppData\Local\Packages\PythonSoftwareFoundation.Python.3.12_qbz5n2kfra8p0\LocalCache\local-packages\Python312\site-packages\django\template\loader.py", line 61, in render_to_string
+    template = get_template(template_name, using=using)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\DLSne\AppData\Local\Packages\PythonSoftwareFoundation.Python.3.12_qbz5n2kfra8p0\LocalCache\local-packages\Python312\site-packages\django\template\loader.py", line 19, in get_template
+    raise TemplateDoesNotExist(template_name, chain=chain)
+django.template.exceptions.TemplateDoesNotExist: experiences/my_blogs.html
+ERROR 2025-10-08 01:05:01,091 basehttp 62140 70372 "GET /experiences/blogs/my-blogs/ HTTP/1.1" 500 93219
+INFO 2025-10-08 01:05:03,396 basehttp 62140 70372 "GET /admin/dashboard/ HTTP/1.1" 200 78685
+ERROR 2025-10-08 01:05:06,266 log 62140 70372 Internal Server Error: /experiences/blogs/create/
+Traceback (most recent call last):
+  File "C:\Users\DLSne\AppData\Local\Packages\PythonSoftwareFoundation.Python.3.12_qbz5n2kfra8p0\LocalCache\local-packages\Python312\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+               ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\DLSne\AppData\Local\Packages\PythonSoftwareFoundation.Python.3.12_qbz5n2kfra8p0\LocalCache\local-packages\Python312\site-packages\django\core\handlers\base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\DLSne\AppData\Local\Packages\PythonSoftwareFoundation.Python.3.12_qbz5n2kfra8p0\LocalCache\local-packages\Python312\site-packages\django\contrib\auth\decorators.py", line 59, in _view_wrapper
+    return view_func(request, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\DLSne\OneDrive\Desktop\Code\webdev\HygGeo\HygGeo\experiences\views.py", line 1402, in create_blog
+    return render(request, 'experiences/create_blog.html', {
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\DLSne\AppData\Local\Packages\PythonSoftwareFoundation.Python.3.12_qbz5n2kfra8p0\LocalCache\local-packages\Python312\site-packages\django\shortcuts.py", line 25, in render
+    content = loader.render_to_string(template_name, context, request, using=using)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\DLSne\AppData\Local\Packages\PythonSoftwareFoundation.Python.3.12_qbz5n2kfra8p0\LocalCache\local-packages\Python312\site-packages\django\template\loader.py", line 61, in render_to_string
+    template = get_template(template_name, using=using)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\DLSne\AppData\Local\Packages\PythonSoftwareFoundation.Python.3.12_qbz5n2kfra8p0\LocalCache\local-packages\Python312\site-packages\django\template\loader.py", line 19, in get_template
+    raise TemplateDoesNotExist(template_name, chain=chain)
+django.template.exceptions.TemplateDoesNotExist: experiences/create_blog.html
+ERROR 2025-10-08 01:05:06,270 basehttp 62140 70372 "GET /experiences/blogs/create/ HTTP/1.1" 500 95019
+ERROR 2025-10-08 01:05:07,919 log 62140 70372 Internal Server Error: /experiences/blogs/create/
+Traceback (most recent call last):
+  File "C:\Users\DLSne\AppData\Local\Packages\PythonSoftwareFoundation.Python.3.12_qbz5n2kfra8p0\LocalCache\local-packages\Python312\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+               ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\DLSne\AppData\Local\Packages\PythonSoftwareFoundation.Python.3.12_qbz5n2kfra8p0\LocalCache\local-packages\Python312\site-packages\django\core\handlers\base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\DLSne\AppData\Local\Packages\PythonSoftwareFoundation.Python.3.12_qbz5n2kfra8p0\LocalCache\local-packages\Python312\site-packages\django\contrib\auth\decorators.py", line 59, in _view_wrapper
+    return view_func(request, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\DLSne\OneDrive\Desktop\Code\webdev\HygGeo\HygGeo\experiences\views.py", line 1402, in create_blog
+    return render(request, 'experiences/create_blog.html', {
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\DLSne\AppData\Local\Packages\PythonSoftwareFoundation.Python.3.12_qbz5n2kfra8p0\LocalCache\local-packages\Python312\site-packages\django\shortcuts.py", line 25, in render
+    content = loader.render_to_string(template_name, context, request, using=using)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\DLSne\AppData\Local\Packages\PythonSoftwareFoundation.Python.3.12_qbz5n2kfra8p0\LocalCache\local-packages\Python312\site-packages\django\template\loader.py", line 61, in render_to_string
+    template = get_template(template_name, using=using)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\DLSne\AppData\Local\Packages\PythonSoftwareFoundation.Python.3.12_qbz5n2kfra8p0\LocalCache\local-packages\Python312\site-packages\django\template\loader.py", line 19, in get_template
+    raise TemplateDoesNotExist(template_name, chain=chain)
+django.template.exceptions.TemplateDoesNotExist: experiences/create_blog.html
+ERROR 2025-10-08 01:05:07,922 basehttp 62140 70372 "GET /experiences/blogs/create/ HTTP/1.1" 500 95284
+INFO 2025-10-08 01:05:09,760 basehttp 62140 70372 "GET /favicon.ico HTTP/1.1" 301 0
+INFO 2025-10-08 01:05:09,771 basehttp 62140 70372 "GET /static/favicon.ico HTTP/1.1" 200 15406
+INFO 2025-10-08 01:07:01,981 basehttp 62140 70372 "GET /admin/dashboard/ HTTP/1.1" 200 78685
+WARNING 2025-10-08 01:07:04,392 log 62140 70372 Not Found: /.well-known/appspecific/com.chrome.devtools.json
+WARNING 2025-10-08 01:07:04,392 basehttp 62140 70372 "GET /.well-known/appspecific/com.chrome.devtools.json HTTP/1.1" 404 4592
+INFO 2025-10-08 01:07:08,332 basehttp 62140 70372 "GET /experiences/accommodations/ HTTP/1.1" 200 39773
+WARNING 2025-10-08 01:07:08,387 log 62140 70372 Not Found: /.well-known/appspecific/com.chrome.devtools.json
+WARNING 2025-10-08 01:07:08,388 basehttp 62140 70372 "GET /.well-known/appspecific/com.chrome.devtools.json HTTP/1.1" 404 4592
+INFO 2025-10-08 01:07:09,215 basehttp 62140 75204 "GET /static/site.webmanifest HTTP/1.1" 200 263
+INFO 2025-10-08 01:07:14,340 basehttp 62140 70372 "GET /accounts/users/ HTTP/1.1" 200 103629
+WARNING 2025-10-08 01:07:14,399 log 62140 70372 Not Found: /.well-known/appspecific/com.chrome.devtools.json
+WARNING 2025-10-08 01:07:14,400 basehttp 62140 70372 "GET /.well-known/appspecific/com.chrome.devtools.json HTTP/1.1" 404 4592
+INFO 2025-10-08 01:07:15,239 basehttp 62140 75204 "GET /static/site.webmanifest HTTP/1.1" 200 263
+INFO 2025-10-08 01:07:36,411 basehttp 62140 70372 "GET /experiences/accommodations/ HTTP/1.1" 200 39773
+WARNING 2025-10-08 01:07:36,473 log 62140 70372 Not Found: /.well-known/appspecific/com.chrome.devtools.json
+WARNING 2025-10-08 01:07:36,473 basehttp 62140 70372 "GET /.well-known/appspecific/com.chrome.devtools.json HTTP/1.1" 404 4592
+INFO 2025-10-08 01:07:37,842 basehttp 62140 75204 "GET /static/site.webmanifest HTTP/1.1" 200 263
+INFO 2025-10-08 01:07:38,726 basehttp 62140 70372 "GET /experiences/accommodations/test1/ HTTP/1.1" 200 37458
+WARNING 2025-10-08 01:07:38,775 log 62140 70372 Not Found: /.well-known/appspecific/com.chrome.devtools.json
+WARNING 2025-10-08 01:07:38,775 basehttp 62140 70372 "GET /.well-known/appspecific/com.chrome.devtools.json HTTP/1.1" 404 4592
+INFO 2025-10-08 01:07:39,536 basehttp 62140 75204 "GET /static/site.webmanifest HTTP/1.1" 200 263
+INFO 2025-10-08 01:09:03,621 basehttp 62140 70372 "GET /experiences/blogs/my-blogs/ HTTP/1.1" 200 33173
+WARNING 2025-10-08 01:09:03,700 log 62140 70372 Not Found: /.well-known/appspecific/com.chrome.devtools.json
+WARNING 2025-10-08 01:09:03,701 basehttp 62140 70372 "GET /.well-known/appspecific/com.chrome.devtools.json HTTP/1.1" 404 4592
+INFO 2025-10-08 01:09:05,119 basehttp 62140 75204 "GET /static/site.webmanifest HTTP/1.1" 200 263
+INFO 2025-10-08 01:09:05,191 basehttp 62140 70372 "GET /experiences/blogs/create/ HTTP/1.1" 200 42501
+WARNING 2025-10-08 01:09:05,248 log 62140 70372 Not Found: /.well-known/appspecific/com.chrome.devtools.json
+WARNING 2025-10-08 01:09:05,249 basehttp 62140 70372 "GET /.well-known/appspecific/com.chrome.devtools.json HTTP/1.1" 404 4592
+INFO 2025-10-08 01:09:05,637 basehttp 62140 75204 "GET /static/site.webmanifest HTTP/1.1" 200 263
+INFO 2025-10-08 01:09:47,419 basehttp 62140 70372 "POST /experiences/blogs/create/ HTTP/1.1" 200 42931
+WARNING 2025-10-08 01:09:47,485 log 62140 70372 Not Found: /.well-known/appspecific/com.chrome.devtools.json
+WARNING 2025-10-08 01:09:47,486 basehttp 62140 70372 "GET /.well-known/appspecific/com.chrome.devtools.json HTTP/1.1" 404 4592
+INFO 2025-10-08 01:09:48,722 basehttp 62140 75204 "GET /static/site.webmanifest HTTP/1.1" 200 263
+INFO 2025-10-08 01:10:02,731 basehttp 62140 70372 "POST /experiences/blogs/create/ HTTP/1.1" 200 42939
+WARNING 2025-10-08 01:10:02,781 log 62140 70372 Not Found: /.well-known/appspecific/com.chrome.devtools.json
+WARNING 2025-10-08 01:10:02,782 basehttp 62140 70372 "GET /.well-known/appspecific/com.chrome.devtools.json HTTP/1.1" 404 4592
+INFO 2025-10-08 01:10:04,007 basehttp 62140 75204 "GET /static/site.webmanifest HTTP/1.1" 200 263
+INFO 2025-10-08 01:10:09,348 basehttp 62140 70372 "POST /experiences/blogs/create/ HTTP/1.1" 302 0
+INFO 2025-10-08 01:10:09,396 basehttp 62140 70372 "GET /experiences/blogs/testg45t323r23/ HTTP/1.1" 200 39527
+WARNING 2025-10-08 01:10:09,445 log 62140 70372 Not Found: /.well-known/appspecific/com.chrome.devtools.json
+WARNING 2025-10-08 01:10:09,446 basehttp 62140 70372 "GET /.well-known/appspecific/com.chrome.devtools.json HTTP/1.1" 404 4592
+INFO 2025-10-08 01:10:10,246 basehttp 62140 75204 "GET /static/site.webmanifest HTTP/1.1" 200 263
+INFO 2025-10-08 01:10:11,751 basehttp 62140 70372 "GET /experiences/experience/ultimate-seattle-tbd-test1-white-water-rafting-adventure/ HTTP/1.1" 200 48747
+WARNING 2025-10-08 01:10:11,807 log 62140 70372 Not Found: /.well-known/appspecific/com.chrome.devtools.json
+WARNING 2025-10-08 01:10:11,807 basehttp 62140 70372 "GET /.well-known/appspecific/com.chrome.devtools.json HTTP/1.1" 404 4592
+INFO 2025-10-08 01:10:12,602 basehttp 62140 75204 "GET /static/site.webmanifest HTTP/1.1" 200 263
+INFO 2025-10-08 01:10:16,576 basehttp 62140 70372 "GET /experiences/blogs/testg45t323r23/ HTTP/1.1" 200 39147
+WARNING 2025-10-08 01:10:16,650 log 62140 70372 Not Found: /.well-known/appspecific/com.chrome.devtools.json
+WARNING 2025-10-08 01:10:16,650 basehttp 62140 70372 "GET /.well-known/appspecific/com.chrome.devtools.json HTTP/1.1" 404 4592
+INFO 2025-10-08 01:10:17,378 basehttp 62140 75204 "GET /static/site.webmanifest HTTP/1.1" 200 263
+INFO 2025-10-08 01:10:24,157 basehttp 62140 70372 "GET /experiences/blogs/ HTTP/1.1" 200 37548
+WARNING 2025-10-08 01:10:24,245 log 62140 70372 Not Found: /.well-known/appspecific/com.chrome.devtools.json
+WARNING 2025-10-08 01:10:24,246 basehttp 62140 70372 "GET /.well-known/appspecific/com.chrome.devtools.json HTTP/1.1" 404 4592
+INFO 2025-10-08 01:10:25,028 basehttp 62140 75204 "GET /static/site.webmanifest HTTP/1.1" 200 263
+INFO 2025-10-08 01:10:28,259 basehttp 62140 70372 "GET /experiences/accommodations/ HTTP/1.1" 200 39773
+WARNING 2025-10-08 01:10:28,322 log 62140 70372 Not Found: /.well-known/appspecific/com.chrome.devtools.json
+WARNING 2025-10-08 01:10:28,323 basehttp 62140 70372 "GET /.well-known/appspecific/com.chrome.devtools.json HTTP/1.1" 404 4592
+INFO 2025-10-08 01:10:29,099 basehttp 62140 75204 "GET /static/site.webmanifest HTTP/1.1" 200 263
+INFO 2025-10-08 01:10:34,604 basehttp 62140 70372 "GET /experiences/blogs/ HTTP/1.1" 200 37548
+WARNING 2025-10-08 01:10:34,684 log 62140 70372 Not Found: /.well-known/appspecific/com.chrome.devtools.json
+WARNING 2025-10-08 01:10:34,684 basehttp 62140 70372 "GET /.well-known/appspecific/com.chrome.devtools.json HTTP/1.1" 404 4592
+INFO 2025-10-08 01:10:36,009 basehttp 62140 75204 "GET /static/site.webmanifest HTTP/1.1" 200 263
+INFO 2025-10-08 01:10:37,514 basehttp 62140 70372 "GET /experiences/blogs/testg45t323r23/ HTTP/1.1" 200 39147
+WARNING 2025-10-08 01:10:37,565 log 62140 70372 Not Found: /.well-known/appspecific/com.chrome.devtools.json
+WARNING 2025-10-08 01:10:37,565 basehttp 62140 70372 "GET /.well-known/appspecific/com.chrome.devtools.json HTTP/1.1" 404 4592
+INFO 2025-10-08 01:10:38,278 basehttp 62140 75204 "GET /static/site.webmanifest HTTP/1.1" 200 263
+INFO 2025-10-08 01:10:51,507 basehttp 62140 70372 "GET /experiences/accommodations/ HTTP/1.1" 200 39773
+WARNING 2025-10-08 01:10:51,572 log 62140 70372 Not Found: /.well-known/appspecific/com.chrome.devtools.json
+WARNING 2025-10-08 01:10:51,573 basehttp 62140 70372 "GET /.well-known/appspecific/com.chrome.devtools.json HTTP/1.1" 404 4592
+INFO 2025-10-08 01:10:52,375 basehttp 62140 75204 "GET /static/site.webmanifest HTTP/1.1" 200 263
+INFO 2025-10-08 01:10:57,839 basehttp 62140 70372 "GET /accounts/users/ HTTP/1.1" 200 103629
+WARNING 2025-10-08 01:10:57,959 log 62140 70372 Not Found: /.well-known/appspecific/com.chrome.devtools.json
+WARNING 2025-10-08 01:10:57,960 basehttp 62140 70372 "GET /.well-known/appspecific/com.chrome.devtools.json HTTP/1.1" 404 4592
+INFO 2025-10-08 01:10:58,672 basehttp 62140 75204 "GET /static/site.webmanifest HTTP/1.1" 200 263
+INFO 2025-10-08 01:11:02,306 basehttp 62140 70372 "GET /experiences/blogs/create/ HTTP/1.1" 200 42501
+WARNING 2025-10-08 01:11:02,379 log 62140 70372 Not Found: /.well-known/appspecific/com.chrome.devtools.json
+WARNING 2025-10-08 01:11:02,380 basehttp 62140 70372 "GET /.well-known/appspecific/com.chrome.devtools.json HTTP/1.1" 404 4592
+INFO 2025-10-08 01:11:03,181 basehttp 62140 75204 "GET /static/site.webmanifest HTTP/1.1" 200 263
+INFO 2025-10-08 01:11:36,175 basehttp 62140 70372 "POST /experiences/blogs/create/ HTTP/1.1" 200 42966
+WARNING 2025-10-08 01:11:36,248 log 62140 70372 Not Found: /.well-known/appspecific/com.chrome.devtools.json
+WARNING 2025-10-08 01:11:36,248 basehttp 62140 70372 "GET /.well-known/appspecific/com.chrome.devtools.json HTTP/1.1" 404 4592
+INFO 2025-10-08 01:11:37,225 basehttp 62140 75204 "GET /static/site.webmanifest HTTP/1.1" 200 263
+INFO 2025-10-08 01:11:52,190 basehttp 62140 70372 "POST /experiences/blogs/create/ HTTP/1.1" 302 0
+INFO 2025-10-08 01:11:52,215 basehttp 62140 70372 "GET /experiences/blogs/35t2pirjroif34jhoi/ HTTP/1.1" 200 40632
+WARNING 2025-10-08 01:11:52,298 log 62140 70372 Not Found: /.well-known/appspecific/com.chrome.devtools.json
+WARNING 2025-10-08 01:11:52,298 basehttp 62140 70372 "GET /.well-known/appspecific/com.chrome.devtools.json HTTP/1.1" 404 4592
+INFO 2025-10-08 01:11:53,083 basehttp 62140 75204 "GET /static/site.webmanifest HTTP/1.1" 200 263
+INFO 2025-10-08 01:12:59,469 autoreload 62140 61664 C:\Users\DLSne\OneDrive\Desktop\Code\webdev\HygGeo\HygGeo\experiences\forms.py changed, reloading.
+INFO 2025-10-08 01:13:01,205 autoreload 68184 73768 Watching for file changes with StatReloader
+INFO 2025-10-08 01:13:18,526 autoreload 68184 73768 C:\Users\DLSne\OneDrive\Desktop\Code\webdev\HygGeo\HygGeo\experiences\views.py changed, reloading.
+INFO 2025-10-08 01:13:20,263 autoreload 71468 69916 Watching for file changes with StatReloader
+INFO 2025-10-08 01:13:33,743 autoreload 71468 69916 C:\Users\DLSne\OneDrive\Desktop\Code\webdev\HygGeo\HygGeo\experiences\views.py changed, reloading.
+INFO 2025-10-08 01:13:35,398 autoreload 73028 68756 Watching for file changes with StatReloader
+INFO 2025-10-08 01:15:58,333 basehttp 73028 62380 "GET /experiences/blogs/ HTTP/1.1" 200 39723
+WARNING 2025-10-08 01:15:58,401 log 73028 62380 Not Found: /.well-known/appspecific/com.chrome.devtools.json
+WARNING 2025-10-08 01:15:58,402 basehttp 73028 62380 "GET /.well-known/appspecific/com.chrome.devtools.json HTTP/1.1" 404 4592
+INFO 2025-10-08 01:15:59,764 basehttp 73028 68940 "GET /static/site.webmanifest HTTP/1.1" 200 263
+INFO 2025-10-08 01:16:07,572 basehttp 73028 62380 "GET /experiences/accommodations/ HTTP/1.1" 200 39773
+WARNING 2025-10-08 01:16:07,640 log 73028 62380 Not Found: /.well-known/appspecific/com.chrome.devtools.json
+WARNING 2025-10-08 01:16:07,641 basehttp 73028 62380 "GET /.well-known/appspecific/com.chrome.devtools.json HTTP/1.1" 404 4592
+INFO 2025-10-08 01:16:08,446 basehttp 73028 68940 "GET /static/site.webmanifest HTTP/1.1" 200 263
+INFO 2025-10-08 01:16:11,496 basehttp 73028 62380 "GET /experiences/accommodations/ HTTP/1.1" 200 39773
+WARNING 2025-10-08 01:16:11,547 log 73028 62380 Not Found: /.well-known/appspecific/com.chrome.devtools.json
+WARNING 2025-10-08 01:16:11,548 basehttp 73028 62380 "GET /.well-known/appspecific/com.chrome.devtools.json HTTP/1.1" 404 4592
+INFO 2025-10-08 01:16:12,273 basehttp 73028 68940 "GET /static/site.webmanifest HTTP/1.1" 200 263
+INFO 2025-10-08 01:16:14,997 basehttp 73028 62380 "GET /experiences/accommodations/test1/ HTTP/1.1" 200 37458
+WARNING 2025-10-08 01:16:15,050 log 73028 62380 Not Found: /.well-known/appspecific/com.chrome.devtools.json
+WARNING 2025-10-08 01:16:15,050 basehttp 73028 62380 "GET /.well-known/appspecific/com.chrome.devtools.json HTTP/1.1" 404 4592
+INFO 2025-10-08 01:16:15,805 basehttp 73028 68940 "GET /static/site.webmanifest HTTP/1.1" 200 263
+INFO 2025-10-08 01:16:17,476 basehttp 73028 62380 "GET /experiences/accommodations/ HTTP/1.1" 200 39773
+WARNING 2025-10-08 01:16:17,531 log 73028 62380 Not Found: /.well-known/appspecific/com.chrome.devtools.json
+WARNING 2025-10-08 01:16:17,531 basehttp 73028 62380 "GET /.well-known/appspecific/com.chrome.devtools.json HTTP/1.1" 404 4592
+INFO 2025-10-08 01:16:18,245 basehttp 73028 68940 "GET /static/site.webmanifest HTTP/1.1" 200 263
+INFO 2025-10-08 01:16:19,715 basehttp 73028 62380 "GET /experiences/accommodations/ HTTP/1.1" 200 39773
+WARNING 2025-10-08 01:16:19,765 log 73028 62380 Not Found: /.well-known/appspecific/com.chrome.devtools.json
+WARNING 2025-10-08 01:16:19,765 basehttp 73028 62380 "GET /.well-known/appspecific/com.chrome.devtools.json HTTP/1.1" 404 4592
+INFO 2025-10-08 01:16:20,442 basehttp 73028 68940 "GET /static/site.webmanifest HTTP/1.1" 200 263
+INFO 2025-10-08 01:16:25,301 basehttp 73028 62380 "GET /experiences/blogs/ HTTP/1.1" 200 39723
+WARNING 2025-10-08 01:16:25,381 log 73028 62380 Not Found: /.well-known/appspecific/com.chrome.devtools.json
+WARNING 2025-10-08 01:16:25,383 basehttp 73028 62380 "GET /.well-known/appspecific/com.chrome.devtools.json HTTP/1.1" 404 4592
+INFO 2025-10-08 01:16:26,573 basehttp 73028 68940 "GET /static/site.webmanifest HTTP/1.1" 200 263
+INFO 2025-10-08 01:16:31,198 basehttp 73028 62380 "GET /experiences/blogs/create/ HTTP/1.1" 200 40131
+WARNING 2025-10-08 01:16:31,247 log 73028 62380 Not Found: /.well-known/appspecific/com.chrome.devtools.json
+WARNING 2025-10-08 01:16:31,248 basehttp 73028 62380 "GET /.well-known/appspecific/com.chrome.devtools.json HTTP/1.1" 404 4592
+INFO 2025-10-08 01:16:32,007 basehttp 73028 68940 "GET /static/site.webmanifest HTTP/1.1" 200 263
+INFO 2025-10-08 01:16:50,799 basehttp 73028 62380 "POST /experiences/blogs/create/ HTTP/1.1" 200 40544
+WARNING 2025-10-08 01:16:50,896 log 73028 62380 Not Found: /.well-known/appspecific/com.chrome.devtools.json
+WARNING 2025-10-08 01:16:50,897 basehttp 73028 62380 "GET /.well-known/appspecific/com.chrome.devtools.json HTTP/1.1" 404 4592
+INFO 2025-10-08 01:16:51,477 basehttp 73028 68940 "GET /static/site.webmanifest HTTP/1.1" 200 263
+INFO 2025-10-08 01:17:00,450 basehttp 73028 62380 "POST /experiences/blogs/create/ HTTP/1.1" 200 40547
+WARNING 2025-10-08 01:17:00,499 log 73028 62380 Not Found: /.well-known/appspecific/com.chrome.devtools.json
+WARNING 2025-10-08 01:17:00,499 basehttp 73028 62380 "GET /.well-known/appspecific/com.chrome.devtools.json HTTP/1.1" 404 4592
+INFO 2025-10-08 01:17:01,274 basehttp 73028 68940 "GET /static/site.webmanifest HTTP/1.1" 200 263
+INFO 2025-10-08 01:18:00,782 autoreload 73028 68756 C:\Users\DLSne\OneDrive\Desktop\Code\webdev\HygGeo\HygGeo\experiences\models.py changed, reloading.
+INFO 2025-10-08 01:18:02,312 autoreload 72260 67096 Watching for file changes with StatReloader
+INFO 2025-10-08 01:18:09,547 autoreload 72260 67096 C:\Users\DLSne\OneDrive\Desktop\Code\webdev\HygGeo\HygGeo\experiences\models.py changed, reloading.
+INFO 2025-10-08 01:18:10,798 autoreload 70244 68820 Watching for file changes with StatReloader
+INFO 2025-10-08 01:18:25,884 autoreload 70244 68820 C:\Users\DLSne\OneDrive\Desktop\Code\webdev\HygGeo\HygGeo\experiences\models.py changed, reloading.
+INFO 2025-10-08 01:18:27,562 autoreload 34032 24804 Watching for file changes with StatReloader
+INFO 2025-10-08 01:18:41,122 autoreload 34032 24804 C:\Users\DLSne\OneDrive\Desktop\Code\webdev\HygGeo\HygGeo\experiences\models.py changed, reloading.
+INFO 2025-10-08 01:18:42,633 autoreload 60388 67764 Watching for file changes with StatReloader
+INFO 2025-10-08 01:19:00,144 autoreload 60388 67764 C:\Users\DLSne\OneDrive\Desktop\Code\webdev\HygGeo\HygGeo\HygGeo\settings.py changed, reloading.
+INFO 2025-10-08 01:19:01,851 autoreload 39864 18904 Watching for file changes with StatReloader
+INFO 2025-10-08 01:19:11,286 autoreload 39864 18904 C:\Users\DLSne\OneDrive\Desktop\Code\webdev\HygGeo\HygGeo\HygGeo\settings.py changed, reloading.
+INFO 2025-10-08 01:19:13,042 autoreload 62140 69232 Watching for file changes with StatReloader
+INFO 2025-10-08 01:22:46,387 autoreload 62140 69232 C:\Users\DLSne\OneDrive\Desktop\Code\webdev\HygGeo\HygGeo\experiences\urls.py changed, reloading.
+INFO 2025-10-08 01:22:48,163 autoreload 69680 48632 Watching for file changes with StatReloader
+INFO 2025-10-08 01:23:09,279 autoreload 69680 48632 C:\Users\DLSne\OneDrive\Desktop\Code\webdev\HygGeo\HygGeo\experiences\views.py changed, reloading.
+INFO 2025-10-08 01:23:10,964 autoreload 45040 72976 Watching for file changes with StatReloader
+INFO 2025-10-08 01:23:55,977 basehttp 45040 36384 "POST /experiences/blogs/create/ HTTP/1.1" 200 47819
+INFO 2025-10-08 01:23:56,969 basehttp 45040 36384 "GET /static/favicon.ico HTTP/1.1" 200 15406
+INFO 2025-10-08 01:23:56,991 basehttp 45040 69368 "GET /static/site.webmanifest HTTP/1.1" 200 263
+INFO 2025-10-08 01:25:38,739 basehttp 45040 36384 "POST /experiences/blogs/create/ HTTP/1.1" 302 0
+INFO 2025-10-08 01:25:38,784 basehttp 45040 36384 "GET /experiences/blogs/geeswef/ HTTP/1.1" 200 40401
+INFO 2025-10-08 01:26:48,185 autoreload 45040 72976 C:\Users\DLSne\OneDrive\Desktop\Code\webdev\HygGeo\HygGeo\experiences\views.py changed, reloading.
+INFO 2025-10-08 01:26:50,048 autoreload 32180 19916 Watching for file changes with StatReloader
+INFO 2025-10-08 01:27:14,153 autoreload 32180 19916 C:\Users\DLSne\OneDrive\Desktop\Code\webdev\HygGeo\HygGeo\experiences\views.py changed, reloading.
+INFO 2025-10-08 01:27:15,732 autoreload 3028 57704 Watching for file changes with StatReloader
+INFO 2025-10-08 01:27:38,687 autoreload 3028 57704 C:\Users\DLSne\OneDrive\Desktop\Code\webdev\HygGeo\HygGeo\experiences\views.py changed, reloading.
+INFO 2025-10-08 01:27:40,334 autoreload 31056 68480 Watching for file changes with StatReloader
+INFO 2025-10-08 01:28:43,188 basehttp 31056 62552 "GET /experiences/blogs/create/ HTTP/1.1" 200 49021
+INFO 2025-10-08 01:29:15,626 basehttp 31056 62552 "POST /experiences/blogs/create/ HTTP/1.1" 302 0
+INFO 2025-10-08 01:29:15,654 basehttp 31056 62552 "GET /experiences/blogs/my-blogs/ HTTP/1.1" 200 42502
+INFO 2025-10-08 01:29:21,304 basehttp 31056 62552 "GET /experiences/blogs/test/edit/ HTTP/1.1" 200 47632
+INFO 2025-10-08 01:29:29,038 basehttp 31056 62552 "POST /experiences/blogs/test/edit/ HTTP/1.1" 302 0
+INFO 2025-10-08 01:29:29,080 basehttp 31056 62552 "GET /experiences/blogs/test/ HTTP/1.1" 200 40002
+INFO 2025-10-08 01:29:39,625 basehttp 31056 62552 "GET /experiences/blogs/test/edit/ HTTP/1.1" 200 47640
+INFO 2025-10-08 01:29:57,401 basehttp 31056 68068 "POST /experiences/blogs/test/edit/ HTTP/1.1" 302 0
+INFO 2025-10-08 01:29:57,419 basehttp 31056 68068 "GET /experiences/blogs/test/ HTTP/1.1" 200 40038
+INFO 2025-10-08 01:30:50,375 autoreload 31056 68480 C:\Users\DLSne\OneDrive\Desktop\Code\webdev\HygGeo\HygGeo\experiences\views.py changed, reloading.
+INFO 2025-10-08 01:30:51,993 autoreload 556 57532 Watching for file changes with StatReloader
+INFO 2025-10-08 01:32:24,728 basehttp 556 68736 "GET /experiences/blogs/test/edit/ HTTP/1.1" 200 50816
+INFO 2025-10-08 01:32:32,249 basehttp 556 68736 "POST /experiences/blogs/test/edit/ HTTP/1.1" 302 0
+INFO 2025-10-08 01:32:32,291 basehttp 556 68736 "GET /experiences/blogs/test/ HTTP/1.1" 200 40112
+INFO 2025-10-08 01:32:41,988 basehttp 556 68736 "GET /experiences/blogs/create/ HTTP/1.1" 200 52161
+INFO 2025-10-08 01:33:10,981 basehttp 556 53288 "POST /experiences/blogs/create/ HTTP/1.1" 302 0
+INFO 2025-10-08 01:33:11,003 basehttp 556 53288 "GET /experiences/blogs/wefwwq/ HTTP/1.1" 200 39954
+INFO 2025-10-08 01:33:21,636 basehttp 556 53288 "GET /experiences/blogs/wefwwq/edit/ HTTP/1.1" 200 50698
+INFO 2025-10-08 01:34:45,618 basehttp 556 53288 "GET /experiences/blogs/wefwwq/edit/ HTTP/1.1" 200 50698
+INFO 2025-10-08 01:34:46,633 basehttp 556 53288 "GET /static/favicon.ico HTTP/1.1" 200 15406
+INFO 2025-10-08 01:34:46,709 basehttp 556 73012 "GET /static/site.webmanifest HTTP/1.1" 200 263
+INFO 2025-10-08 01:34:54,063 basehttp 556 53288 "POST /experiences/blogs/wefwwq/edit/ HTTP/1.1" 302 0
+INFO 2025-10-08 01:34:54,094 basehttp 556 53288 "GET /experiences/blogs/wefwwq/ HTTP/1.1" 200 39992
+INFO 2025-10-08 01:34:57,847 basehttp 556 53288 "GET /experiences/blogs/wefwwq/edit/ HTTP/1.1" 200 50791
+INFO 2025-10-08 01:35:10,292 basehttp 556 53288 "POST /experiences/blogs/wefwwq/edit/ HTTP/1.1" 302 0
+INFO 2025-10-08 01:35:10,318 basehttp 556 53288 "GET /experiences/blogs/wefwwq/ HTTP/1.1" 200 40064
+INFO 2025-10-08 01:35:18,828 basehttp 556 53288 "GET /experiences/blogs/wefwwq/edit/ HTTP/1.1" 200 50947
+INFO 2025-10-08 01:35:35,414 basehttp 556 53288 "GET /experiences/blogs/create/ HTTP/1.1" 200 52161
+INFO 2025-10-08 01:38:28,743 basehttp 556 53288 "GET /experiences/blogs/create/ HTTP/1.1" 200 46831
+INFO 2025-10-08 01:38:29,571 basehttp 556 73012 "GET /static/site.webmanifest HTTP/1.1" 200 263
+INFO 2025-10-08 01:38:29,768 basehttp 556 53288 "GET /static/favicon.ico HTTP/1.1" 200 15406
+INFO 2025-10-08 01:42:45,860 basehttp 556 53288 "GET /experiences/blogs/create/ HTTP/1.1" 200 56249
+INFO 2025-10-08 01:42:46,759 basehttp 556 73012 "GET /static/site.webmanifest HTTP/1.1" 200 263
+INFO 2025-10-08 01:42:46,941 basehttp 556 53288 "GET /static/favicon.ico HTTP/1.1" 200 15406
+INFO 2025-10-08 01:43:29,687 basehttp 556 53288 "POST /experiences/blogs/create/ HTTP/1.1" 302 0
+INFO 2025-10-08 01:43:29,714 basehttp 556 53288 "GET /experiences/blogs/wef/ HTTP/1.1" 200 39951

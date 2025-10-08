@@ -30,6 +30,15 @@
         <div class="col-md-3 mb-3">
             <div class="card card-hygge h-100">
                 <div class="card-body text-center">
+                    <i class="fas fa-bed text-info mb-3" style="font-size: 2.5rem; color: #9b59b6 !important;"></i>
+                    <h4 class="fw-bold">{{ stats.accommodations_count }}</h4>
+                    <p class="text-muted mb-0">Accommodations</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3 mb-3">
+            <div class="card card-hygge h-100">
+                <div class="card-body text-center">
                     <i class="fas fa-globe-americas text-info mb-3" style="font-size: 2.5rem; color: var(--hygge-soft-blue) !important;"></i>
                     <h4 class="fw-bold">{{ stats.destinations_count }}</h4>
                     <p class="text-muted mb-0">Destinations</p>
@@ -45,6 +54,10 @@
                 </div>
             </div>
         </div>
+    </div>
+
+    <!-- Second Stats Row -->
+    <div class="row mb-5">
         <div class="col-md-3 mb-3">
             <div class="card card-hygge h-100">
                 <div class="card-body text-center">
@@ -142,6 +155,22 @@
                     <p class="text-muted mb-4">Define a new type of travel experience for better categorization.</p>
                     <a href="{% url 'experiences:add_experience_type' %}" class="btn btn-outline-hygge btn-lg w-100">
                         <i class="fas fa-plus me-2"></i>Add Type
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Add Accommodation -->
+        <div class="col-lg-6 col-xl-4 mb-4">
+            <div class="card card-hygge h-100 admin-action-card">
+                <div class="card-body text-center p-4">
+                    <div class="action-icon mb-3">
+                        <i class="fas fa-bed" style="font-size: 3rem; color: #9b59b6;"></i>
+                    </div>
+                    <h5 class="fw-bold mb-3">Add Accommodation</h5>
+                    <p class="text-muted mb-4">Add a new accommodation option like hotels, hostels, or eco-lodges.</p>
+                    <a href="{% url 'experiences:add_accommodation' %}" class="btn btn-outline-hygge btn-lg w-100">
+                        <i class="fas fa-plus me-2"></i>Add Accommodation
                     </a>
                 </div>
             </div>
@@ -729,8 +758,34 @@ Format: Month | Theme | Content Ideas | Key Keywords | Publishing Schedule</div>
             </div>
         </div>
 
+        <!-- View All Accommodations -->
+        <div class="col-lg-6 col-xl-2 mb-4">
+            <div class="card card-hygge h-100">
+                <div class="card-body text-center p-3">
+                    <i class="fas fa-bed mb-2" style="font-size: 2rem; color: #9b59b6;"></i>
+                    <h6 class="fw-bold mb-2 small">View Accommodations</h6>
+                    <a href="{% url 'experiences:accommodation_list' %}" class="btn btn-sm btn-outline-hygge">
+                        <i class="fas fa-arrow-right me-1"></i>View All
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Edit Accommodations -->
+        <div class="col-lg-6 col-xl-2 mb-4">
+            <div class="card card-hygge h-100">
+                <div class="card-body text-center p-3">
+                    <i class="fas fa-hotel mb-2" style="font-size: 2rem; color: #9b59b6;"></i>
+                    <h6 class="fw-bold mb-2 small">Edit Accommodations</h6>
+                    <a href="{% url 'experiences:accommodation_list' %}" class="btn btn-sm btn-outline-hygge">
+                        <i class="fas fa-edit me-1"></i>Manage
+                    </a>
+                </div>
+            </div>
+        </div>
+
         <!-- Analytics -->
-        <div class="col-lg-6 col-xl-3 mb-4">
+        <div class="col-lg-6 col-xl-2 mb-4">
             <div class="card card-hygge h-100">
                 <div class="card-body text-center p-3">
                     <i class="fas fa-chart-bar mb-2" style="font-size: 2rem; color: var(--hygge-light-green);"></i>

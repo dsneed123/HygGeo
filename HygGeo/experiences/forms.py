@@ -1,6 +1,6 @@
 # experiences/forms.py
 from django import forms
-from .models import Experience, Provider, Destination, Category, ExperienceType
+from .models import Experience, Provider, Destination, Category, ExperienceType, Accommodation, TravelBlog, BlogComment
 class ExperienceForm(forms.ModelForm):
     class Meta:
         model = Experience
@@ -408,4 +408,246 @@ class CategoryForm(forms.ModelForm):
         self.fields['description'].help_text = 'Brief description of what experiences in this category typically offer'
         self.fields['icon'].help_text = 'FontAwesome icon class - browse available icons at fontawesome.com/icons'
         self.fields['color'].help_text = 'Choose a color that best represents this category'
+
+class AccommodationForm(forms.ModelForm):
+    class Meta:
+        model = Accommodation
+        fields = [
+            'name', 'short_description', 'description', 'main_image',
+            'destination', 'provider', 'accommodation_type', 'budget_range',
+            'price_per_night_from', 'price_per_night_to', 'currency',
+            'booking_link', 'sustainability_score', 'hygge_factor',
+            'carbon_neutral', 'supports_local_community', 'eco_certified',
+            'address', 'amenities', 'total_rooms', 'max_guests',
+            'cancellation_policy',
+            'meta_title', 'meta_description', 'is_featured', 'is_active'
+        ]
+        widgets = {
+            'name': forms.TextInput(attrs={
+                'class': 'form-control',
+                'placeholder': 'Enter accommodation name',
+                'required': True
+            }),
+            'short_description': forms.TextInput(attrs={
+                'class': 'form-control',
+                'placeholder': 'Brief description for cards (max 300 characters)',
+                'maxlength': 300
+            }),
+            'description': forms.Textarea(attrs={
+                'class': 'form-control',
+                'rows': 6,
+                'placeholder': 'Detailed description of the accommodation...'
+            }),
+            'main_image': forms.FileInput(attrs={
+                'class': 'form-control',
+                'accept': 'image/*'
+            }),
+            'destination': forms.Select(attrs={
+                'class': 'form-select',
+                'required': True
+            }),
+            'provider': forms.Select(attrs={
+                'class': 'form-select',
+                'required': True
+            }),
+            'accommodation_type': forms.Select(attrs={
+                'class': 'form-select',
+                'required': True
+            }),
+            'budget_range': forms.Select(attrs={
+                'class': 'form-select',
+                'required': True
+            }),
+            'price_per_night_from': forms.NumberInput(attrs={
+                'class': 'form-control',
+                'placeholder': '0.00',
+                'step': '0.01'
+            }),
+            'price_per_night_to': forms.NumberInput(attrs={
+                'class': 'form-control',
+                'placeholder': '0.00',
+                'step': '0.01'
+            }),
+            'currency': forms.TextInput(attrs={
+                'class': 'form-control',
+                'placeholder': 'USD',
+                'maxlength': 3
+            }),
+            'booking_link': forms.URLInput(attrs={
+                'class': 'form-control',
+                'placeholder': 'https://example.com/book'
+            }),
+            'sustainability_score': forms.Select(attrs={
+                'class': 'form-select',
+                'required': True
+            }, choices=[
+                (i, f"{i} - {'Very Poor' if i == 1 else 'Poor' if i == 2 else 'Below Average' if i == 3 else 'Fair' if i == 4 else 'Average' if i == 5 else 'Good' if i == 6 else 'Very Good' if i == 7 else 'Excellent' if i == 8 else 'Outstanding' if i == 9 else 'Perfect'}")
+                for i in range(1, 11)
+            ]),
+            'hygge_factor': forms.Select(attrs={
+                'class': 'form-select',
+                'required': True
+            }, choices=[
+                (i, f"{i} - {'Very Low' if i == 1 else 'Low' if i == 2 else 'Below Average' if i == 3 else 'Fair' if i == 4 else 'Average' if i == 5 else 'Good' if i == 6 else 'Very Good' if i == 7 else 'Excellent' if i == 8 else 'Outstanding' if i == 9 else 'Perfect'}")
+                for i in range(1, 11)
+            ]),
+            'carbon_neutral': forms.CheckboxInput(attrs={
+                'class': 'form-check-input'
+            }),
+            'supports_local_community': forms.CheckboxInput(attrs={
+                'class': 'form-check-input'
+            }),
+            'eco_certified': forms.CheckboxInput(attrs={
+                'class': 'form-check-input'
+            }),
+            'address': forms.Textarea(attrs={
+                'class': 'form-control',
+                'rows': 2,
+                'placeholder': 'Street address'
+            }),
+            'amenities': forms.Textarea(attrs={
+                'class': 'form-control',
+                'rows': 3,
+                'placeholder': 'Enter amenities as JSON array, e.g., ["WiFi", "Breakfast", "Parking"]'
+            }),
+            'total_rooms': forms.NumberInput(attrs={
+                'class': 'form-control',
+                'placeholder': '0'
+            }),
+            'max_guests': forms.NumberInput(attrs={
+                'class': 'form-control',
+                'placeholder': '0'
+            }),
+            'cancellation_policy': forms.Textarea(attrs={
+                'class': 'form-control',
+                'rows': 3,
+                'placeholder': 'Describe the cancellation policy...'
+            }),
+            'meta_title': forms.TextInput(attrs={
+                'class': 'form-control',
+                'placeholder': 'SEO title (leave blank to use main title)',
+                'maxlength': 60
+            }),
+            'meta_description': forms.Textarea(attrs={
+                'class': 'form-control',
+                'rows': 3,
+                'placeholder': 'Brief SEO description for search results (120-160 characters)',
+                'maxlength': 160
+            }),
+            'is_featured': forms.CheckboxInput(attrs={
+                'class': 'form-check-input'
+            }),
+            'is_active': forms.CheckboxInput(attrs={
+                'class': 'form-check-input'
+            }),
+        }
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+
+        # Set initial values
+        self.fields['is_active'].initial = True
+        self.fields['is_featured'].initial = False
+        self.fields['sustainability_score'].initial = 5
+        self.fields['hygge_factor'].initial = 5
+        self.fields['currency'].initial = 'USD'
+
+        # Add comprehensive help text
+        self.fields['name'].help_text = 'The name of the hotel, hostel, or accommodation'
+        self.fields['short_description'].help_text = 'A brief summary shown on cards (max 300 characters)'
+        self.fields['description'].help_text = 'Detailed description including facilities, atmosphere, and unique features'
+        self.fields['accommodation_type'].help_text = 'Select the type of accommodation (hotel, hostel, eco-lodge, etc.)'
+        self.fields['budget_range'].help_text = 'Price category per night'
+        self.fields['price_per_night_from'].help_text = 'Starting price per night'
+        self.fields['price_per_night_to'].help_text = 'Maximum price per night (optional)'
+        self.fields['booking_link'].help_text = 'Direct booking link or website URL'
+        self.fields['sustainability_score'].help_text = 'Environmental sustainability rating (1-10)'
+        self.fields['hygge_factor'].help_text = 'Comfort and coziness rating (1-10)'
+        self.fields['carbon_neutral'].help_text = 'Check if carbon neutral certified'
+        self.fields['supports_local_community'].help_text = 'Check if supports local community'
+        self.fields['eco_certified'].help_text = 'Check if has environmental certification'
+        self.fields['amenities'].help_text = 'List amenities as JSON array'
+        self.fields['total_rooms'].help_text = 'Total number of rooms available'
+        self.fields['max_guests'].help_text = 'Maximum guests per room'
+        self.fields['cancellation_policy'].help_text = 'Describe the cancellation terms'
+        self.fields['is_featured'].help_text = 'Mark as featured to highlight on homepage'
+        self.fields['is_active'].help_text = 'Uncheck to temporarily hide this accommodation'
+
+
+class TravelBlogForm(forms.ModelForm):
+    class Meta:
+        model = TravelBlog
+        fields = [
+            'title', 'excerpt', 'content', 'featured_image',
+            'experience', 'accommodation', 'destination',
+            'is_published'
+        ]
+        widgets = {
+            'title': forms.TextInput(attrs={
+                'class': 'form-control',
+                'placeholder': 'Enter your blog post title',
+                'required': True
+            }),
+            'excerpt': forms.Textarea(attrs={
+                'class': 'form-control',
+                'rows': 3,
+                'placeholder': 'Write a short excerpt (max 300 characters)',
+                'maxlength': 300
+            }),
+            'content': forms.Textarea(attrs={
+                'class': 'form-control',
+                'rows': 15,
+                'placeholder': 'Write your travel story here...',
+                'required': True
+            }),
+            'featured_image': forms.ClearableFileInput(attrs={
+                'class': 'form-control',
+                'accept': 'image/*'
+            }),
+            'experience': forms.Select(attrs={
+                'class': 'form-select'
+            }),
+            'accommodation': forms.Select(attrs={
+                'class': 'form-select'
+            }),
+            'destination': forms.Select(attrs={
+                'class': 'form-select'
+            }),
+            'is_published': forms.CheckboxInput(attrs={
+                'class': 'form-check-input'
+            }),
+        }
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+
+        # Make relationships optional
+        self.fields['experience'].required = False
+        self.fields['accommodation'].required = False
+        self.fields['destination'].required = False
+        self.fields['featured_image'].required = False
+
+        # Add help text
+        self.fields['title'].help_text = 'Give your travel blog post a catchy title'
+        self.fields['excerpt'].help_text = 'A brief summary that appears in blog listings'
+        self.fields['content'].help_text = 'Share your full travel story, tips, and experiences'
+        self.fields['featured_image'].help_text = 'Upload a beautiful cover image for your post'
+        self.fields['experience'].help_text = 'Link to a specific experience (optional)'
+        self.fields['accommodation'].help_text = 'Link to a specific accommodation (optional)'
+        self.fields['destination'].help_text = 'Main destination featured in this post (optional)'
+        self.fields['is_published'].help_text = 'Check to publish immediately, uncheck to save as draft'
+
+
+class BlogCommentForm(forms.ModelForm):
+    class Meta:
+        model = BlogComment
+        fields = ['content']
+        widgets = {
+            'content': forms.Textarea(attrs={
+                'class': 'form-control',
+                'rows': 3,
+                'placeholder': 'Share your thoughts...',
+                'required': True
+            }),
+        }
 

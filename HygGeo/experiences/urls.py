@@ -39,7 +39,24 @@ urlpatterns = [
 
     # Categories
     path('category/<slug:slug>/', views.category_detail_view, name='category_detail'),
-    
+
+    # Accommodations
+    path('accommodations/', views.accommodation_list_view, name='accommodation_list'),
+    path('accommodations/add/', views.add_accommodation, name='add_accommodation'),
+    path('accommodations/<slug:slug>/', views.accommodation_detail_view, name='accommodation_detail'),
+    path('accommodations/<slug:slug>/edit/', views.edit_accommodation, name='edit_accommodation'),
+    path('accommodations/<slug:slug>/delete/', views.delete_accommodation, name='delete_accommodation'),
+
+    # Travel Blogs
+    path('blogs/', views.blog_feed, name='blog_feed'),
+    path('blogs/my-blogs/', views.my_blogs, name='my_blogs'),
+    path('blogs/create/', views.create_blog, name='create_blog'),
+    path('blogs/terms/', views.blogger_terms, name='blogger_terms'),
+    path('blogs/<slug:slug>/', views.blog_detail, name='blog_detail'),
+    path('blogs/<slug:slug>/edit/', views.edit_blog, name='edit_blog'),
+    path('blogs/<slug:slug>/delete/', views.delete_blog, name='delete_blog'),
+    path('blogs/<slug:slug>/like/', views.like_blog, name='like_blog'),
+
     # AJAX endpoints
     path('api/track-click/<uuid:experience_id>/', views.track_affiliate_click, name='track_affiliate_click'),
     path('api/bookmark/<uuid:experience_id>/', views.bookmark_experience, name='bookmark_experience'),

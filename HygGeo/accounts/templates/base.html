@@ -142,8 +142,14 @@
         .navbar {
             background: linear-gradient(135deg, var(--hygge-green), var(--hygge-light-green));
             box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-            padding: 0.25rem 0; /* Reduced from default 0.5rem */
+            padding: 0.5rem 0;
             min-height: auto;
+        }
+
+        .navbar .container {
+            max-width: 100%;
+            padding-left: 2rem;
+            padding-right: 2rem;
         }
         
         .navbar-brand {
@@ -174,7 +180,12 @@
             color: rgba(255,255,255,0.9) !important;
             font-weight: 500;
             transition: color 0.3s ease;
-            padding: 0.5rem 0.75rem; /* Reduced vertical padding */
+            padding: 0.5rem 1rem;
+            white-space: nowrap;
+        }
+
+        .navbar-nav .nav-item {
+            margin-right: 0.5rem;
         }
         
         .navbar-nav .nav-link:hover {
@@ -312,27 +323,42 @@
             }
         }
         
-        /* Desktop dropdown styles (unchanged) */
+        /* Desktop dropdown styles */
         @media (min-width: 992px) {
             .mobile-submenu {
                 display: none !important;
             }
-            
+
             .navbar-nav .dropdown-menu {
-                background-color: rgba(45, 90, 61, 0.95);
+                background-color: rgba(45, 90, 61, 0.98);
                 border: none;
-                box-shadow: 0 5px 20px rgba(0,0,0,0.15);
+                box-shadow: 0 5px 20px rgba(0,0,0,0.2);
+                min-width: 220px;
+                border-radius: 8px;
+                margin-top: 0.5rem;
             }
-            
+
             .navbar-nav .dropdown-menu .dropdown-item {
-                color: rgba(255, 255, 255, 0.9);
-                padding: 10px 20px;
+                color: rgba(255, 255, 255, 0.95);
+                padding: 12px 20px;
+                transition: all 0.2s ease;
+                white-space: nowrap;
             }
-            
+
             .navbar-nav .dropdown-menu .dropdown-item:hover,
             .navbar-nav .dropdown-menu .dropdown-item:focus {
                 background-color: var(--hygge-light-green);
                 color: white;
+                padding-left: 25px;
+            }
+
+            .navbar-nav .dropdown-menu .dropdown-divider {
+                border-color: rgba(255, 255, 255, 0.2);
+            }
+
+            .dropdown-toggle::after {
+                margin-left: 0.5rem;
+                vertical-align: middle;
             }
         }
     </style>
@@ -412,19 +438,67 @@
                         </ul>
                     </li>
 
-                    {% if user.is_authenticated %}
-                    
+                    <!-- Accommodations Link -->
                     <li class="nav-item">
-                        <a class="nav-link" href="{% url 'survey' %}">
-                            <i class="fas fa-clipboard-list me-1"></i>Travel Survey
+                        <a class="nav-link" href="{% url 'experiences:accommodation_list' %}">
+                            <i class="fas fa-bed me-1"></i>Accommodations
                         </a>
                     </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="{% url 'user_list' %}">
+
+                    <!-- Community Dropdown - Desktop -->
+                    <li class="nav-item dropdown d-none d-lg-block">
+                        <a class="nav-link dropdown-toggle" href="#" id="communityDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                             <i class="fas fa-users me-1"></i>Community
                         </a>
+                        <ul class="dropdown-menu" aria-labelledby="communityDropdown">
+                            <li><a class="dropdown-item" href="{% url 'experiences:blog_feed' %}">
+                                <i class="fas fa-book-open me-2"></i>Travel Blogs
+                            </a></li>
+                            {% if user.is_authenticated %}
+                            <li><a class="dropdown-item" href="{% url 'experiences:my_blogs' %}">
+                                <i class="fas fa-pen-fancy me-2"></i>My Blogs
+                            </a></li>
+                            <li><a class="dropdown-item" href="{% url 'experiences:create_blog' %}">
+                                <i class="fas fa-plus-circle me-2"></i>Write a Blog
+                            </a></li>
+                            <li><hr class="dropdown-divider"></li>
+                            <li><a class="dropdown-item" href="{% url 'user_list' %}">
+                                <i class="fas fa-user-friends me-2"></i>All Members
+                            </a></li>
+                            {% else %}
+                            <li><a class="dropdown-item" href="{% url 'user_list' %}">
+                                <i class="fas fa-user-friends me-2"></i>All Members
+                            </a></li>
+                            {% endif %}
+                        </ul>
                     </li>
-                    {% endif %}
+
+                    <!-- Community Dropdown - Mobile -->
+                    <li class="nav-item d-lg-none">
+                        <a class="nav-link mobile-dropdown-toggle" href="#" data-target="community-mobile">
+                            <i class="fas fa-users me-1"></i>Community
+                        </a>
+                        <ul class="mobile-submenu" id="community-mobile">
+                            <li><a href="{% url 'experiences:blog_feed' %}">
+                                <i class="fas fa-book-open me-2"></i>Travel Blogs
+                            </a></li>
+                            {% if user.is_authenticated %}
+                            <li><a href="{% url 'experiences:my_blogs' %}">
+                                <i class="fas fa-pen-fancy me-2"></i>My Blogs
+                            </a></li>
+                            <li><a href="{% url 'experiences:create_blog' %}">
+                                <i class="fas fa-plus-circle me-2"></i>Write a Blog
+                            </a></li>
+                            <li><a href="{% url 'user_list' %}">
+                                <i class="fas fa-user-friends me-2"></i>All Members
+                            </a></li>
+                            {% else %}
+                            <li><a href="{% url 'user_list' %}">
+                                <i class="fas fa-user-friends me-2"></i>All Members
+                            </a></li>
+                            {% endif %}
+                        </ul>
+                    </li>
                     {% if user.is_authenticated %}
                     <li class="nav-item">
                         <a class="nav-link" href="{% url 'message_list' %}">

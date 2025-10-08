@@ -1,0 +1,560 @@
+{% extends 'base.html' %}
+
+{% block title %}Write a Blog Post - HygGeo{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-10">
+            <div class="card card-hygge">
+                <div class="card-body p-4">
+                    <h2 class="card-title fw-bold text-center mb-4" style="color: var(--hygge-green);">
+                        <i class="fas fa-pen-fancy me-2"></i>Write a Travel Blog Post
+                    </h2>
+
+                    <form method="post" enctype="multipart/form-data">
+                        {% csrf_token %}
+
+                        <!-- Title & Excerpt -->
+                        <div class="row mb-4">
+                            <div class="col-12">
+                                <h4 class="fw-bold mb-3" style="color: var(--hygge-green);">
+                                    <i class="fas fa-heading me-2"></i>Title & Summary
+                                </h4>
+                            </div>
+                            <div class="col-12 mb-3">
+                                <label class="form-label fw-bold">Blog Title:</label>
+                                {{ form.title }}
+                                {% if form.title.errors %}
+                                    <div class="text-danger">{{ form.title.errors }}</div>
+                                {% endif %}
+                                <div class="form-text">{{ form.title.help_text }}</div>
+                            </div>
+                            <div class="col-12 mb-3">
+                                <label class="form-label fw-bold">Short Excerpt:</label>
+                                {{ form.excerpt }}
+                                {% if form.excerpt.errors %}
+                                    <div class="text-danger">{{ form.excerpt.errors }}</div>
+                                {% endif %}
+                                <div class="form-text">{{ form.excerpt.help_text }}</div>
+                            </div>
+                        </div>
+
+                        <!-- Content -->
+                        <div class="row mb-4">
+                            <div class="col-12">
+                                <h4 class="fw-bold mb-3" style="color: var(--hygge-green);">
+                                    <i class="fas fa-file-alt me-2"></i>Your Story
+                                </h4>
+                            </div>
+                            <div class="col-12 mb-3">
+                                <label class="form-label fw-bold">Content:</label>
+
+                                <!-- Blog Templates -->
+                                <div class="mb-3">
+                                    <button type="button" class="btn btn-sm btn-outline-secondary dropdown-toggle" data-bs-toggle="dropdown">
+                                        <i class="fas fa-file-alt me-1"></i>Use Template
+                                    </button>
+                                    <ul class="dropdown-menu">
+                                        <li><a class="dropdown-item" href="#" onclick="useTemplate('travel-story'); return false;">Travel Story</a></li>
+                                        <li><a class="dropdown-item" href="#" onclick="useTemplate('destination-guide'); return false;">Destination Guide</a></li>
+                                        <li><a class="dropdown-item" href="#" onclick="useTemplate('tips-list'); return false;">Travel Tips List</a></li>
+                                        <li><a class="dropdown-item" href="#" onclick="useTemplate('itinerary'); return false;">Day-by-Day Itinerary</a></li>
+                                    </ul>
+                                </div>
+
+                                <!-- Rich Text Editor Toolbar -->
+                                <div class="editor-toolbar mb-2 p-2 bg-light border rounded">
+                                    <button type="button" class="btn btn-sm btn-outline-secondary me-1" data-command="bold" title="Bold">
+                                        <i class="fas fa-bold"></i>
+                                    </button>
+                                    <button type="button" class="btn btn-sm btn-outline-secondary me-1" data-command="italic" title="Italic">
+                                        <i class="fas fa-italic"></i>
+                                    </button>
+                                    <button type="button" class="btn btn-sm btn-outline-secondary me-1" data-command="underline" title="Underline">
+                                        <i class="fas fa-underline"></i>
+                                    </button>
+                                    <span class="mx-2">|</span>
+                                    <button type="button" class="btn btn-sm btn-outline-secondary me-1" data-command="h2" title="Heading 2">
+                                        <strong>H2</strong>
+                                    </button>
+                                    <button type="button" class="btn btn-sm btn-outline-secondary me-1" data-command="h3" title="Heading 3">
+                                        <strong>H3</strong>
+                                    </button>
+                                    <span class="mx-2">|</span>
+                                    <button type="button" class="btn btn-sm btn-outline-secondary me-1" data-command="insertUnorderedList" title="Bullet List">
+                                        <i class="fas fa-list-ul"></i>
+                                    </button>
+                                    <button type="button" class="btn btn-sm btn-outline-secondary me-1" data-command="insertOrderedList" title="Numbered List">
+                                        <i class="fas fa-list-ol"></i>
+                                    </button>
+                                    <span class="mx-2">|</span>
+                                    <button type="button" class="btn btn-sm btn-outline-secondary me-1" data-command="createLink" title="Insert Link">
+                                        <i class="fas fa-link"></i>
+                                    </button>
+                                </div>
+
+                                <!-- WYSIWYG Editor -->
+                                <div id="editor" contenteditable="true" class="form-control" style="min-height: 400px; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif; font-size: 16px; line-height: 1.6;">
+                                </div>
+
+                                <!-- Hidden textarea for form submission -->
+                                <textarea name="content" id="id_content" style="display: none;">{{ form.content.value|default:'' }}</textarea>
+
+                                {% if form.content.errors %}
+                                    <div class="text-danger">{{ form.content.errors }}</div>
+                                {% endif %}
+                                <div class="form-text">Use the toolbar above to format your text. What you see is what you get!</div>
+                            </div>
+                        </div>
+
+                        <!-- Media -->
+                        <div class="row mb-4">
+                            <div class="col-12">
+                                <h4 class="fw-bold mb-3" style="color: var(--hygge-green);">
+                                    <i class="fas fa-image me-2"></i>Featured Image
+                                </h4>
+                            </div>
+                            <div class="col-12 mb-3">
+                                <label class="form-label fw-bold">Upload Image:</label>
+                                {{ form.featured_image }}
+                                {% if form.featured_image.errors %}
+                                    <div class="text-danger">{{ form.featured_image.errors }}</div>
+                                {% endif %}
+                                <div class="form-text">{{ form.featured_image.help_text }}</div>
+                            </div>
+                        </div>
+
+                        <!-- Links to Experiences/Accommodations -->
+                        <div class="row mb-4">
+                            <div class="col-12">
+                                <h4 class="fw-bold mb-3" style="color: var(--hygge-green);">
+                                    <i class="fas fa-link me-2"></i>Link to Content (Optional)
+                                </h4>
+                            </div>
+                            <div class="col-md-4 mb-3">
+                                <label class="form-label fw-bold">Destination:</label>
+                                {{ form.destination }}
+                                {% if form.destination.errors %}
+                                    <div class="text-danger">{{ form.destination.errors }}</div>
+                                {% endif %}
+                                <div class="form-text">{{ form.destination.help_text }}</div>
+                            </div>
+                            <div class="col-md-4 mb-3">
+                                <label class="form-label fw-bold">Experience:</label>
+                                {{ form.experience }}
+                                {% if form.experience.errors %}
+                                    <div class="text-danger">{{ form.experience.errors }}</div>
+                                {% endif %}
+                                <div class="form-text">{{ form.experience.help_text }}</div>
+                            </div>
+                            <div class="col-md-4 mb-3">
+                                <label class="form-label fw-bold">Accommodation:</label>
+                                {{ form.accommodation }}
+                                {% if form.accommodation.errors %}
+                                    <div class="text-danger">{{ form.accommodation.errors }}</div>
+                                {% endif %}
+                                <div class="form-text">{{ form.accommodation.help_text }}</div>
+                            </div>
+                        </div>
+
+                        <!-- Publishing -->
+                        <div class="row mb-4">
+                            <div class="col-12">
+                                <h4 class="fw-bold mb-3" style="color: var(--hygge-green);">
+                                    <i class="fas fa-globe me-2"></i>Publishing
+                                </h4>
+                            </div>
+                            <div class="col-12 mb-3">
+                                <div class="form-check">
+                                    {{ form.is_published }}
+                                    <label class="form-check-label fw-bold">
+                                        Publish immediately (uncheck to save as draft)
+                                    </label>
+                                </div>
+                                <div class="form-text">{{ form.is_published.help_text }}</div>
+                            </div>
+                        </div>
+
+                        <!-- Terms & Conditions -->
+                        <div class="row mb-4">
+                            <div class="col-12">
+                                <div class="alert alert-info">
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="checkbox" id="accept_terms" required>
+                                        <label class="form-check-label" for="accept_terms">
+                                            I have read and agree to the
+                                            <a href="{% url 'experiences:blogger_terms' %}" target="_blank" style="color: var(--hygge-green); font-weight: bold;">
+                                                Blogger Terms & Conditions
+                                            </a>
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Submit Buttons -->
+                        <div class="d-grid gap-2">
+                            <button type="submit" class="btn btn-hygge btn-lg">
+                                <i class="fas fa-check me-2"></i>Save Blog Post
+                            </button>
+                            <a href="{% url 'experiences:my_blogs' %}" class="btn btn-outline-secondary">
+                                <i class="fas fa-times me-2"></i>Cancel
+                            </a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const editor = document.getElementById('editor');
+    const hiddenTextarea = document.getElementById('id_content');
+
+    // Load initial content if editing
+    if (hiddenTextarea.value) {
+        editor.innerHTML = hiddenTextarea.value;
+    }
+
+    // Sync editor content to hidden textarea on input
+    editor.addEventListener('input', function() {
+        hiddenTextarea.value = editor.innerHTML;
+    });
+
+    // Sync before form submission
+    const form = editor.closest('form');
+    form.addEventListener('submit', function() {
+        hiddenTextarea.value = editor.innerHTML;
+    });
+
+    // Handle toolbar button clicks
+    document.querySelectorAll('.editor-toolbar button[data-command]').forEach(button => {
+        button.addEventListener('mousedown', function(e) {
+            e.preventDefault(); // Prevent editor from losing focus
+        });
+
+        button.addEventListener('click', function(e) {
+            e.preventDefault();
+
+            const command = this.getAttribute('data-command');
+
+            // Focus editor before executing command
+            editor.focus();
+
+            if (command === 'h2') {
+                document.execCommand('formatBlock', false, 'h2');
+            } else if (command === 'h3') {
+                document.execCommand('formatBlock', false, 'h3');
+            } else if (command === 'createLink') {
+                const url = prompt('Enter URL:', 'https://');
+                if (url) {
+                    document.execCommand('createLink', false, url);
+                    // Set target="_blank" on the newly created link
+                    const selection = window.getSelection();
+                    if (selection.anchorNode) {
+                        let element = selection.anchorNode.parentElement;
+                        if (element.tagName === 'A') {
+                            element.setAttribute('target', '_blank');
+                        }
+                    }
+                }
+                return;
+            } else {
+                document.execCommand(command, false, null);
+            }
+
+            // Toggle button active state for formatting commands
+            updateButtonStates();
+        });
+    });
+
+    // Update button active states based on current selection
+    function updateButtonStates() {
+        document.querySelectorAll('.editor-toolbar button[data-command]').forEach(button => {
+            const command = button.getAttribute('data-command');
+
+            if (command === 'bold' || command === 'italic' || command === 'underline') {
+                if (document.queryCommandState(command)) {
+                    button.classList.add('active');
+                    button.classList.remove('btn-outline-secondary');
+                    button.classList.add('btn-secondary');
+                } else {
+                    button.classList.remove('active');
+                    button.classList.add('btn-outline-secondary');
+                    button.classList.remove('btn-secondary');
+                }
+            }
+        });
+    }
+
+    // Update button states on selection change
+    editor.addEventListener('mouseup', updateButtonStates);
+    editor.addEventListener('keyup', updateButtonStates);
+
+    // Focus editor on load
+    editor.focus();
+});
+
+// Blog post templates
+function useTemplate(templateType) {
+    const editor = document.getElementById('editor');
+    const templates = {
+        'travel-story': `<h2>My Journey to [Destination]</h2>
+<p>It was [season/month] when I first set foot in [destination name]. From the moment I arrived, I knew this trip would be unforgettable...</p>
+
+<h3>Getting There</h3>
+<p>I traveled from [starting point] to [destination] by [mode of transport]. The journey took about [duration] and cost approximately [price].</p>
+
+<h3>Where I Stayed</h3>
+<p>I stayed at [accommodation name], a charming [hotel/hostel/airbnb] in the [neighborhood] district. The location was perfect because...</p>
+
+<h3>Highlights of the Trip</h3>
+<ul>
+  <li><strong>Day 1:</strong> [Activity or experience]</li>
+  <li><strong>Day 2:</strong> [Activity or experience]</li>
+  <li><strong>Day 3:</strong> [Activity or experience]</li>
+</ul>
+
+<h3>Best Moments</h3>
+<p>The most memorable moment was when [describe special experience]. I'll never forget...</p>
+
+<h3>Tips for Future Travelers</h3>
+<ul>
+  <li>[Useful tip #1]</li>
+  <li>[Useful tip #2]</li>
+  <li>[Useful tip #3]</li>
+</ul>
+
+<h3>Final Thoughts</h3>
+<p>Would I recommend [destination]? Absolutely! This place is perfect for [type of traveler]. If you're planning a visit, don't miss...</p>`,
+
+        'destination-guide': `<h2>[Destination Name]: The Complete Travel Guide</h2>
+<p>[Brief introduction about the destination - what makes it special, unique features, best time to visit]</p>
+
+<h3>📍 Location & Getting There</h3>
+<p><strong>Location:</strong> [Country, region, coordinates]</p>
+<p><strong>Best time to visit:</strong> [Season/months and why]</p>
+<p><strong>How to get there:</strong> [Transportation options]</p>
+
+<h3>🏨 Where to Stay</h3>
+<ul>
+  <li><strong>Budget:</strong> [Hostel/budget option recommendations]</li>
+  <li><strong>Mid-range:</strong> [Mid-range hotel/airbnb recommendations]</li>
+  <li><strong>Luxury:</strong> [High-end accommodation options]</li>
+</ul>
+
+<h3>🗺️ Top Things to Do</h3>
+<ol>
+  <li><strong>[Attraction #1]</strong> - [Brief description]</li>
+  <li><strong>[Attraction #2]</strong> - [Brief description]</li>
+  <li><strong>[Attraction #3]</strong> - [Brief description]</li>
+  <li><strong>[Attraction #4]</strong> - [Brief description]</li>
+  <li><strong>[Attraction #5]</strong> - [Brief description]</li>
+</ol>
+
+<h3>🍽️ Food & Dining</h3>
+<p><strong>Must-try dishes:</strong> [List local specialties]</p>
+<p><strong>Restaurant recommendations:</strong> [List of recommended places]</p>
+
+<h3>💰 Budget Guide</h3>
+<ul>
+  <li><strong>Daily budget:</strong> [Amount] per day</li>
+  <li><strong>Accommodation:</strong> [Price range]</li>
+  <li><strong>Food:</strong> [Typical meal costs]</li>
+  <li><strong>Activities:</strong> [Tour/attraction costs]</li>
+</ul>
+
+<h3>💡 Practical Tips</h3>
+<ul>
+  <li>[Tip about local customs/culture]</li>
+  <li>[Transportation tip]</li>
+  <li>[Safety or health tip]</li>
+  <li>[Money/currency tip]</li>
+</ul>`,
+
+        'tips-list': `<h2>Essential Travel Tips for [Destination/Topic]</h2>
+<p>Planning a trip to [destination]? Here are my top tips based on personal experience to help you make the most of your journey!</p>
+
+<h3>Before You Go</h3>
+<ul>
+  <li><strong>[Tip #1]:</strong> [Detailed explanation]</li>
+  <li><strong>[Tip #2]:</strong> [Detailed explanation]</li>
+  <li><strong>[Tip #3]:</strong> [Detailed explanation]</li>
+</ul>
+
+<h3>Packing Essentials</h3>
+<ul>
+  <li><strong>[Essential item #1]:</strong> [Why it's important]</li>
+  <li><strong>[Essential item #2]:</strong> [Why it's important]</li>
+  <li><strong>[Essential item #3]:</strong> [Why it's important]</li>
+</ul>
+
+<h3>Money-Saving Tips</h3>
+<ul>
+  <li>[Tip to save money on accommodation]</li>
+  <li>[Tip to save money on food]</li>
+  <li>[Tip to save money on activities]</li>
+  <li>[Tip to save money on transportation]</li>
+</ul>
+
+<h3>Cultural Do's and Don'ts</h3>
+<ul>
+  <li><strong>DO:</strong> [Cultural etiquette advice]</li>
+  <li><strong>DON'T:</strong> [What to avoid]</li>
+  <li><strong>DO:</strong> [Cultural etiquette advice]</li>
+  <li><strong>DON'T:</strong> [What to avoid]</li>
+</ul>
+
+<h3>Safety Tips</h3>
+<ul>
+  <li>[Safety recommendation #1]</li>
+  <li>[Safety recommendation #2]</li>
+  <li>[Safety recommendation #3]</li>
+</ul>
+
+<h3>Final Thoughts</h3>
+<p>[Wrap up with encouraging words and any final advice]</p>`,
+
+        'itinerary': `<h2>[Number]-Day Itinerary for [Destination]</h2>
+<p>This itinerary covers the best of [destination] in [number] days. Perfect for [type of traveler - first-timers/families/solo travelers/etc.]</p>
+
+<h3>Day 1: [Theme/Focus of the Day]</h3>
+<p><strong>Morning:</strong> [Activity 1]</p>
+<p>[Brief description of what to expect, how long it takes, approximate cost]</p>
+
+<p><strong>Afternoon:</strong> [Activity 2]</p>
+<p>[Brief description of what to expect, how long it takes, approximate cost]</p>
+
+<p><strong>Evening:</strong> [Activity 3]</p>
+<p>[Brief description of what to expect, recommendations]</p>
+
+<p><em>💰 Estimated cost for Day 1: [Amount]</em></p>
+
+<h3>Day 2: [Theme/Focus of the Day]</h3>
+<p><strong>Morning:</strong> [Activity 1]</p>
+<p>[Brief description]</p>
+
+<p><strong>Afternoon:</strong> [Activity 2]</p>
+<p>[Brief description]</p>
+
+<p><strong>Evening:</strong> [Activity 3]</p>
+<p>[Brief description]</p>
+
+<p><em>💰 Estimated cost for Day 2: [Amount]</em></p>
+
+<h3>Day 3: [Theme/Focus of the Day]</h3>
+<p><strong>Morning:</strong> [Activity 1]</p>
+<p>[Brief description]</p>
+
+<p><strong>Afternoon:</strong> [Activity 2]</p>
+<p>[Brief description]</p>
+
+<p><strong>Evening:</strong> [Activity 3]</p>
+<p>[Brief description]</p>
+
+<p><em>💰 Estimated cost for Day 3: [Amount]</em></p>
+
+<h3>Practical Information</h3>
+<ul>
+  <li><strong>Best time to visit:</strong> [Season/months]</li>
+  <li><strong>Total estimated budget:</strong> [Amount] (excluding flights)</li>
+  <li><strong>Recommended accommodation area:</strong> [Neighborhood/district]</li>
+  <li><strong>Getting around:</strong> [Transportation tips]</li>
+</ul>
+
+<h3>Pro Tips</h3>
+<ul>
+  <li>[Helpful tip #1]</li>
+  <li>[Helpful tip #2]</li>
+  <li>[Helpful tip #3]</li>
+</ul>`
+    };
+
+    if (templates[templateType]) {
+        editor.innerHTML = templates[templateType];
+        editor.focus();
+
+        // Update hidden textarea
+        const hiddenTextarea = document.getElementById('id_content');
+        hiddenTextarea.value = editor.innerHTML;
+    }
+}
+</script>
+
+<style>
+.editor-toolbar {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.25rem;
+    align-items: center;
+}
+
+.editor-toolbar button {
+    min-width: 36px;
+    height: 36px;
+    padding: 0.25rem 0.5rem;
+}
+
+.editor-toolbar button:hover {
+    background-color: var(--hygge-light-green);
+    border-color: var(--hygge-green);
+    color: var(--hygge-green);
+}
+
+/* WYSIWYG Editor styling */
+#editor {
+    overflow-y: auto;
+}
+
+#editor:focus {
+    outline: none;
+    border-color: var(--hygge-green);
+    box-shadow: 0 0 0 0.2rem rgba(45, 90, 61, 0.25);
+}
+
+#editor h2 {
+    color: var(--hygge-green);
+    font-size: 1.75rem;
+    font-weight: bold;
+    margin-top: 1.5rem;
+    margin-bottom: 1rem;
+}
+
+#editor h3 {
+    color: var(--hygge-green);
+    font-size: 1.5rem;
+    font-weight: bold;
+    margin-top: 1rem;
+    margin-bottom: 0.75rem;
+}
+
+#editor ul, #editor ol {
+    margin-left: 2rem;
+    margin-bottom: 1rem;
+}
+
+#editor li {
+    margin-bottom: 0.5rem;
+}
+
+#editor a {
+    color: var(--hygge-green);
+    text-decoration: underline;
+}
+
+#editor a:hover {
+    color: var(--hygge-dark-green);
+}
+
+#editor blockquote {
+    border-left: 4px solid var(--hygge-green);
+    padding-left: 1.5rem;
+    margin: 1.5rem 0;
+    font-style: italic;
+    color: #666;
+}
+</style>
+{% endblock %}

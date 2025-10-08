@@ -1,0 +1,273 @@
+{% extends 'base.html' %}
+
+{% block title %}Add New Accommodation - HygGeo{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+            <div class="card card-hygge">
+                <div class="card-body p-4">
+                    <h2 class="card-title fw-bold text-center mb-4" style="color: var(--hygge-green);">
+                        <i class="fas fa-bed me-2"></i>Add New Accommodation
+                    </h2>
+
+                    <form method="post" enctype="multipart/form-data">
+                        {% csrf_token %}
+
+                        <!-- Basic Details -->
+                        <div class="row mb-4">
+                            <div class="col-12">
+                                <h4 class="fw-bold mb-3" style="color: var(--hygge-green);">
+                                    <i class="fas fa-edit me-2"></i>Basic Details
+                                </h4>
+                            </div>
+                            <div class="col-12 mb-3">
+                                <label class="form-label fw-bold">Accommodation Name:</label>
+                                {{ form.name }}
+                                {% if form.name.errors %}
+                                    <div class="text-danger">{{ form.name.errors }}</div>
+                                {% endif %}
+                            </div>
+                            <div class="col-12 mb-3">
+                                <label class="form-label fw-bold">Short Description:</label>
+                                {{ form.short_description }}
+                                {% if form.short_description.errors %}
+                                    <div class="text-danger">{{ form.short_description.errors }}</div>
+                                {% endif %}
+                            </div>
+                            <div class="col-12 mb-3">
+                                <label class="form-label fw-bold">Full Description:</label>
+                                {{ form.description }}
+                                {% if form.description.errors %}
+                                    <div class="text-danger">{{ form.description.errors }}</div>
+                                {% endif %}
+                            </div>
+                            <div class="col-12 mb-3">
+                                <label class="form-label fw-bold">Main Image:</label>
+                                {{ form.main_image }}
+                                {% if form.main_image.errors %}
+                                    <div class="text-danger">{{ form.main_image.errors }}</div>
+                                {% endif %}
+                            </div>
+                        </div>
+
+                        <!-- Location & Classification -->
+                        <div class="row mb-4">
+                            <div class="col-12">
+                                <h4 class="fw-bold mb-3" style="color: var(--hygge-green);">
+                                    <i class="fas fa-map-marker-alt me-2"></i>Location & Classification
+                                </h4>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label fw-bold">Destination:</label>
+                                {{ form.destination }}
+                                {% if form.destination.errors %}
+                                    <div class="text-danger">{{ form.destination.errors }}</div>
+                                {% endif %}
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label fw-bold">Provider:</label>
+                                {{ form.provider }}
+                                {% if form.provider.errors %}
+                                    <div class="text-danger">{{ form.provider.errors }}</div>
+                                {% endif %}
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label fw-bold">Accommodation Type:</label>
+                                {{ form.accommodation_type }}
+                                {% if form.accommodation_type.errors %}
+                                    <div class="text-danger">{{ form.accommodation_type.errors }}</div>
+                                {% endif %}
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label fw-bold">Budget Range:</label>
+                                {{ form.budget_range }}
+                                {% if form.budget_range.errors %}
+                                    <div class="text-danger">{{ form.budget_range.errors }}</div>
+                                {% endif %}
+                            </div>
+                        </div>
+
+                        <!-- Pricing -->
+                        <div class="row mb-4">
+                            <div class="col-12">
+                                <h4 class="fw-bold mb-3" style="color: var(--hygge-green);">
+                                    <i class="fas fa-dollar-sign me-2"></i>Pricing
+                                </h4>
+                            </div>
+                            <div class="col-md-4 mb-3">
+                                <label class="form-label fw-bold">Price From (per night):</label>
+                                {{ form.price_per_night_from }}
+                                {% if form.price_per_night_from.errors %}
+                                    <div class="text-danger">{{ form.price_per_night_from.errors }}</div>
+                                {% endif %}
+                            </div>
+                            <div class="col-md-4 mb-3">
+                                <label class="form-label fw-bold">Price To (per night):</label>
+                                {{ form.price_per_night_to }}
+                                {% if form.price_per_night_to.errors %}
+                                    <div class="text-danger">{{ form.price_per_night_to.errors }}</div>
+                                {% endif %}
+                            </div>
+                            <div class="col-md-4 mb-3">
+                                <label class="form-label fw-bold">Currency:</label>
+                                {{ form.currency }}
+                                {% if form.currency.errors %}
+                                    <div class="text-danger">{{ form.currency.errors }}</div>
+                                {% endif %}
+                            </div>
+                        </div>
+
+                        <!-- Sustainability & Hygge -->
+                        <div class="row mb-4">
+                            <div class="col-12">
+                                <h4 class="fw-bold mb-3" style="color: var(--hygge-green);">
+                                    <i class="fas fa-leaf me-2"></i>Sustainability & Hygge
+                                </h4>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label fw-bold">Sustainability Score (1-10):</label>
+                                {{ form.sustainability_score }}
+                                {% if form.sustainability_score.errors %}
+                                    <div class="text-danger">{{ form.sustainability_score.errors }}</div>
+                                {% endif %}
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label fw-bold">Hygge Factor (1-10):</label>
+                                {{ form.hygge_factor }}
+                                {% if form.hygge_factor.errors %}
+                                    <div class="text-danger">{{ form.hygge_factor.errors }}</div>
+                                {% endif %}
+                            </div>
+                            <div class="col-md-4 mb-3">
+                                <div class="form-check">
+                                    {{ form.carbon_neutral }}
+                                    <label class="form-check-label">Carbon Neutral</label>
+                                </div>
+                            </div>
+                            <div class="col-md-4 mb-3">
+                                <div class="form-check">
+                                    {{ form.supports_local_community }}
+                                    <label class="form-check-label">Supports Local Community</label>
+                                </div>
+                            </div>
+                            <div class="col-md-4 mb-3">
+                                <div class="form-check">
+                                    {{ form.eco_certified }}
+                                    <label class="form-check-label">Eco Certified</label>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Details -->
+                        <div class="row mb-4">
+                            <div class="col-12">
+                                <h4 class="fw-bold mb-3" style="color: var(--hygge-green);">
+                                    <i class="fas fa-info-circle me-2"></i>Additional Details
+                                </h4>
+                            </div>
+                            <div class="col-12 mb-3">
+                                <label class="form-label fw-bold">Address:</label>
+                                {{ form.address }}
+                                {% if form.address.errors %}
+                                    <div class="text-danger">{{ form.address.errors }}</div>
+                                {% endif %}
+                            </div>
+                            <div class="col-12 mb-3">
+                                <label class="form-label fw-bold">Booking/Affiliate Link:</label>
+                                {{ form.booking_link }}
+                                {% if form.booking_link.errors %}
+                                    <div class="text-danger">{{ form.booking_link.errors }}</div>
+                                {% endif %}
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label fw-bold">Total Rooms:</label>
+                                {{ form.total_rooms }}
+                                {% if form.total_rooms.errors %}
+                                    <div class="text-danger">{{ form.total_rooms.errors }}</div>
+                                {% endif %}
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label fw-bold">Max Guests per Room:</label>
+                                {{ form.max_guests }}
+                                {% if form.max_guests.errors %}
+                                    <div class="text-danger">{{ form.max_guests.errors }}</div>
+                                {% endif %}
+                            </div>
+                            <div class="col-12 mb-3">
+                                <label class="form-label fw-bold">Amenities (JSON array):</label>
+                                {{ form.amenities }}
+                                {% if form.amenities.errors %}
+                                    <div class="text-danger">{{ form.amenities.errors }}</div>
+                                {% endif %}
+                                <div class="form-text">Example: ["WiFi", "Breakfast", "Parking", "Pool"]</div>
+                            </div>
+                            <div class="col-12 mb-3">
+                                <label class="form-label fw-bold">Cancellation Policy:</label>
+                                {{ form.cancellation_policy }}
+                                {% if form.cancellation_policy.errors %}
+                                    <div class="text-danger">{{ form.cancellation_policy.errors }}</div>
+                                {% endif %}
+                            </div>
+                        </div>
+
+                        <!-- SEO -->
+                        <div class="row mb-4">
+                            <div class="col-12">
+                                <h4 class="fw-bold mb-3" style="color: var(--hygge-green);">
+                                    <i class="fas fa-search me-2"></i>SEO Settings
+                                </h4>
+                            </div>
+                            <div class="col-12 mb-3">
+                                <label class="form-label fw-bold">Meta Title:</label>
+                                {{ form.meta_title }}
+                                {% if form.meta_title.errors %}
+                                    <div class="text-danger">{{ form.meta_title.errors }}</div>
+                                {% endif %}
+                            </div>
+                            <div class="col-12 mb-3">
+                                <label class="form-label fw-bold">Meta Description:</label>
+                                {{ form.meta_description }}
+                                {% if form.meta_description.errors %}
+                                    <div class="text-danger">{{ form.meta_description.errors }}</div>
+                                {% endif %}
+                            </div>
+                        </div>
+
+                        <!-- Status -->
+                        <div class="row mb-4">
+                            <div class="col-12">
+                                <h4 class="fw-bold mb-3" style="color: var(--hygge-green);">
+                                    <i class="fas fa-toggle-on me-2"></i>Status
+                                </h4>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <div class="form-check">
+                                    {{ form.is_featured }}
+                                    <label class="form-check-label">Featured Accommodation</label>
+                                </div>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <div class="form-check">
+                                    {{ form.is_active }}
+                                    <label class="form-check-label">Active (Visible to Users)</label>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="d-grid gap-2">
+                            <button type="submit" class="btn btn-hygge btn-lg">
+                                <i class="fas fa-check me-2"></i>Create Accommodation
+                            </button>
+                            <a href="{% url 'experiences:accommodation_list' %}" class="btn btn-outline-secondary">
+                                <i class="fas fa-times me-2"></i>Cancel
+                            </a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

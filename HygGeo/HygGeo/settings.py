@@ -368,79 +368,48 @@ if DEBUG:
 # MEDIA FILES CONFIGURATION - CONDITIONAL BASED ON ENVIRONMENT
 # =============================================================================
 
-if not DEBUG:
-    # PRODUCTION: Use DigitalOcean Spaces for media files
-    print("PRODUCTION MODE: Configuring DigitalOcean Spaces for media files")
-    
-    # DigitalOcean Spaces configuration
-    AWS_ACCESS_KEY_ID = config('SPACES_ACCESS_KEY', default='')
-    AWS_SECRET_ACCESS_KEY = config('SPACES_SECRET_KEY', default='')
-    AWS_STORAGE_BUCKET_NAME = config('SPACES_BUCKET_NAME', default='hygoe-images')
-    AWS_S3_ENDPOINT_URL = config('SPACES_ENDPOINT_URL', default='https://sfo3.digitaloceanspaces.com')
-    
-    # Spaces file settings
-    AWS_S3_OBJECT_PARAMETERS = {
-        'CacheControl': 'max-age=86400',
-        'ACL': 'public-read',
-    }
-    AWS_LOCATION = 'media'
-    AWS_DEFAULT_ACL = 'public-read'
-    AWS_S3_FILE_OVERWRITE = False
-    
-    # CDN configuration
-    AWS_S3_CUSTOM_DOMAIN = config('SPACES_CDN_ENDPOINT', 
-                                  default=f'{AWS_STORAGE_BUCKET_NAME}.{AWS_S3_ENDPOINT_URL.replace("https://", "")}')
-    
-    # Media files served from CDN
-    MEDIA_URL = f'https://{AWS_S3_CUSTOM_DOMAIN}/{AWS_LOCATION}/'
-    
-    print(f"✅ DigitalOcean Spaces configured:")
-    print(f"   - Bucket: {AWS_STORAGE_BUCKET_NAME}")
-    
-else:
-    # DEVELOPMENT: Use local media files
-    print("DEVELOPMENT MODE: Using local file storage")
+# DigitalOcean Spaces configuration (works in both development and production)
+print(f"Configuring DigitalOcean Spaces for media files (DEBUG={DEBUG})")
+
+# DigitalOcean Spaces configuration
+AWS_ACCESS_KEY_ID = config('SPACES_ACCESS_KEY', default='')
+AWS_SECRET_ACCESS_KEY = config('SPACES_SECRET_KEY', default='')
+AWS_STORAGE_BUCKET_NAME = config('SPACES_BUCKET_NAME', default='hygoe-images')
+AWS_S3_ENDPOINT_URL = config('SPACES_ENDPOINT_URL', default='https://sfo3.digitaloceanspaces.com')
+
+# Spaces file settings
+AWS_S3_OBJECT_PARAMETERS = {
+    'CacheControl': 'max-age=86400',
+    'ACL': 'public-read',
+}
+AWS_LOCATION = 'media'
+AWS_DEFAULT_ACL = 'public-read'
+AWS_S3_FILE_OVERWRITE = False
+AWS_QUERYSTRING_AUTH = False  # Don't add authentication to URLs
+
+# CDN configuration
+AWS_S3_CUSTOM_DOMAIN = config('SPACES_CDN_ENDPOINT',
+                              default=f'{AWS_STORAGE_BUCKET_NAME}.{AWS_S3_ENDPOINT_URL.replace("https://", "")}')
+
+# Media files served from CDN
+MEDIA_URL = f'https://{AWS_S3_CUSTOM_DOMAIN}/{AWS_LOCATION}/'
+
+print(f"✅ DigitalOcean Spaces configured:")
+print(f"   - Bucket: {AWS_STORAGE_BUCKET_NAME}")
+print(f"   - Endpoint: {AWS_S3_ENDPOINT_URL}")
+print(f"   - Media URL: {MEDIA_URL}")
+
+# Fallback for local development if S3 credentials are not set
+if not AWS_ACCESS_KEY_ID or not AWS_SECRET_ACCESS_KEY:
+    print("⚠️  WARNING: S3 credentials not found, falling back to local storage")
     MEDIA_URL = '/media/'
     MEDIA_ROOT = BASE_DIR / 'media'
 
-print(f"Django DEBUG: {DEBUG}, Storage: {'Spaces' if not DEBUG else 'Local'}")
+print(f"Django DEBUG: {DEBUG}, Storage: Spaces")
 
-# Set DEFAULT_FILE_STORAGE setting
-if not DEBUG:
-    DEFAULT_FILE_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
-    print(f"🔧 Set DEFAULT_FILE_STORAGE = {DEFAULT_FILE_STORAGE}")
-
-# =============================================================================
-# NUCLEAR OPTION: FORCE DJANGO TO USE S3 STORAGE
-# =============================================================================
-
-if not DEBUG:
-    print("🚀 NUCLEAR OPTION: Forcing S3 storage replacement...")
-    
-    try:
-        # Import storage after settings are loaded
-        from storages.backends.s3boto3 import S3Boto3Storage
-        
-        # Create S3 storage instance
-        s3_storage = S3Boto3Storage()
-        
-        # FORCE replace Django's default storage
-        import django.core.files.storage as storage_module
-        storage_module.default_storage = s3_storage
-        
-        # Also replace internal reference if it exists
-        if hasattr(storage_module, '_default_storage'):
-            storage_module._default_storage = s3_storage
-        
-        print(f"💥 FORCED REPLACEMENT: {type(s3_storage)}")
-        print(f"   - Storage class: {s3_storage.__class__.__name__}")
-        print("✅ SUCCESS: Django forced to use S3 storage!")
-        
-    except Exception as e:
-        print(f"❌ NUCLEAR OPTION FAILED: {e}")
-        import traceback
-        print("Full traceback:")
-        traceback.print_exc()
+# Set DEFAULT_FILE_STORAGE setting for all environments
+DEFAULT_FILE_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
+print(f"🔧 Set DEFAULT_FILE_STORAGE = {DEFAULT_FILE_STORAGE}")
 
 # =============================================================================
 # DJANGO ALLAUTH CONFIGURATION
