@@ -710,6 +710,21 @@ def edit_experience(request, slug):
         'categories': categories,
     })
 
+@user_passes_test(lambda u: u.is_staff)
+def delete_experience(request, slug):
+    """Delete an experience"""
+    experience = get_object_or_404(Experience, slug=slug)
+
+    if request.method == "POST":
+        experience_title = experience.title
+        experience.delete()
+        messages.success(request, f'✅ Experience "{experience_title}" has been deleted.')
+        return redirect('experiences:experience_list')
+
+    return render(request, 'experiences/delete_experience.html', {
+        'experience': experience
+    })
+
 # Experience Type Management Views
 
 @user_passes_test(lambda u: u.is_staff)

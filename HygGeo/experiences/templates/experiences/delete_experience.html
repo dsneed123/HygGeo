@@ -1,0 +1,48 @@
+{% extends 'base.html' %}
+
+{% block title %}Delete {{ experience.title }} - HygGeo{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-6">
+            <div class="card card-hygge">
+                <div class="card-body p-4">
+                    <h2 class="card-title fw-bold text-center mb-4 text-danger">
+                        <i class="fas fa-exclamation-triangle me-2"></i>Delete Experience
+                    </h2>
+
+                    <div class="alert alert-danger">
+                        <i class="fas fa-warning me-2"></i>
+                        <strong>Warning:</strong> This action cannot be undone!
+                    </div>
+
+                    <p class="text-center mb-4">
+                        Are you sure you want to delete the experience:<br>
+                        <strong class="h5">{{ experience.title }}</strong>?
+                    </p>
+
+                    {% if experience.main_image %}
+                    <div class="text-center mb-4">
+                        <img src="{{ experience.main_image.url }}" alt="{{ experience.title }}"
+                             style="max-width: 200px; height: auto;">
+                    </div>
+                    {% endif %}
+
+                    <form method="post">
+                        {% csrf_token %}
+                        <div class="d-grid gap-2">
+                            <button type="submit" class="btn btn-danger btn-lg">
+                                <i class="fas fa-trash me-2"></i>Yes, Delete Experience
+                            </button>
+                            <a href="{% url 'experiences:experience_detail' experience.slug %}" class="btn btn-outline-secondary">
+                                <i class="fas fa-times me-2"></i>Cancel
+                            </a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

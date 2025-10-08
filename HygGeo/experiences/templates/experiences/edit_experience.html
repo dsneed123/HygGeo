@@ -279,16 +279,21 @@
                         </div>
 
                         <!-- Submit Button -->
-                        <div class="d-grid gap-2 d-md-flex justify-content-md-end">
-                            <a href="{% url 'experiences:experience_list' %}" class="btn btn-outline-secondary me-md-2">
-                                <i class="fas fa-times me-1"></i>Cancel
+                        <div class="d-grid gap-2 d-md-flex justify-content-md-between">
+                            <a href="{% url 'experiences:delete_experience' experience.slug %}" class="btn btn-danger">
+                                <i class="fas fa-trash me-1"></i>Delete Experience
                             </a>
-                            <a href="{% url 'experiences:experience_detail' experience.slug %}" class="btn btn-outline-hygge me-md-2">
-                                <i class="fas fa-eye me-1"></i>View Experience
-                            </a>
-                            <button type="submit" class="btn btn-hygge">
-                                <i class="fas fa-save me-1"></i>Update Experience
-                            </button>
+                            <div class="d-flex gap-2">
+                                <a href="{% url 'experiences:experience_list' %}" class="btn btn-outline-secondary">
+                                    <i class="fas fa-times me-1"></i>Cancel
+                                </a>
+                                <a href="{% url 'experiences:experience_detail' experience.slug %}" class="btn btn-outline-hygge">
+                                    <i class="fas fa-eye me-1"></i>View Experience
+                                </a>
+                                <button type="submit" class="btn btn-hygge">
+                                    <i class="fas fa-save me-1"></i>Update Experience
+                                </button>
+                            </div>
                         </div>
                     </form>
 

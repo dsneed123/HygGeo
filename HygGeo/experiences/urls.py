@@ -15,6 +15,7 @@ urlpatterns = [
     path('add/', views.add_experience, name='add_experience'),
     path('experience/<slug:slug>/', views.experience_detail_view, name='experience_detail'),
     path('experience/<slug:slug>/edit/', views.edit_experience, name='edit_experience'),
+    path('experience/<slug:slug>/delete/', views.delete_experience, name='delete_experience'),
     
     # Destinations - SPECIFIC PATHS FIRST, THEN GENERAL ONES
     path('destinations/', views.destination_list_view, name='destination_list'),

@@ -13685,3 +13685,15 @@ INFO 2025-10-08 13:08:26,959 basehttp 80284 55560 "GET /experiences/ HTTP/1.1" 2
 INFO 2025-10-08 13:08:30,050 basehttp 80284 55560 "GET /experiences/accommodations/ HTTP/1.1" 200 39773
 INFO 2025-10-08 13:08:39,386 basehttp 80284 55560 "GET /admin/dashboard/ HTTP/1.1" 200 78685
 INFO 2025-10-08 13:08:43,394 basehttp 80284 55560 "GET /experiences/accommodations/add/ HTTP/1.1" 200 48385
+INFO 2025-10-08 13:48:03,102 autoreload 23344 6896 Watching for file changes with StatReloader
+INFO 2025-10-08 13:48:06,308 basehttp 23344 15640 "GET / HTTP/1.1" 200 99513
+INFO 2025-10-08 13:48:10,185 basehttp 23344 15640 "GET /admin/dashboard/ HTTP/1.1" 200 78685
+INFO 2025-10-08 13:48:23,229 basehttp 23344 15640 "GET /experiences/ HTTP/1.1" 200 58653
+INFO 2025-10-08 13:48:26,649 basehttp 23344 15640 "GET /experiences/experience/ultimate-seattle-tbd-test1-white-water-rafting-adventure/ HTTP/1.1" 200 52481
+INFO 2025-10-08 13:48:49,181 basehttp 23344 3020 "GET /experiences/experience/ultimate-seattle-tbd-test1-white-water-rafting-adventure/edit/ HTTP/1.1" 200 66678
+INFO 2025-10-08 13:48:49,181 basehttp 23344 15640 - Broken pipe from ('127.0.0.1', 4766)
+INFO 2025-10-08 13:48:49,685 basehttp 23344 4752 - Broken pipe from ('127.0.0.1', 35559)
+INFO 2025-10-08 13:48:50,206 basehttp 23344 3020 "POST /experiences/api/analyze-seo/ HTTP/1.1" 200 1727
+INFO 2025-10-08 13:48:52,105 basehttp 23344 3020 "GET /experiences/experience/ultimate-seattle-tbd-test1-white-water-rafting-adventure/delete/ HTTP/1.1" 200 33855
+INFO 2025-10-08 13:48:53,383 basehttp 23344 3020 "POST /experiences/experience/ultimate-seattle-tbd-test1-white-water-rafting-adventure/delete/ HTTP/1.1" 302 0
+INFO 2025-10-08 13:48:53,396 basehttp 23344 3020 "GET /experiences/ HTTP/1.1" 200 54941
