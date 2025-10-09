@@ -183,6 +183,10 @@ STATICFILES_DIRS = [
 # Static file storage with WhiteNoise compression
 STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
+# WhiteNoise caching configuration for better performance
+WHITENOISE_MAX_AGE = 31536000  # 1 year in seconds for static files
+WHITENOISE_IMMUTABLE_FILE_TEST = lambda path, url: True  # All static files are immutable
+
 # Default primary key field type
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 

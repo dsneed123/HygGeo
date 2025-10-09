@@ -13697,3 +13697,9 @@ INFO 2025-10-08 13:48:50,206 basehttp 23344 3020 "POST /experiences/api/analyze-
 INFO 2025-10-08 13:48:52,105 basehttp 23344 3020 "GET /experiences/experience/ultimate-seattle-tbd-test1-white-water-rafting-adventure/delete/ HTTP/1.1" 200 33855
 INFO 2025-10-08 13:48:53,383 basehttp 23344 3020 "POST /experiences/experience/ultimate-seattle-tbd-test1-white-water-rafting-adventure/delete/ HTTP/1.1" 302 0
 INFO 2025-10-08 13:48:53,396 basehttp 23344 3020 "GET /experiences/ HTTP/1.1" 200 54941
+INFO 2025-10-09 13:47:35,156 autoreload 27404 34836 Watching for file changes with StatReloader
+INFO 2025-10-09 13:47:44,969 basehttp 27404 9784 "GET / HTTP/1.1" 200 88132
+INFO 2025-10-09 13:47:45,174 basehttp 27404 9784 "GET /static/css/base.css HTTP/1.1" 200 5306
+INFO 2025-10-09 13:47:45,177 basehttp 27404 31924 "GET /static/js/navbar.js HTTP/1.1" 200 2732
+INFO 2025-10-09 13:47:45,871 basehttp 27404 5832 "GET /static/site.webmanifest HTTP/1.1" 200 263
+INFO 2025-10-09 13:47:58,504 basehttp 27404 31924 "GET /experiences/blogs/create/ HTTP/1.1" 200 48403
