@@ -332,6 +332,7 @@ def public_profile_view(request, username):
 
 # In your accounts/views.py - Replace your existing admin_dashboard function with this:
 
+@user_passes_test(lambda u: u.is_staff, login_url='/accounts/login/')
 def admin_dashboard(request):
     """
     Admin dashboard view - only accessible to staff users
