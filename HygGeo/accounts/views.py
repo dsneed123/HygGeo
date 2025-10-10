@@ -69,18 +69,33 @@ def index(request):
     if not featured_destinations.exists():
         featured_destinations = Destination.objects.all().order_by('-created_at')[:6]
 
-    # Get featured experiences for the carousel
+    # Get 8 random featured experiences for the carousel
     featured_experiences = Experience.objects.filter(
-        is_featured=True
+        is_featured=True,
+        is_active=True
     ).select_related(
         'destination', 'experience_type', 'provider'
-    ).order_by('-created_at')[:8]
+    )
 
-    # If no featured experiences, get the most recent ones
-    if not featured_experiences.exists():
-        featured_experiences = Experience.objects.select_related(
+    # Get random 8 featured experiences
+    if featured_experiences.exists():
+        # Get all IDs and pick 8 random ones for better performance
+        featured_ids = list(featured_experiences.values_list('id', flat=True))
+        random_ids = random.sample(featured_ids, min(8, len(featured_ids)))
+        featured_experiences = Experience.objects.filter(id__in=random_ids).select_related(
             'destination', 'experience_type', 'provider'
-        ).order_by('-created_at')[:6]
+        )
+    else:
+        # If no featured experiences, get 8 random active ones
+        all_experiences = Experience.objects.filter(is_active=True).select_related(
+            'destination', 'experience_type', 'provider'
+        )
+        if all_experiences.exists():
+            all_ids = list(all_experiences.values_list('id', flat=True))
+            random_ids = random.sample(all_ids, min(8, len(all_ids)))
+            featured_experiences = Experience.objects.filter(id__in=random_ids).select_related(
+                'destination', 'experience_type', 'provider'
+            )
 
     # Check if user has completed a survey
     has_survey = False

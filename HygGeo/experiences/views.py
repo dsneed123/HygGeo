@@ -124,7 +124,7 @@ def recommendations_view(request):
     return render(request, 'experiences/recommendations.html', context)
 
 def experience_list_view(request):
-    """Browse all experiences with filtering"""
+    """Browse all experiences with filtering and load more functionality"""
     experiences = Experience.objects.filter(is_active=True).select_related(
         'destination', 'provider', 'experience_type'
     ).prefetch_related('categories')
@@ -207,10 +207,53 @@ def experience_list_view(request):
     else:  # newest
         experiences = experiences.order_by('-created_at')
 
-    # Pagination
-    paginator = Paginator(experiences, 12)
-    page_number = request.GET.get('page')
-    page_obj = paginator.get_page(page_number)
+    # Load more functionality - initially load 12 experiences
+    offset = int(request.GET.get('offset', 0))
+    limit = 12
+
+    # Get the experiences for this offset
+    total_count = experiences.count()
+    experiences_slice = experiences[offset:offset + limit]
+    has_more = (offset + limit) < total_count
+
+    # Check if this is an AJAX request for load more
+    if request.headers.get('X-Requested-With') == 'XMLHttpRequest':
+        # Get user bookmarks for template
+        user_bookmarks = get_user_bookmarks(request.user)
+
+        # Render just the experience cards HTML
+        from django.template.loader import render_to_string
+        html = render_to_string('experiences/experience_cards.html', {
+            'experiences': experiences_slice,
+            'user_bookmarks': user_bookmarks,
+            'user': request.user,
+        }, request=request)
+
+        return JsonResponse({
+            'html': html,
+            'has_more': has_more,
+            'next_offset': offset + limit,
+            'total_count': total_count,
+        })
+
+    # Regular page load - create paginator for initial display
+    # Use a fake paginator to work with existing template
+    class FakePaginator:
+        def __init__(self, count):
+            self.count = count
+
+    class FakePage:
+        def __init__(self, object_list, paginator):
+            self.object_list = object_list
+            self.paginator = FakePaginator(paginator)
+
+        def __iter__(self):
+            return iter(self.object_list)
+
+        def has_other_pages(self):
+            return False  # We'll use load more instead
+
+    page_obj = FakePage(experiences_slice, total_count)
 
     # Get filter options
     categories = Category.objects.all().order_by('name')
@@ -224,6 +267,9 @@ def experience_list_view(request):
 
     context = {
         'experiences': page_obj,
+        'total_count': total_count,
+        'has_more': has_more,
+        'initial_offset': limit,
         'categories': categories,
         'destinations': destinations,
         'experience_types': experience_types,
@@ -245,7 +291,7 @@ def experience_list_view(request):
             'sort': sort_by or 'newest',
         }
     }
-    
+
     return render(request, 'experiences/experience_list.html', context)
 
 def experience_detail_view(request, slug):

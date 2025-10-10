@@ -14,7 +14,7 @@
   "name": "Sustainable Travel Experiences",
   "description": "A curated list of sustainable travel experiences that embrace hygge and responsible tourism",
   "url": "{{ request.build_absolute_uri }}",
-  "numberOfItems": {{ experiences.paginator.count|default:0 }},
+  "numberOfItems": {{ total_count|default:0 }},
   "itemListElement": [
     {% for experience in experiences %}
     {
@@ -289,7 +289,7 @@
         <div class="col-12">
             <div class="d-flex justify-content-between align-items-center">
                 <h5 class="fw-bold mb-0">
-                    Found {{ experiences.paginator.count }} experience{{ experiences.paginator.count|pluralize }}
+                    Found {{ total_count }} experience{{ total_count|pluralize }}
                     {% if current_filters.search or current_filters.category or current_filters.destination or current_filters.type or current_filters.budget or current_filters.group_size or current_filters.duration or current_filters.sustainability_min or current_filters.hygge_min or current_filters.carbon_neutral %}
                         <small class="text-muted">(filtered)</small>
                     {% endif %}
@@ -307,91 +307,10 @@
     </div>
 
     <!-- Experience Grid -->
-    <div class="row g-4 mb-5">
-        {% for experience in experiences %}
-        <div class="col-lg-4 col-md-6">
-            <div class="card card-hygge h-100">
-                {% if experience.main_image %}
-                <img src="{{ experience.main_image.url }}" class="card-img-top" alt="{{ experience.title }}" style="height: 200px; object-fit: cover;">
-                {% else %}
-                <div class="card-img-top bg-light d-flex align-items-center justify-content-center" style="height: 200px;">
-                    <i class="fas fa-image text-muted" style="font-size: 3rem;"></i>
-                </div>
-                {% endif %}
-                
-                <div class="card-body p-3 d-flex flex-column">
-                    <!-- Header -->
-                    <div class="d-flex justify-content-between align-items-start mb-2">
-                        <h6 class="fw-bold mb-0" style="color: var(--hygge-green);">{{ experience.title }}</h6>
-                        <div class="d-flex align-items-center ms-2">
-                            {% if experience.is_featured %}
-                            <span class="badge bg-warning me-1" style="font-size: 0.7rem;">Featured</span>
-                            {% endif %}
-                            {% with badge=experience.get_sustainability_badge %}
-                            <span class="badge" style="background-color: {{ badge.color }}; font-size: 0.7rem;">
-                                {{ badge.text }}
-                            </span>
-                            {% endwith %}
-                        </div>
-                    </div>
-                    
-                    <!-- Location & Type -->
-                    <div class="mb-2">
-                        <p class="text-muted small mb-1">
-                            <i class="fas fa-map-marker-alt me-1"></i>{{ experience.destination.name }}, {{ experience.destination.country }}
-                        </p>
-                        <span class="badge bg-secondary small">{{ experience.get_experience_type_display }}</span>
-                        <span class="badge bg-info small ms-1">{{ experience.get_group_size_display }}</span>
-                    </div>
-                    
-                    <!-- Description -->
-                    <p class="small mb-3 flex-grow-1">{{ experience.short_description|truncatewords:20 }}</p> <!-- description -->
-                    
-                    <!-- Features -->
-                    <div class="mb-3">
-                        <div class="d-flex justify-content-between align-items-center small">
-                            <div class="text-warning">
-                                <i class="fas fa-leaf me-1"></i>
-                                <span>{{ experience.sustainability_score }}/10</span>
-                            </div>
-                            <div class="text-danger">
-                                <i class="fas fa-heart me-1"></i>
-                                <span>{{ experience.hygge_factor }}/10</span>
-                            </div>
-                            {% if experience.carbon_neutral %}
-                            <div class="text-success">
-                                <i class="fas fa-check-circle me-1"></i>
-                                <span>Carbon Neutral</span>
-                            </div>
-                            {% endif %}
-                        </div>
-                    </div>
-                    
-                    <!-- Price & Actions -->
-                    <div class="mt-auto">
-                        <div class="d-flex justify-content-between align-items-center mb-2">
-                            <span class="fw-bold text-primary">{{ experience.get_price_display }}</span>
-                            <small class="text-muted">{{ experience.get_duration_display }}</small>
-                        </div>
-                        
-                        <div class="d-flex gap-2">
-                            <a href="{% url 'experiences:experience_detail' experience.slug %}" class="btn btn-hygge btn-sm flex-grow-1">
-                                <i class="fas fa-eye me-1"></i>View Details
-                            </a>
-                            {% if user.is_staff %}
-                            <a href="{% url 'experiences:edit_experience' experience.slug %}" class="btn btn-outline-hygge-edit btn-sm" title="Edit Experience">
-                                <i class="fas fa-edit"></i>
-                            </a>
-                            {% endif %}
-                            <button class="btn btn-outline-hygge btn-sm bookmark-btn{% if experience.id in user_bookmarks %} bookmarked{% endif %}" data-experience-id="{{ experience.id }}">
-                                <i class="{% if experience.id in user_bookmarks %}fas{% else %}far{% endif %} fa-bookmark"></i>
-                            </button>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-        {% empty %}
+    <div class="row g-4 mb-5" id="experiencesGrid">
+        {% include 'experiences/experience_cards.html' with experiences=experiences user_bookmarks=user_bookmarks %}
+
+        {% if not experiences %}
         <div class="col-12">
             <div class="text-center py-5">
                 <i class="fas fa-search text-muted" style="font-size: 4rem;"></i>
@@ -402,38 +321,24 @@
                 </a>
             </div>
         </div>
-        {% endfor %}
+        {% endif %}
     </div>
 
-    <!-- Pagination -->
-    {% if experiences.has_other_pages %}
-    <nav aria-label="Experience pagination" class="mt-5">
-        <ul class="pagination justify-content-center">
-            {% if experiences.has_previous %}
-                <li class="page-item">
-                    <a class="page-link" href="?page={{ experiences.previous_page_number }}{% for key, value in current_filters.items %}{% if value %}&{{ key }}={{ value }}{% endif %}{% endfor %}">Previous</a>
-                </li>
-            {% endif %}
-
-            {% for num in experiences.paginator.page_range %}
-                {% if experiences.number == num %}
-                    <li class="page-item active">
-                        <span class="page-link">{{ num }}</span>
-                    </li>
-                {% else %}
-                    <li class="page-item">
-                        <a class="page-link" href="?page={{ num }}{% for key, value in current_filters.items %}{% if value %}&{{ key }}={{ value }}{% endif %}{% endfor %}">{{ num }}</a>
-                    </li>
-                {% endif %}
-            {% endfor %}
-
-            {% if experiences.has_next %}
-                <li class="page-item">
-                    <a class="page-link" href="?page={{ experiences.next_page_number }}{% for key, value in current_filters.items %}{% if value %}&{{ key }}={{ value }}{% endif %}{% endfor %}">Next</a>
-                </li>
-            {% endif %}
-        </ul>
-    </nav>
+    <!-- Load More Button -->
+    {% if has_more %}
+    <div class="row mb-5">
+        <div class="col-12 text-center">
+            <button id="loadMoreBtn" class="btn btn-hygge btn-lg" data-offset="{{ initial_offset }}">
+                <i class="fas fa-plus-circle me-2"></i>Load More Experiences
+            </button>
+            <div id="loadingSpinner" class="d-none mt-3">
+                <div class="spinner-border text-primary" role="status">
+                    <span class="visually-hidden">Loading...</span>
+                </div>
+                <p class="text-muted mt-2">Loading more experiences...</p>
+            </div>
+        </div>
+    </div>
     {% endif %}
 </div>
 
@@ -631,17 +536,145 @@ document.addEventListener('DOMContentLoaded', function() {
     }
     
     // Add animation to cards
-    const cards = document.querySelectorAll('.card-hygge');
-    cards.forEach((card, index) => {
-        card.style.opacity = '0';
-        card.style.transform = 'translateY(30px)';
-        
-        setTimeout(() => {
-            card.style.transition = 'all 0.6s ease';
-            card.style.opacity = '1';
-            card.style.transform = 'translateY(0)';
-        }, index * 50);
-    });
+    function animateCards() {
+        const cards = document.querySelectorAll('.experience-card-item');
+        cards.forEach((card, index) => {
+            if (!card.classList.contains('animated')) {
+                card.style.opacity = '0';
+                card.style.transform = 'translateY(30px)';
+
+                setTimeout(() => {
+                    card.style.transition = 'all 0.6s ease';
+                    card.style.opacity = '1';
+                    card.style.transform = 'translateY(0)';
+                    card.classList.add('animated');
+                }, index * 50);
+            }
+        });
+    }
+
+    // Animate initial cards
+    animateCards();
+
+    // Load More functionality
+    const loadMoreBtn = document.getElementById('loadMoreBtn');
+    if (loadMoreBtn) {
+        loadMoreBtn.addEventListener('click', async function() {
+            const currentOffset = parseInt(this.dataset.offset);
+            const loadingSpinner = document.getElementById('loadingSpinner');
+
+            // Show loading state
+            this.style.display = 'none';
+            loadingSpinner.classList.remove('d-none');
+
+            // Build URL with current filters and offset
+            const url = new URL(window.location.href);
+            url.searchParams.set('offset', currentOffset);
+
+            try {
+                const response = await fetch(url.toString(), {
+                    headers: {
+                        'X-Requested-With': 'XMLHttpRequest'
+                    }
+                });
+
+                const data = await response.json();
+
+                if (data.html) {
+                    // Append new experiences to grid
+                    const grid = document.getElementById('experiencesGrid');
+                    const tempDiv = document.createElement('div');
+                    tempDiv.innerHTML = data.html;
+
+                    // Append each card
+                    Array.from(tempDiv.children).forEach(child => {
+                        grid.appendChild(child);
+                    });
+
+                    // Animate new cards
+                    setTimeout(() => {
+                        animateCards();
+                    }, 100);
+
+                    // Re-attach bookmark event listeners to new cards
+                    const newBookmarkButtons = grid.querySelectorAll('.bookmark-btn:not(.listener-attached)');
+                    newBookmarkButtons.forEach(button => {
+                        button.classList.add('listener-attached');
+                        button.addEventListener('click', async function(e) {
+                            e.preventDefault();
+
+                            {% if not user.is_authenticated %}
+                            window.location.href = '{% url "login" %}';
+                            return;
+                            {% endif %}
+
+                            const experienceId = this.dataset.experienceId;
+                            const originalContent = this.innerHTML;
+
+                            this.disabled = true;
+                            this.innerHTML = '<i class="fas fa-spinner fa-spin"></i>';
+
+                            try {
+                                const response = await fetch(`{% url 'experiences:bookmark_experience' '00000000-0000-0000-0000-000000000000' %}`.replace('00000000-0000-0000-0000-000000000000', experienceId), {
+                                    method: 'POST',
+                                    headers: {
+                                        'X-CSRFToken': document.querySelector('[name=csrfmiddlewaretoken]').value,
+                                        'Content-Type': 'application/json',
+                                    },
+                                });
+
+                                const data = await response.json();
+
+                                if (data.success) {
+                                    if (data.bookmarked) {
+                                        this.innerHTML = '<i class="fas fa-bookmark"></i>';
+                                        this.classList.add('bookmarked');
+                                        showBookmarkMessage('Added to bookmarks!', 'success');
+                                    } else {
+                                        this.innerHTML = '<i class="far fa-bookmark"></i>';
+                                        this.classList.remove('bookmarked');
+                                        showBookmarkMessage('Removed from bookmarks', 'info');
+                                    }
+                                } else {
+                                    showBookmarkMessage('Failed to bookmark', 'error');
+                                    this.innerHTML = originalContent;
+                                }
+                            } catch (error) {
+                                showBookmarkMessage('Network error', 'error');
+                                this.innerHTML = originalContent;
+                            }
+
+                            this.disabled = false;
+                        });
+                    });
+
+                    // Update button state
+                    if (data.has_more) {
+                        this.dataset.offset = data.next_offset;
+                        this.style.display = 'inline-block';
+                        loadingSpinner.classList.add('d-none');
+                    } else {
+                        // No more experiences - hide button
+                        this.remove();
+                        loadingSpinner.remove();
+
+                        // Show "all loaded" message
+                        const allLoadedMsg = document.createElement('p');
+                        allLoadedMsg.className = 'text-muted text-center';
+                        allLoadedMsg.innerHTML = '<i class="fas fa-check-circle me-2"></i>All experiences loaded!';
+                        document.querySelector('.container').appendChild(allLoadedMsg);
+                    }
+                }
+            } catch (error) {
+                console.error('Error loading more experiences:', error);
+                loadingSpinner.classList.add('d-none');
+                this.style.display = 'inline-block';
+
+                // Show error message
+                showBookmarkMessage('Failed to load more experiences', 'error');
+            }
+        });
+    }
 });
 </script>
 
