@@ -27,6 +27,7 @@ import random
 
 def index(request):
     """Homepage with hygge concept, sustainability facts, and survey CTA"""
+    from django.core.cache import cache
 
     # Sustainability facts to display randomly
     sustainability_facts = [
@@ -59,48 +60,81 @@ def index(request):
     # Select 3 random facts for display
     featured_facts = random.sample(sustainability_facts, 3)
 
-    # Get all destinations, prioritizing those with experiences and featured status
-    featured_destinations = Destination.objects.annotate(
-        has_experiences=Count('experiences'),
-        has_featured=Count('experiences', filter=Q(experiences__is_featured=True))
-    ).order_by('-has_featured', '-has_experiences', '-created_at')[:6]
+    # Try to get cached featured destinations (cache for 15 minutes)
+    featured_destinations = cache.get('index_featured_destinations')
+    if featured_destinations is None:
+        # Optimized query: Only fetch needed fields and use efficient ordering
+        featured_destinations = Destination.objects.filter(
+            experiences__isnull=False
+        ).distinct().only(
+            'id', 'name', 'country', 'description', 'image',
+            'sustainability_score', 'hygge_factor', 'created_at'
+        ).prefetch_related(
+            'experiences'
+        ).order_by('-created_at')[:6]
 
-    # If no destinations at all, create some sample data
-    if not featured_destinations.exists():
-        featured_destinations = Destination.objects.all().order_by('-created_at')[:6]
+        # Convert to list to cache the queryset
+        featured_destinations = list(featured_destinations)
 
-    # Get 8 random featured experiences for the carousel
-    featured_experiences = Experience.objects.filter(
-        is_featured=True,
-        is_active=True
-    ).select_related(
-        'destination', 'experience_type', 'provider'
-    )
-
-    # Get random 8 featured experiences
-    if featured_experiences.exists():
-        # Get all IDs and pick 8 random ones for better performance
-        featured_ids = list(featured_experiences.values_list('id', flat=True))
-        random_ids = random.sample(featured_ids, min(8, len(featured_ids)))
-        featured_experiences = Experience.objects.filter(id__in=random_ids).select_related(
-            'destination', 'experience_type', 'provider'
-        )
-    else:
-        # If no featured experiences, get 8 random active ones
-        all_experiences = Experience.objects.filter(is_active=True).select_related(
-            'destination', 'experience_type', 'provider'
-        )
-        if all_experiences.exists():
-            all_ids = list(all_experiences.values_list('id', flat=True))
-            random_ids = random.sample(all_ids, min(8, len(all_ids)))
-            featured_experiences = Experience.objects.filter(id__in=random_ids).select_related(
-                'destination', 'experience_type', 'provider'
+        # If no destinations with experiences, get any 6 destinations
+        if not featured_destinations:
+            featured_destinations = list(
+                Destination.objects.only(
+                    'id', 'name', 'country', 'description', 'image',
+                    'sustainability_score', 'hygge_factor', 'created_at'
+                ).order_by('-created_at')[:6]
             )
 
-    # Check if user has completed a survey
+        # Cache for 15 minutes
+        cache.set('index_featured_destinations', featured_destinations, 60 * 15)
+
+    # Try to get cached featured experiences (cache for 10 minutes)
+    featured_experiences = cache.get('index_featured_experiences')
+    if featured_experiences is None:
+        # Optimized query: Use order_by('?') with limit for random selection
+        # This is more efficient than fetching all IDs
+        featured_experiences = Experience.objects.filter(
+            is_featured=True,
+            is_active=True
+        ).select_related(
+            'destination', 'experience_type', 'provider'
+        ).only(
+            'id', 'title', 'description', 'main_image', 'price_from',
+            'destination__id', 'destination__name',
+            'experience_type__id', 'experience_type__name',
+            'provider__id', 'provider__name'
+        ).order_by('?')[:8]
+
+        # Convert to list to cache
+        featured_experiences = list(featured_experiences)
+
+        # If no featured experiences, get random active ones
+        if not featured_experiences:
+            featured_experiences = list(
+                Experience.objects.filter(
+                    is_active=True
+                ).select_related(
+                    'destination', 'experience_type', 'provider'
+                ).only(
+                    'id', 'title', 'description', 'main_image', 'price_from',
+                    'destination__id', 'destination__name',
+                    'experience_type__id', 'experience_type__name',
+                    'provider__id', 'provider__name'
+                ).order_by('?')[:8]
+            )
+
+        # Cache for 10 minutes
+        cache.set('index_featured_experiences', featured_experiences, 60 * 10)
+
+    # Check if user has completed a survey (only for authenticated users)
     has_survey = False
     if request.user.is_authenticated:
-        has_survey = TravelSurvey.objects.filter(user=request.user).exists()
+        # Cache per-user survey status for 5 minutes
+        cache_key = f'user_has_survey_{request.user.id}'
+        has_survey = cache.get(cache_key)
+        if has_survey is None:
+            has_survey = TravelSurvey.objects.filter(user=request.user).exists()
+            cache.set(cache_key, has_survey, 60 * 5)
 
     context = {
         'sustainability_facts': featured_facts,
