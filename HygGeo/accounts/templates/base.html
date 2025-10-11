@@ -50,6 +50,8 @@
     <meta name="application-name" content="HygGeo">
 
     <!-- Preconnect to external domains for faster loading -->
+    <link rel="preconnect" href="https://hygoe-images.sfo3.cdn.digitaloceanspaces.com">
+    <link rel="dns-prefetch" href="https://hygoe-images.sfo3.cdn.digitaloceanspaces.com">
     <link rel="preconnect" href="https://cdn.jsdelivr.net">
     <link rel="dns-prefetch" href="https://cdn.jsdelivr.net">
     <link rel="preconnect" href="https://cdnjs.cloudflare.com">
@@ -57,10 +59,6 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link rel="dns-prefetch" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://www.googletagmanager.com">
-    <link rel="dns-prefetch" href="https://www.googletagmanager.com">
-    <link rel="preconnect" href="https://pagead2.googlesyndication.com">
-    <link rel="dns-prefetch" href="https://pagead2.googlesyndication.com">
 
     <!-- Site Structure and Organization Schema -->
     <script type="application/ld+json">
@@ -101,37 +99,54 @@
       gtag('config', 'AW-17493025780');
       gtag('config', 'G-8L2ZHG9R99');
 
-      // Load analytics after page loads
-      window.addEventListener('load', function() {
-        // Google Analytics
-        var ga1 = document.createElement('script');
-        ga1.async = true;
-        ga1.src = 'https://www.googletagmanager.com/gtag/js?id=G-TSVRNN9JFB';
-        document.head.appendChild(ga1);
+      // Load analytics after initial content and with idle callback
+      function loadAnalytics() {
+        // Google Analytics - load one at a time to reduce blocking
+        setTimeout(function() {
+          var ga1 = document.createElement('script');
+          ga1.async = true;
+          ga1.src = 'https://www.googletagmanager.com/gtag/js?id=G-TSVRNN9JFB';
+          document.head.appendChild(ga1);
+        }, 100);
 
-        var ga2 = document.createElement('script');
-        ga2.async = true;
-        ga2.src = 'https://www.googletagmanager.com/gtag/js?id=AW-17493025780';
-        document.head.appendChild(ga2);
+        setTimeout(function() {
+          var ga2 = document.createElement('script');
+          ga2.async = true;
+          ga2.src = 'https://www.googletagmanager.com/gtag/js?id=AW-17493025780';
+          document.head.appendChild(ga2);
+        }, 200);
 
-        var ga3 = document.createElement('script');
-        ga3.async = true;
-        ga3.src = 'https://www.googletagmanager.com/gtag/js?id=G-8L2ZHG9R99';
-        document.head.appendChild(ga3);
+        setTimeout(function() {
+          var ga3 = document.createElement('script');
+          ga3.async = true;
+          ga3.src = 'https://www.googletagmanager.com/gtag/js?id=G-8L2ZHG9R99';
+          document.head.appendChild(ga3);
+        }, 300);
 
-        // AdSense
-        var ads = document.createElement('script');
-        ads.async = true;
-        ads.src = 'https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-3243152138999761';
-        ads.crossOrigin = 'anonymous';
-        document.head.appendChild(ads);
+        // AdSense - lowest priority
+        setTimeout(function() {
+          var ads = document.createElement('script');
+          ads.async = true;
+          ads.src = 'https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-3243152138999761';
+          ads.crossOrigin = 'anonymous';
+          document.head.appendChild(ads);
+        }, 1000);
 
-        // Other ad script
-        var adScript = document.createElement('script');
-        adScript.async = true;
-        adScript.src = 'https://emrldtp.com/NDYwMDk2.js?t=460096';
-        document.head.appendChild(adScript);
-      });
+        // Other ad script - lowest priority
+        setTimeout(function() {
+          var adScript = document.createElement('script');
+          adScript.async = true;
+          adScript.src = 'https://emrldtp.com/NDYwMDk2.js?t=460096';
+          document.head.appendChild(adScript);
+        }, 1500);
+      }
+
+      // Use requestIdleCallback if available, otherwise fallback to load event
+      if ('requestIdleCallback' in window) {
+        requestIdleCallback(loadAnalytics, { timeout: 2000 });
+      } else {
+        window.addEventListener('load', loadAnalytics);
+      }
     </script>
 
     <!-- Critical CSS inline for above-the-fold content -->

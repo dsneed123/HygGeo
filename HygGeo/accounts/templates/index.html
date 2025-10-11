@@ -14,7 +14,7 @@
         {% for destination in featured_destinations %}
         <div class="banner-slide{% if forloop.first %} active{% endif %}">
             {% if destination.image %}
-                <img src="{{ destination.image.url }}" alt="{{ destination.name }}" loading="lazy">
+                <img src="{{ destination.image.url }}" alt="{{ destination.name }}"{% if forloop.first %} fetchpriority="high"{% else %} loading="lazy"{% endif %} width="1920" height="1080">
             {% else %}
                 <div class="placeholder-image {% cycle 'nordic' 'forest' 'coastal' %}">
                     <i class="fas fa-{% cycle 'mountain' 'tree' 'water' %}"></i>
@@ -92,7 +92,7 @@
                     <!-- Carousel Indicators -->
                     <div class="carousel-indicators">
                         {% for destination in featured_destinations %}
-                        <button class="indicator{% if forloop.first %} active{% endif %}" onclick="goToSlide({{ forloop.counter0 }})"></button>
+                        <button class="indicator{% if forloop.first %} active{% endif %}" onclick="goToSlide({{ forloop.counter0 }})" aria-label="Go to destination {{ forloop.counter }}"></button>
                         {% endfor %}
                     </div>
                 </div>
@@ -127,7 +127,7 @@
                         <h2 class="h3 fw-bold mb-2" style="color: var(--hygge-green);">Featured Experiences</h2>
                         <p class="text-muted mb-0">Sustainable adventures await</p>
                     </div>
-                       <a href="{% url 'experiences:experience_list' %}" class="btn btn-outline-primary btn-sm">
+                       <a href="{% url 'experiences:experience_list' %}" class="btn btn-outline-primary btn-sm" style="color: #1e5a3d; border-color: #1e5a3d;">
                         View All <i class="fas fa-arrow-right ms-1"></i>
                     </a>
                 </div>
@@ -141,7 +141,7 @@
                 <div class="experience-card">
                     <div class="experience-image">
                         {% if experience.main_image %}
-                            <img src="{{ experience.main_image.url }}" alt="{{ experience.title }}" loading="lazy">
+                            <img src="{{ experience.main_image.url }}" alt="{{ experience.title }}" loading="lazy" width="240" height="140">
                         {% else %}
                             <div class="experience-placeholder">
                                 <i class="fas fa-mountain"></i>
@@ -229,11 +229,11 @@
 
             <!-- Carousel Navigation -->
             <div class="experiences-nav">
-                <button class="nav-btn prev-btn" onclick="scrollExperiences('prev')">
-                    <i class="fas fa-chevron-left"></i>
+                <button class="nav-btn prev-btn" onclick="scrollExperiences('prev')" aria-label="Previous experiences">
+                    <i class="fas fa-chevron-left" aria-hidden="true"></i>
                 </button>
-                <button class="nav-btn next-btn" onclick="scrollExperiences('next')">
-                    <i class="fas fa-chevron-right"></i>
+                <button class="nav-btn next-btn" onclick="scrollExperiences('next')" aria-label="Next experiences">
+                    <i class="fas fa-chevron-right" aria-hidden="true"></i>
                 </button>
             </div>
         </div>
@@ -248,7 +248,7 @@
                 <h2 class="h3 fw-bold mb-3" style="color: var(--hygge-green);">
                     The Art of Hygge in Travel
                 </h2>
-                <p class="text-muted">
+                <p style="color: #5a5a5a;">
                     <strong>Hygge</strong> (pronounced "hoo-gah") is the Danish concept of creating
                     atmosphere and enjoying life's simple pleasures with people you care about.
                 </p>
@@ -262,7 +262,7 @@
                         <i class="fas fa-heart" style="font-size: 2rem; color: var(--hygge-green);"></i>
                     </div>
                     <h5 class="fw-bold mb-2" style="color: var(--hygge-green);">Mindful Moments</h5>
-                    <p class="text-muted small mb-0">
+                    <p class="small mb-0" style="color: #5a5a5a;">
                         Slow down and savor each experience with intention and presence.
                     </p>
                 </div>
@@ -273,7 +273,7 @@
                         <i class="fas fa-users" style="font-size: 2rem; color: var(--hygge-green);"></i>
                     </div>
                     <h5 class="fw-bold mb-2" style="color: var(--hygge-green);">Connection</h5>
-                    <p class="text-muted small mb-0">
+                    <p class="small mb-0" style="color: #5a5a5a;">
                         Build genuine relationships with communities and environments.
                     </p>
                 </div>
@@ -284,7 +284,7 @@
                         <i class="fas fa-leaf" style="font-size: 2rem; color: var(--hygge-green);"></i>
                     </div>
                     <h5 class="fw-bold mb-2" style="color: var(--hygge-green);">Sustainability</h5>
-                    <p class="text-muted small mb-0">
+                    <p class="small mb-0" style="color: #5a5a5a;">
                         Travel responsibly with eco-friendly choices and local support.
                     </p>
                 </div>
