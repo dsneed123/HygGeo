@@ -238,13 +238,36 @@
                         </a>
                     </li>
                     
-                    <!-- About link -->
-                    <li class="nav-item">
-                        <a class="nav-link" href="{% url 'experiences:about' %}">
+                    <!-- About Dropdown - Desktop -->
+                    <li class="nav-item dropdown d-none d-lg-block">
+                        <a class="nav-link dropdown-toggle" href="#" id="aboutDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                             <i class="fas fa-info-circle me-1"></i>About
                         </a>
+                        <ul class="dropdown-menu" aria-labelledby="aboutDropdown">
+                            <li><a class="dropdown-item" href="{% url 'experiences:about' %}">
+                                <i class="fas fa-info-circle me-2"></i>About HygGeo
+                            </a></li>
+                            <li><a class="dropdown-item" href="{% url 'faq' %}">
+                                <i class="fas fa-question-circle me-2"></i>FAQ
+                            </a></li>
+                        </ul>
                     </li>
-                    
+
+                    <!-- About Dropdown - Mobile -->
+                    <li class="nav-item d-lg-none">
+                        <a class="nav-link mobile-dropdown-toggle" href="#" data-target="about-mobile">
+                            <i class="fas fa-info-circle me-1"></i>About
+                        </a>
+                        <ul class="mobile-submenu" id="about-mobile">
+                            <li><a href="{% url 'experiences:about' %}">
+                                <i class="fas fa-info-circle me-2"></i>About HygGeo
+                            </a></li>
+                            <li><a href="{% url 'faq' %}">
+                                <i class="fas fa-question-circle me-2"></i>FAQ
+                            </a></li>
+                        </ul>
+                    </li>
+
                     <!-- Experiences Menu - Public Access -->
                     <li class="nav-item dropdown d-none d-lg-block">
                         <!-- Desktop dropdown -->
