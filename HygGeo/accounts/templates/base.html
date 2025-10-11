@@ -99,6 +99,7 @@
       gtag('js', new Date());
       gtag('config', 'G-TSVRNN9JFB');
       gtag('config', 'AW-17493025780');
+      gtag('config', 'G-8L2ZHG9R99');
 
       // Load analytics after page loads
       window.addEventListener('load', function() {
@@ -112,6 +113,11 @@
         ga2.async = true;
         ga2.src = 'https://www.googletagmanager.com/gtag/js?id=AW-17493025780';
         document.head.appendChild(ga2);
+
+        var ga3 = document.createElement('script');
+        ga3.async = true;
+        ga3.src = 'https://www.googletagmanager.com/gtag/js?id=G-8L2ZHG9R99';
+        document.head.appendChild(ga3);
 
         // AdSense
         var ads = document.createElement('script');
