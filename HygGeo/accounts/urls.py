@@ -85,4 +85,5 @@ urlpatterns = [
 
     # Legal pages
     path('privacy/', views.privacy_policy_view, name='privacy_policy'),
+    path('faq/', views.faq_view, name='faq'),
 ]

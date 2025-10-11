@@ -1,0 +1,353 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Frequently Asked Questions - HygGeo{% endblock %}
+
+{% block description %}Find answers to common questions about HygGeo's sustainable travel platform, bookings, safety, and how we curate eco-friendly experiences.{% endblock %}
+
+{% block content %}
+<div class="container my-5">
+    <div class="row">
+        <div class="col-lg-10 mx-auto">
+            <!-- Header -->
+            <div class="text-center mb-5">
+                <h1 class="display-4 fw-bold" style="color: var(--hygge-green);">
+                    <i class="fas fa-question-circle me-3"></i>Frequently Asked Questions
+                </h1>
+                <p class="lead text-muted">Everything you need to know about HygGeo and sustainable travel</p>
+            </div>
+
+            <!-- FAQ Accordion -->
+            <div class="accordion" id="faqAccordion">
+
+                <!-- General Questions -->
+                <h3 class="mt-5 mb-4" style="color: var(--hygge-green);">
+                    <i class="fas fa-info-circle me-2"></i>General Questions
+                </h3>
+
+                <!-- Is HygGeo a scam? -->
+                <div class="accordion-item mb-3">
+                    <h2 class="accordion-header" id="headingScam">
+                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseScam" aria-expanded="false" aria-controls="collapseScam">
+                            <strong>Is HygGeo a scam? How do I know I can trust you?</strong>
+                        </button>
+                    </h2>
+                    <div id="collapseScam" class="accordion-collapse collapse" aria-labelledby="headingScam" data-bs-parent="#faqAccordion">
+                        <div class="accordion-body">
+                            <p><strong>No, HygGeo is not a scam.</strong> We are a legitimate sustainable travel platform that helps you discover eco-friendly experiences.</p>
+
+                            <p><strong>Here's how we operate:</strong></p>
+                            <ul>
+                                <li><strong>We don't handle bookings directly</strong> - All bookings are processed through external, verified booking platforms and tour operators</li>
+                                <li><strong>We're a discovery platform</strong> - Think of us like a curator or directory that lists verified sustainable travel experiences</li>
+                                <li><strong>No payment to HygGeo</strong> - You never pay us directly. When you click "Book Now," you're redirected to the official booking site of the experience provider</li>
+                                <li><strong>We verify providers</strong> - We carefully curate experiences and only list providers with legitimate operations and sustainability credentials</li>
+                                <li><strong>Transparent partnerships</strong> - We may earn a small commission from some bookings, but this never affects your price</li>
+                            </ul>
+
+                            <div class="alert alert-info mt-3">
+                                <strong>How to stay safe:</strong> Always check reviews, verify the booking site's legitimacy, and use secure payment methods when booking through our partner providers.
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- What is HygGeo? -->
+                <div class="accordion-item mb-3">
+                    <h2 class="accordion-header" id="headingWhat">
+                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseWhat" aria-expanded="false" aria-controls="collapseWhat">
+                            <strong>What is HygGeo?</strong>
+                        </button>
+                    </h2>
+                    <div id="collapseWhat" class="accordion-collapse collapse" aria-labelledby="headingWhat" data-bs-parent="#faqAccordion">
+                        <div class="accordion-body">
+                            <p>HygGeo combines the Danish concept of <em>hygge</em> (finding joy in simple, mindful moments) with sustainable travel. We're a platform that helps conscious travelers discover eco-friendly accommodations, experiences, and destinations that align with their values.</p>
+
+                            <p><strong>We help you:</strong></p>
+                            <ul>
+                                <li>Discover verified sustainable travel experiences</li>
+                                <li>Connect with like-minded eco-conscious travelers</li>
+                                <li>Plan trips that minimize environmental impact</li>
+                                <li>Support local communities and responsible tourism</li>
+                                <li>Find authentic, mindful travel experiences</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- How does HygGeo make money? -->
+                <div class="accordion-item mb-3">
+                    <h2 class="accordion-header" id="headingMoney">
+                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseMoney" aria-expanded="false" aria-controls="collapseMoney">
+                            <strong>How does HygGeo make money?</strong>
+                        </button>
+                    </h2>
+                    <div id="collapseMoney" class="accordion-collapse collapse" aria-labelledby="headingMoney" data-bs-parent="#faqAccordion">
+                        <div class="accordion-body">
+                            <p>HygGeo operates on an <strong>affiliate commission model</strong>, similar to platforms like TripAdvisor or Booking.com.</p>
+
+                            <p><strong>Here's how it works:</strong></p>
+                            <ul>
+                                <li>When you book through links on our site, we may earn a small commission from the booking platform or tour operator</li>
+                                <li>This commission comes from their marketing budget - <strong>it doesn't increase your price</strong></li>
+                                <li>You pay the same price as booking directly (sometimes even less with exclusive deals)</li>
+                                <li>This model allows us to offer our platform for free to users</li>
+                            </ul>
+
+                            <div class="alert alert-success">
+                                <strong>100% Transparent:</strong> Our commission never influences which experiences we recommend. We only list experiences that meet our strict sustainability criteria.
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Bookings & Payments -->
+                <h3 class="mt-5 mb-4" style="color: var(--hygge-green);">
+                    <i class="fas fa-credit-card me-2"></i>Bookings & Payments
+                </h3>
+
+                <!-- How do bookings work? -->
+                <div class="accordion-item mb-3">
+                    <h2 class="accordion-header" id="headingBooking">
+                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseBooking" aria-expanded="false" aria-controls="collapseBooking">
+                            <strong>How do bookings work on HygGeo?</strong>
+                        </button>
+                    </h2>
+                    <div id="collapseBooking" class="accordion-collapse collapse" aria-labelledby="headingBooking" data-bs-parent="#faqAccordion">
+                        <div class="accordion-body">
+                            <p>All bookings are handled <strong>externally</strong> through verified booking platforms and tour operators. Here's the process:</p>
+
+                            <ol>
+                                <li><strong>Browse</strong> - Explore sustainable experiences on HygGeo</li>
+                                <li><strong>Click "Book Now"</strong> - You'll be redirected to the official booking site</li>
+                                <li><strong>Complete booking</strong> - Book directly with the provider on their secure platform</li>
+                                <li><strong>Confirmation</strong> - You'll receive confirmation from the booking provider (not HygGeo)</li>
+                                <li><strong>Enjoy</strong> - Take your sustainable adventure!</li>
+                            </ol>
+
+                            <p><strong>Important:</strong> HygGeo does not process payments, hold reservations, or handle cancellations. All of these are managed by the experience provider.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Do I pay HygGeo? -->
+                <div class="accordion-item mb-3">
+                    <h2 class="accordion-header" id="headingPayment">
+                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapsePayment" aria-expanded="false" aria-controls="collapsePayment">
+                            <strong>Do I pay HygGeo directly?</strong>
+                        </button>
+                    </h2>
+                    <div id="collapsePayment" class="accordion-collapse collapse" aria-labelledby="headingPayment" data-bs-parent="#faqAccordion">
+                        <div class="accordion-body">
+                            <p><strong>No, you never pay HygGeo directly.</strong></p>
+
+                            <p>When you book an experience through our site, you complete the transaction with:</p>
+                            <ul>
+                                <li>The tour operator's booking system</li>
+                                <li>A third-party booking platform (like Viator, GetYourGuide, etc.)</li>
+                                <li>The accommodation provider's reservation system</li>
+                            </ul>
+
+                            <p>Your payment information is processed securely by these established booking platforms - HygGeo never sees or stores your payment details.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Cancellations and Refunds -->
+                <div class="accordion-item mb-3">
+                    <h2 class="accordion-header" id="headingRefund">
+                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseRefund" aria-expanded="false" aria-controls="collapseRefund">
+                            <strong>What about cancellations and refunds?</strong>
+                        </button>
+                    </h2>
+                    <div id="collapseRefund" class="accordion-collapse collapse" aria-labelledby="headingRefund" data-bs-parent="#faqAccordion">
+                        <div class="accordion-body">
+                            <p>Since all bookings are made directly with experience providers, <strong>cancellations and refunds are handled by them</strong>, not HygGeo.</p>
+
+                            <p><strong>To cancel or request a refund:</strong></p>
+                            <ol>
+                                <li>Review the cancellation policy shown on the booking page before booking</li>
+                                <li>Contact the booking platform or tour operator directly</li>
+                                <li>Follow their specific cancellation procedures</li>
+                                <li>Refunds are processed according to the provider's policy</li>
+                            </ol>
+
+                            <div class="alert alert-warning">
+                                <strong>Tip:</strong> Always read the cancellation policy carefully before booking. Policies vary by provider.
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Sustainability & Curation -->
+                <h3 class="mt-5 mb-4" style="color: var(--hygge-green);">
+                    <i class="fas fa-leaf me-2"></i>Sustainability & Curation
+                </h3>
+
+                <!-- How are experiences vetted? -->
+                <div class="accordion-item mb-3">
+                    <h2 class="accordion-header" id="headingVetting">
+                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseVetting" aria-expanded="false" aria-controls="collapseVetting">
+                            <strong>How do you verify that experiences are truly sustainable?</strong>
+                        </button>
+                    </h2>
+                    <div id="collapseVetting" class="accordion-collapse collapse" aria-labelledby="headingVetting" data-bs-parent="#faqAccordion">
+                        <div class="accordion-body">
+                            <p>We carefully curate every experience on HygGeo using our <strong>Sustainability Scorecard</strong>. Each experience is evaluated on:</p>
+
+                            <ul>
+                                <li><strong>Environmental Impact</strong> - Carbon footprint, waste management, resource conservation</li>
+                                <li><strong>Local Community Support</strong> - Fair wages, local employment, community benefits</li>
+                                <li><strong>Cultural Authenticity</strong> - Respect for local cultures and traditions</li>
+                                <li><strong>Conservation Efforts</strong> - Wildlife protection, habitat preservation</li>
+                                <li><strong>Certifications</strong> - Recognized eco-certifications (LEED, Green Key, etc.)</li>
+                            </ul>
+
+                            <p>We also verify provider credentials, check reviews, and may conduct site visits for featured experiences.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- What is Hygge? -->
+                <div class="accordion-item mb-3">
+                    <h2 class="accordion-header" id="headingHygge">
+                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseHygge" aria-expanded="false" aria-controls="collapseHygge">
+                            <strong>What does "hygge" mean and how does it relate to travel?</strong>
+                        </button>
+                    </h2>
+                    <div id="collapseHygge" class="accordion-collapse collapse" aria-labelledby="headingHygge" data-bs-parent="#faqAccordion">
+                        <div class="accordion-body">
+                            <p><strong>Hygge</strong> (pronounced "hoo-gah") is a Danish concept that embodies coziness, contentment, and well-being through simple pleasures.</p>
+
+                            <p><strong>In travel, hygge means:</strong></p>
+                            <ul>
+                                <li><strong>Mindful moments</strong> - Slowing down to truly experience each destination</li>
+                                <li><strong>Authentic connections</strong> - Building genuine relationships with locals and fellow travelers</li>
+                                <li><strong>Simple pleasures</strong> - Finding joy in cozy cafes, scenic walks, and meaningful conversations</li>
+                                <li><strong>Sustainable choices</strong> - Traveling responsibly to preserve these special moments for future generations</li>
+                            </ul>
+
+                            <p>At HygGeo, we believe the best travel combines hygge's mindful approach with environmental responsibility.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Account & Features -->
+                <h3 class="mt-5 mb-4" style="color: var(--hygge-green);">
+                    <i class="fas fa-user me-2"></i>Account & Features
+                </h3>
+
+                <!-- Do I need an account? -->
+                <div class="accordion-item mb-3">
+                    <h2 class="accordion-header" id="headingAccount">
+                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseAccount" aria-expanded="false" aria-controls="collapseAccount">
+                            <strong>Do I need an account to use HygGeo?</strong>
+                        </button>
+                    </h2>
+                    <div id="collapseAccount" class="accordion-collapse collapse" aria-labelledby="headingAccount" data-bs-parent="#faqAccordion">
+                        <div class="accordion-body">
+                            <p>You can <strong>browse experiences without an account</strong>, but creating a free account unlocks additional features:</p>
+
+                            <ul>
+                                <li><strong>Personalized recommendations</strong> based on your travel style and sustainability preferences</li>
+                                <li><strong>Bookmark experiences</strong> to save for later</li>
+                                <li><strong>Trip planning tools</strong> to organize your sustainable adventures</li>
+                                <li><strong>Community features</strong> - connect with other eco-conscious travelers</li>
+                                <li><strong>Travel blogs</strong> - share your sustainable travel stories</li>
+                                <li><strong>Exclusive deals</strong> from our sustainable travel partners</li>
+                            </ul>
+
+                            <p class="mb-0">Signing up is free and takes less than 2 minutes!</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Is my data safe? -->
+                <div class="accordion-item mb-3">
+                    <h2 class="accordion-header" id="headingPrivacy">
+                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapsePrivacy" aria-expanded="false" aria-controls="collapsePrivacy">
+                            <strong>Is my personal data safe?</strong>
+                        </button>
+                    </h2>
+                    <div id="collapsePrivacy" class="accordion-collapse collapse" aria-labelledby="headingPrivacy" data-bs-parent="#faqAccordion">
+                        <div class="accordion-body">
+                            <p><strong>Yes, we take your privacy seriously.</strong></p>
+
+                            <p><strong>How we protect your data:</strong></p>
+                            <ul>
+                                <li><strong>Secure storage</strong> - All data is encrypted and stored securely</li>
+                                <li><strong>No payment data</strong> - We never store credit card or payment information</li>
+                                <li><strong>Limited data collection</strong> - We only collect what's necessary to provide our service</li>
+                                <li><strong>No selling data</strong> - We never sell your personal information to third parties</li>
+                                <li><strong>GDPR compliant</strong> - We follow international data protection standards</li>
+                                <li><strong>You control your data</strong> - You can export or delete your data at any time</li>
+                            </ul>
+
+                            <p>For more details, please read our <a href="{% url 'privacy_policy' %}">Privacy Policy</a>.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Still have questions? -->
+                <div class="card mt-5 border-0" style="background-color: var(--hygge-cream);">
+                    <div class="card-body text-center p-5">
+                        <h3 style="color: var(--hygge-green);">Still Have Questions?</h3>
+                        <p class="lead mb-4">We're here to help! Reach out to our team.</p>
+                        <div class="d-flex flex-wrap justify-content-center gap-3">
+                            {% if user.is_authenticated %}
+                                <a href="{% url 'profile' %}" class="btn btn-hygge">
+                                    <i class="fas fa-user me-2"></i>My Profile
+                                </a>
+                            {% else %}
+                                <a href="{% url 'signup' %}" class="btn btn-hygge">
+                                    <i class="fas fa-user-plus me-2"></i>Create Free Account
+                                </a>
+                            {% endif %}
+                            <a href="{% url 'index' %}" class="btn btn-outline-hygge">
+                                <i class="fas fa-home me-2"></i>Back to Home
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+.accordion-button:not(.collapsed) {
+    background-color: var(--hygge-cream);
+    color: var(--hygge-green);
+    font-weight: 600;
+}
+
+.accordion-button:focus {
+    box-shadow: none;
+    border-color: var(--hygge-green);
+}
+
+.accordion-item {
+    border: 1px solid rgba(74, 124, 89, 0.2);
+    border-radius: 10px !important;
+    overflow: hidden;
+}
+
+.accordion-body {
+    background-color: #fafafa;
+}
+
+.accordion-body ul {
+    margin-left: 1.5rem;
+}
+
+.accordion-body li {
+    margin-bottom: 0.5rem;
+}
+
+.alert {
+    border-radius: 10px;
+    border: none;
+}
+</style>
+{% endblock %}

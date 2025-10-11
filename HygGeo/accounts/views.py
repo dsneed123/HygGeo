@@ -1596,3 +1596,7 @@ def export_categories_json(request):
     })
     response['Content-Disposition'] = 'attachment; filename="categories.json"'
     return response
+
+def faq_view(request):
+    """Display the FAQs page"""
+    return render(request, 'accounts/faq.html')
