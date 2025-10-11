@@ -20,4 +20,4 @@ Allow: /about/
 Allow: /contact/
 
 # Sitemap location
-Sitemap: https://yourdomain.com/sitemap.xml
+Sitemap: https://hyggeo.com/sitemap.xml

@@ -381,9 +381,9 @@ AWS_SECRET_ACCESS_KEY = config('SPACES_SECRET_KEY', default='')
 AWS_STORAGE_BUCKET_NAME = config('SPACES_BUCKET_NAME', default='hygoe-images')
 AWS_S3_ENDPOINT_URL = config('SPACES_ENDPOINT_URL', default='https://sfo3.digitaloceanspaces.com')
 
-# Spaces file settings
+# Spaces file settings - Optimized for performance with long cache times
 AWS_S3_OBJECT_PARAMETERS = {
-    'CacheControl': 'max-age=86400',
+    'CacheControl': 'max-age=31536000, immutable',  # 1 year cache for media files
     'ACL': 'public-read',
 }
 AWS_LOCATION = 'media'
