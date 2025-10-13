@@ -133,6 +133,22 @@
                         </div>
                     </div>
                     
+                    <!-- Email Consent -->
+                    <div class="mb-3">
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" name="email_consent" id="{{ form.email_consent.id_for_label }}" value="on" checked required>
+                            <label class="form-check-label small" for="{{ form.email_consent.id_for_label }}">
+                                {{ form.email_consent.label }}
+                            </label>
+                            {% if form.email_consent.errors %}
+                                <div class="text-danger small">{{ form.email_consent.errors.0 }}</div>
+                            {% endif %}
+                            <div class="form-text">
+                                <small>{{ form.email_consent.help_text }}</small>
+                            </div>
+                        </div>
+                    </div>
+
                     <!-- Privacy Policy Agreement -->
                     <div class="mb-3">
                         <div class="form-check">
