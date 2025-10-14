@@ -257,9 +257,7 @@ def experience_list_view(request):
 
     # Get filter options
     categories = Category.objects.all().order_by('name')
-    destinations = Destination.objects.annotate(
-        experience_count=Count('experiences', filter=Q(experiences__is_active=True))
-    ).filter(experience_count__gt=0).order_by('name')
+    destinations = Destination.objects.all().order_by('name')
     experience_types = ExperienceType.objects.all().order_by('name')
 
     # Get user bookmarks for template
