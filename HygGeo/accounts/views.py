@@ -126,6 +126,43 @@ def index(request):
         # Cache for 10 minutes
         cache.set('index_featured_experiences', featured_experiences, 60 * 10)
 
+    # Try to get cached featured accommodations (cache for 10 minutes)
+    featured_accommodations = cache.get('index_featured_accommodations')
+    if featured_accommodations is None:
+        # Optimized query for featured accommodations
+        featured_accommodations = Accommodation.objects.filter(
+            is_featured=True,
+            is_active=True
+        ).select_related(
+            'destination', 'provider'
+        ).only(
+            'id', 'name', 'description', 'short_description', 'main_image',
+            'slug', 'accommodation_type', 'price_per_night_from',
+            'destination__id', 'destination__name',
+            'provider__id', 'provider__name'
+        ).order_by('?')[:8]
+
+        # Convert to list to cache
+        featured_accommodations = list(featured_accommodations)
+
+        # If no featured accommodations, get random active ones
+        if not featured_accommodations:
+            featured_accommodations = list(
+                Accommodation.objects.filter(
+                    is_active=True
+                ).select_related(
+                    'destination', 'provider'
+                ).only(
+                    'id', 'name', 'description', 'short_description', 'main_image',
+                    'slug', 'accommodation_type', 'price_per_night_from',
+                    'destination__id', 'destination__name',
+                    'provider__id', 'provider__name'
+                ).order_by('?')[:8]
+            )
+
+        # Cache for 10 minutes
+        cache.set('index_featured_accommodations', featured_accommodations, 60 * 10)
+
     # Check if user has completed a survey (only for authenticated users)
     has_survey = False
     if request.user.is_authenticated:
@@ -141,6 +178,7 @@ def index(request):
         'has_survey': has_survey,
         'featured_destinations': featured_destinations,
         'featured_experiences': featured_experiences,
+        'featured_accommodations': featured_accommodations,
     }
 
     return render(request, 'index.html', context)
@@ -415,6 +453,11 @@ def admin_dashboard(request):
     # Get active/featured counts
     featured_experiences = Experience.objects.filter(is_featured=True).count()
     active_experiences = Experience.objects.filter(is_active=True).count()
+    featured_accommodations = Accommodation.objects.filter(is_featured=True).count()
+
+    # Update stats dict with featured counts
+    stats['featured_experiences_count'] = featured_experiences
+    stats['featured_accommodations_count'] = featured_accommodations
 
     context = {
         'stats': stats,

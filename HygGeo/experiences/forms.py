@@ -100,12 +100,13 @@ class ExperienceForm(forms.ModelForm):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        
-        # Set initial values
-        self.fields['is_active'].initial = True
-        self.fields['is_featured'].initial = False
-        self.fields['sustainability_score'].initial = 5
-        self.fields['hygge_factor'].initial = 5
+
+        # Set initial values only for new instances (not when editing)
+        if not self.instance.pk:  # Only set defaults for new experiences
+            self.fields['is_active'].initial = True
+            self.fields['is_featured'].initial = False
+            self.fields['sustainability_score'].initial = 5
+            self.fields['hygge_factor'].initial = 5
         
         # Add comprehensive help text and labels with definitions
         self.fields['title'].help_text = 'The main headline that will appear on experience cards and detail pages. Make it compelling and descriptive.'
@@ -540,12 +541,13 @@ class AccommodationForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
-        # Set initial values
-        self.fields['is_active'].initial = True
-        self.fields['is_featured'].initial = False
-        self.fields['sustainability_score'].initial = 5
-        self.fields['hygge_factor'].initial = 5
-        self.fields['currency'].initial = 'USD'
+        # Set initial values only for new instances (not when editing)
+        if not self.instance.pk:  # Only set defaults for new accommodations
+            self.fields['is_active'].initial = True
+            self.fields['is_featured'].initial = False
+            self.fields['sustainability_score'].initial = 5
+            self.fields['hygge_factor'].initial = 5
+            self.fields['currency'].initial = 'USD'
 
         # Add comprehensive help text
         self.fields['name'].help_text = 'The name of the hotel, hostel, or accommodation'

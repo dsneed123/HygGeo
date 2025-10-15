@@ -240,8 +240,133 @@
     </div>
 </section>
 
+<!-- Featured Accommodations Section -->
+<section class="py-4" style="background-color: var(--hygge-cream);">
+    <div class="container">
+        <div class="row">
+            <div class="col-12 mb-4">
+                <div class="d-flex justify-content-between align-items-center">
+                    <div>
+                        <h2 class="h3 fw-bold mb-2" style="color: var(--hygge-green);">Featured Accommodations</h2>
+                        <p class="text-muted mb-0">Eco-friendly places to stay</p>
+                    </div>
+                    <a href="{% url 'experiences:accommodation_list' %}" class="btn btn-outline-primary btn-sm" style="color: #1e5a3d; border-color: #1e5a3d;">
+                        View All <i class="fas fa-arrow-right ms-1"></i>
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Accommodations Carousel -->
+        <div class="experiences-carousel-wrapper">
+            <div class="experiences-carousel" id="accommodationsCarousel">
+                {% for accommodation in featured_accommodations %}
+                <div class="experience-card">
+                    <div class="experience-image">
+                        {% if accommodation.main_image %}
+                            <img src="{{ accommodation.main_image.url }}" alt="{{ accommodation.name }}" loading="lazy" width="240" height="140">
+                        {% else %}
+                            <div class="experience-placeholder" style="background: linear-gradient(135deg, #9b59b6, #8e44ad);">
+                                <i class="fas fa-bed"></i>
+                            </div>
+                        {% endif %}
+                        <div class="experience-overlay">
+                            <div class="experience-type-badge" style="background: rgba(155, 89, 182, 0.9);">
+                                {% if accommodation.accommodation_type %}
+                                    {{ accommodation.get_accommodation_type_display }}
+                                {% else %}
+                                    Eco-Stay
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                    <div class="experience-content">
+                        <h4 class="experience-title">{{ accommodation.name }}</h4>
+                        <p class="experience-location">
+                            <i class="fas fa-map-marker-alt me-2"></i>
+                            {% if accommodation.destination %}{{ accommodation.destination.name }}{% else %}Prime Location{% endif %}
+                        </p>
+                        <p class="experience-description">
+                            {% if accommodation.short_description %}
+                                {{ accommodation.short_description|truncatewords:15 }}
+                            {% elif accommodation.description %}
+                                {{ accommodation.description|truncatewords:15 }}
+                            {% else %}
+                                A sustainable accommodation with modern amenities and eco-friendly practices.
+                            {% endif %}
+                        </p>
+                        <div class="experience-stats">
+                            <div class="stat">
+                                <i class="fas fa-leaf"></i>
+                                <span>Eco-Certified</span>
+                            </div>
+                            {% if accommodation.price_per_night_from %}
+                            <div class="stat">
+                                <i class="fas fa-tag"></i>
+                                <span>${{ accommodation.price_per_night_from }}/night</span>
+                            </div>
+                            {% endif %}
+                        </div>
+                        <a href="{% url 'experiences:accommodation_detail' accommodation.slug %}" class="btn btn-experience" style="background: #9b59b6;">
+                            <i class="fas fa-arrow-right me-2"></i>
+                            View Details
+                        </a>
+                    </div>
+                </div>
+                {% empty %}
+                <!-- Sample accommodation if none exist -->
+                <div class="experience-card">
+                    <div class="experience-image">
+                        <div class="experience-placeholder" style="background: linear-gradient(135deg, #9b59b6, #8e44ad);">
+                            <i class="fas fa-bed"></i>
+                        </div>
+                        <div class="experience-overlay">
+                            <div class="experience-type-badge" style="background: rgba(155, 89, 182, 0.9);">Eco-Lodge</div>
+                        </div>
+                    </div>
+                    <div class="experience-content">
+                        <h4 class="experience-title">Sustainable Forest Retreat</h4>
+                        <p class="experience-location">
+                            <i class="fas fa-map-marker-alt me-2"></i>
+                            Swedish Wilderness
+                        </p>
+                        <p class="experience-description">
+                            Experience comfort and sustainability in harmony with nature at this eco-certified forest lodge.
+                        </p>
+                        <div class="experience-stats">
+                            <div class="stat">
+                                <i class="fas fa-leaf"></i>
+                                <span>Eco-Certified</span>
+                            </div>
+                            <div class="stat">
+                                <i class="fas fa-tag"></i>
+                                <span>$149/night</span>
+                            </div>
+                        </div>
+                        <a href="#" class="btn btn-experience" style="background: #9b59b6;">
+                            <i class="fas fa-arrow-right me-2"></i>
+                            View Details
+                        </a>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+
+            <!-- Carousel Navigation -->
+            <div class="experiences-nav">
+                <button class="nav-btn prev-btn" onclick="scrollAccommodations('prev')" aria-label="Previous accommodations">
+                    <i class="fas fa-chevron-left" aria-hidden="true"></i>
+                </button>
+                <button class="nav-btn next-btn" onclick="scrollAccommodations('next')" aria-label="Next accommodations">
+                    <i class="fas fa-chevron-right" aria-hidden="true"></i>
+                </button>
+            </div>
+        </div>
+    </div>
+</section>
+
 <!-- Hygge Philosophy Section -->
-<section id="hygge-section" class="py-4" style="background-color: var(--hygge-cream);">
+<section id="hygge-section" class="py-4" style="background-color: var(--hygge-warm-white);">
     <div class="container">
         <div class="row">
             <div class="col-lg-10 mx-auto text-center mb-4">
@@ -2427,15 +2552,22 @@ function resetSlideShow() {
 // Smooth scrolling for anchor links
 document.querySelectorAll('a[href^="#"]').forEach(anchor => {
     anchor.addEventListener('click', function (e) {
-        e.preventDefault();
-        console.log('Learn More button clicked!');
-        const target = document.querySelector(this.getAttribute('href'));
-        console.log('Target found:', target);
-        if (target) {
-            target.scrollIntoView({
-                behavior: 'smooth',
-                block: 'start'
-            });
+        const href = this.getAttribute('href');
+
+        // Only handle links with valid anchor targets (not just "#")
+        if (href && href.length > 1 && href !== '#') {
+            e.preventDefault();
+            try {
+                const target = document.querySelector(href);
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                }
+            } catch (error) {
+                console.error('Invalid selector:', href, error);
+            }
         }
     });
 });
@@ -2529,6 +2661,27 @@ function handleSwipe() {
 // Experiences Carousel Functionality
 function scrollExperiences(direction) {
     const carousel = document.getElementById('experiencesCarousel');
+    if (!carousel) return;
+
+    // Responsive scroll amount based on screen size
+    let cardWidth = 260; // Base card width + gap
+    if (window.innerWidth <= 576) {
+        cardWidth = 200; // Mobile size
+    } else if (window.innerWidth <= 768) {
+        cardWidth = 220; // Tablet size
+    }
+
+    const scrollAmount = direction === 'next' ? cardWidth : -cardWidth;
+
+    carousel.scrollBy({
+        left: scrollAmount,
+        behavior: 'smooth'
+    });
+}
+
+// Accommodations Carousel Functionality
+function scrollAccommodations(direction) {
+    const carousel = document.getElementById('accommodationsCarousel');
     if (!carousel) return;
 
     // Responsive scroll amount based on screen size

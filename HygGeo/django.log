@@ -13725,3 +13725,286 @@ INFO 2025-10-10 23:43:13,955 basehttp 50024 45108 "GET / HTTP/1.1" 200 83367
 INFO 2025-10-10 23:43:13,989 basehttp 50024 45108 "GET /static/css/base.css HTTP/1.1" 200 5306
 INFO 2025-10-10 23:43:13,992 basehttp 50024 45108 "GET /static/js/navbar.js HTTP/1.1" 200 2732
 INFO 2025-10-10 23:43:14,317 basehttp 50024 45108 "GET /static/favicon.ico HTTP/1.1" 200 15406
+INFO 2025-10-14 17:59:24,426 autoreload 37316 41512 Watching for file changes with StatReloader
+INFO 2025-10-14 17:59:42,211 basehttp 37316 26412 "GET / HTTP/1.1" 200 96819
+INFO 2025-10-14 17:59:42,585 basehttp 37316 26412 "GET /static/css/base.css HTTP/1.1" 200 5306
+INFO 2025-10-14 17:59:42,591 basehttp 37316 21576 "GET /static/js/navbar.js HTTP/1.1" 200 2732
+INFO 2025-10-14 17:59:44,291 basehttp 37316 19012 "GET /static/site.webmanifest HTTP/1.1" 200 263
+INFO 2025-10-14 17:59:44,639 basehttp 37316 21576 "GET /static/favicon.ico HTTP/1.1" 200 15406
+INFO 2025-10-14 17:59:47,950 basehttp 37316 21576 "GET /admin/dashboard/ HTTP/1.1" 200 76769
+INFO 2025-10-14 17:59:54,326 basehttp 37316 21576 "GET /experiences/ HTTP/1.1" 200 56037
+INFO 2025-10-14 18:00:00,195 basehttp 37316 21576 "GET /experiences/?featured=true HTTP/1.1" 200 56037
+INFO 2025-10-14 18:00:24,005 basehttp 37316 25688 "GET /experiences/?featured=true HTTP/1.1" 200 56037
+INFO 2025-10-14 18:00:24,062 basehttp 37316 25688 "GET /static/css/base.css HTTP/1.1" 200 5306
+INFO 2025-10-14 18:00:24,065 basehttp 37316 25688 "GET /static/js/navbar.js HTTP/1.1" 200 2732
+INFO 2025-10-14 18:00:24,628 basehttp 37316 25688 "GET /static/favicon.ico HTTP/1.1" 200 15406
+INFO 2025-10-14 18:00:38,101 basehttp 37316 25688 "GET /experiences/experience/qwvew/edit/ HTTP/1.1" 200 58452
+INFO 2025-10-14 18:00:38,102 basehttp 37316 21576 - Broken pipe from ('127.0.0.1', 45171)
+INFO 2025-10-14 18:00:38,104 basehttp 37316 26412 - Broken pipe from ('127.0.0.1', 20209)
+INFO 2025-10-14 18:00:39,151 basehttp 37316 25688 "POST /experiences/api/analyze-seo/ HTTP/1.1" 200 3030
+INFO 2025-10-14 18:01:03,443 basehttp 37316 25688 "POST /experiences/experience/qwvew/edit/ HTTP/1.1" 302 0
+INFO 2025-10-14 18:01:03,475 basehttp 37316 25688 "GET /experiences/experience/qwvew/ HTTP/1.1" 200 41308
+INFO 2025-10-14 18:01:07,471 basehttp 37316 25688 "GET / HTTP/1.1" 200 96792
+INFO 2025-10-14 18:02:04,392 autoreload 37316 41512 C:\Users\DLSne\OneDrive\Desktop\Code\webdev\HygGeo\HygGeo\experiences\forms.py changed, reloading.
+INFO 2025-10-14 18:02:06,354 autoreload 17256 17392 Watching for file changes with StatReloader
+INFO 2025-10-14 18:02:44,178 basehttp 17256 41496 "GET /experiences/experience/qwvew/ HTTP/1.1" 200 40937
+INFO 2025-10-14 18:02:48,523 basehttp 17256 41496 "GET /experiences/experience/qwvew/edit/ HTTP/1.1" 200 58444
+INFO 2025-10-14 18:02:49,564 basehttp 17256 41496 "POST /experiences/api/analyze-seo/ HTTP/1.1" 200 3030
+INFO 2025-10-14 18:02:53,152 basehttp 17256 41496 "POST /experiences/experience/qwvew/edit/ HTTP/1.1" 302 0
+INFO 2025-10-14 18:02:53,179 basehttp 17256 41496 "GET /experiences/experience/qwvew/ HTTP/1.1" 200 41308
+INFO 2025-10-14 18:02:54,853 basehttp 17256 41496 "GET / HTTP/1.1" 200 96802
+INFO 2025-10-14 18:02:58,800 basehttp 17256 30208 "GET / HTTP/1.1" 200 96823
+INFO 2025-10-14 18:02:59,316 basehttp 17256 30208 "GET /static/css/base.css HTTP/1.1" 200 5306
+INFO 2025-10-14 18:02:59,325 basehttp 17256 36156 "GET /static/js/navbar.js HTTP/1.1" 200 2732
+INFO 2025-10-14 18:02:59,736 basehttp 17256 36156 "GET /static/favicon.ico HTTP/1.1" 200 15406
+INFO 2025-10-14 18:02:59,938 basehttp 17256 32620 "GET /static/site.webmanifest HTTP/1.1" 200 263
+INFO 2025-10-14 18:03:05,309 basehttp 17256 36156 "GET /admin/dashboard/ HTTP/1.1" 200 76649
+INFO 2025-10-14 18:03:10,556 basehttp 17256 36156 "GET /experiences/ HTTP/1.1" 200 55917
+INFO 2025-10-14 18:03:15,807 basehttp 17256 36156 "GET /experiences/experience/qwvew/edit/ HTTP/1.1" 200 58444
+INFO 2025-10-14 18:03:16,851 basehttp 17256 36156 "POST /experiences/api/analyze-seo/ HTTP/1.1" 200 3030
+INFO 2025-10-14 18:03:24,508 basehttp 17256 36156 "POST /experiences/experience/qwvew/edit/ HTTP/1.1" 302 0
+INFO 2025-10-14 18:03:24,564 basehttp 17256 36156 "GET /experiences/experience/qwvew/ HTTP/1.1" 200 41308
+INFO 2025-10-14 18:03:26,779 basehttp 17256 36156 "GET / HTTP/1.1" 200 96806
+INFO 2025-10-14 18:04:58,359 autoreload 17256 17392 C:\Users\DLSne\OneDrive\Desktop\Code\webdev\HygGeo\HygGeo\experiences\views.py changed, reloading.
+INFO 2025-10-14 18:05:00,296 autoreload 34272 34888 Watching for file changes with StatReloader
+INFO 2025-10-14 18:05:31,986 basehttp 34272 40116 "GET / HTTP/1.1" 200 96798
+INFO 2025-10-14 18:05:32,373 basehttp 34272 34700 "GET /static/js/navbar.js HTTP/1.1" 200 2732
+INFO 2025-10-14 18:05:32,375 basehttp 34272 40116 "GET /static/css/base.css HTTP/1.1" 200 5306
+INFO 2025-10-14 18:05:33,524 basehttp 34272 14044 "GET /static/site.webmanifest HTTP/1.1" 200 263
+INFO 2025-10-14 18:05:34,387 basehttp 34272 40116 "GET /static/favicon.ico HTTP/1.1" 200 15406
+INFO 2025-10-14 18:05:35,705 basehttp 34272 40116 "GET /admin/dashboard/ HTTP/1.1" 200 76649
+INFO 2025-10-14 18:05:42,753 basehttp 34272 40116 "GET /experiences/ HTTP/1.1" 200 55917
+INFO 2025-10-14 18:05:48,389 basehttp 34272 40116 "GET /experiences/experience/qwvew/edit/ HTTP/1.1" 200 58444
+INFO 2025-10-14 18:05:49,425 basehttp 34272 40116 "POST /experiences/api/analyze-seo/ HTTP/1.1" 200 3028
+INFO 2025-10-14 18:05:53,073 basehttp 34272 40116 "POST /experiences/experience/qwvew/edit/ HTTP/1.1" 302 0
+INFO 2025-10-14 18:05:53,113 basehttp 34272 40116 "GET /experiences/experience/qwvew/ HTTP/1.1" 200 41436
+INFO 2025-10-14 18:05:54,677 basehttp 34272 40116 "GET /experiences/experience/qwvew/edit/ HTTP/1.1" 200 58452
+INFO 2025-10-14 18:05:55,717 basehttp 34272 40116 "POST /experiences/api/analyze-seo/ HTTP/1.1" 200 3028
+INFO 2025-10-14 18:05:59,446 basehttp 34272 40116 "POST /experiences/experience/qwvew/edit/ HTTP/1.1" 302 0
+INFO 2025-10-14 18:05:59,505 basehttp 34272 40116 "GET /experiences/experience/qwvew/ HTTP/1.1" 200 41308
+WARNING 2025-10-14 18:06:02,609 log 34272 40116 Not Found: /.well-known/appspecific/com.chrome.devtools.json
+WARNING 2025-10-14 18:06:02,610 basehttp 34272 40116 "GET /.well-known/appspecific/com.chrome.devtools.json HTTP/1.1" 404 4592
+INFO 2025-10-14 18:06:11,467 basehttp 34272 40116 "GET / HTTP/1.1" 200 96814
+WARNING 2025-10-14 18:06:11,614 log 34272 40116 Not Found: /.well-known/appspecific/com.chrome.devtools.json
+WARNING 2025-10-14 18:06:11,614 basehttp 34272 40116 "GET /.well-known/appspecific/com.chrome.devtools.json HTTP/1.1" 404 4592
+INFO 2025-10-14 18:06:11,637 basehttp 34272 40116 "GET /static/css/base.css HTTP/1.1" 200 5306
+INFO 2025-10-14 18:06:11,639 basehttp 34272 34700 "GET /static/js/navbar.js HTTP/1.1" 200 2732
+INFO 2025-10-14 18:06:13,032 basehttp 34272 14044 "GET /static/site.webmanifest HTTP/1.1" 200 263
+INFO 2025-10-14 18:06:42,859 basehttp 34272 34700 "GET /experiences/accommodations/ HTTP/1.1" 200 35810
+WARNING 2025-10-14 18:06:43,035 log 34272 34700 Not Found: /.well-known/appspecific/com.chrome.devtools.json
+WARNING 2025-10-14 18:06:43,035 basehttp 34272 34700 "GET /.well-known/appspecific/com.chrome.devtools.json HTTP/1.1" 404 4592
+INFO 2025-10-14 18:06:43,078 basehttp 34272 34700 "GET /static/css/base.css HTTP/1.1" 200 5306
+INFO 2025-10-14 18:06:43,080 basehttp 34272 40116 "GET /static/js/navbar.js HTTP/1.1" 200 2732
+INFO 2025-10-14 18:06:45,084 basehttp 34272 14044 "GET /static/site.webmanifest HTTP/1.1" 200 263
+INFO 2025-10-14 18:06:45,510 basehttp 34272 40116 "GET /experiences/accommodations/test1/ HTTP/1.1" 200 34860
+WARNING 2025-10-14 18:06:45,610 log 34272 40116 Not Found: /.well-known/appspecific/com.chrome.devtools.json
+WARNING 2025-10-14 18:06:45,610 basehttp 34272 40116 "GET /.well-known/appspecific/com.chrome.devtools.json HTTP/1.1" 404 4592
+INFO 2025-10-14 18:06:45,647 basehttp 34272 40116 "GET /static/css/base.css HTTP/1.1" 200 5306
+INFO 2025-10-14 18:06:45,647 basehttp 34272 34700 "GET /static/js/navbar.js HTTP/1.1" 200 2732
+INFO 2025-10-14 18:06:47,037 basehttp 34272 14044 "GET /static/site.webmanifest HTTP/1.1" 200 263
+INFO 2025-10-14 18:06:48,664 basehttp 34272 34700 "GET /admin/dashboard/ HTTP/1.1" 200 76649
+WARNING 2025-10-14 18:06:48,792 log 34272 34700 Not Found: /.well-known/appspecific/com.chrome.devtools.json
+WARNING 2025-10-14 18:06:48,792 basehttp 34272 34700 "GET /.well-known/appspecific/com.chrome.devtools.json HTTP/1.1" 404 4592
+INFO 2025-10-14 18:06:48,801 basehttp 34272 40116 "GET /static/js/navbar.js HTTP/1.1" 200 2732
+INFO 2025-10-14 18:06:48,801 basehttp 34272 34700 "GET /static/css/base.css HTTP/1.1" 200 5306
+INFO 2025-10-14 18:06:50,022 basehttp 34272 14044 "GET /static/site.webmanifest HTTP/1.1" 200 263
+INFO 2025-10-14 18:06:58,428 basehttp 34272 40116 "GET /experiences/accommodations/ HTTP/1.1" 200 35810
+WARNING 2025-10-14 18:06:58,556 log 34272 40116 Not Found: /.well-known/appspecific/com.chrome.devtools.json
+WARNING 2025-10-14 18:06:58,557 basehttp 34272 40116 "GET /.well-known/appspecific/com.chrome.devtools.json HTTP/1.1" 404 4592
+INFO 2025-10-14 18:06:58,613 basehttp 34272 40116 "GET /static/css/base.css HTTP/1.1" 200 5306
+INFO 2025-10-14 18:06:58,614 basehttp 34272 34700 "GET /static/js/navbar.js HTTP/1.1" 200 2732
+INFO 2025-10-14 18:07:00,038 basehttp 34272 14044 "GET /static/site.webmanifest HTTP/1.1" 200 263
+INFO 2025-10-14 18:07:06,394 basehttp 34272 34700 "GET /experiences/accommodations/test1/ HTTP/1.1" 200 34860
+WARNING 2025-10-14 18:07:06,589 log 34272 34700 Not Found: /.well-known/appspecific/com.chrome.devtools.json
+WARNING 2025-10-14 18:07:06,589 basehttp 34272 34700 "GET /.well-known/appspecific/com.chrome.devtools.json HTTP/1.1" 404 4592
+INFO 2025-10-14 18:07:06,639 basehttp 34272 34700 "GET /static/css/base.css HTTP/1.1" 200 5306
+INFO 2025-10-14 18:07:06,640 basehttp 34272 40116 "GET /static/js/navbar.js HTTP/1.1" 200 2732
+INFO 2025-10-14 18:07:07,881 basehttp 34272 14044 "GET /static/site.webmanifest HTTP/1.1" 200 263
+WARNING 2025-10-14 18:07:10,087 log 34272 40116 Not Found: /.well-known/appspecific/com.chrome.devtools.json
+WARNING 2025-10-14 18:07:10,088 basehttp 34272 40116 "GET /.well-known/appspecific/com.chrome.devtools.json HTTP/1.1" 404 4592
+WARNING 2025-10-14 18:07:10,136 log 34272 40116 Not Found: /.well-known/appspecific/com.chrome.devtools.json
+WARNING 2025-10-14 18:07:10,136 basehttp 34272 40116 "GET /.well-known/appspecific/com.chrome.devtools.json HTTP/1.1" 404 4592
+WARNING 2025-10-14 18:07:10,847 log 34272 40116 Not Found: /.well-known/appspecific/com.chrome.devtools.json
+WARNING 2025-10-14 18:07:10,847 basehttp 34272 40116 "GET /.well-known/appspecific/com.chrome.devtools.json HTTP/1.1" 404 4592
+WARNING 2025-10-14 18:07:10,871 log 34272 40116 Not Found: /.well-known/appspecific/com.chrome.devtools.json
+WARNING 2025-10-14 18:07:10,871 basehttp 34272 40116 "GET /.well-known/appspecific/com.chrome.devtools.json HTTP/1.1" 404 4592
+INFO 2025-10-14 18:09:04,554 autoreload 34272 34888 C:\Users\DLSne\OneDrive\Desktop\Code\webdev\HygGeo\HygGeo\experiences\views.py changed, reloading.
+INFO 2025-10-14 18:09:06,419 autoreload 41928 31916 Watching for file changes with StatReloader
+INFO 2025-10-14 18:10:02,174 basehttp 41928 41168 "GET /admin/dashboard/ HTTP/1.1" 200 76649
+WARNING 2025-10-14 18:10:02,336 log 41928 41168 Not Found: /.well-known/appspecific/com.chrome.devtools.json
+WARNING 2025-10-14 18:10:02,341 basehttp 41928 41168 "GET /.well-known/appspecific/com.chrome.devtools.json HTTP/1.1" 404 4592
+INFO 2025-10-14 18:10:02,675 basehttp 41928 5128 "GET /static/js/navbar.js HTTP/1.1" 200 2732
+INFO 2025-10-14 18:10:02,693 basehttp 41928 35740 "GET /static/css/base.css HTTP/1.1" 200 5306
+INFO 2025-10-14 18:10:04,360 basehttp 41928 34524 "GET /static/site.webmanifest HTTP/1.1" 200 263
+INFO 2025-10-14 18:10:04,789 basehttp 41928 35740 "GET /static/favicon.ico HTTP/1.1" 200 15406
+INFO 2025-10-14 18:10:07,094 basehttp 41928 35740 "GET /experiences/accommodations/ HTTP/1.1" 200 36395
+WARNING 2025-10-14 18:10:07,207 log 41928 35740 Not Found: /.well-known/appspecific/com.chrome.devtools.json
+WARNING 2025-10-14 18:10:07,208 basehttp 41928 35740 "GET /.well-known/appspecific/com.chrome.devtools.json HTTP/1.1" 404 4592
+INFO 2025-10-14 18:10:07,225 basehttp 41928 35740 "GET /static/css/base.css HTTP/1.1" 200 5306
+INFO 2025-10-14 18:10:07,226 basehttp 41928 5128 "GET /static/js/navbar.js HTTP/1.1" 200 2732
+INFO 2025-10-14 18:10:08,998 basehttp 41928 34524 "GET /static/site.webmanifest HTTP/1.1" 200 263
+INFO 2025-10-14 18:10:10,441 basehttp 41928 5128 "GET /experiences/accommodations/test1/edit/ HTTP/1.1" 200 45794
+WARNING 2025-10-14 18:10:10,544 log 41928 5128 Not Found: /.well-known/appspecific/com.chrome.devtools.json
+WARNING 2025-10-14 18:10:10,545 basehttp 41928 5128 "GET /.well-known/appspecific/com.chrome.devtools.json HTTP/1.1" 404 4592
+INFO 2025-10-14 18:10:10,555 basehttp 41928 5128 "GET /static/css/base.css HTTP/1.1" 200 5306
+INFO 2025-10-14 18:10:10,557 basehttp 41928 35740 "GET /static/js/navbar.js HTTP/1.1" 200 2732
+INFO 2025-10-14 18:10:11,538 basehttp 41928 34524 "GET /static/site.webmanifest HTTP/1.1" 200 263
+INFO 2025-10-14 18:10:19,746 basehttp 41928 35740 "POST /experiences/accommodations/test1/edit/ HTTP/1.1" 302 0
+INFO 2025-10-14 18:10:19,769 basehttp 41928 35740 "GET /experiences/accommodations/test1/ HTTP/1.1" 200 35233
+WARNING 2025-10-14 18:10:19,869 log 41928 35740 Not Found: /.well-known/appspecific/com.chrome.devtools.json
+WARNING 2025-10-14 18:10:19,869 basehttp 41928 35740 "GET /.well-known/appspecific/com.chrome.devtools.json HTTP/1.1" 404 4592
+INFO 2025-10-14 18:10:19,895 basehttp 41928 35740 "GET /static/css/base.css HTTP/1.1" 200 5306
+INFO 2025-10-14 18:10:19,896 basehttp 41928 5128 "GET /static/js/navbar.js HTTP/1.1" 200 2732
+INFO 2025-10-14 18:10:21,245 basehttp 41928 34524 "GET /static/site.webmanifest HTTP/1.1" 200 263
+INFO 2025-10-14 18:10:22,057 basehttp 41928 5128 "GET / HTTP/1.1" 200 96779
+WARNING 2025-10-14 18:10:22,161 log 41928 5128 Not Found: /.well-known/appspecific/com.chrome.devtools.json
+WARNING 2025-10-14 18:10:22,161 basehttp 41928 5128 "GET /.well-known/appspecific/com.chrome.devtools.json HTTP/1.1" 404 4592
+INFO 2025-10-14 18:10:22,188 basehttp 41928 5128 "GET /static/css/base.css HTTP/1.1" 200 5306
+INFO 2025-10-14 18:10:22,189 basehttp 41928 35740 "GET /static/js/navbar.js HTTP/1.1" 200 2732
+INFO 2025-10-14 18:10:22,189 basehttp 41928 34524 "GET /static/site.webmanifest HTTP/1.1" 200 263
+INFO 2025-10-14 18:10:43,891 basehttp 41928 35740 "GET /admin/dashboard/ HTTP/1.1" 200 76649
+WARNING 2025-10-14 18:10:44,051 log 41928 35740 Not Found: /.well-known/appspecific/com.chrome.devtools.json
+WARNING 2025-10-14 18:10:44,051 basehttp 41928 35740 "GET /.well-known/appspecific/com.chrome.devtools.json HTTP/1.1" 404 4592
+INFO 2025-10-14 18:10:44,060 basehttp 41928 5128 "GET /static/css/base.css HTTP/1.1" 200 5306
+INFO 2025-10-14 18:10:44,065 basehttp 41928 35740 "GET /static/js/navbar.js HTTP/1.1" 200 2732
+INFO 2025-10-14 18:10:45,310 basehttp 41928 34524 "GET /static/site.webmanifest HTTP/1.1" 200 263
+INFO 2025-10-14 18:10:55,641 basehttp 41928 35740 "GET /experiences/accommodations/ HTTP/1.1" 200 36395
+WARNING 2025-10-14 18:10:55,904 log 41928 35740 Not Found: /.well-known/appspecific/com.chrome.devtools.json
+WARNING 2025-10-14 18:10:55,905 basehttp 41928 35740 "GET /.well-known/appspecific/com.chrome.devtools.json HTTP/1.1" 404 4592
+INFO 2025-10-14 18:10:55,939 basehttp 41928 35740 "GET /static/css/base.css HTTP/1.1" 200 5306
+INFO 2025-10-14 18:10:55,941 basehttp 41928 5128 "GET /static/js/navbar.js HTTP/1.1" 200 2732
+INFO 2025-10-14 18:10:57,423 basehttp 41928 34524 "GET /static/site.webmanifest HTTP/1.1" 200 263
+INFO 2025-10-14 18:10:57,673 basehttp 41928 5128 "GET /experiences/accommodations/test1/edit/ HTTP/1.1" 200 45802
+WARNING 2025-10-14 18:10:57,793 log 41928 5128 Not Found: /.well-known/appspecific/com.chrome.devtools.json
+WARNING 2025-10-14 18:10:57,793 basehttp 41928 5128 "GET /.well-known/appspecific/com.chrome.devtools.json HTTP/1.1" 404 4592
+INFO 2025-10-14 18:10:57,801 basehttp 41928 5128 "GET /static/css/base.css HTTP/1.1" 200 5306
+INFO 2025-10-14 18:10:57,803 basehttp 41928 35740 "GET /static/js/navbar.js HTTP/1.1" 200 2732
+INFO 2025-10-14 18:10:59,233 basehttp 41928 34524 "GET /static/site.webmanifest HTTP/1.1" 200 263
+INFO 2025-10-14 18:11:02,485 basehttp 41928 35740 "POST /experiences/accommodations/test1/edit/ HTTP/1.1" 302 0
+INFO 2025-10-14 18:11:02,511 basehttp 41928 35740 "GET /experiences/accommodations/test1/ HTTP/1.1" 200 35233
+WARNING 2025-10-14 18:11:02,637 log 41928 35740 Not Found: /.well-known/appspecific/com.chrome.devtools.json
+WARNING 2025-10-14 18:11:02,638 basehttp 41928 35740 "GET /.well-known/appspecific/com.chrome.devtools.json HTTP/1.1" 404 4592
+INFO 2025-10-14 18:11:02,671 basehttp 41928 35740 "GET /static/css/base.css HTTP/1.1" 200 5306
+INFO 2025-10-14 18:11:02,672 basehttp 41928 5128 "GET /static/js/navbar.js HTTP/1.1" 200 2732
+INFO 2025-10-14 18:11:04,159 basehttp 41928 34524 "GET /static/site.webmanifest HTTP/1.1" 200 263
+INFO 2025-10-14 18:11:04,446 basehttp 41928 35740 "GET / HTTP/1.1" 200 96841
+WARNING 2025-10-14 18:11:04,559 log 41928 35740 Not Found: /.well-known/appspecific/com.chrome.devtools.json
+WARNING 2025-10-14 18:11:04,559 basehttp 41928 35740 "GET /.well-known/appspecific/com.chrome.devtools.json HTTP/1.1" 404 4592
+INFO 2025-10-14 18:11:04,574 basehttp 41928 35740 "GET /static/css/base.css HTTP/1.1" 200 5306
+INFO 2025-10-14 18:11:04,576 basehttp 41928 5128 "GET /static/js/navbar.js HTTP/1.1" 200 2732
+INFO 2025-10-14 18:11:05,791 basehttp 41928 34524 "GET /static/site.webmanifest HTTP/1.1" 200 263
+INFO 2025-10-14 18:12:28,389 autoreload 41928 31916 C:\Users\DLSne\OneDrive\Desktop\Code\webdev\HygGeo\HygGeo\accounts\views.py changed, reloading.
+INFO 2025-10-14 18:12:29,950 autoreload 32000 36396 Watching for file changes with StatReloader
+INFO 2025-10-14 18:16:36,808 basehttp 32000 42188 "GET /admin/dashboard/ HTTP/1.1" 200 76649
+WARNING 2025-10-14 18:16:36,978 log 32000 42188 Not Found: /.well-known/appspecific/com.chrome.devtools.json
+WARNING 2025-10-14 18:16:36,979 basehttp 32000 42188 "GET /.well-known/appspecific/com.chrome.devtools.json HTTP/1.1" 404 4592
+INFO 2025-10-14 18:16:37,230 basehttp 32000 42188 "GET /static/css/base.css HTTP/1.1" 200 5306
+INFO 2025-10-14 18:16:37,237 basehttp 32000 42676 "GET /static/js/navbar.js HTTP/1.1" 200 2732
+INFO 2025-10-14 18:16:39,165 basehttp 32000 24776 "GET /static/site.webmanifest HTTP/1.1" 200 263
+INFO 2025-10-14 18:16:43,657 basehttp 32000 42676 "GET /experiences/ HTTP/1.1" 200 55917
+WARNING 2025-10-14 18:16:43,917 log 32000 42676 Not Found: /.well-known/appspecific/com.chrome.devtools.json
+WARNING 2025-10-14 18:16:43,918 basehttp 32000 42676 "GET /.well-known/appspecific/com.chrome.devtools.json HTTP/1.1" 404 4592
+INFO 2025-10-14 18:16:43,953 basehttp 32000 42676 "GET /static/css/base.css HTTP/1.1" 200 5306
+INFO 2025-10-14 18:16:43,953 basehttp 32000 42188 "GET /static/js/navbar.js HTTP/1.1" 200 2732
+INFO 2025-10-14 18:16:45,276 basehttp 32000 24776 "GET /static/site.webmanifest HTTP/1.1" 200 263
+INFO 2025-10-14 18:16:49,356 basehttp 32000 42676 "GET /experiences/experience/qwvew/edit/ HTTP/1.1" 200 58444
+INFO 2025-10-14 18:16:49,359 basehttp 32000 42188 - Broken pipe from ('127.0.0.1', 12523)
+WARNING 2025-10-14 18:16:49,521 log 32000 42676 Not Found: /.well-known/appspecific/com.chrome.devtools.json
+WARNING 2025-10-14 18:16:49,522 basehttp 32000 42676 "GET /.well-known/appspecific/com.chrome.devtools.json HTTP/1.1" 404 4592
+INFO 2025-10-14 18:16:49,540 basehttp 32000 42676 "GET /static/css/base.css HTTP/1.1" 200 5306
+INFO 2025-10-14 18:16:49,541 basehttp 32000 41512 "GET /static/js/navbar.js HTTP/1.1" 200 2732
+INFO 2025-10-14 18:16:50,605 basehttp 32000 41512 "POST /experiences/api/analyze-seo/ HTTP/1.1" 200 3034
+INFO 2025-10-14 18:16:50,809 basehttp 32000 24776 "GET /static/site.webmanifest HTTP/1.1" 200 263
+INFO 2025-10-14 18:16:55,110 basehttp 32000 41512 "POST /experiences/experience/qwvew/edit/ HTTP/1.1" 302 0
+INFO 2025-10-14 18:16:55,193 basehttp 32000 41512 "GET /experiences/experience/qwvew/ HTTP/1.1" 200 41308
+WARNING 2025-10-14 18:16:55,313 log 32000 41512 Not Found: /.well-known/appspecific/com.chrome.devtools.json
+WARNING 2025-10-14 18:16:55,314 basehttp 32000 41512 "GET /.well-known/appspecific/com.chrome.devtools.json HTTP/1.1" 404 4592
+INFO 2025-10-14 18:16:55,339 basehttp 32000 41512 "GET /static/css/base.css HTTP/1.1" 200 5306
+INFO 2025-10-14 18:16:55,339 basehttp 32000 42676 "GET /static/js/navbar.js HTTP/1.1" 200 2732
+INFO 2025-10-14 18:16:56,647 basehttp 32000 42676 "GET / HTTP/1.1" 200 97076
+WARNING 2025-10-14 18:16:56,746 log 32000 42676 Not Found: /.well-known/appspecific/com.chrome.devtools.json
+WARNING 2025-10-14 18:16:56,747 basehttp 32000 42676 "GET /.well-known/appspecific/com.chrome.devtools.json HTTP/1.1" 404 4592
+INFO 2025-10-14 18:16:56,763 basehttp 32000 42676 "GET /static/css/base.css HTTP/1.1" 200 5306
+INFO 2025-10-14 18:16:56,765 basehttp 32000 41512 "GET /static/js/navbar.js HTTP/1.1" 200 2732
+INFO 2025-10-14 18:16:58,012 basehttp 32000 24776 "GET /static/site.webmanifest HTTP/1.1" 200 263
+INFO 2025-10-14 18:17:07,292 basehttp 32000 41512 "GET /experiences/experience/qwvew/ HTTP/1.1" 200 40937
+WARNING 2025-10-14 18:17:07,414 log 32000 41512 Not Found: /.well-known/appspecific/com.chrome.devtools.json
+WARNING 2025-10-14 18:17:07,415 basehttp 32000 41512 "GET /.well-known/appspecific/com.chrome.devtools.json HTTP/1.1" 404 4592
+INFO 2025-10-14 18:17:07,438 basehttp 32000 41512 "GET /static/css/base.css HTTP/1.1" 200 5306
+INFO 2025-10-14 18:17:07,443 basehttp 32000 41512 "GET /static/js/navbar.js HTTP/1.1" 200 2732
+INFO 2025-10-14 18:17:08,797 basehttp 32000 24776 "GET /static/site.webmanifest HTTP/1.1" 200 263
+WARNING 2025-10-14 18:17:09,039 log 32000 41512 Not Found: /.well-known/appspecific/com.chrome.devtools.json
+WARNING 2025-10-14 18:17:09,039 basehttp 32000 41512 "GET /.well-known/appspecific/com.chrome.devtools.json HTTP/1.1" 404 4592
+WARNING 2025-10-14 18:17:09,082 log 32000 41512 Not Found: /.well-known/appspecific/com.chrome.devtools.json
+WARNING 2025-10-14 18:17:09,083 basehttp 32000 41512 "GET /.well-known/appspecific/com.chrome.devtools.json HTTP/1.1" 404 4592
+INFO 2025-10-14 18:18:37,966 autoreload 32000 36396 C:\Users\DLSne\OneDrive\Desktop\Code\webdev\HygGeo\HygGeo\accounts\views.py changed, reloading.
+INFO 2025-10-14 18:18:39,781 autoreload 32920 40020 Watching for file changes with StatReloader
+INFO 2025-10-14 18:19:59,490 basehttp 32920 35044 "GET / HTTP/1.1" 200 97004
+WARNING 2025-10-14 18:19:59,603 log 32920 33304 Not Found: /.well-known/appspecific/com.chrome.devtools.json
+WARNING 2025-10-14 18:19:59,603 basehttp 32920 33304 "GET /.well-known/appspecific/com.chrome.devtools.json HTTP/1.1" 404 4592
+INFO 2025-10-14 18:19:59,859 basehttp 32920 35044 "GET /static/css/base.css HTTP/1.1" 200 5306
+INFO 2025-10-14 18:19:59,869 basehttp 32920 41440 "GET /static/js/navbar.js HTTP/1.1" 200 2732
+INFO 2025-10-14 18:20:01,901 basehttp 32920 36788 "GET /static/site.webmanifest HTTP/1.1" 200 263
+INFO 2025-10-14 18:20:02,523 basehttp 32920 41440 "GET /static/favicon.ico HTTP/1.1" 200 15406
+INFO 2025-10-14 18:20:05,915 basehttp 32920 41440 "GET /admin/dashboard/ HTTP/1.1" 200 76649
+WARNING 2025-10-14 18:20:06,205 log 32920 41440 Not Found: /.well-known/appspecific/com.chrome.devtools.json
+WARNING 2025-10-14 18:20:06,206 basehttp 32920 41440 "GET /.well-known/appspecific/com.chrome.devtools.json HTTP/1.1" 404 4592
+INFO 2025-10-14 18:20:06,242 basehttp 32920 41440 "GET /static/css/base.css HTTP/1.1" 200 5306
+INFO 2025-10-14 18:20:06,243 basehttp 32920 35044 "GET /static/js/navbar.js HTTP/1.1" 200 2732
+INFO 2025-10-14 18:20:07,908 basehttp 32920 36788 "GET /static/site.webmanifest HTTP/1.1" 200 263
+INFO 2025-10-14 18:20:13,645 basehttp 32920 35044 "GET /experiences/ HTTP/1.1" 200 55917
+WARNING 2025-10-14 18:20:13,950 log 32920 35044 Not Found: /.well-known/appspecific/com.chrome.devtools.json
+WARNING 2025-10-14 18:20:13,951 basehttp 32920 35044 "GET /.well-known/appspecific/com.chrome.devtools.json HTTP/1.1" 404 4592
+INFO 2025-10-14 18:20:14,009 basehttp 32920 35044 "GET /static/css/base.css HTTP/1.1" 200 5306
+INFO 2025-10-14 18:20:14,010 basehttp 32920 41440 "GET /static/js/navbar.js HTTP/1.1" 200 2732
+INFO 2025-10-14 18:20:15,411 basehttp 32920 36788 "GET /static/site.webmanifest HTTP/1.1" 200 263
+INFO 2025-10-14 18:20:19,659 basehttp 32920 41440 "GET /experiences/experience/qwvew/edit/ HTTP/1.1" 200 58444
+WARNING 2025-10-14 18:20:19,800 log 32920 41440 Not Found: /.well-known/appspecific/com.chrome.devtools.json
+WARNING 2025-10-14 18:20:19,801 basehttp 32920 41440 "GET /.well-known/appspecific/com.chrome.devtools.json HTTP/1.1" 404 4592
+INFO 2025-10-14 18:20:19,832 basehttp 32920 41440 "GET /static/css/base.css HTTP/1.1" 200 5306
+INFO 2025-10-14 18:20:19,833 basehttp 32920 35044 "GET /static/js/navbar.js HTTP/1.1" 200 2732
+INFO 2025-10-14 18:20:20,952 basehttp 32920 35044 "POST /experiences/api/analyze-seo/ HTTP/1.1" 200 3037
+INFO 2025-10-14 18:20:21,036 basehttp 32920 36788 "GET /static/site.webmanifest HTTP/1.1" 200 263
+INFO 2025-10-14 18:20:26,780 basehttp 32920 35044 "POST /experiences/experience/qwvew/edit/ HTTP/1.1" 302 0
+WARNING 2025-10-14 18:20:26,795 log 32920 35044 Not Found: /experiences/experience/qwvew/
+WARNING 2025-10-14 18:20:26,795 basehttp 32920 35044 "GET /experiences/experience/qwvew/ HTTP/1.1" 404 5153
+WARNING 2025-10-14 18:20:26,933 log 32920 35044 Not Found: /.well-known/appspecific/com.chrome.devtools.json
+WARNING 2025-10-14 18:20:26,933 basehttp 32920 35044 "GET /.well-known/appspecific/com.chrome.devtools.json HTTP/1.1" 404 4592
+INFO 2025-10-14 18:20:27,224 basehttp 32920 35044 "GET /favicon.ico HTTP/1.1" 301 0
+INFO 2025-10-14 18:20:27,228 basehttp 32920 35044 "GET /static/favicon.ico HTTP/1.1" 200 15406
+WARNING 2025-10-14 18:20:34,169 log 32920 35044 Not Found: /.well-known/appspecific/com.chrome.devtools.json
+WARNING 2025-10-14 18:20:34,170 basehttp 32920 35044 "GET /.well-known/appspecific/com.chrome.devtools.json HTTP/1.1" 404 4592
+WARNING 2025-10-14 18:20:34,212 log 32920 35044 Not Found: /.well-known/appspecific/com.chrome.devtools.json
+WARNING 2025-10-14 18:20:34,212 basehttp 32920 35044 "GET /.well-known/appspecific/com.chrome.devtools.json HTTP/1.1" 404 4592
+INFO 2025-10-14 18:20:35,834 basehttp 32920 35044 "POST /experiences/experience/qwvew/edit/ HTTP/1.1" 302 0
+INFO 2025-10-14 18:20:35,869 basehttp 32920 35044 "GET /experiences/experience/qwvew/ HTTP/1.1" 200 41621
+WARNING 2025-10-14 18:20:35,968 log 32920 35044 Not Found: /.well-known/appspecific/com.chrome.devtools.json
+WARNING 2025-10-14 18:20:35,968 basehttp 32920 35044 "GET /.well-known/appspecific/com.chrome.devtools.json HTTP/1.1" 404 4592
+INFO 2025-10-14 18:20:35,993 basehttp 32920 35044 "GET /static/css/base.css HTTP/1.1" 200 5306
+INFO 2025-10-14 18:20:35,996 basehttp 32920 41440 "GET /static/js/navbar.js HTTP/1.1" 200 2732
+INFO 2025-10-14 18:20:37,194 basehttp 32920 36788 "GET /static/site.webmanifest HTTP/1.1" 200 263
+INFO 2025-10-14 18:20:40,014 basehttp 32920 41440 "GET / HTTP/1.1" 200 96991
+WARNING 2025-10-14 18:20:40,159 log 32920 41440 Not Found: /.well-known/appspecific/com.chrome.devtools.json
+WARNING 2025-10-14 18:20:40,160 basehttp 32920 41440 "GET /.well-known/appspecific/com.chrome.devtools.json HTTP/1.1" 404 4592
+INFO 2025-10-14 18:20:40,179 basehttp 32920 41440 "GET /static/css/base.css HTTP/1.1" 200 5306
+INFO 2025-10-14 18:20:40,180 basehttp 32920 35044 "GET /static/js/navbar.js HTTP/1.1" 200 2732
+INFO 2025-10-14 18:20:41,394 basehttp 32920 36788 "GET /static/site.webmanifest HTTP/1.1" 200 263
+INFO 2025-10-14 18:20:43,368 basehttp 32920 35044 "GET /experiences/accommodations/test1/ HTTP/1.1" 200 34860
+WARNING 2025-10-14 18:20:43,530 log 32920 35044 Not Found: /.well-known/appspecific/com.chrome.devtools.json
+WARNING 2025-10-14 18:20:43,530 basehttp 32920 35044 "GET /.well-known/appspecific/com.chrome.devtools.json HTTP/1.1" 404 4592
+INFO 2025-10-14 18:20:43,549 basehttp 32920 35044 "GET /static/css/base.css HTTP/1.1" 200 5306
+INFO 2025-10-14 18:20:43,550 basehttp 32920 41440 "GET /static/js/navbar.js HTTP/1.1" 200 2732
+INFO 2025-10-14 18:20:44,728 basehttp 32920 36788 "GET /static/site.webmanifest HTTP/1.1" 200 263
+INFO 2025-10-14 18:20:47,699 basehttp 32920 41440 "GET /experiences/accommodations/test1/edit/ HTTP/1.1" 200 45794
+WARNING 2025-10-14 18:20:47,965 log 32920 41440 Not Found: /.well-known/appspecific/com.chrome.devtools.json
+WARNING 2025-10-14 18:20:47,966 basehttp 32920 41440 "GET /.well-known/appspecific/com.chrome.devtools.json HTTP/1.1" 404 4592
+INFO 2025-10-14 18:20:48,064 basehttp 32920 41440 "GET /static/css/base.css HTTP/1.1" 200 5306
+INFO 2025-10-14 18:20:48,070 basehttp 32920 35044 "GET /static/js/navbar.js HTTP/1.1" 200 2732
+INFO 2025-10-14 18:20:49,702 basehttp 32920 36788 "GET /static/site.webmanifest HTTP/1.1" 200 263
+INFO 2025-10-14 18:20:54,134 basehttp 32920 35044 "POST /experiences/accommodations/test1/edit/ HTTP/1.1" 302 0
+INFO 2025-10-14 18:20:54,178 basehttp 32920 35044 "GET /experiences/accommodations/test1/ HTTP/1.1" 200 35233
+WARNING 2025-10-14 18:20:54,460 log 32920 35044 Not Found: /.well-known/appspecific/com.chrome.devtools.json
+WARNING 2025-10-14 18:20:54,462 basehttp 32920 35044 "GET /.well-known/appspecific/com.chrome.devtools.json HTTP/1.1" 404 4592
+INFO 2025-10-14 18:20:54,532 basehttp 32920 35044 "GET /static/css/base.css HTTP/1.1" 200 5306
+INFO 2025-10-14 18:20:54,537 basehttp 32920 41440 "GET /static/js/navbar.js HTTP/1.1" 200 2732
+INFO 2025-10-14 18:20:55,977 basehttp 32920 36788 "GET /static/site.webmanifest HTTP/1.1" 200 263

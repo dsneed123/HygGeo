@@ -106,9 +106,19 @@
                         <p class="fw-bold mb-2">{{ accommodation.get_price_display }}</p>
                     </div>
                     <div class="card-footer bg-transparent border-0 p-3 pt-0">
-                        <a href="{% url 'experiences:accommodation_detail' accommodation.slug %}" class="btn btn-outline-hygge w-100">
+                        <a href="{% url 'experiences:accommodation_detail' accommodation.slug %}" class="btn btn-outline-hygge w-100 mb-2">
                             View Details
                         </a>
+                        {% if user.is_staff %}
+                        <div class="d-flex gap-2">
+                            <a href="{% url 'experiences:edit_accommodation' accommodation.slug %}" class="btn btn-sm btn-warning flex-fill">
+                                <i class="fas fa-edit me-1"></i>Edit
+                            </a>
+                            <a href="{% url 'experiences:delete_accommodation' accommodation.slug %}" class="btn btn-sm btn-danger flex-fill">
+                                <i class="fas fa-trash me-1"></i>Delete
+                            </a>
+                        </div>
+                        {% endif %}
                     </div>
                 </div>
             </div>
