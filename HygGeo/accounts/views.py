@@ -889,28 +889,26 @@ def analytics_dashboard(request):
             'count': count
         })
 
-    # Content creation trends (experiences and accommodations over time)
+    # Content creation trends (cumulative totals over time)
     content_creation_data = []
     for i in range(0, chart_days, step):
         date = now - timedelta(days=chart_days-1-i)
-        start_of_day = date.replace(hour=0, minute=0, second=0, microsecond=0)
-        end_of_day = start_of_day + timedelta(days=step)
+        end_of_period = date.replace(hour=23, minute=59, second=59, microsecond=999999)
 
-        exp_count = Experience.objects.filter(
-            created_at__gte=start_of_day,
-            created_at__lt=end_of_day
+        # Get cumulative count up to this date
+        exp_total = Experience.objects.filter(
+            created_at__lte=end_of_period
         ).count()
 
-        acc_count = Accommodation.objects.filter(
-            created_at__gte=start_of_day,
-            created_at__lt=end_of_day
+        acc_total = Accommodation.objects.filter(
+            created_at__lte=end_of_period
         ).count()
 
         content_creation_data.append({
-            'date': start_of_day.strftime(date_format),
-            'experiences': exp_count,
-            'accommodations': acc_count,
-            'total': exp_count + acc_count
+            'date': date.strftime(date_format),
+            'experiences': exp_total,
+            'accommodations': acc_total,
+            'total': exp_total + acc_total
         })
 
     # Content statistics for different time periods
