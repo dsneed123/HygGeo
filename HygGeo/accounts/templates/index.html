@@ -118,6 +118,7 @@
 </section>
 
 <!-- Featured Experiences Section -->
+{% if featured_experiences %}
 <section class="py-4" style="background-color: var(--hygge-warm-white);">
     <div class="container">
         <div class="row">
@@ -188,42 +189,6 @@
                         </a>
                     </div>
                 </div>
-                {% empty %}
-                <!-- Sample experiences if none exist -->
-                <div class="experience-card">
-                    <div class="experience-image">
-                        <div class="experience-placeholder">
-                            <i class="fas fa-mountain"></i>
-                        </div>
-                        <div class="experience-overlay">
-                            <div class="experience-type-badge">Adventure</div>
-                        </div>
-                    </div>
-                    <div class="experience-content">
-                        <h4 class="experience-title">Mountain Hiking Adventure</h4>
-                        <p class="experience-location">
-                            <i class="fas fa-map-marker-alt me-2"></i>
-                            Norwegian Fjords
-                        </p>
-                        <p class="experience-description">
-                            Explore pristine mountain trails with local guides committed to sustainable tourism practices.
-                        </p>
-                        <div class="experience-stats">
-                            <div class="stat">
-                                <i class="fas fa-leaf"></i>
-                                <span>Eco-Friendly</span>
-                            </div>
-                            <div class="stat">
-                                <i class="fas fa-tag"></i>
-                                <span>$299</span>
-                            </div>
-                        </div>
-                        <a href="#" class="btn btn-experience">
-                            <i class="fas fa-arrow-right me-2"></i>
-                            Learn More
-                        </a>
-                    </div>
-                </div>
                 {% endfor %}
             </div>
 
@@ -239,6 +204,7 @@
         </div>
     </div>
 </section>
+{% endif %}
 
 <!-- Featured Accommodations Section -->
 <section class="py-4" style="background-color: var(--hygge-cream);">
@@ -2679,26 +2645,84 @@ function scrollExperiences(direction) {
     });
 }
 
-// Accommodations Carousel Functionality
+// Accommodations Carousel Functionality - Enhanced for desktop
 function scrollAccommodations(direction) {
     const carousel = document.getElementById('accommodationsCarousel');
     if (!carousel) return;
 
-    // Responsive scroll amount based on screen size
-    let cardWidth = 260; // Base card width + gap
-    if (window.innerWidth <= 576) {
-        cardWidth = 200; // Mobile size
-    } else if (window.innerWidth <= 768) {
-        cardWidth = 220; // Tablet size
-    }
+    // Calculate exact card width including gap
+    const firstCard = carousel.querySelector('.experience-card');
+    if (!firstCard) return;
 
-    const scrollAmount = direction === 'next' ? cardWidth : -cardWidth;
+    const cardStyle = window.getComputedStyle(firstCard);
+    const cardWidth = firstCard.offsetWidth;
+    const gap = parseFloat(window.getComputedStyle(carousel).gap) || 32; // 2rem = 32px default
 
-    carousel.scrollBy({
-        left: scrollAmount,
+    // On desktop, scroll multiple cards for better UX
+    const isDesktop = window.innerWidth > 1024;
+    const cardsToScroll = isDesktop ? 3 : (window.innerWidth > 768 ? 2 : 1);
+
+    const scrollAmount = (cardWidth + gap) * cardsToScroll;
+    const targetScroll = direction === 'next'
+        ? carousel.scrollLeft + scrollAmount
+        : carousel.scrollLeft - scrollAmount;
+
+    // Smooth scroll with easing
+    carousel.scrollTo({
+        left: targetScroll,
         behavior: 'smooth'
     });
 }
+
+// Add mouse wheel support for accommodations carousel on desktop
+document.addEventListener('DOMContentLoaded', function() {
+    const accommodationsCarousel = document.getElementById('accommodationsCarousel');
+
+    if (accommodationsCarousel && window.innerWidth > 768) {
+        // Enable horizontal scroll with mouse wheel on desktop
+        accommodationsCarousel.addEventListener('wheel', function(e) {
+            if (Math.abs(e.deltaY) > 0) {
+                e.preventDefault();
+                // Convert vertical scroll to horizontal
+                this.scrollLeft += e.deltaY;
+            }
+        }, { passive: false });
+
+        // Add mouse drag scrolling for desktop
+        let isDown = false;
+        let startX;
+        let scrollLeft;
+
+        accommodationsCarousel.addEventListener('mousedown', function(e) {
+            isDown = true;
+            accommodationsCarousel.style.cursor = 'grabbing';
+            accommodationsCarousel.style.userSelect = 'none';
+            startX = e.pageX - accommodationsCarousel.offsetLeft;
+            scrollLeft = accommodationsCarousel.scrollLeft;
+        });
+
+        accommodationsCarousel.addEventListener('mouseleave', function() {
+            isDown = false;
+            accommodationsCarousel.style.cursor = 'grab';
+        });
+
+        accommodationsCarousel.addEventListener('mouseup', function() {
+            isDown = false;
+            accommodationsCarousel.style.cursor = 'grab';
+        });
+
+        accommodationsCarousel.addEventListener('mousemove', function(e) {
+            if (!isDown) return;
+            e.preventDefault();
+            const x = e.pageX - accommodationsCarousel.offsetLeft;
+            const walk = (x - startX) * 2; // Scroll speed multiplier
+            accommodationsCarousel.scrollLeft = scrollLeft - walk;
+        });
+
+        // Set initial cursor
+        accommodationsCarousel.style.cursor = 'grab';
+    }
+});
 
 // Touch/swipe support for experiences carousel
 let experiencesTouchStart = 0;

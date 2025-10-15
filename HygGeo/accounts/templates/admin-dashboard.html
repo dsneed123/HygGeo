@@ -662,83 +662,135 @@ Format: Month | Theme | Content Ideas | Key Keywords | Publishing Schedule</div>
             <h3 class="fw-bold mb-4" style="color: var(--hygge-green);">
                 <i class="fas fa-star me-2"></i>Manage Featured Content
             </h3>
-            <p class="text-muted mb-4">Control which experiences and accommodations appear on the homepage</p>
+            <p class="text-muted mb-4">Click the star icon to toggle featured status. Featured items appear on the homepage.</p>
         </div>
     </div>
 
-    <!-- Featured Content Cards -->
+    <!-- Featured Content Tabs -->
     <div class="row mb-5">
-        <!-- Featured Experiences Management -->
-        <div class="col-lg-6 mb-4">
-            <div class="card card-hygge h-100">
-                <div class="card-header bg-warning bg-opacity-10">
-                    <h5 class="fw-bold mb-0">
-                        <i class="fas fa-star me-2" style="color: var(--hygge-gold);"></i>Featured Experiences
-                    </h5>
+        <div class="col-12">
+            <div class="card card-hygge">
+                <div class="card-header">
+                    <ul class="nav nav-tabs card-header-tabs" role="tablist">
+                        <li class="nav-item">
+                            <a class="nav-link active" id="experiences-tab" data-bs-toggle="tab" href="#experiences" role="tab">
+                                <i class="fas fa-map-marked-alt me-2"></i>Experiences
+                                <span class="badge bg-primary">{{ stats.featured_experiences_count }}/{{ all_experiences|length }}</span>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" id="accommodations-tab" data-bs-toggle="tab" href="#accommodations" role="tab">
+                                <i class="fas fa-bed me-2"></i>Accommodations
+                                <span class="badge bg-info">{{ stats.featured_accommodations_count }}/{{ all_accommodations|length }}</span>
+                            </a>
+                        </li>
+                    </ul>
                 </div>
                 <div class="card-body">
-                    <p class="text-muted small mb-3">
-                        Manage which experiences are highlighted on the homepage. Featured experiences get priority placement and increased visibility.
-                    </p>
+                    <div class="tab-content">
+                        <!-- Experiences Tab -->
+                        <div class="tab-pane fade show active" id="experiences" role="tabpanel">
+                            <div class="mb-3">
+                                <input type="text" id="experienceSearch" class="form-control" placeholder="Search experiences...">
+                            </div>
+                            <div class="table-responsive">
+                                <table class="table table-hover">
+                                    <thead>
+                                        <tr>
+                                            <th width="60">Featured</th>
+                                            <th>Title</th>
+                                            <th>Destination</th>
+                                            <th>Status</th>
+                                            <th>Created</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="experiencesTableBody">
+                                        {% for exp in all_experiences %}
+                                        <tr data-searchable="{{ exp.title|lower }} {{ exp.destination.name|lower }}">
+                                            <td>
+                                                <button class="btn btn-sm toggle-featured-btn {% if exp.is_featured %}btn-warning{% else %}btn-outline-secondary{% endif %}"
+                                                        data-id="{{ exp.id }}"
+                                                        data-type="experience"
+                                                        data-featured="{{ exp.is_featured|lower }}"
+                                                        title="{% if exp.is_featured %}Remove from featured{% else %}Add to featured{% endif %}">
+                                                    <i class="fas fa-star"></i>
+                                                </button>
+                                            </td>
+                                            <td>
+                                                <strong>{{ exp.title }}</strong>
+                                                <br><small class="text-muted">{{ exp.description|truncatewords:10 }}</small>
+                                            </td>
+                                            <td>{{ exp.destination.name }}</td>
+                                            <td>
+                                                {% if exp.is_active %}
+                                                    <span class="badge bg-success">Active</span>
+                                                {% else %}
+                                                    <span class="badge bg-secondary">Inactive</span>
+                                                {% endif %}
+                                            </td>
+                                            <td>{{ exp.created_at|date:"M d, Y" }}</td>
+                                        </tr>
+                                        {% empty %}
+                                        <tr>
+                                            <td colspan="5" class="text-center text-muted">No experiences found</td>
+                                        </tr>
+                                        {% endfor %}
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
 
-                    <div class="alert alert-info mb-3">
-                        <i class="fas fa-info-circle me-2"></i>
-                        <small>
-                            <strong>Current:</strong> {{ stats.featured_experiences_count|default:0 }} featured experience{{ stats.featured_experiences_count|default:0|pluralize }}
-                        </small>
-                    </div>
-
-                    <div class="d-grid gap-2">
-                        <a href="{% url 'experiences:experience_list' %}?featured=true" class="btn btn-outline-primary">
-                            <i class="fas fa-eye me-2"></i>View Featured Experiences
-                        </a>
-                        <a href="{% url 'experiences:experience_list' %}" class="btn btn-primary">
-                            <i class="fas fa-edit me-2"></i>Manage Featured Status
-                        </a>
-                    </div>
-
-                    <div class="mt-3 p-3 bg-light rounded">
-                        <small class="text-muted">
-                            <strong>Quick Tip:</strong> Go to the experience list, find an experience, click edit, and toggle the "Featured" checkbox to add or remove it from the homepage.
-                        </small>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- Featured Accommodations Management -->
-        <div class="col-lg-6 mb-4">
-            <div class="card card-hygge h-100">
-                <div class="card-header bg-info bg-opacity-10">
-                    <h5 class="fw-bold mb-0">
-                        <i class="fas fa-bed me-2" style="color: #9b59b6;"></i>Featured Accommodations
-                    </h5>
-                </div>
-                <div class="card-body">
-                    <p class="text-muted small mb-3">
-                        Manage which accommodations are featured on the homepage. Showcase your best eco-friendly stays.
-                    </p>
-
-                    <div class="alert alert-info mb-3">
-                        <i class="fas fa-info-circle me-2"></i>
-                        <small>
-                            <strong>Current:</strong> {{ stats.featured_accommodations_count|default:0 }} featured accommodation{{ stats.featured_accommodations_count|default:0|pluralize }}
-                        </small>
-                    </div>
-
-                    <div class="d-grid gap-2">
-                        <a href="{% url 'experiences:accommodation_list' %}?featured=true" class="btn btn-outline-primary">
-                            <i class="fas fa-eye me-2"></i>View Featured Accommodations
-                        </a>
-                        <a href="{% url 'experiences:accommodation_list' %}" class="btn btn-primary">
-                            <i class="fas fa-edit me-2"></i>Manage Featured Status
-                        </a>
-                    </div>
-
-                    <div class="mt-3 p-3 bg-light rounded">
-                        <small class="text-muted">
-                            <strong>Quick Tip:</strong> Edit any accommodation and toggle the "Featured" checkbox to control its homepage visibility.
-                        </small>
+                        <!-- Accommodations Tab -->
+                        <div class="tab-pane fade" id="accommodations" role="tabpanel">
+                            <div class="mb-3">
+                                <input type="text" id="accommodationSearch" class="form-control" placeholder="Search accommodations...">
+                            </div>
+                            <div class="table-responsive">
+                                <table class="table table-hover">
+                                    <thead>
+                                        <tr>
+                                            <th width="60">Featured</th>
+                                            <th>Name</th>
+                                            <th>Destination</th>
+                                            <th>Type</th>
+                                            <th>Status</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="accommodationsTableBody">
+                                        {% for acc in all_accommodations %}
+                                        <tr data-searchable="{{ acc.name|lower }} {{ acc.destination.name|lower }}">
+                                            <td>
+                                                <button class="btn btn-sm toggle-featured-btn {% if acc.is_featured %}btn-warning{% else %}btn-outline-secondary{% endif %}"
+                                                        data-id="{{ acc.id }}"
+                                                        data-type="accommodation"
+                                                        data-featured="{{ acc.is_featured|lower }}"
+                                                        title="{% if acc.is_featured %}Remove from featured{% else %}Add to featured{% endif %}">
+                                                    <i class="fas fa-star"></i>
+                                                </button>
+                                            </td>
+                                            <td>
+                                                <strong>{{ acc.name }}</strong>
+                                                <br><small class="text-muted">{{ acc.short_description|truncatewords:10 }}</small>
+                                            </td>
+                                            <td>{{ acc.destination.name }}</td>
+                                            <td>{{ acc.get_accommodation_type_display }}</td>
+                                            <td>
+                                                {% if acc.is_active %}
+                                                    <span class="badge bg-success">Active</span>
+                                                {% else %}
+                                                    <span class="badge bg-secondary">Inactive</span>
+                                                {% endif %}
+                                            </td>
+                                        </tr>
+                                        {% empty %}
+                                        <tr>
+                                            <td colspan="5" class="text-center text-muted">No accommodations found</td>
+                                        </tr>
+                                        {% endfor %}
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -985,6 +1037,147 @@ Format: Month | Theme | Content Ideas | Key Keywords | Publishing Schedule</div>
 
 <script>
 document.addEventListener('DOMContentLoaded', function() {
+    // Get CSRF token for AJAX requests
+    function getCookie(name) {
+        let cookieValue = null;
+        if (document.cookie && document.cookie !== '') {
+            const cookies = document.cookie.split(';');
+            for (let i = 0; i < cookies.length; i++) {
+                const cookie = cookies[i].trim();
+                if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                    cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                    break;
+                }
+            }
+        }
+        return cookieValue;
+    }
+    const csrftoken = getCookie('csrftoken');
+
+    // Toggle featured status via AJAX
+    document.querySelectorAll('.toggle-featured-btn').forEach(btn => {
+        btn.addEventListener('click', function(e) {
+            e.preventDefault();
+            const button = this;
+            const contentId = button.dataset.id;
+            const contentType = button.dataset.type;
+            const isFeatured = button.dataset.featured === 'true';
+
+            // Disable button during request
+            button.disabled = true;
+            button.innerHTML = '<i class="fas fa-spinner fa-spin"></i>';
+
+            // Send AJAX request
+            fetch('{% url "toggle_featured_status" %}', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded',
+                    'X-CSRFToken': csrftoken
+                },
+                body: `content_type=${contentType}&content_id=${contentId}`
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    // Update button state
+                    button.dataset.featured = data.is_featured;
+                    if (data.is_featured) {
+                        button.classList.remove('btn-outline-secondary');
+                        button.classList.add('btn-warning');
+                        button.title = 'Remove from featured';
+                    } else {
+                        button.classList.remove('btn-warning');
+                        button.classList.add('btn-outline-secondary');
+                        button.title = 'Add to featured';
+                    }
+                    button.innerHTML = '<i class="fas fa-star"></i>';
+                    button.disabled = false;
+
+                    // Update badge counts
+                    updateBadgeCounts();
+
+                    // Show success message
+                    showToast(data.message, 'success');
+                } else {
+                    button.innerHTML = '<i class="fas fa-star"></i>';
+                    button.disabled = false;
+                    showToast('Error: ' + data.error, 'error');
+                }
+            })
+            .catch(error => {
+                button.innerHTML = '<i class="fas fa-star"></i>';
+                button.disabled = false;
+                showToast('Network error occurred', 'error');
+            });
+        });
+    });
+
+    // Update badge counts
+    function updateBadgeCounts() {
+        const expFeaturedCount = document.querySelectorAll('#experiencesTableBody .toggle-featured-btn[data-featured="true"]').length;
+        const expTotalCount = document.querySelectorAll('#experiencesTableBody .toggle-featured-btn').length;
+        const accFeaturedCount = document.querySelectorAll('#accommodationsTableBody .toggle-featured-btn[data-featured="true"]').length;
+        const accTotalCount = document.querySelectorAll('#accommodationsTableBody .toggle-featured-btn').length;
+
+        const expBadge = document.querySelector('#experiences-tab .badge');
+        const accBadge = document.querySelector('#accommodations-tab .badge');
+
+        if (expBadge) expBadge.textContent = `${expFeaturedCount}/${expTotalCount}`;
+        if (accBadge) accBadge.textContent = `${accFeaturedCount}/${accTotalCount}`;
+    }
+
+    // Simple toast notification
+    function showToast(message, type) {
+        const toast = document.createElement('div');
+        toast.className = `alert alert-${type === 'success' ? 'success' : 'danger'} position-fixed`;
+        toast.style.cssText = 'top: 20px; right: 20px; z-index: 9999; min-width: 300px;';
+        toast.innerHTML = `
+            <i class="fas fa-${type === 'success' ? 'check-circle' : 'exclamation-circle'} me-2"></i>
+            ${message}
+        `;
+        document.body.appendChild(toast);
+
+        setTimeout(() => {
+            toast.style.opacity = '0';
+            toast.style.transition = 'opacity 0.5s';
+            setTimeout(() => toast.remove(), 500);
+        }, 3000);
+    }
+
+    // Search functionality for experiences
+    const experienceSearch = document.getElementById('experienceSearch');
+    if (experienceSearch) {
+        experienceSearch.addEventListener('input', function() {
+            const searchTerm = this.value.toLowerCase();
+            const rows = document.querySelectorAll('#experiencesTableBody tr[data-searchable]');
+            rows.forEach(row => {
+                const searchableText = row.dataset.searchable;
+                if (searchableText.includes(searchTerm)) {
+                    row.style.display = '';
+                } else {
+                    row.style.display = 'none';
+                }
+            });
+        });
+    }
+
+    // Search functionality for accommodations
+    const accommodationSearch = document.getElementById('accommodationSearch');
+    if (accommodationSearch) {
+        accommodationSearch.addEventListener('input', function() {
+            const searchTerm = this.value.toLowerCase();
+            const rows = document.querySelectorAll('#accommodationsTableBody tr[data-searchable]');
+            rows.forEach(row => {
+                const searchableText = row.dataset.searchable;
+                if (searchableText.includes(searchTerm)) {
+                    row.style.display = '';
+                } else {
+                    row.style.display = 'none';
+                }
+            });
+        });
+    }
+
     // Add click handlers to make entire cards clickable
     document.querySelectorAll('.admin-action-card').forEach(card => {
         card.addEventListener('click', function(e) {
@@ -997,8 +1190,8 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     });
 
-    // Add loading states to buttons
-    document.querySelectorAll('.btn').forEach(btn => {
+    // Add loading states to buttons (but not toggle buttons)
+    document.querySelectorAll('.btn:not(.toggle-featured-btn)').forEach(btn => {
         btn.addEventListener('click', function() {
             if (this.href && !this.classList.contains('copy-prompt-btn')) {
                 this.innerHTML = '<i class="fas fa-spinner fa-spin me-2"></i>Loading...';

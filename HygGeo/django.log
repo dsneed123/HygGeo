@@ -14008,3 +14008,16 @@ WARNING 2025-10-14 18:20:54,462 basehttp 32920 35044 "GET /.well-known/appspecif
 INFO 2025-10-14 18:20:54,532 basehttp 32920 35044 "GET /static/css/base.css HTTP/1.1" 200 5306
 INFO 2025-10-14 18:20:54,537 basehttp 32920 41440 "GET /static/js/navbar.js HTTP/1.1" 200 2732
 INFO 2025-10-14 18:20:55,977 basehttp 32920 36788 "GET /static/site.webmanifest HTTP/1.1" 200 263
+INFO 2025-10-14 18:42:02,899 autoreload 42788 43228 Watching for file changes with StatReloader
+INFO 2025-10-14 18:42:09,715 basehttp 42788 18312 "GET /admin/dashboard/ HTTP/1.1" 200 85902
+INFO 2025-10-14 18:42:17,562 basehttp 42788 18312 "POST /accounts/admin/toggle-featured/ HTTP/1.1" 200 74
+INFO 2025-10-14 18:42:22,159 basehttp 42788 18312 "GET / HTTP/1.1" 200 99372
+INFO 2025-10-14 18:42:27,162 basehttp 42788 18312 "GET /admin/dashboard/ HTTP/1.1" 200 86016
+INFO 2025-10-14 18:42:32,110 basehttp 42788 18312 "POST /accounts/admin/toggle-featured/ HTTP/1.1" 200 77
+INFO 2025-10-14 18:42:35,427 basehttp 42788 18312 "GET / HTTP/1.1" 200 99342
+INFO 2025-10-14 18:43:19,015 autoreload 42788 43228 C:\Users\DLSne\OneDrive\Desktop\Code\webdev\HygGeo\HygGeo\accounts\views.py changed, reloading.
+INFO 2025-10-14 18:43:20,516 autoreload 32440 40596 Watching for file changes with StatReloader
+INFO 2025-10-14 18:45:53,686 basehttp 32440 42536 "GET / HTTP/1.1" 200 95963
+INFO 2025-10-14 18:45:57,898 basehttp 32440 42536 "GET /admin/dashboard/ HTTP/1.1" 200 85902
+INFO 2025-10-14 18:46:02,514 basehttp 32440 42536 "POST /accounts/admin/toggle-featured/ HTTP/1.1" 200 74
+INFO 2025-10-14 18:46:05,272 basehttp 32440 42536 "GET / HTTP/1.1" 200 99348

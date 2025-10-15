@@ -91,8 +91,7 @@ def index(request):
     # Try to get cached featured experiences (cache for 10 minutes)
     featured_experiences = cache.get('index_featured_experiences')
     if featured_experiences is None:
-        # Optimized query: Use order_by('?') with limit for random selection
-        # This is more efficient than fetching all IDs
+        # Optimized query: ONLY show featured experiences, no fallback
         featured_experiences = Experience.objects.filter(
             is_featured=True,
             is_active=True
@@ -107,21 +106,6 @@ def index(request):
 
         # Convert to list to cache
         featured_experiences = list(featured_experiences)
-
-        # If no featured experiences, get random active ones
-        if not featured_experiences:
-            featured_experiences = list(
-                Experience.objects.filter(
-                    is_active=True
-                ).select_related(
-                    'destination', 'experience_type', 'provider'
-                ).only(
-                    'id', 'title', 'description', 'main_image', 'price_from',
-                    'destination__id', 'destination__name',
-                    'experience_type__id', 'experience_type__name',
-                    'provider__id', 'provider__name'
-                ).order_by('?')[:8]
-            )
 
         # Cache for 10 minutes
         cache.set('index_featured_experiences', featured_experiences, 60 * 10)
@@ -444,6 +428,10 @@ def admin_dashboard(request):
     stats['featured_experiences_count'] = featured_experiences
     stats['featured_accommodations_count'] = featured_accommodations
 
+    # Get all experiences and accommodations for featured management
+    all_experiences = Experience.objects.select_related('destination').order_by('-created_at')[:50]
+    all_accommodations = Accommodation.objects.select_related('destination').order_by('-created_at')[:50]
+
     context = {
         'stats': stats,
         'email_stats': email_stats,
@@ -451,6 +439,8 @@ def admin_dashboard(request):
         'recent_destinations': recent_destinations,
         'featured_count': featured_experiences,
         'active_count': active_experiences,
+        'all_experiences': all_experiences,
+        'all_accommodations': all_accommodations,
     }
     
     # Updated template path to match your file location
@@ -1628,3 +1618,41 @@ def export_categories_json(request):
 def faq_view(request):
     """Display the FAQs page"""
     return render(request, 'accounts/faq.html')
+
+@user_passes_test(lambda u: u.is_staff, login_url='/accounts/login/')
+def toggle_featured_status(request):
+    """Toggle featured status for experiences or accommodations via AJAX"""
+    from django.http import JsonResponse
+    from django.core.cache import cache
+
+    if request.method != 'POST':
+        return JsonResponse({'success': False, 'error': 'Method not allowed'}, status=405)
+
+    content_type = request.POST.get('content_type')  # 'experience' or 'accommodation'
+    content_id = request.POST.get('content_id')
+
+    try:
+        if content_type == 'experience':
+            item = Experience.objects.get(id=content_id)
+            item.is_featured = not item.is_featured
+            item.save()
+            # Clear cache
+            cache.delete('index_featured_experiences')
+        elif content_type == 'accommodation':
+            item = Accommodation.objects.get(id=content_id)
+            item.is_featured = not item.is_featured
+            item.save()
+            # Clear cache
+            cache.delete('index_featured_accommodations')
+        else:
+            return JsonResponse({'success': False, 'error': 'Invalid content type'}, status=400)
+
+        return JsonResponse({
+            'success': True,
+            'is_featured': item.is_featured,
+            'message': f'{"Featured" if item.is_featured else "Unfeatured"} successfully'
+        })
+    except (Experience.DoesNotExist, Accommodation.DoesNotExist):
+        return JsonResponse({'success': False, 'error': 'Item not found'}, status=404)
+    except Exception as e:
+        return JsonResponse({'success': False, 'error': str(e)}, status=500)
