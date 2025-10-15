@@ -129,7 +129,7 @@ def index(request):
     # Try to get cached featured accommodations (cache for 10 minutes)
     featured_accommodations = cache.get('index_featured_accommodations')
     if featured_accommodations is None:
-        # Optimized query for featured accommodations
+        # Optimized query for featured accommodations - ONLY show featured ones
         featured_accommodations = Accommodation.objects.filter(
             is_featured=True,
             is_active=True
@@ -144,21 +144,6 @@ def index(request):
 
         # Convert to list to cache
         featured_accommodations = list(featured_accommodations)
-
-        # If no featured accommodations, get random active ones
-        if not featured_accommodations:
-            featured_accommodations = list(
-                Accommodation.objects.filter(
-                    is_active=True
-                ).select_related(
-                    'destination', 'provider'
-                ).only(
-                    'id', 'name', 'description', 'short_description', 'main_image',
-                    'slug', 'accommodation_type', 'price_per_night_from',
-                    'destination__id', 'destination__name',
-                    'provider__id', 'provider__name'
-                ).order_by('?')[:8]
-            )
 
         # Cache for 10 minutes
         cache.set('index_featured_accommodations', featured_accommodations, 60 * 10)
