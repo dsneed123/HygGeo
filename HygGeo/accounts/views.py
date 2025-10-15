@@ -889,6 +889,40 @@ def analytics_dashboard(request):
             'count': count
         })
 
+    # Content creation trends (experiences and accommodations over time)
+    content_creation_data = []
+    for i in range(0, chart_days, step):
+        date = now - timedelta(days=chart_days-1-i)
+        start_of_day = date.replace(hour=0, minute=0, second=0, microsecond=0)
+        end_of_day = start_of_day + timedelta(days=step)
+
+        exp_count = Experience.objects.filter(
+            created_at__gte=start_of_day,
+            created_at__lt=end_of_day
+        ).count()
+
+        acc_count = Accommodation.objects.filter(
+            created_at__gte=start_of_day,
+            created_at__lt=end_of_day
+        ).count()
+
+        content_creation_data.append({
+            'date': start_of_day.strftime(date_format),
+            'experiences': exp_count,
+            'accommodations': acc_count,
+            'total': exp_count + acc_count
+        })
+
+    # Content statistics for different time periods
+    total_accommodations = Accommodation.objects.count()
+    active_accommodations = Accommodation.objects.filter(is_active=True).count()
+    accommodations_created_7_days = Accommodation.objects.filter(created_at__gte=last_7_days).count()
+    accommodations_created_30_days = Accommodation.objects.filter(created_at__gte=last_30_days).count()
+    accommodations_created_90_days = Accommodation.objects.filter(created_at__gte=last_90_days).count()
+
+    experiences_created_30_days = Experience.objects.filter(created_at__gte=last_30_days).count()
+    experiences_created_90_days = Experience.objects.filter(created_at__gte=last_90_days).count()
+
     context = {
         'current_period': period,
         'available_periods': [
@@ -920,6 +954,13 @@ def analytics_dashboard(request):
             'active_experiences': active_experiences,
             'featured_experiences': featured_experiences,
             'experiences_created_7_days': experiences_created_7_days,
+            'experiences_created_30_days': experiences_created_30_days,
+            'experiences_created_90_days': experiences_created_90_days,
+            'total_accommodations': total_accommodations,
+            'active_accommodations': active_accommodations,
+            'accommodations_created_7_days': accommodations_created_7_days,
+            'accommodations_created_30_days': accommodations_created_30_days,
+            'accommodations_created_90_days': accommodations_created_90_days,
             'destinations_created_7_days': destinations_created_7_days,
 
             # Booking metrics
@@ -953,6 +994,7 @@ def analytics_dashboard(request):
             'user_registrations': json.dumps(user_registration_data),
             'hourly_activity': json.dumps(hourly_activity_data),
             'booking_trends': json.dumps(booking_trend_data),
+            'content_creation': json.dumps(content_creation_data),
         }
     }
 
