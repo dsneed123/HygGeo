@@ -1675,76 +1675,97 @@ def get_items_for_destination(request):
         items = []
 
         if item_type == 'experiences':
+            # Don't filter by is_active for staff users - show all experiences
             queryset = Experience.objects.filter(
-                destination_id=destination_id,
-                is_active=True
-            ).select_related('provider').order_by('-sustainability_score', '-created_at')
+                destination_id=destination_id
+            ).select_related('provider', 'experience_type').order_by('-sustainability_score', '-created_at')
 
             for exp in queryset:
                 short_desc = exp.short_description or exp.title
                 description = short_desc[:100] + '...' if len(short_desc) > 100 else short_desc
+                # Include experience type in the description if available
+                exp_type = f" ({exp.experience_type.name})" if exp.experience_type else ""
                 items.append({
                     'id': str(exp.id),
-                    'name': exp.title,
+                    'name': exp.title + exp_type,
                     'description': description,
-                    'sustainability': exp.sustainability_score,
-                    'hygge': exp.hygge_factor,
+                    'sustainability': exp.sustainability_score or 0,
+                    'hygge': exp.hygge_factor or 0,
+                    'is_active': exp.is_active,
                 })
 
         elif item_type == 'accommodations':
+            # Don't filter by is_active for staff users - show all accommodations
             queryset = Accommodation.objects.filter(
-                destination_id=destination_id,
-                is_active=True
+                destination_id=destination_id
             ).select_related('provider').order_by('-sustainability_score', '-created_at')
 
             for acc in queryset:
                 short_desc = acc.short_description or acc.name
                 description = short_desc[:100] + '...' if len(short_desc) > 100 else short_desc
+                # Use the model's built-in method
+                acc_type = f" ({acc.get_accommodation_type_display()})" if acc.accommodation_type else ""
                 items.append({
                     'id': str(acc.id),
-                    'name': acc.name,
+                    'name': acc.name + acc_type,
                     'description': description,
-                    'sustainability': acc.sustainability_score,
-                    'hygge': acc.hygge_factor,
+                    'sustainability': acc.sustainability_score or 0,
+                    'hygge': acc.hygge_factor or 0,
+                    'is_active': acc.is_active,
                 })
 
         elif item_type == 'mixed':
-            # Get both experiences and accommodations
+            # Get both experiences and accommodations - don't filter by is_active
             exp_queryset = Experience.objects.filter(
-                destination_id=destination_id,
-                is_active=True
-            ).select_related('provider').order_by('-sustainability_score', '-created_at')[:20]
+                destination_id=destination_id
+            ).select_related('provider', 'experience_type').order_by('-sustainability_score', '-created_at')[:30]
 
             acc_queryset = Accommodation.objects.filter(
-                destination_id=destination_id,
-                is_active=True
-            ).select_related('provider').order_by('-sustainability_score', '-created_at')[:20]
+                destination_id=destination_id
+            ).select_related('provider').order_by('-sustainability_score', '-created_at')[:30]
 
             for exp in exp_queryset:
                 short_desc = exp.short_description or exp.title
                 description = short_desc[:100] + '...' if len(short_desc) > 100 else short_desc
+                exp_type = f" ({exp.experience_type.name})" if exp.experience_type else ""
                 items.append({
                     'id': f'exp_{exp.id}',
-                    'name': exp.title,
+                    'name': exp.title + exp_type,
                     'description': description,
-                    'sustainability': exp.sustainability_score,
-                    'hygge': exp.hygge_factor,
+                    'sustainability': exp.sustainability_score or 0,
+                    'hygge': exp.hygge_factor or 0,
+                    'is_active': exp.is_active,
+                    'type': 'experience',
                 })
 
             for acc in acc_queryset:
                 short_desc = acc.short_description or acc.name
                 description = short_desc[:100] + '...' if len(short_desc) > 100 else short_desc
+                # Use the model's built-in method (matching line 1707)
+                acc_type = f" ({acc.get_accommodation_type_display()})" if acc.accommodation_type else ""
                 items.append({
                     'id': f'acc_{acc.id}',
-                    'name': acc.name,
+                    'name': acc.name + acc_type,
                     'description': description,
-                    'sustainability': acc.sustainability_score,
-                    'hygge': acc.hygge_factor,
+                    'sustainability': acc.sustainability_score or 0,
+                    'hygge': acc.hygge_factor or 0,
+                    'is_active': acc.is_active,
+                    'type': 'accommodation',
                 })
 
         return JsonResponse({'items': items})
 
     except Exception as e:
+        # Add detailed logging for debugging
+        import traceback
+        error_details = {
+            'error': str(e),
+            'error_type': type(e).__name__,
+            'traceback': traceback.format_exc(),
+            'destination_id': destination_id,
+            'item_type': item_type,
+        }
+        print(f"ERROR in get_items_for_destination: {error_details}")  # Log to console
         return JsonResponse({'error': str(e)}, status=500)
 
 @user_passes_test(lambda u: u.is_staff, login_url='/accounts/login/')
@@ -2009,6 +2030,33 @@ def generate_top_10_blog(request):
         content_html += f"<p>Ready to explore {destination.name}? These {content_type_label.lower()} represent the best of sustainable, hygge-inspired travel. Each option has been carefully selected for its commitment to environmental responsibility and authentic local experiences.</p>\n"
         content_html += f"<p>Remember to travel mindfully, support local businesses, and leave only footprints behind. Safe travels!</p>\n"
 
+        # Determine featured image - use destination image or random experience/accommodation image
+        featured_image = None
+        if destination.image:
+            featured_image = destination.image
+        elif items:
+            # Try to find an item with an image
+            items_with_images = [item for item in items if hasattr(item, 'main_image') and item.main_image]
+            if items_with_images:
+                # Pick a random item with an image
+                random_item = random.choice(items_with_images)
+                featured_image = random_item.main_image
+
+        # Generate SEO-optimized meta title (max 60 characters)
+        meta_title = title
+        if len(meta_title) > 60:
+            # Truncate if too long, keeping the most important parts
+            meta_title = f"{filter_labels.get(filter_by, 'Top')} {len(items)} {content_type_label} in {destination.name}"
+            if len(meta_title) > 60:
+                # Further truncate if still too long
+                meta_title = f"{len(items)} Best {content_type_label} in {destination.name}"[:60]
+
+        # Generate SEO-optimized meta description (max 160 characters)
+        current_year = datetime.now().year
+        meta_description = f"Discover the {filter_labels.get(filter_by, 'best').lower()} {content_type_label.lower()} in {destination.name} for {current_year}. Sustainable, hygge-inspired travel options for eco-conscious travelers."
+        if len(meta_description) > 160:
+            meta_description = f"Explore {len(items)} {content_type_label.lower()} in {destination.name}. Sustainable travel options for eco-conscious travelers seeking authentic experiences."[:160]
+
         # Create blog post
         blog = TravelBlog.objects.create(
             title=title,
@@ -2017,7 +2065,10 @@ def generate_top_10_blog(request):
             excerpt=excerpt,
             author=request.user,
             destination=destination,
+            featured_image=featured_image,
             is_published=publish,
+            meta_title=meta_title,
+            meta_description=meta_description,
             tags=['top 10', destination.name.lower(), content_type_label.lower(), 'sustainable travel', 'hygge']
         )
 

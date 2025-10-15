@@ -14144,3 +14144,52 @@ INFO 2025-10-14 23:54:01,572 basehttp 66380 19532 "GET /static/favicon.ico HTTP/
 INFO 2025-10-14 23:54:01,878 basehttp 66380 59920 "GET /static/site.webmanifest HTTP/1.1" 200 263
 INFO 2025-10-14 23:54:05,977 basehttp 66380 19532 "POST /experiences/blogs/most-sustainable-1-experiences-in-seattle-2/edit/ HTTP/1.1" 302 0
 INFO 2025-10-14 23:54:06,023 basehttp 66380 19532 "GET /experiences/blogs/my-blogs/ HTTP/1.1" 200 58102
+INFO 2025-10-15 09:38:46,458 autoreload 6340 5084 Watching for file changes with StatReloader
+INFO 2025-10-15 09:38:53,432 basehttp 6340 66244 "GET / HTTP/1.1" 200 99391
+INFO 2025-10-15 09:38:53,732 basehttp 6340 66244 "GET /static/css/base.css HTTP/1.1" 200 5306
+INFO 2025-10-15 09:38:53,746 basehttp 6340 73168 "GET /static/js/navbar.js HTTP/1.1" 200 2732
+INFO 2025-10-15 09:38:54,571 basehttp 6340 73168 "GET /static/favicon.ico HTTP/1.1" 200 15406
+INFO 2025-10-15 09:38:56,859 basehttp 6340 73168 "GET /admin/dashboard/ HTTP/1.1" 200 112057
+WARNING 2025-10-15 09:39:09,368 log 6340 73168 Not Found: /admin/get-items-for-destination/
+WARNING 2025-10-15 09:39:09,369 basehttp 6340 73168 "GET /admin/get-items-for-destination/?destination=1&type=experiences HTTP/1.1" 404 11174
+INFO 2025-10-15 09:39:24,696 basehttp 6340 73168 "GET /sitemap.xml HTTP/1.1" 200 3392
+INFO 2025-10-15 09:39:24,844 basehttp 6340 73168 "GET /favicon.ico HTTP/1.1" 301 0
+INFO 2025-10-15 09:40:25,956 autoreload 6340 5084 C:\Users\DLSne\OneDrive\Desktop\Code\webdev\HygGeo\HygGeo\accounts\views.py changed, reloading.
+INFO 2025-10-15 09:40:27,664 autoreload 78248 76360 Watching for file changes with StatReloader
+INFO 2025-10-15 09:40:37,768 autoreload 78248 76360 C:\Users\DLSne\OneDrive\Desktop\Code\webdev\HygGeo\HygGeo\accounts\views.py changed, reloading.
+INFO 2025-10-15 09:40:39,552 autoreload 61880 44208 Watching for file changes with StatReloader
+WARNING 2025-10-15 09:40:40,214 log 61880 72884 Not Found: /admin/get-items-for-destination/
+WARNING 2025-10-15 09:40:40,215 basehttp 61880 72884 "GET /admin/get-items-for-destination/?destination=2&type=accommodations HTTP/1.1" 404 11177
+WARNING 2025-10-15 09:40:41,643 log 61880 72884 Not Found: /admin/get-items-for-destination/
+WARNING 2025-10-15 09:40:41,645 basehttp 61880 72884 "GET /admin/get-items-for-destination/?destination=3&type=accommodations HTTP/1.1" 404 11177
+WARNING 2025-10-15 09:42:28,995 log 61880 78040 Not Found: /admin/get-items-for-destination/
+WARNING 2025-10-15 09:42:28,996 basehttp 61880 78040 "GET /admin/get-items-for-destination/?destination=1&type=accommodations HTTP/1.1" 404 11177
+INFO 2025-10-15 09:42:30,083 basehttp 61880 78040 "GET /admin/dashboard/ HTTP/1.1" 200 112057
+INFO 2025-10-15 09:42:30,317 basehttp 61880 78040 "GET /static/css/base.css HTTP/1.1" 200 5306
+INFO 2025-10-15 09:42:30,387 basehttp 61880 10752 "GET /static/js/navbar.js HTTP/1.1" 200 2732
+INFO 2025-10-15 09:42:30,780 basehttp 61880 10752 "GET /static/favicon.ico HTTP/1.1" 200 15406
+WARNING 2025-10-15 09:42:40,393 log 61880 10752 Not Found: /admin/get-items-for-destination/
+WARNING 2025-10-15 09:42:40,393 basehttp 61880 10752 "GET /admin/get-items-for-destination/?destination=1&type=experiences HTTP/1.1" 404 11174
+INFO 2025-10-15 09:43:54,439 autoreload 61880 44208 C:\Users\DLSne\OneDrive\Desktop\Code\webdev\HygGeo\HygGeo\accounts\views.py changed, reloading.
+INFO 2025-10-15 09:43:56,364 autoreload 53644 47564 Watching for file changes with StatReloader
+INFO 2025-10-15 09:46:07,140 autoreload 53644 47564 C:\Users\DLSne\OneDrive\Desktop\Code\webdev\HygGeo\HygGeo\accounts\views.py changed, reloading.
+INFO 2025-10-15 09:46:08,596 autoreload 73380 77616 Watching for file changes with StatReloader
+INFO 2025-10-15 09:47:15,309 basehttp 73380 78508 "GET /admin/dashboard/ HTTP/1.1" 200 112057
+INFO 2025-10-15 09:47:15,606 basehttp 73380 78508 "GET /static/css/base.css HTTP/1.1" 200 5306
+INFO 2025-10-15 09:47:15,615 basehttp 73380 74776 "GET /static/js/navbar.js HTTP/1.1" 200 2732
+INFO 2025-10-15 09:47:17,195 basehttp 73380 14832 "GET /static/site.webmanifest HTTP/1.1" 200 263
+INFO 2025-10-15 09:47:17,795 basehttp 73380 74776 "GET /static/favicon.ico HTTP/1.1" 200 15406
+WARNING 2025-10-15 09:47:21,885 log 73380 74776 Not Found: /admin/get-items-for-destination/
+WARNING 2025-10-15 09:47:21,885 basehttp 73380 74776 "GET /admin/get-items-for-destination/?destination=1&type=experiences HTTP/1.1" 404 11174
+WARNING 2025-10-15 09:47:24,652 log 73380 74776 Not Found: /.well-known/appspecific/com.chrome.devtools.json
+WARNING 2025-10-15 09:47:24,652 basehttp 73380 74776 "GET /.well-known/appspecific/com.chrome.devtools.json HTTP/1.1" 404 4592
+INFO 2025-10-15 09:49:54,295 basehttp 73380 74776 "GET /admin/dashboard/ HTTP/1.1" 200 112243
+INFO 2025-10-15 09:49:54,355 basehttp 73380 74776 "GET /static/css/base.css HTTP/1.1" 200 5306
+INFO 2025-10-15 09:49:54,359 basehttp 73380 78508 "GET /static/js/navbar.js HTTP/1.1" 200 2732
+INFO 2025-10-15 09:49:55,715 basehttp 73380 14832 "GET /static/site.webmanifest HTTP/1.1" 200 263
+INFO 2025-10-15 09:49:56,472 basehttp 73380 78508 "GET /static/favicon.ico HTTP/1.1" 200 15406
+INFO 2025-10-15 09:50:01,068 basehttp 73380 78508 "GET /accounts/admin/get-items-for-destination/?destination=1&type=experiences HTTP/1.1" 200 187
+INFO 2025-10-15 09:51:30,484 autoreload 73380 77616 C:\Users\DLSne\OneDrive\Desktop\Code\webdev\HygGeo\HygGeo\HygGeo\urls.py changed, reloading.
+INFO 2025-10-15 09:51:32,156 autoreload 52252 42536 Watching for file changes with StatReloader
+INFO 2025-10-15 09:53:10,835 autoreload 52252 42536 C:\Users\DLSne\OneDrive\Desktop\Code\webdev\HygGeo\HygGeo\accounts\views.py changed, reloading.
+INFO 2025-10-15 09:53:12,297 autoreload 71240 18400 Watching for file changes with StatReloader

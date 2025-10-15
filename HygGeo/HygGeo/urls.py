@@ -32,30 +32,7 @@ urlpatterns = [
     path('favicon.ico', RedirectView.as_view(url='/static/favicon.ico', permanent=True)),
     path('site.webmanifest', RedirectView.as_view(url='/static/site.webmanifest', permanent=True)),
     path('browserconfig.xml', RedirectView.as_view(url='/static/browserconfig.xml', permanent=True)),
-    path('robots.txt', lambda request: HttpResponse("""User-agent: *
-Allow: /
-Allow: /experiences/
-Allow: /experiences/experience/
-Allow: /experiences/destinations/
-Allow: /experiences/category/
-Allow: /static/
-Allow: /favicon.ico
-
-# Disallow private/admin areas
-Disallow: /admin/
-Disallow: /accounts/profile/
-Disallow: /accounts/survey/
-Disallow: /experiences/bookmarks/
-Disallow: /experiences/recommendations/
-Disallow: /experiences/add/
-Disallow: /experiences/*/edit/
-
-# Allow important public pages
-Allow: /about/
-Allow: /contact/
-
-# Sitemap location - will be dynamically generated with correct domain
-Sitemap: /sitemap.xml""", content_type='text/plain')),
+    path('robots.txt', RedirectView.as_view(url='/static/robots.txt', permanent=True)),
 ]
 
 # Serve media files during development

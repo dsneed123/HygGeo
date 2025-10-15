@@ -1668,19 +1668,20 @@ document.addEventListener('DOMContentLoaded', function() {
         itemsList.innerHTML = '<div class="text-center py-3"><i class="fas fa-spinner fa-spin me-2"></i>Loading items...</div>';
 
         // Fetch items via AJAX
-        fetch(`/admin/get-items-for-destination/?destination=${destinationId}&type=${blogType}`)
+        fetch(`/accounts/admin/get-items-for-destination/?destination=${destinationId}&type=${blogType}`)
             .then(response => response.json())
             .then(data => {
                 if (data.items && data.items.length > 0) {
                     let html = '<div class="form-check-list">';
                     data.items.forEach(item => {
+                        const statusBadge = item.is_active ? '<span class="badge bg-success">Active</span>' : '<span class="badge bg-warning">Inactive</span>';
                         html += `
                             <div class="form-check p-3 mb-2 border rounded" style="background: white;">
-                                <input class="form-check-input" type="checkbox" name="manual_items" value="${item.id}" id="item-${item.id}">
+                                <input class="form-check-input" type="checkbox" name="selected_items" value="${item.id}" id="item-${item.id}">
                                 <label class="form-check-label w-100" for="item-${item.id}">
                                     <div class="d-flex justify-content-between align-items-start">
                                         <div>
-                                            <strong>${item.name}</strong>
+                                            <strong>${item.name}</strong> ${statusBadge}
                                             <p class="small text-muted mb-1">${item.description}</p>
                                             <span class="badge bg-success">Sustainability: ${item.sustainability}/10</span>
                                             <span class="badge bg-info">Hygge: ${item.hygge}/10</span>

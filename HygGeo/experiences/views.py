@@ -1020,10 +1020,12 @@ def sitemap_view(request):
     protocol = 'https' if request.is_secure() else 'http'
     base_url = f'{protocol}://{current_site}'
 
-    # Get all active experiences and destinations
+    # Get all active experiences, destinations, and published blogs
     experiences = Experience.objects.filter(is_active=True).select_related('destination').order_by('-updated_at')
     destinations = Destination.objects.all().order_by('-updated_at')
     categories = Category.objects.all().order_by('name')
+    blogs = TravelBlog.objects.filter(is_published=True).select_related('author', 'destination').order_by('-published_at')
+    accommodations = Accommodation.objects.filter(is_active=True).select_related('destination').order_by('-updated_at')
 
     # Build sitemap XML with better SEO attributes
     sitemap_xml = ['<?xml version="1.0" encoding="UTF-8"?>']
@@ -1100,6 +1102,65 @@ def sitemap_view(request):
         sitemap_xml.append('<priority>0.7</priority>')
         if hasattr(category, 'created_at') and category.created_at:
             sitemap_xml.append(f'<lastmod>{category.created_at.strftime("%Y-%m-%d")}</lastmod>')
+        sitemap_xml.append('</url>')
+
+    # Add accommodations list page
+    sitemap_xml.append('<url>')
+    sitemap_xml.append(f'<loc>{base_url}/experiences/accommodations/</loc>')
+    sitemap_xml.append('<changefreq>daily</changefreq>')
+    sitemap_xml.append('<priority>0.9</priority>')
+    sitemap_xml.append(f'<lastmod>{timezone.now().strftime("%Y-%m-%d")}</lastmod>')
+    sitemap_xml.append('</url>')
+
+    # Add individual accommodations
+    for accommodation in accommodations:
+        sitemap_xml.append('<url>')
+        sitemap_xml.append(f'<loc>{base_url}/experiences/accommodation/{accommodation.slug}/</loc>')
+        sitemap_xml.append('<changefreq>weekly</changefreq>')
+        priority = '0.95' if accommodation.is_featured else '0.9'
+        sitemap_xml.append(f'<priority>{priority}</priority>')
+        if accommodation.updated_at:
+            sitemap_xml.append(f'<lastmod>{accommodation.updated_at.strftime("%Y-%m-%d")}</lastmod>')
+
+        # Add accommodation image if available
+        if accommodation.main_image:
+            sitemap_xml.append('<image:image>')
+            sitemap_xml.append(f'<image:loc>{base_url}{accommodation.main_image.url}</image:loc>')
+            sitemap_xml.append(f'<image:title>{accommodation.name}</image:title>')
+            sitemap_xml.append(f'<image:caption>{accommodation.short_description[:160] if accommodation.short_description else accommodation.name}</image:caption>')
+            sitemap_xml.append('</image:image>')
+
+        sitemap_xml.append('</url>')
+
+    # Add blog feed page
+    sitemap_xml.append('<url>')
+    sitemap_xml.append(f'<loc>{base_url}/experiences/blogs/</loc>')
+    sitemap_xml.append('<changefreq>daily</changefreq>')
+    sitemap_xml.append('<priority>0.9</priority>')
+    sitemap_xml.append(f'<lastmod>{timezone.now().strftime("%Y-%m-%d")}</lastmod>')
+    sitemap_xml.append('</url>')
+
+    # Add individual blog posts - HIGH PRIORITY FOR SEO
+    for blog in blogs:
+        sitemap_xml.append('<url>')
+        sitemap_xml.append(f'<loc>{base_url}/experiences/blog/{blog.slug}/</loc>')
+        sitemap_xml.append('<changefreq>monthly</changefreq>')
+        # Blog posts get high priority for SEO value
+        priority = '0.95' if blog.is_featured else '0.85'
+        sitemap_xml.append(f'<priority>{priority}</priority>')
+        if blog.published_at:
+            sitemap_xml.append(f'<lastmod>{blog.published_at.strftime("%Y-%m-%d")}</lastmod>')
+        elif blog.updated_at:
+            sitemap_xml.append(f'<lastmod>{blog.updated_at.strftime("%Y-%m-%d")}</lastmod>')
+
+        # Add blog featured image if available
+        if blog.featured_image:
+            sitemap_xml.append('<image:image>')
+            sitemap_xml.append(f'<image:loc>{base_url}{blog.featured_image.url}</image:loc>')
+            sitemap_xml.append(f'<image:title>{blog.title}</image:title>')
+            sitemap_xml.append(f'<image:caption>{blog.excerpt[:160] if blog.excerpt else blog.title}</image:caption>')
+            sitemap_xml.append('</image:image>')
+
         sitemap_xml.append('</url>')
 
     sitemap_xml.append('</urlset>')
