@@ -1014,6 +1014,24 @@ def sitemap_view(request):
     """Generate comprehensive XML sitemap for search engines with all experiences"""
     from django.http import HttpResponse
     from django.utils import timezone
+    from xml.sax.saxutils import escape
+
+    def xml_escape(text):
+        """Escape special XML characters"""
+        if not text:
+            return ''
+        return escape(str(text), {'"': '&quot;', "'": '&apos;'})
+
+    def get_full_url(url_or_path):
+        """Get full URL, handling both absolute URLs and relative paths"""
+        if not url_or_path:
+            return ''
+        url_str = str(url_or_path)
+        # If already an absolute URL, return as-is (with XML escaping)
+        if url_str.startswith('http://') or url_str.startswith('https://'):
+            return xml_escape(url_str)
+        # Otherwise prepend base_url for relative paths
+        return xml_escape(f'{base_url}{url_str}')
 
     # Get the current site domain dynamically
     current_site = request.get_host()
@@ -1068,9 +1086,10 @@ def sitemap_view(request):
         # Add image information for better SEO
         if experience.main_image:
             sitemap_xml.append('<image:image>')
-            sitemap_xml.append(f'<image:loc>{base_url}{experience.main_image.url}</image:loc>')
-            sitemap_xml.append(f'<image:title>{experience.title}</image:title>')
-            sitemap_xml.append(f'<image:caption>{experience.short_description[:160] if experience.short_description else experience.title}</image:caption>')
+            sitemap_xml.append(f'<image:loc>{get_full_url(experience.main_image.url)}</image:loc>')
+            sitemap_xml.append(f'<image:title>{xml_escape(experience.title)}</image:title>')
+            caption = experience.short_description[:160] if experience.short_description else experience.title
+            sitemap_xml.append(f'<image:caption>{xml_escape(caption)}</image:caption>')
             sitemap_xml.append('</image:image>')
 
         sitemap_xml.append('</url>')
@@ -1087,9 +1106,9 @@ def sitemap_view(request):
         # Add destination image if available
         if destination.image:
             sitemap_xml.append('<image:image>')
-            sitemap_xml.append(f'<image:loc>{base_url}{destination.image.url}</image:loc>')
-            sitemap_xml.append(f'<image:title>{destination.name}, {destination.country}</image:title>')
-            sitemap_xml.append(f'<image:caption>Sustainable travel destination: {destination.name}</image:caption>')
+            sitemap_xml.append(f'<image:loc>{get_full_url(destination.image.url)}</image:loc>')
+            sitemap_xml.append(f'<image:title>{xml_escape(destination.name)}, {xml_escape(destination.country)}</image:title>')
+            sitemap_xml.append(f'<image:caption>Sustainable travel destination: {xml_escape(destination.name)}</image:caption>')
             sitemap_xml.append('</image:image>')
 
         sitemap_xml.append('</url>')
@@ -1125,9 +1144,10 @@ def sitemap_view(request):
         # Add accommodation image if available
         if accommodation.main_image:
             sitemap_xml.append('<image:image>')
-            sitemap_xml.append(f'<image:loc>{base_url}{accommodation.main_image.url}</image:loc>')
-            sitemap_xml.append(f'<image:title>{accommodation.name}</image:title>')
-            sitemap_xml.append(f'<image:caption>{accommodation.short_description[:160] if accommodation.short_description else accommodation.name}</image:caption>')
+            sitemap_xml.append(f'<image:loc>{get_full_url(accommodation.main_image.url)}</image:loc>')
+            sitemap_xml.append(f'<image:title>{xml_escape(accommodation.name)}</image:title>')
+            acc_caption = accommodation.short_description[:160] if accommodation.short_description else accommodation.name
+            sitemap_xml.append(f'<image:caption>{xml_escape(acc_caption)}</image:caption>')
             sitemap_xml.append('</image:image>')
 
         sitemap_xml.append('</url>')
@@ -1156,9 +1176,10 @@ def sitemap_view(request):
         # Add blog featured image if available
         if blog.featured_image:
             sitemap_xml.append('<image:image>')
-            sitemap_xml.append(f'<image:loc>{base_url}{blog.featured_image.url}</image:loc>')
-            sitemap_xml.append(f'<image:title>{blog.title}</image:title>')
-            sitemap_xml.append(f'<image:caption>{blog.excerpt[:160] if blog.excerpt else blog.title}</image:caption>')
+            sitemap_xml.append(f'<image:loc>{get_full_url(blog.featured_image.url)}</image:loc>')
+            sitemap_xml.append(f'<image:title>{xml_escape(blog.title)}</image:title>')
+            blog_caption = blog.excerpt[:160] if blog.excerpt else blog.title
+            sitemap_xml.append(f'<image:caption>{xml_escape(blog_caption)}</image:caption>')
             sitemap_xml.append('</image:image>')
 
         sitemap_xml.append('</url>')
