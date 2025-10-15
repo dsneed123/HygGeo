@@ -690,8 +690,22 @@ Format: Month | Theme | Content Ideas | Key Keywords | Publishing Schedule</div>
                     <div class="tab-content">
                         <!-- Experiences Tab -->
                         <div class="tab-pane fade show active" id="experiences" role="tabpanel">
-                            <div class="mb-3">
-                                <input type="text" id="experienceSearch" class="form-control" placeholder="Search experiences...">
+                            <div class="row mb-3">
+                                <div class="col-md-8">
+                                    <input type="text" id="experienceSearch" class="form-control" placeholder="Search by title or destination...">
+                                </div>
+                                <div class="col-md-4">
+                                    <select id="experienceFilter" class="form-control">
+                                        <option value="featured">Featured Only</option>
+                                        <option value="all">All Experiences</option>
+                                        <option value="not-featured">Not Featured</option>
+                                        <option value="active">Active Only</option>
+                                        <option value="inactive">Inactive Only</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="alert alert-info" id="experienceCount">
+                                <i class="fas fa-info-circle me-2"></i>Showing <strong id="experienceCountText">0</strong> experiences
                             </div>
                             <div class="table-responsive">
                                 <table class="table table-hover">
@@ -706,7 +720,10 @@ Format: Month | Theme | Content Ideas | Key Keywords | Publishing Schedule</div>
                                     </thead>
                                     <tbody id="experiencesTableBody">
                                         {% for exp in all_experiences %}
-                                        <tr data-searchable="{{ exp.title|lower }} {{ exp.destination.name|lower }}">
+                                        <tr data-searchable="{{ exp.title|lower }} {{ exp.destination.name|lower }}"
+                                            data-featured="{{ exp.is_featured|lower }}"
+                                            data-active="{{ exp.is_active|lower }}"
+                                            style="{% if not exp.is_featured %}display: none;{% endif %}">
                                             <td>
                                                 <button class="btn btn-sm toggle-featured-btn {% if exp.is_featured %}btn-warning{% else %}btn-outline-secondary{% endif %}"
                                                         data-id="{{ exp.id }}"
@@ -731,7 +748,7 @@ Format: Month | Theme | Content Ideas | Key Keywords | Publishing Schedule</div>
                                             <td>{{ exp.created_at|date:"M d, Y" }}</td>
                                         </tr>
                                         {% empty %}
-                                        <tr>
+                                        <tr id="experienceNoResults">
                                             <td colspan="5" class="text-center text-muted">No experiences found</td>
                                         </tr>
                                         {% endfor %}
@@ -742,8 +759,22 @@ Format: Month | Theme | Content Ideas | Key Keywords | Publishing Schedule</div>
 
                         <!-- Accommodations Tab -->
                         <div class="tab-pane fade" id="accommodations" role="tabpanel">
-                            <div class="mb-3">
-                                <input type="text" id="accommodationSearch" class="form-control" placeholder="Search accommodations...">
+                            <div class="row mb-3">
+                                <div class="col-md-8">
+                                    <input type="text" id="accommodationSearch" class="form-control" placeholder="Search by name or destination...">
+                                </div>
+                                <div class="col-md-4">
+                                    <select id="accommodationFilter" class="form-control">
+                                        <option value="featured">Featured Only</option>
+                                        <option value="all">All Accommodations</option>
+                                        <option value="not-featured">Not Featured</option>
+                                        <option value="active">Active Only</option>
+                                        <option value="inactive">Inactive Only</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="alert alert-info" id="accommodationCount">
+                                <i class="fas fa-info-circle me-2"></i>Showing <strong id="accommodationCountText">0</strong> accommodations
                             </div>
                             <div class="table-responsive">
                                 <table class="table table-hover">
@@ -758,7 +789,10 @@ Format: Month | Theme | Content Ideas | Key Keywords | Publishing Schedule</div>
                                     </thead>
                                     <tbody id="accommodationsTableBody">
                                         {% for acc in all_accommodations %}
-                                        <tr data-searchable="{{ acc.name|lower }} {{ acc.destination.name|lower }}">
+                                        <tr data-searchable="{{ acc.name|lower }} {{ acc.destination.name|lower }}"
+                                            data-featured="{{ acc.is_featured|lower }}"
+                                            data-active="{{ acc.is_active|lower }}"
+                                            style="{% if not acc.is_featured %}display: none;{% endif %}">
                                             <td>
                                                 <button class="btn btn-sm toggle-featured-btn {% if acc.is_featured %}btn-warning{% else %}btn-outline-secondary{% endif %}"
                                                         data-id="{{ acc.id }}"
@@ -783,7 +817,7 @@ Format: Month | Theme | Content Ideas | Key Keywords | Publishing Schedule</div>
                                             </td>
                                         </tr>
                                         {% empty %}
-                                        <tr>
+                                        <tr id="accommodationNoResults">
                                             <td colspan="5" class="text-center text-muted">No accommodations found</td>
                                         </tr>
                                         {% endfor %}
@@ -1081,6 +1115,11 @@ document.addEventListener('DOMContentLoaded', function() {
                 if (data.success) {
                     // Update button state
                     button.dataset.featured = data.is_featured;
+                    const row = button.closest('tr');
+                    if (row) {
+                        row.dataset.featured = data.is_featured;
+                    }
+
                     if (data.is_featured) {
                         button.classList.remove('btn-outline-secondary');
                         button.classList.add('btn-warning');
@@ -1095,6 +1134,13 @@ document.addEventListener('DOMContentLoaded', function() {
 
                     // Update badge counts
                     updateBadgeCounts();
+
+                    // Refresh filters to show/hide based on current filter setting
+                    if (contentType === 'experience' && typeof filterExperiences === 'function') {
+                        filterExperiences();
+                    } else if (contentType === 'accommodation' && typeof filterAccommodations === 'function') {
+                        filterAccommodations();
+                    }
 
                     // Show success message
                     showToast(data.message, 'success');
@@ -1144,38 +1190,124 @@ document.addEventListener('DOMContentLoaded', function() {
         }, 3000);
     }
 
-    // Search functionality for experiences
-    const experienceSearch = document.getElementById('experienceSearch');
-    if (experienceSearch) {
-        experienceSearch.addEventListener('input', function() {
-            const searchTerm = this.value.toLowerCase();
-            const rows = document.querySelectorAll('#experiencesTableBody tr[data-searchable]');
-            rows.forEach(row => {
-                const searchableText = row.dataset.searchable;
-                if (searchableText.includes(searchTerm)) {
-                    row.style.display = '';
-                } else {
-                    row.style.display = 'none';
-                }
-            });
+    // Filter and search functionality for experiences
+    function filterExperiences() {
+        const searchTerm = document.getElementById('experienceSearch').value.toLowerCase();
+        const filterValue = document.getElementById('experienceFilter').value;
+        const rows = document.querySelectorAll('#experiencesTableBody tr[data-searchable]');
+        let visibleCount = 0;
+
+        rows.forEach(row => {
+            const searchableText = row.dataset.searchable;
+            const isFeatured = row.dataset.featured === 'true';
+            const isActive = row.dataset.active === 'true';
+
+            // Apply search filter
+            const matchesSearch = searchableText.includes(searchTerm);
+
+            // Apply status filter
+            let matchesFilter = true;
+            switch(filterValue) {
+                case 'featured':
+                    matchesFilter = isFeatured;
+                    break;
+                case 'not-featured':
+                    matchesFilter = !isFeatured;
+                    break;
+                case 'active':
+                    matchesFilter = isActive;
+                    break;
+                case 'inactive':
+                    matchesFilter = !isActive;
+                    break;
+                case 'all':
+                    matchesFilter = true;
+                    break;
+            }
+
+            // Show/hide row based on both filters
+            if (matchesSearch && matchesFilter) {
+                row.style.display = '';
+                visibleCount++;
+            } else {
+                row.style.display = 'none';
+            }
         });
+
+        // Update count display
+        document.getElementById('experienceCountText').textContent = visibleCount;
+        updateBadgeCounts();
     }
 
-    // Search functionality for accommodations
-    const accommodationSearch = document.getElementById('accommodationSearch');
-    if (accommodationSearch) {
-        accommodationSearch.addEventListener('input', function() {
-            const searchTerm = this.value.toLowerCase();
-            const rows = document.querySelectorAll('#accommodationsTableBody tr[data-searchable]');
-            rows.forEach(row => {
-                const searchableText = row.dataset.searchable;
-                if (searchableText.includes(searchTerm)) {
-                    row.style.display = '';
-                } else {
-                    row.style.display = 'none';
-                }
-            });
+    const experienceSearch = document.getElementById('experienceSearch');
+    const experienceFilter = document.getElementById('experienceFilter');
+    if (experienceSearch) {
+        experienceSearch.addEventListener('input', filterExperiences);
+    }
+    if (experienceFilter) {
+        experienceFilter.addEventListener('change', filterExperiences);
+        // Initialize count on page load
+        setTimeout(filterExperiences, 100);
+    }
+
+    // Filter and search functionality for accommodations
+    function filterAccommodations() {
+        const searchTerm = document.getElementById('accommodationSearch').value.toLowerCase();
+        const filterValue = document.getElementById('accommodationFilter').value;
+        const rows = document.querySelectorAll('#accommodationsTableBody tr[data-searchable]');
+        let visibleCount = 0;
+
+        rows.forEach(row => {
+            const searchableText = row.dataset.searchable;
+            const isFeatured = row.dataset.featured === 'true';
+            const isActive = row.dataset.active === 'true';
+
+            // Apply search filter
+            const matchesSearch = searchableText.includes(searchTerm);
+
+            // Apply status filter
+            let matchesFilter = true;
+            switch(filterValue) {
+                case 'featured':
+                    matchesFilter = isFeatured;
+                    break;
+                case 'not-featured':
+                    matchesFilter = !isFeatured;
+                    break;
+                case 'active':
+                    matchesFilter = isActive;
+                    break;
+                case 'inactive':
+                    matchesFilter = !isActive;
+                    break;
+                case 'all':
+                    matchesFilter = true;
+                    break;
+            }
+
+            // Show/hide row based on both filters
+            if (matchesSearch && matchesFilter) {
+                row.style.display = '';
+                visibleCount++;
+            } else {
+                row.style.display = 'none';
+            }
         });
+
+        // Update count display
+        document.getElementById('accommodationCountText').textContent = visibleCount;
+        updateBadgeCounts();
+    }
+
+    const accommodationSearch = document.getElementById('accommodationSearch');
+    const accommodationFilter = document.getElementById('accommodationFilter');
+    if (accommodationSearch) {
+        accommodationSearch.addEventListener('input', filterAccommodations);
+    }
+    if (accommodationFilter) {
+        accommodationFilter.addEventListener('change', filterAccommodations);
+        // Initialize count on page load
+        setTimeout(filterAccommodations, 100);
     }
 
     // Add click handlers to make entire cards clickable

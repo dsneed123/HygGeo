@@ -89,7 +89,8 @@ def index(request):
         cache.set('index_featured_destinations', featured_destinations, 60 * 15)
 
     # Try to get cached featured experiences (cache for 10 minutes)
-    featured_experiences = cache.get('index_featured_experiences')
+    # Changed cache key to invalidate old cache with fallback logic
+    featured_experiences = cache.get('index_featured_experiences_v2')
     if featured_experiences is None:
         # Optimized query: ONLY show featured experiences, no fallback
         featured_experiences = Experience.objects.filter(
@@ -98,7 +99,7 @@ def index(request):
         ).select_related(
             'destination', 'experience_type', 'provider'
         ).only(
-            'id', 'title', 'description', 'main_image', 'price_from',
+            'id', 'title', 'description', 'main_image', 'price_from', 'slug',
             'destination__id', 'destination__name',
             'experience_type__id', 'experience_type__name',
             'provider__id', 'provider__name'
@@ -108,22 +109,18 @@ def index(request):
         featured_experiences = list(featured_experiences)
 
         # Cache for 10 minutes
-        cache.set('index_featured_experiences', featured_experiences, 60 * 10)
+        cache.set('index_featured_experiences_v2', featured_experiences, 60 * 10)
 
     # Try to get cached featured accommodations (cache for 10 minutes)
     featured_accommodations = cache.get('index_featured_accommodations')
     if featured_accommodations is None:
         # Optimized query for featured accommodations - ONLY show featured ones
+        # Note: Removed .only() to ensure ImageField loads properly
         featured_accommodations = Accommodation.objects.filter(
             is_featured=True,
             is_active=True
         ).select_related(
             'destination', 'provider'
-        ).only(
-            'id', 'name', 'description', 'short_description', 'main_image',
-            'slug', 'accommodation_type', 'price_per_night_from',
-            'destination__id', 'destination__name',
-            'provider__id', 'provider__name'
         ).order_by('?')[:8]
 
         # Convert to list to cache
@@ -429,8 +426,9 @@ def admin_dashboard(request):
     stats['featured_accommodations_count'] = featured_accommodations
 
     # Get all experiences and accommodations for featured management
-    all_experiences = Experience.objects.select_related('destination').order_by('-created_at')[:50]
-    all_accommodations = Accommodation.objects.select_related('destination').order_by('-created_at')[:50]
+    # Fetch all to allow proper filtering in the UI
+    all_experiences = Experience.objects.select_related('destination').order_by('-created_at')
+    all_accommodations = Accommodation.objects.select_related('destination').order_by('-created_at')
 
     context = {
         'stats': stats,
@@ -1636,8 +1634,9 @@ def toggle_featured_status(request):
             item = Experience.objects.get(id=content_id)
             item.is_featured = not item.is_featured
             item.save()
-            # Clear cache
+            # Clear cache (both old and new keys)
             cache.delete('index_featured_experiences')
+            cache.delete('index_featured_experiences_v2')
         elif content_type == 'accommodation':
             item = Accommodation.objects.get(id=content_id)
             item.is_featured = not item.is_featured
