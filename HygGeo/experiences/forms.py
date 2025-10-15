@@ -576,6 +576,7 @@ class TravelBlogForm(forms.ModelForm):
         fields = [
             'title', 'excerpt', 'content', 'featured_image',
             'experience', 'accommodation', 'destination',
+            'meta_title', 'meta_description', 'tags',
             'is_published'
         ]
         widgets = {
@@ -612,6 +613,21 @@ class TravelBlogForm(forms.ModelForm):
                 'class': 'form-select autocomplete-select',
                 'data-placeholder': 'Type to search destinations...'
             }),
+            'meta_title': forms.TextInput(attrs={
+                'class': 'form-control',
+                'placeholder': 'SEO title (leave blank to use main title)',
+                'maxlength': 60
+            }),
+            'meta_description': forms.Textarea(attrs={
+                'class': 'form-control',
+                'rows': 3,
+                'placeholder': 'SEO description for search results (120-160 characters)',
+                'maxlength': 160
+            }),
+            'tags': forms.TextInput(attrs={
+                'class': 'form-control',
+                'placeholder': 'adventure, solo travel, budget (comma-separated)'
+            }),
             'is_published': forms.CheckboxInput(attrs={
                 'class': 'form-check-input'
             }),
@@ -625,6 +641,9 @@ class TravelBlogForm(forms.ModelForm):
         self.fields['accommodation'].required = False
         self.fields['destination'].required = False
         self.fields['featured_image'].required = False
+        self.fields['meta_title'].required = False
+        self.fields['meta_description'].required = False
+        self.fields['tags'].required = False
 
         # Add help text
         self.fields['title'].help_text = 'Give your travel blog post a catchy title'
@@ -634,7 +653,18 @@ class TravelBlogForm(forms.ModelForm):
         self.fields['experience'].help_text = 'Link to a specific experience (optional)'
         self.fields['accommodation'].help_text = 'Link to a specific accommodation (optional)'
         self.fields['destination'].help_text = 'Main destination featured in this post (optional)'
+        self.fields['meta_title'].help_text = 'Custom title for search engines (leave blank to use main title)'
+        self.fields['meta_description'].help_text = 'Description shown in search results (improves click-through rate)'
+        self.fields['tags'].help_text = 'Add relevant tags (comma-separated) to help people find your post'
         self.fields['is_published'].help_text = 'Check to publish immediately, uncheck to save as draft'
+
+    def clean_tags(self):
+        """Convert comma-separated tags to a list"""
+        tags = self.cleaned_data.get('tags', '')
+        if isinstance(tags, str):
+            # Split by comma and clean up whitespace
+            return [tag.strip() for tag in tags.split(',') if tag.strip()]
+        return tags
 
 
 class BlogCommentForm(forms.ModelForm):

@@ -14044,3 +14044,103 @@ INFO 2025-10-14 18:57:12,629 basehttp 39268 27328 "GET /admin/dashboard/ HTTP/1.
 INFO 2025-10-14 18:57:21,786 basehttp 39268 27328 "POST /accounts/admin/toggle-featured/ HTTP/1.1" 200 74
 INFO 2025-10-14 18:57:25,220 basehttp 39268 27328 "GET / HTTP/1.1" 200 99317
 INFO 2025-10-14 18:57:28,120 basehttp 39268 27328 "GET /admin/dashboard/ HTTP/1.1" 200 92118
+INFO 2025-10-14 23:26:11,496 autoreload 52056 44716 Watching for file changes with StatReloader
+INFO 2025-10-14 23:26:20,222 basehttp 52056 63656 "GET / HTTP/1.1" 200 93382
+INFO 2025-10-14 23:26:20,766 basehttp 52056 63656 "GET /static/css/base.css HTTP/1.1" 200 5306
+INFO 2025-10-14 23:26:20,774 basehttp 52056 56824 "GET /static/js/navbar.js HTTP/1.1" 200 2732
+INFO 2025-10-14 23:26:22,388 basehttp 52056 63244 "GET /static/site.webmanifest HTTP/1.1" 200 263
+INFO 2025-10-14 23:26:22,929 basehttp 52056 56824 "GET /static/favicon.ico HTTP/1.1" 200 15406
+INFO 2025-10-14 23:26:30,940 basehttp 52056 56824 "GET /accounts/login/ HTTP/1.1" 200 26844
+INFO 2025-10-14 23:26:38,912 basehttp 52056 56824 "POST /accounts/login/ HTTP/1.1" 200 27075
+INFO 2025-10-14 23:26:45,308 basehttp 52056 56824 "POST /accounts/login/ HTTP/1.1" 200 27075
+INFO 2025-10-14 23:26:51,606 basehttp 52056 56824 "POST /accounts/login/ HTTP/1.1" 200 27075
+INFO 2025-10-14 23:26:57,289 basehttp 52056 56824 "POST /accounts/login/ HTTP/1.1" 200 27075
+INFO 2025-10-14 23:27:05,436 basehttp 52056 56824 "POST /accounts/login/ HTTP/1.1" 200 27075
+INFO 2025-10-14 23:27:15,760 basehttp 52056 58816 "GET / HTTP/1.1" 200 99361
+INFO 2025-10-14 23:27:17,388 basehttp 52056 58816 "GET /admin/dashboard/ HTTP/1.1" 200 98897
+INFO 2025-10-14 23:27:53,233 basehttp 52056 58816 "POST /accounts/admin/generate-blog/ HTTP/1.1" 302 0
+INFO 2025-10-14 23:27:53,274 basehttp 52056 58816 "GET /experiences/blogs/most-sustainable-1-experiences-in-seattle/edit/ HTTP/1.1" 200 46596
+INFO 2025-10-14 23:28:09,490 basehttp 52056 58816 "GET / HTTP/1.1" 200 99370
+INFO 2025-10-14 23:28:15,113 basehttp 52056 58816 "GET /admin/dashboard/ HTTP/1.1" 200 98897
+INFO 2025-10-14 23:28:27,879 basehttp 52056 58816 "POST /accounts/admin/generate-blog/ HTTP/1.1" 302 0
+INFO 2025-10-14 23:28:27,920 basehttp 52056 58816 "GET /experiences/blogs/most-sustainable-1-experiences-in-seattle-1/edit/ HTTP/1.1" 200 46601
+INFO 2025-10-14 23:28:35,515 basehttp 52056 58816 "POST /experiences/blogs/most-sustainable-1-experiences-in-seattle-1/edit/ HTTP/1.1" 302 0
+INFO 2025-10-14 23:28:35,564 basehttp 52056 58816 "GET /experiences/blogs/most-sustainable-1-experiences-in-seattle-1/ HTTP/1.1" 200 40436
+INFO 2025-10-14 23:29:47,488 basehttp 52056 58816 "GET /experiences/blogs/create/ HTTP/1.1" 200 53969
+INFO 2025-10-14 23:30:09,460 basehttp 52056 58816 "POST /experiences/blogs/create/ HTTP/1.1" 302 0
+INFO 2025-10-14 23:30:09,507 basehttp 52056 58816 "GET /experiences/blogs/test-1/ HTTP/1.1" 200 41619
+INFO 2025-10-14 23:30:14,026 basehttp 52056 58816 "GET /experiences/blogs/ HTTP/1.1" 200 47521
+INFO 2025-10-14 23:30:25,026 basehttp 52056 58816 "GET /admin/dashboard/ HTTP/1.1" 200 98897
+INFO 2025-10-14 23:30:26,638 basehttp 52056 58816 "GET /admin/dashboard/ HTTP/1.1" 200 98897
+INFO 2025-10-14 23:30:52,140 basehttp 52056 58816 "POST /accounts/admin/generate-blog/ HTTP/1.1" 302 0
+INFO 2025-10-14 23:30:52,170 basehttp 52056 58816 "GET /admin/dashboard/ HTTP/1.1" 200 99329
+INFO 2025-10-14 23:30:55,895 basehttp 52056 58816 "GET /admin/dashboard/ HTTP/1.1" 200 106509
+INFO 2025-10-14 23:31:00,432 basehttp 52056 58816 "GET /admin/dashboard/ HTTP/1.1" 200 106509
+INFO 2025-10-14 23:31:00,497 basehttp 52056 57512 "GET /static/js/navbar.js HTTP/1.1" 200 2732
+INFO 2025-10-14 23:31:00,497 basehttp 52056 58816 "GET /static/css/base.css HTTP/1.1" 200 5306
+INFO 2025-10-14 23:31:01,556 basehttp 52056 58816 "GET /static/favicon.ico HTTP/1.1" 200 15406
+INFO 2025-10-14 23:31:01,642 basehttp 52056 60704 "GET /static/site.webmanifest HTTP/1.1" 200 263
+INFO 2025-10-14 23:31:45,647 autoreload 52056 44716 C:\Users\DLSne\OneDrive\Desktop\Code\webdev\HygGeo\HygGeo\accounts\views.py changed, reloading.
+INFO 2025-10-14 23:31:47,242 autoreload 18664 23584 Watching for file changes with StatReloader
+INFO 2025-10-14 23:32:11,718 autoreload 18664 23584 C:\Users\DLSne\OneDrive\Desktop\Code\webdev\HygGeo\HygGeo\accounts\urls.py changed, reloading.
+INFO 2025-10-14 23:32:13,249 autoreload 67016 60868 Watching for file changes with StatReloader
+INFO 2025-10-14 23:34:48,197 autoreload 63256 63512 Watching for file changes with StatReloader
+INFO 2025-10-14 23:38:32,709 basehttp 67016 55524 "GET /admin/dashboard/ HTTP/1.1" 200 112057
+WARNING 2025-10-14 23:38:54,213 log 67016 55524 Not Found: /admin/get-items-for-destination/
+WARNING 2025-10-14 23:38:54,214 basehttp 67016 55524 "GET /admin/get-items-for-destination/?destination=1&type=experiences HTTP/1.1" 404 11174
+WARNING 2025-10-14 23:39:10,140 log 67016 55524 Not Found: /admin/get-items-for-destination/
+WARNING 2025-10-14 23:39:10,140 basehttp 67016 55524 "GET /admin/get-items-for-destination/?destination=1&type=experiences HTTP/1.1" 404 11174
+INFO 2025-10-14 23:39:29,156 basehttp 67016 55524 "POST /accounts/admin/generate-blog/ HTTP/1.1" 302 0
+INFO 2025-10-14 23:39:29,179 basehttp 67016 55524 "GET /admin/dashboard/ HTTP/1.1" 200 112436
+INFO 2025-10-14 23:40:31,006 autoreload 67016 60868 C:\Users\DLSne\OneDrive\Desktop\Code\webdev\HygGeo\HygGeo\accounts\views.py changed, reloading.
+INFO 2025-10-14 23:40:32,548 autoreload 56656 56268 Watching for file changes with StatReloader
+INFO 2025-10-14 23:40:39,053 autoreload 56656 56268 C:\Users\DLSne\OneDrive\Desktop\Code\webdev\HygGeo\HygGeo\accounts\views.py changed, reloading.
+INFO 2025-10-14 23:40:40,536 autoreload 47848 65540 Watching for file changes with StatReloader
+INFO 2025-10-14 23:42:40,650 autoreload 47848 65540 C:\Users\DLSne\OneDrive\Desktop\Code\webdev\HygGeo\HygGeo\accounts\views.py changed, reloading.
+INFO 2025-10-14 23:42:42,202 autoreload 60980 65744 Watching for file changes with StatReloader
+INFO 2025-10-14 23:44:24,478 autoreload 60980 65744 C:\Users\DLSne\OneDrive\Desktop\Code\webdev\HygGeo\HygGeo\accounts\views.py changed, reloading.
+INFO 2025-10-14 23:44:25,911 autoreload 65516 49764 Watching for file changes with StatReloader
+INFO 2025-10-14 23:44:43,015 autoreload 65516 49764 C:\Users\DLSne\OneDrive\Desktop\Code\webdev\HygGeo\HygGeo\accounts\views.py changed, reloading.
+INFO 2025-10-14 23:44:44,551 autoreload 59656 66728 Watching for file changes with StatReloader
+INFO 2025-10-14 23:46:47,178 basehttp 59656 55172 "GET /admin/dashboard/ HTTP/1.1" 200 112057
+INFO 2025-10-14 23:46:47,648 basehttp 59656 55172 "GET /static/css/base.css HTTP/1.1" 200 5306
+INFO 2025-10-14 23:46:47,667 basehttp 59656 65596 "GET /static/js/navbar.js HTTP/1.1" 200 2732
+INFO 2025-10-14 23:46:48,961 basehttp 59656 63196 "GET /static/site.webmanifest HTTP/1.1" 200 263
+INFO 2025-10-14 23:46:49,424 basehttp 59656 65596 "GET /static/favicon.ico HTTP/1.1" 200 15406
+WARNING 2025-10-14 23:46:56,134 log 59656 65596 Not Found: /admin/get-items-for-destination/
+WARNING 2025-10-14 23:46:56,134 basehttp 59656 65596 "GET /admin/get-items-for-destination/?destination=1&type=accommodations HTTP/1.1" 404 11177
+WARNING 2025-10-14 23:46:58,004 log 59656 65596 Not Found: /admin/get-items-for-destination/
+WARNING 2025-10-14 23:46:58,005 basehttp 59656 65596 "GET /admin/get-items-for-destination/?destination=2&type=accommodations HTTP/1.1" 404 11177
+WARNING 2025-10-14 23:46:59,744 log 59656 65596 Not Found: /admin/get-items-for-destination/
+WARNING 2025-10-14 23:46:59,744 basehttp 59656 65596 "GET /admin/get-items-for-destination/?destination=3&type=accommodations HTTP/1.1" 404 11177
+INFO 2025-10-14 23:47:12,867 basehttp 59656 65596 "POST /accounts/admin/generate-blog/ HTTP/1.1" 302 0
+INFO 2025-10-14 23:47:12,894 basehttp 59656 65596 "GET /experiences/blogs/most-sustainable-1-accommodations-in-seattle/edit/ HTTP/1.1" 200 46559
+INFO 2025-10-14 23:47:20,148 basehttp 59656 65596 "POST /experiences/blogs/most-sustainable-1-accommodations-in-seattle/edit/ HTTP/1.1" 302 0
+INFO 2025-10-14 23:47:20,184 basehttp 59656 65596 "GET /experiences/blogs/my-blogs/ HTTP/1.1" 200 53216
+INFO 2025-10-14 23:47:22,979 basehttp 59656 65596 "GET /experiences/blogs/most-sustainable-1-accommodations-in-seattle/edit/ HTTP/1.1" 200 46255
+INFO 2025-10-14 23:47:37,767 basehttp 59656 65596 "GET /experiences/blogs/ HTTP/1.1" 200 47521
+INFO 2025-10-14 23:47:58,546 basehttp 59656 65596 "GET /admin/dashboard/ HTTP/1.1" 200 112057
+WARNING 2025-10-14 23:49:35,902 log 59656 11152 Not Found: /admin/get-items-for-destination/
+WARNING 2025-10-14 23:49:35,902 basehttp 59656 11152 "GET /admin/get-items-for-destination/?destination=1&type=experiences HTTP/1.1" 404 11174
+INFO 2025-10-14 23:50:24,836 autoreload 59656 66728 C:\Users\DLSne\OneDrive\Desktop\Code\webdev\HygGeo\HygGeo\accounts\views.py changed, reloading.
+INFO 2025-10-14 23:50:26,432 autoreload 37336 65796 Watching for file changes with StatReloader
+INFO 2025-10-14 23:50:35,470 autoreload 37336 65796 C:\Users\DLSne\OneDrive\Desktop\Code\webdev\HygGeo\HygGeo\accounts\views.py changed, reloading.
+INFO 2025-10-14 23:50:36,865 autoreload 63948 66256 Watching for file changes with StatReloader
+INFO 2025-10-14 23:50:46,222 autoreload 63948 66256 C:\Users\DLSne\OneDrive\Desktop\Code\webdev\HygGeo\HygGeo\accounts\views.py changed, reloading.
+INFO 2025-10-14 23:50:47,611 autoreload 64088 62648 Watching for file changes with StatReloader
+INFO 2025-10-14 23:50:48,094 basehttp 64088 60024 "POST /accounts/admin/generate-blog/ HTTP/1.1" 302 0
+INFO 2025-10-14 23:50:48,130 basehttp 64088 60024 "GET /experiences/blogs/top-1-experiences-in-seattle/edit/ HTTP/1.1" 200 46493
+INFO 2025-10-14 23:52:51,530 basehttp 64088 53688 "GET / HTTP/1.1" 200 99408
+INFO 2025-10-14 23:52:52,484 autoreload 64088 62648 C:\Users\DLSne\OneDrive\Desktop\Code\webdev\HygGeo\HygGeo\accounts\views.py changed, reloading.
+INFO 2025-10-14 23:52:54,055 autoreload 66380 59500 Watching for file changes with StatReloader
+INFO 2025-10-14 23:52:55,038 basehttp 66380 60484 "GET /experiences/accommodations/test1/ HTTP/1.1" 200 36172
+INFO 2025-10-14 23:53:29,184 basehttp 66380 60484 "GET /admin/dashboard/ HTTP/1.1" 200 112057
+INFO 2025-10-14 23:53:55,131 basehttp 66380 60484 "POST /accounts/admin/generate-blog/ HTTP/1.1" 302 0
+INFO 2025-10-14 23:53:55,191 basehttp 66380 60484 "GET /experiences/blogs/most-sustainable-1-experiences-in-seattle-2/edit/ HTTP/1.1" 200 46597
+INFO 2025-10-14 23:54:00,894 basehttp 66380 60484 "GET /experiences/blogs/most-sustainable-1-experiences-in-seattle-2/edit/ HTTP/1.1" 200 46187
+INFO 2025-10-14 23:54:01,198 basehttp 66380 60484 "GET /static/css/base.css HTTP/1.1" 200 5306
+INFO 2025-10-14 23:54:01,387 basehttp 66380 19532 "GET /static/js/navbar.js HTTP/1.1" 200 2732
+INFO 2025-10-14 23:54:01,572 basehttp 66380 19532 "GET /static/favicon.ico HTTP/1.1" 200 15406
+INFO 2025-10-14 23:54:01,878 basehttp 66380 59920 "GET /static/site.webmanifest HTTP/1.1" 200 263
+INFO 2025-10-14 23:54:05,977 basehttp 66380 19532 "POST /experiences/blogs/most-sustainable-1-experiences-in-seattle-2/edit/ HTTP/1.1" 302 0
+INFO 2025-10-14 23:54:06,023 basehttp 66380 19532 "GET /experiences/blogs/my-blogs/ HTTP/1.1" 200 58102

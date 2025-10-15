@@ -89,4 +89,8 @@ urlpatterns = [
 
     # Admin featured content management
     path('admin/toggle-featured/', views.toggle_featured_status, name='toggle_featured_status'),
+
+    # Blog generator
+    path('admin/generate-blog/', views.generate_top_10_blog, name='generate_top_10_blog'),
+    path('admin/get-items-for-destination/', views.get_items_for_destination, name='get_items_for_destination'),
 ]

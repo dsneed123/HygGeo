@@ -831,6 +831,218 @@ Format: Month | Theme | Content Ideas | Key Keywords | Publishing Schedule</div>
         </div>
     </div>
 
+    <!-- Top 10 Blog Generator Section -->
+    <div class="row mb-5">
+        <div class="col-12">
+            <h3 class="fw-bold mb-4" style="color: var(--hygge-green);">
+                <i class="fas fa-magic me-2"></i>Top 10 Blog Generator
+            </h3>
+            <p class="text-muted mb-4">Automatically generate "Top 10" style blog posts with experiences and accommodations</p>
+        </div>
+    </div>
+
+    <div class="row mb-5">
+        <div class="col-12">
+            <div class="card card-hygge">
+                <div class="card-body p-4">
+                    <form id="blogGeneratorForm" method="POST" action="{% url 'generate_top_10_blog' %}">
+                        {% csrf_token %}
+                        <div class="row g-3">
+                            <!-- Step 1: Basic Settings -->
+                            <div class="col-12">
+                                <h5 class="fw-bold mb-3" style="color: var(--hygge-green);">
+                                    <i class="fas fa-cog me-2"></i>Step 1: Basic Settings
+                                </h5>
+                            </div>
+
+                            <div class="col-md-6">
+                                <label class="form-label fw-bold">Blog Type</label>
+                                <select name="blog_type" id="blogType" class="form-select" required onchange="updateItemSelection()">
+                                    <option value="experiences">Top Experiences</option>
+                                    <option value="accommodations">Top Accommodations</option>
+                                    <option value="mixed">Mixed (Experiences + Accommodations)</option>
+                                </select>
+                            </div>
+
+                            <div class="col-md-6">
+                                <label class="form-label fw-bold">Destination</label>
+                                <select name="destination" id="destinationSelect" class="form-select" required onchange="loadItemsForDestination()">
+                                    <option value="">Select Destination...</option>
+                                    {% for dest in all_destinations %}
+                                    <option value="{{ dest.id }}">{{ dest.name }}, {{ dest.country }}</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+
+                            <!-- Step 2: SEO Title Template -->
+                            <div class="col-12 mt-4">
+                                <h5 class="fw-bold mb-3" style="color: var(--hygge-green);">
+                                    <i class="fas fa-search me-2"></i>Step 2: SEO Title Template
+                                </h5>
+                            </div>
+
+                            <div class="col-12">
+                                <label class="form-label fw-bold">Title Template (SEO Optimized)</label>
+                                <select id="titleTemplate" class="form-select" onchange="updateTitlePreview()">
+                                    <option value="">-- Select a Template or Enter Custom --</option>
+                                    <optgroup label="Top X Format">
+                                        <option value="Top {count} {type} in {destination} for {year}">Top {count} {type} in {destination} for {year}</option>
+                                        <option value="{count} Best {type} in {destination} ({year} Guide)">{count} Best {type} in {destination} ({year} Guide)</option>
+                                        <option value="The Ultimate Guide to {destination}: Top {count} {type}">The Ultimate Guide to {destination}: Top {count} {type}</option>
+                                    </optgroup>
+                                    <optgroup label="Sustainable Focus">
+                                        <option value="{count} Most Sustainable {type} in {destination}">{count} Most Sustainable {type} in {destination}</option>
+                                        <option value="Eco-Friendly Travel: {count} Green {type} in {destination}">Eco-Friendly Travel: {count} Green {type} in {destination}</option>
+                                        <option value="{count} Sustainable {type} You Must Try in {destination}">{count} Sustainable {type} You Must Try in {destination}</option>
+                                    </optgroup>
+                                    <optgroup label="Hygge Focus">
+                                        <option value="{count} Hygge-Inspired {type} in {destination}">{count} Hygge-Inspired {type} in {destination}</option>
+                                        <option value="Experience Hygge: {count} Cozy {type} in {destination}">Experience Hygge: {count} Cozy {type} in {destination}</option>
+                                    </optgroup>
+                                    <optgroup label="Action-Oriented">
+                                        <option value="{count} Amazing {type} You Can't Miss in {destination}">{count} Amazing {type} You Can't Miss in {destination}</option>
+                                        <option value="Discover {destination}: {count} Must-Visit {type}">Discover {destination}: {count} Must-Visit {type}</option>
+                                        <option value="Your {destination} Bucket List: {count} Essential {type}">Your {destination} Bucket List: {count} Essential {type}</option>
+                                    </optgroup>
+                                </select>
+                                <div class="form-text">Variables: {count}, {type}, {destination}, {year}</div>
+                            </div>
+
+                            <div class="col-12">
+                                <label class="form-label fw-bold">Custom Title (Optional)</label>
+                                <input type="text" name="custom_title" id="customTitle" class="form-control"
+                                       placeholder="Leave blank to use template above" onchange="updateTitlePreview()">
+                                <div id="titlePreview" class="mt-2 p-3 border rounded" style="background: #f8f9fa; display: none;">
+                                    <strong>Preview:</strong> <span id="titlePreviewText"></span>
+                                </div>
+                            </div>
+
+                            <!-- Step 3: Selection Method -->
+                            <div class="col-12 mt-4">
+                                <h5 class="fw-bold mb-3" style="color: var(--hygge-green);">
+                                    <i class="fas fa-list-check me-2"></i>Step 3: Select Items
+                                </h5>
+                            </div>
+
+                            <div class="col-12">
+                                <label class="form-label fw-bold">Selection Method</label>
+                                <div class="btn-group w-100" role="group">
+                                    <input type="radio" class="btn-check" name="selection_method" id="autoSelect" value="auto" checked onchange="toggleSelectionMethod()">
+                                    <label class="btn btn-outline-primary" for="autoSelect">
+                                        <i class="fas fa-wand-magic-sparkles me-2"></i>Auto-Select
+                                    </label>
+
+                                    <input type="radio" class="btn-check" name="selection_method" id="manualSelect" value="manual" onchange="toggleSelectionMethod()">
+                                    <label class="btn btn-outline-success" for="manualSelect">
+                                        <i class="fas fa-hand-pointer me-2"></i>Manual Selection
+                                    </label>
+                                </div>
+                            </div>
+
+                            <!-- Auto Selection Options -->
+                            <div id="autoSelectionOptions" class="col-12">
+                                <div class="row g-3">
+                                    <div class="col-md-6">
+                                        <label class="form-label fw-bold">Number of Items</label>
+                                        <select name="item_count" class="form-select" required>
+                                            <option value="5">Top 5</option>
+                                            <option value="10" selected>Top 10</option>
+                                            <option value="15">Top 15</option>
+                                            <option value="20">Top 20</option>
+                                        </select>
+                                    </div>
+
+                                    <div class="col-md-6">
+                                        <label class="form-label fw-bold">Filter By</label>
+                                        <select name="filter_by" id="filterBy" class="form-select">
+                                            <option value="sustainability">Most Sustainable</option>
+                                            <option value="hygge">Most Hygge</option>
+                                            <option value="featured">Featured Only</option>
+                                            <option value="recent">Most Recent</option>
+                                            <option value="random">Random Selection</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Manual Selection Options -->
+                            <div id="manualSelectionOptions" class="col-12" style="display: none;">
+                                <div class="alert alert-info">
+                                    <i class="fas fa-info-circle me-2"></i>Select destination first, then check the items you want to include
+                                </div>
+
+                                <div id="manualItemsList" class="border rounded p-3" style="max-height: 400px; overflow-y: auto; background: #f8f9fa;">
+                                    <p class="text-muted text-center py-4">Please select a destination to see available items</p>
+                                </div>
+                            </div>
+
+                            <!-- Additional Options -->
+                            <div class="col-12 mt-4">
+                                <h5 class="fw-bold mb-3" style="color: var(--hygge-green);">
+                                    <i class="fas fa-sliders me-2"></i>Additional Options
+                                </h5>
+                            </div>
+
+                            <div class="col-md-6">
+                                <label class="form-label fw-bold">Publish Immediately</label>
+                                <select name="publish" class="form-select">
+                                    <option value="false" selected>Save as Draft</option>
+                                    <option value="true">Publish Now</option>
+                                </select>
+                            </div>
+
+                            <div class="col-md-6">
+                                <label class="form-label fw-bold">Include Introduction</label>
+                                <select id="includeIntro" class="form-select">
+                                    <option value="auto" selected>Auto-Generate</option>
+                                    <option value="custom">Custom Introduction</option>
+                                    <option value="none">No Introduction</option>
+                                </select>
+                            </div>
+
+                            <div id="customIntroSection" class="col-12" style="display: none;">
+                                <label class="form-label fw-bold">Custom Introduction</label>
+                                <textarea name="custom_intro" class="form-control" rows="3"
+                                          placeholder="Write your custom introduction paragraph..."></textarea>
+                            </div>
+
+                            <div class="col-12">
+                                <button type="submit" class="btn btn-hygge btn-lg">
+                                    <i class="fas fa-magic me-2"></i>Generate Blog Post
+                                </button>
+                                <button type="button" class="btn btn-outline-secondary btn-lg ms-2" id="previewBtn">
+                                    <i class="fas fa-eye me-2"></i>Preview
+                                </button>
+                            </div>
+                        </div>
+                    </form>
+
+                    <!-- Preview Section (hidden by default) -->
+                    <div id="previewSection" class="mt-4 pt-4 border-top" style="display: none;">
+                        <h5 class="fw-bold mb-3">Preview</h5>
+                        <div id="previewContent" class="border rounded p-4" style="background: var(--hygge-warm-white);"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Quick Tips -->
+    <div class="row mb-5">
+        <div class="col-12">
+            <div class="alert alert-info">
+                <h6 class="fw-bold"><i class="fas fa-lightbulb me-2"></i>Tips for Great Top 10 Posts:</h6>
+                <ul class="mb-0 small">
+                    <li>Use specific destinations for better targeting (e.g., "Copenhagen" not "Denmark")</li>
+                    <li>Filter by sustainability or hygge factor to align with your brand</li>
+                    <li>Each item will automatically include its booking link</li>
+                    <li>Add SEO meta title and description after generation for better search visibility</li>
+                    <li>Generated posts are saved to your drafts - review and customize before publishing</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
     <!-- Management Section -->
     <div class="row mb-5">
         <div class="col-12">
@@ -1392,6 +1604,125 @@ document.addEventListener('DOMContentLoaded', function() {
             return new bootstrap.Tooltip(tooltipTriggerEl);
         });
     }
+
+    // Blog Generator Functions
+    window.updateTitlePreview = function() {
+        const template = document.getElementById('titleTemplate').value;
+        const customTitle = document.getElementById('customTitle').value;
+        const destination = document.getElementById('destinationSelect').selectedOptions[0]?.text || '{destination}';
+        const blogType = document.getElementById('blogType').value;
+        const itemCount = document.querySelector('select[name="item_count"]').value || '10';
+        const preview = document.getElementById('titlePreview');
+        const previewText = document.getElementById('titlePreviewText');
+
+        if (customTitle) {
+            previewText.textContent = customTitle;
+            preview.style.display = 'block';
+        } else if (template) {
+            const year = new Date().getFullYear();
+            const typeMap = {
+                'experiences': 'Experiences',
+                'accommodations': 'Accommodations',
+                'mixed': 'Things to Do'
+            };
+            const type = typeMap[blogType];
+
+            const title = template
+                .replace(/{count}/g, itemCount)
+                .replace(/{type}/g, type)
+                .replace(/{destination}/g, destination.split(',')[0])
+                .replace(/{year}/g, year);
+
+            previewText.textContent = title;
+            preview.style.display = 'block';
+        } else {
+            preview.style.display = 'none';
+        }
+    };
+
+    window.toggleSelectionMethod = function() {
+        const autoOptions = document.getElementById('autoSelectionOptions');
+        const manualOptions = document.getElementById('manualSelectionOptions');
+        const autoRadio = document.getElementById('autoSelect');
+
+        if (autoRadio.checked) {
+            autoOptions.style.display = 'block';
+            manualOptions.style.display = 'none';
+        } else {
+            autoOptions.style.display = 'none';
+            manualOptions.style.display = 'block';
+            loadItemsForDestination();
+        }
+    };
+
+    window.loadItemsForDestination = function() {
+        const destinationId = document.getElementById('destinationSelect').value;
+        const blogType = document.getElementById('blogType').value;
+        const manualSelect = document.getElementById('manualSelect');
+
+        if (!manualSelect.checked || !destinationId) {
+            return;
+        }
+
+        const itemsList = document.getElementById('manualItemsList');
+        itemsList.innerHTML = '<div class="text-center py-3"><i class="fas fa-spinner fa-spin me-2"></i>Loading items...</div>';
+
+        // Fetch items via AJAX
+        fetch(`/admin/get-items-for-destination/?destination=${destinationId}&type=${blogType}`)
+            .then(response => response.json())
+            .then(data => {
+                if (data.items && data.items.length > 0) {
+                    let html = '<div class="form-check-list">';
+                    data.items.forEach(item => {
+                        html += `
+                            <div class="form-check p-3 mb-2 border rounded" style="background: white;">
+                                <input class="form-check-input" type="checkbox" name="manual_items" value="${item.id}" id="item-${item.id}">
+                                <label class="form-check-label w-100" for="item-${item.id}">
+                                    <div class="d-flex justify-content-between align-items-start">
+                                        <div>
+                                            <strong>${item.name}</strong>
+                                            <p class="small text-muted mb-1">${item.description}</p>
+                                            <span class="badge bg-success">Sustainability: ${item.sustainability}/10</span>
+                                            <span class="badge bg-info">Hygge: ${item.hygge}/10</span>
+                                        </div>
+                                    </div>
+                                </label>
+                            </div>
+                        `;
+                    });
+                    html += '</div>';
+                    itemsList.innerHTML = html;
+                } else {
+                    itemsList.innerHTML = '<p class="text-muted text-center py-4">No items found for this destination</p>';
+                }
+            })
+            .catch(error => {
+                itemsList.innerHTML = '<p class="text-danger text-center py-4">Error loading items. Please try again.</p>';
+                console.error('Error:', error);
+            });
+    };
+
+    window.updateItemSelection = function() {
+        // Clear manual selection when blog type changes
+        const manualItemsList = document.getElementById('manualItemsList');
+        manualItemsList.innerHTML = '<p class="text-muted text-center py-4">Please select a destination to see available items</p>';
+
+        // Update title preview
+        updateTitlePreview();
+    };
+
+    // Show/hide custom intro section
+    document.getElementById('includeIntro').addEventListener('change', function() {
+        const customIntroSection = document.getElementById('customIntroSection');
+        if (this.value === 'custom') {
+            customIntroSection.style.display = 'block';
+        } else {
+            customIntroSection.style.display = 'none';
+        }
+    });
+
+    // Update title preview when count changes
+    document.querySelector('select[name="item_count"]').addEventListener('change', updateTitlePreview);
 });
 
 // Function to customize prompts with specific values

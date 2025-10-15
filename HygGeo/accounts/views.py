@@ -430,6 +430,9 @@ def admin_dashboard(request):
     all_experiences = Experience.objects.select_related('destination').order_by('-created_at')
     all_accommodations = Accommodation.objects.select_related('destination').order_by('-created_at')
 
+    # Get all destinations for blog generator
+    all_destinations = Destination.objects.all().order_by('name')
+
     context = {
         'stats': stats,
         'email_stats': email_stats,
@@ -439,8 +442,9 @@ def admin_dashboard(request):
         'active_count': active_experiences,
         'all_experiences': all_experiences,
         'all_accommodations': all_accommodations,
+        'all_destinations': all_destinations,
     }
-    
+
     # Updated template path to match your file location
     return render(request, 'admin-dashboard.html', context)
 
@@ -1655,3 +1659,378 @@ def toggle_featured_status(request):
         return JsonResponse({'success': False, 'error': 'Item not found'}, status=404)
     except Exception as e:
         return JsonResponse({'success': False, 'error': str(e)}, status=500)
+
+@user_passes_test(lambda u: u.is_staff, login_url='/accounts/login/')
+def get_items_for_destination(request):
+    """AJAX endpoint to get items for a destination"""
+    from django.http import JsonResponse
+
+    destination_id = request.GET.get('destination')
+    item_type = request.GET.get('type')
+
+    if not destination_id:
+        return JsonResponse({'error': 'Destination required'}, status=400)
+
+    try:
+        items = []
+
+        if item_type == 'experiences':
+            queryset = Experience.objects.filter(
+                destination_id=destination_id,
+                is_active=True
+            ).select_related('provider').order_by('-sustainability_score', '-created_at')
+
+            for exp in queryset:
+                short_desc = exp.short_description or exp.title
+                description = short_desc[:100] + '...' if len(short_desc) > 100 else short_desc
+                items.append({
+                    'id': str(exp.id),
+                    'name': exp.title,
+                    'description': description,
+                    'sustainability': exp.sustainability_score,
+                    'hygge': exp.hygge_factor,
+                })
+
+        elif item_type == 'accommodations':
+            queryset = Accommodation.objects.filter(
+                destination_id=destination_id,
+                is_active=True
+            ).select_related('provider').order_by('-sustainability_score', '-created_at')
+
+            for acc in queryset:
+                short_desc = acc.short_description or acc.name
+                description = short_desc[:100] + '...' if len(short_desc) > 100 else short_desc
+                items.append({
+                    'id': str(acc.id),
+                    'name': acc.name,
+                    'description': description,
+                    'sustainability': acc.sustainability_score,
+                    'hygge': acc.hygge_factor,
+                })
+
+        elif item_type == 'mixed':
+            # Get both experiences and accommodations
+            exp_queryset = Experience.objects.filter(
+                destination_id=destination_id,
+                is_active=True
+            ).select_related('provider').order_by('-sustainability_score', '-created_at')[:20]
+
+            acc_queryset = Accommodation.objects.filter(
+                destination_id=destination_id,
+                is_active=True
+            ).select_related('provider').order_by('-sustainability_score', '-created_at')[:20]
+
+            for exp in exp_queryset:
+                short_desc = exp.short_description or exp.title
+                description = short_desc[:100] + '...' if len(short_desc) > 100 else short_desc
+                items.append({
+                    'id': f'exp_{exp.id}',
+                    'name': exp.title,
+                    'description': description,
+                    'sustainability': exp.sustainability_score,
+                    'hygge': exp.hygge_factor,
+                })
+
+            for acc in acc_queryset:
+                short_desc = acc.short_description or acc.name
+                description = short_desc[:100] + '...' if len(short_desc) > 100 else short_desc
+                items.append({
+                    'id': f'acc_{acc.id}',
+                    'name': acc.name,
+                    'description': description,
+                    'sustainability': acc.sustainability_score,
+                    'hygge': acc.hygge_factor,
+                })
+
+        return JsonResponse({'items': items})
+
+    except Exception as e:
+        return JsonResponse({'error': str(e)}, status=500)
+
+@user_passes_test(lambda u: u.is_staff, login_url='/accounts/login/')
+def generate_top_10_blog(request):
+    """Generate a Top 10 blog post with experiences/accommodations"""
+    from experiences.models import TravelBlog
+    from django.utils.text import slugify
+    from datetime import datetime
+
+    if request.method != 'POST':
+        messages.error(request, 'Invalid request method')
+        return redirect('admin_dashboard')
+
+    try:
+        # Get form data
+        blog_type = request.POST.get('blog_type')
+        destination_id = request.POST.get('destination')
+        selection_method = request.POST.get('selection_method', 'auto')
+        publish = request.POST.get('publish') == 'true'
+
+        # Auto-selection parameters
+        filter_by = request.POST.get('filter_by', 'sustainability')
+        item_count = int(request.POST.get('item_count', 10))
+
+        # Manual selection parameters
+        selected_items = request.POST.getlist('selected_items')
+
+        # Title handling
+        title_template = request.POST.get('title_template', '')
+        custom_title = request.POST.get('custom_title', '').strip()
+
+        # Intro handling
+        include_intro = request.POST.get('include_intro', 'auto')
+        custom_intro = request.POST.get('custom_intro', '').strip() if include_intro == 'custom' else ''
+
+        # Get destination
+        destination = Destination.objects.get(id=destination_id)
+
+        # Build query based on blog type and selection method
+        items = []
+
+        # Handle manual selection
+        if selection_method == 'manual' and selected_items:
+            if blog_type == 'experiences':
+                items = list(Experience.objects.filter(
+                    id__in=selected_items,
+                    is_active=True
+                ).select_related('destination', 'provider', 'experience_type'))
+                content_type_label = "Experiences"
+            elif blog_type == 'accommodations':
+                items = list(Accommodation.objects.filter(
+                    id__in=selected_items,
+                    is_active=True
+                ).select_related('destination', 'provider'))
+                content_type_label = "Accommodations"
+            elif blog_type == 'mixed':
+                # Handle mixed selection (exp_123 or acc_456 format)
+                exp_ids = [item.replace('exp_', '') for item in selected_items if item.startswith('exp_')]
+                acc_ids = [item.replace('acc_', '') for item in selected_items if item.startswith('acc_')]
+
+                experiences = Experience.objects.filter(
+                    id__in=exp_ids,
+                    is_active=True
+                ).select_related('destination', 'provider', 'experience_type')
+
+                accommodations = Accommodation.objects.filter(
+                    id__in=acc_ids,
+                    is_active=True
+                ).select_related('destination', 'provider')
+
+                items = []
+                for exp in experiences:
+                    exp.item_type = 'experience'
+                    items.append(exp)
+                for acc in accommodations:
+                    acc.item_type = 'accommodation'
+                    items.append(acc)
+
+                content_type_label = "Things to Do"
+
+        # Handle auto-selection
+        elif selection_method == 'auto' or not selected_items:
+            if blog_type == 'experiences':
+                queryset = Experience.objects.filter(
+                    destination=destination,
+                    is_active=True
+                ).select_related('destination', 'provider', 'experience_type')
+
+                # Apply filters
+                if filter_by == 'sustainability':
+                    queryset = queryset.order_by('-sustainability_score', '-hygge_factor')
+                elif filter_by == 'hygge':
+                    queryset = queryset.order_by('-hygge_factor', '-sustainability_score')
+                elif filter_by == 'featured':
+                    queryset = queryset.filter(is_featured=True).order_by('-created_at')
+                elif filter_by == 'recent':
+                    queryset = queryset.order_by('-created_at')
+                elif filter_by == 'random':
+                    queryset = queryset.order_by('?')
+
+                items = list(queryset[:item_count])
+                content_type_label = "Experiences"
+
+            elif blog_type == 'accommodations':
+                queryset = Accommodation.objects.filter(
+                    destination=destination,
+                    is_active=True
+                ).select_related('destination', 'provider')
+
+                # Apply filters
+                if filter_by == 'sustainability':
+                    queryset = queryset.order_by('-sustainability_score', '-hygge_factor')
+                elif filter_by == 'hygge':
+                    queryset = queryset.order_by('-hygge_factor', '-sustainability_score')
+                elif filter_by == 'featured':
+                    queryset = queryset.filter(is_featured=True).order_by('-created_at')
+                elif filter_by == 'recent':
+                    queryset = queryset.order_by('-created_at')
+                elif filter_by == 'random':
+                    queryset = queryset.order_by('?')
+
+                items = list(queryset[:item_count])
+                content_type_label = "Accommodations"
+
+            elif blog_type == 'mixed':
+                # Get half experiences and half accommodations
+                exp_count = item_count // 2
+                acc_count = item_count - exp_count
+
+                exp_queryset = Experience.objects.filter(
+                    destination=destination,
+                    is_active=True
+                ).select_related('destination', 'provider', 'experience_type')
+
+                acc_queryset = Accommodation.objects.filter(
+                    destination=destination,
+                    is_active=True
+                ).select_related('destination', 'provider')
+
+                # Apply filters to both
+                if filter_by == 'sustainability':
+                    exp_queryset = exp_queryset.order_by('-sustainability_score')
+                    acc_queryset = acc_queryset.order_by('-sustainability_score')
+                elif filter_by == 'hygge':
+                    exp_queryset = exp_queryset.order_by('-hygge_factor')
+                    acc_queryset = acc_queryset.order_by('-hygge_factor')
+                elif filter_by == 'featured':
+                    exp_queryset = exp_queryset.filter(is_featured=True).order_by('-created_at')
+                    acc_queryset = acc_queryset.filter(is_featured=True).order_by('-created_at')
+                elif filter_by == 'recent':
+                    exp_queryset = exp_queryset.order_by('-created_at')
+                    acc_queryset = acc_queryset.order_by('-created_at')
+                elif filter_by == 'random':
+                    exp_queryset = exp_queryset.order_by('?')
+                    acc_queryset = acc_queryset.order_by('?')
+
+                experiences = list(exp_queryset[:exp_count])
+                accommodations = list(acc_queryset[:acc_count])
+
+                # Combine and mark type
+                items = []
+                for exp in experiences:
+                    exp.item_type = 'experience'
+                    items.append(exp)
+                for acc in accommodations:
+                    acc.item_type = 'accommodation'
+                    items.append(acc)
+
+                # Shuffle if random
+                if filter_by == 'random':
+                    import random
+                    random.shuffle(items)
+
+                content_type_label = "Things to Do"
+
+        # Check if we have enough items
+        if not items:
+            messages.error(request, f'No items found for {destination.name}. Please choose a different destination.')
+            return redirect('admin_dashboard')
+
+        # Generate title
+        if custom_title:
+            title = custom_title
+        else:
+            filter_labels = {
+                'sustainability': 'Most Sustainable',
+                'hygge': 'Most Hygge',
+                'featured': 'Best',
+                'recent': 'Newest',
+                'random': 'Top'
+            }
+            filter_label = filter_labels.get(filter_by, 'Top')
+            title = f"{filter_label} {len(items)} {content_type_label} in {destination.name}"
+
+        # Generate slug
+        slug = slugify(title)
+        # Ensure uniqueness
+        original_slug = slug
+        counter = 1
+        while TravelBlog.objects.filter(slug=slug).exists():
+            slug = f"{original_slug}-{counter}"
+            counter += 1
+
+        # Generate intro
+        if custom_intro:
+            intro = custom_intro
+        else:
+            intro = f"Discover the {filter_labels.get(filter_by, 'top').lower()} {content_type_label.lower()} in {destination.name}, {destination.country}. From sustainable eco-tourism to hygge-inspired experiences, these carefully selected options embody everything we love about mindful, authentic travel."
+
+        # Generate excerpt
+        excerpt = f"Explore our curated list of the {filter_labels.get(filter_by, 'best').lower()} {content_type_label.lower()} in {destination.name}. Perfect for eco-conscious travelers seeking authentic experiences."
+
+        # Generate HTML content
+        content_html = f"<p>{intro}</p>\n\n"
+
+        for index, item in enumerate(items, 1):
+            # Determine item details based on type
+            if blog_type == 'mixed':
+                if item.item_type == 'experience':
+                    item_title = item.title
+                    item_description = item.description
+                    item_url = request.build_absolute_uri(item.get_absolute_url())
+                    booking_link = item.affiliate_link if item.booking_required else item_url
+                    sustainability = item.sustainability_score
+                    hygge = item.hygge_factor
+                    provider = item.provider.name if item.provider else 'Local Provider'
+                else:  # accommodation
+                    item_title = item.name
+                    item_description = item.description
+                    item_url = request.build_absolute_uri(item.get_absolute_url())
+                    booking_link = item.booking_link if item.booking_link else item_url
+                    sustainability = item.sustainability_score
+                    hygge = item.hygge_factor
+                    provider = item.provider.name if item.provider else 'Local Provider'
+            elif blog_type == 'experiences':
+                item_title = item.title
+                item_description = item.description
+                item_url = request.build_absolute_uri(item.get_absolute_url())
+                booking_link = item.affiliate_link if item.booking_required else item_url
+                sustainability = item.sustainability_score
+                hygge = item.hygge_factor
+                provider = item.provider.name if item.provider else 'Local Provider'
+            else:  # accommodations
+                item_title = item.name
+                item_description = item.description
+                item_url = request.build_absolute_uri(item.get_absolute_url())
+                booking_link = item.booking_link if item.booking_link else item_url
+                sustainability = item.sustainability_score
+                hygge = item.hygge_factor
+                provider = item.provider.name if item.provider else 'Local Provider'
+
+            # Add item to content
+            content_html += f"<h2>{index}. {item_title}</h2>\n"
+            content_html += f"<p>{item_description}</p>\n"
+            content_html += f"<p><strong>Provider:</strong> {provider}</p>\n"
+            content_html += f"<p><strong>Sustainability Score:</strong> {sustainability}/10 | <strong>Hygge Factor:</strong> {hygge}/10</p>\n"
+            content_html += f"<p><a href=\"{booking_link}\" target=\"_blank\" rel=\"noopener noreferrer\"><strong>Book Now →</strong></a> | "
+            content_html += f"<a href=\"{item_url}\">View Details</a></p>\n\n"
+
+        # Add conclusion
+        content_html += f"<h2>Plan Your Trip to {destination.name}</h2>\n"
+        content_html += f"<p>Ready to explore {destination.name}? These {content_type_label.lower()} represent the best of sustainable, hygge-inspired travel. Each option has been carefully selected for its commitment to environmental responsibility and authentic local experiences.</p>\n"
+        content_html += f"<p>Remember to travel mindfully, support local businesses, and leave only footprints behind. Safe travels!</p>\n"
+
+        # Create blog post
+        blog = TravelBlog.objects.create(
+            title=title,
+            slug=slug,
+            content=content_html,
+            excerpt=excerpt,
+            author=request.user,
+            destination=destination,
+            is_published=publish,
+            tags=['top 10', destination.name.lower(), content_type_label.lower(), 'sustainable travel', 'hygge']
+        )
+
+        if publish:
+            blog.published_at = timezone.now()
+            blog.save()
+
+        messages.success(request, f'Blog post "{title}" {"published" if publish else "created as draft"} successfully!')
+        return redirect('experiences:edit_blog', slug=blog.slug)
+
+    except Destination.DoesNotExist:
+        messages.error(request, 'Selected destination not found.')
+        return redirect('admin_dashboard')
+    except Exception as e:
+        messages.error(request, f'Error generating blog: {str(e)}')
+        return redirect('admin_dashboard')
