@@ -450,7 +450,7 @@ def admin_dashboard(request):
 
 @user_passes_test(lambda u: u.is_staff, login_url='/accounts/login/')
 def export_all_emails_csv(request):
-    """Export all user emails as CSV file with mail merge fields"""
+    """Export all user emails (with email consent) as CSV file with mail merge fields"""
     response = HttpResponse(content_type='text/csv')
     response['Content-Disposition'] = 'attachment; filename="user_emails_mail_merge.csv"'
 
@@ -458,11 +458,13 @@ def export_all_emails_csv(request):
     # Mail merge friendly headers
     writer.writerow([
         'Email', 'FirstName', 'LastName', 'FullName', 'Username',
-        'DateJoined', 'IsActive', 'Location', 'TravelInterests', 'SustainabilityPriority'
+        'DateJoined', 'IsActive', 'Location', 'TravelInterests', 'SustainabilityPriority', 'UnsubscribeLink'
     ])
 
-    # Get all users with related profile data
-    users = User.objects.select_related('userprofile').prefetch_related('travel_surveys').all()
+    # Get all users with email consent and related profile data
+    users = User.objects.filter(
+        userprofile__email_consent=True
+    ).select_related('userprofile').prefetch_related('travel_surveys')
 
     for user in users:
         # Get user profile if it exists
@@ -487,6 +489,11 @@ def export_all_emails_csv(request):
             priorities = {1: 'Low', 2: 'Medium', 3: 'High', 4: 'Very High', 5: 'Essential'}
             sustainability_priority = priorities.get(profile.sustainability_priority, 'Medium')
 
+        # Get unsubscribe link
+        unsubscribe_link = ''
+        if profile and profile.unsubscribe_token:
+            unsubscribe_link = request.build_absolute_uri(profile.get_unsubscribe_url())
+
         writer.writerow([
             user.email,
             first_name,
@@ -497,25 +504,31 @@ def export_all_emails_csv(request):
             'Yes' if user.is_active else 'No',
             profile.location if profile else '',
             travel_interests,
-            sustainability_priority
+            sustainability_priority,
+            unsubscribe_link
         ])
 
     return response
 
 @user_passes_test(lambda u: u.is_staff, login_url='/accounts/login/')
 def export_all_emails_text(request):
-    """Export all user emails as plain text file"""
+    """Export all user emails (with email consent) as plain text file"""
     response = HttpResponse(content_type='text/plain')
     response['Content-Disposition'] = 'attachment; filename="all_user_emails.txt"'
 
-    emails = [user.email for user in User.objects.all() if user.email]
+    # Only export users with email consent
+    emails = [
+        user.email for user in User.objects.filter(
+            userprofile__email_consent=True
+        ).select_related('userprofile') if user.email
+    ]
     response.write(', '.join(emails))
 
     return response
 
 @user_passes_test(lambda u: u.is_staff, login_url='/accounts/login/')
 def export_active_emails_csv(request):
-    """Export active user emails as CSV file with mail merge fields"""
+    """Export active user emails (with email consent) as CSV file with mail merge fields"""
     response = HttpResponse(content_type='text/csv')
     response['Content-Disposition'] = 'attachment; filename="active_users_mail_merge.csv"'
 
@@ -523,11 +536,14 @@ def export_active_emails_csv(request):
     # Mail merge friendly headers
     writer.writerow([
         'Email', 'FirstName', 'LastName', 'FullName', 'Username',
-        'DateJoined', 'Location', 'TravelInterests', 'SustainabilityPriority', 'BudgetRange'
+        'DateJoined', 'Location', 'TravelInterests', 'SustainabilityPriority', 'BudgetRange', 'UnsubscribeLink'
     ])
 
-    # Get active users with related profile data
-    users = User.objects.filter(is_active=True).select_related('userprofile').prefetch_related('travel_surveys')
+    # Get active users with email consent and related profile data
+    users = User.objects.filter(
+        is_active=True,
+        userprofile__email_consent=True
+    ).select_related('userprofile').prefetch_related('travel_surveys')
 
     for user in users:
         # Get user profile if it exists
@@ -563,6 +579,11 @@ def export_active_emails_csv(request):
             }
             budget_range = budget_ranges.get(latest_survey.budget_range, latest_survey.budget_range)
 
+        # Get unsubscribe link
+        unsubscribe_link = ''
+        if profile and profile.unsubscribe_token:
+            unsubscribe_link = request.build_absolute_uri(profile.get_unsubscribe_url())
+
         writer.writerow([
             user.email,
             first_name,
@@ -573,18 +594,25 @@ def export_active_emails_csv(request):
             profile.location if profile else '',
             travel_interests,
             sustainability_priority,
-            budget_range
+            budget_range,
+            unsubscribe_link
         ])
 
     return response
 
 @user_passes_test(lambda u: u.is_staff, login_url='/accounts/login/')
 def export_active_emails_text(request):
-    """Export active user emails as plain text file"""
+    """Export active user emails (with email consent) as plain text file"""
     response = HttpResponse(content_type='text/plain')
     response['Content-Disposition'] = 'attachment; filename="active_user_emails.txt"'
 
-    emails = [user.email for user in User.objects.filter(is_active=True) if user.email]
+    # Only export active users with email consent
+    emails = [
+        user.email for user in User.objects.filter(
+            is_active=True,
+            userprofile__email_consent=True
+        ).select_related('userprofile') if user.email
+    ]
     response.write(', '.join(emails))
 
     return response
@@ -601,11 +629,14 @@ def export_mail_merge_premium(request):
         'Email', 'FirstName', 'LastName', 'FullName', 'Username',
         'DateJoined', 'Location', 'TravelInterests', 'SustainabilityPriority', 'BudgetRange',
         'GroupSizePreference', 'TripDurationPreference', 'DreamDestination', 'HasCompletedSurvey',
-        'TopRecommendation', 'RecommendationCount', 'PersonalizedGreeting'
+        'TopRecommendation', 'RecommendationCount', 'PersonalizedGreeting', 'UnsubscribeLink'
     ])
 
-    # Get active users with all related data
-    users = User.objects.filter(is_active=True).select_related('userprofile').prefetch_related(
+    # Get active users with email consent and all related data
+    users = User.objects.filter(
+        is_active=True,
+        userprofile__email_consent=True
+    ).select_related('userprofile').prefetch_related(
         'travel_surveys', 'recommendations__experience__destination'
     )
 
@@ -667,6 +698,11 @@ def export_mail_merge_premium(request):
         if dream_destination:
             personalized_greeting += f" Your dream destination of {dream_destination} awaits!"
 
+        # Get unsubscribe link
+        unsubscribe_link = ''
+        if profile and profile.unsubscribe_token:
+            unsubscribe_link = request.build_absolute_uri(profile.get_unsubscribe_url())
+
         writer.writerow([
             user.email,
             first_name,
@@ -684,7 +720,8 @@ def export_mail_merge_premium(request):
             'Yes' if latest_survey else 'No',
             top_recommendation,
             recommendation_count,
-            personalized_greeting
+            personalized_greeting,
+            unsubscribe_link
         ])
 
     return response
@@ -1697,18 +1734,19 @@ def send_template_email(request, template_id):
     })
 
 def unsubscribe_view(request, token):
-    """Handle email unsubscribe requests"""
+    """Handle email unsubscribe requests - supports both one-click and confirmation"""
     try:
         profile = UserProfile.objects.get(unsubscribe_token=token)
         user = profile.user
 
-        if request.method == 'POST':
+        # Support one-click unsubscribe (common email best practice)
+        if request.method == 'POST' or request.GET.get('confirm') == '1':
             profile.email_consent = False
             profile.save()
             messages.success(request, f'You have been successfully unsubscribed from HygGeo email communications.')
-            return render(request, 'accounts/unsubscribe_success.html', {'user': user})
+            return render(request, 'accounts/unsubscribe_success.html', {'user': user, 'token': token})
 
-        # Show confirmation page
+        # Show confirmation page for regular clicks
         return render(request, 'accounts/unsubscribe_confirm.html', {
             'user': user,
             'token': token
@@ -1719,18 +1757,19 @@ def unsubscribe_view(request, token):
         return render(request, 'accounts/unsubscribe_error.html')
 
 def resubscribe_view(request, token):
-    """Handle email resubscribe requests"""
+    """Handle email resubscribe requests - supports both one-click and confirmation"""
     try:
         profile = UserProfile.objects.get(unsubscribe_token=token)
         user = profile.user
 
-        if request.method == 'POST':
+        # Support one-click resubscribe
+        if request.method == 'POST' or request.GET.get('confirm') == '1':
             profile.email_consent = True
             profile.save()
             messages.success(request, f'You have been successfully resubscribed to HygGeo email communications.')
-            return render(request, 'accounts/resubscribe_success.html', {'user': user})
+            return render(request, 'accounts/resubscribe_success.html', {'user': user, 'token': token})
 
-        # Show confirmation page
+        # Show confirmation page for regular clicks
         return render(request, 'accounts/resubscribe_confirm.html', {
             'user': user,
             'token': token

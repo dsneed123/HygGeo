@@ -40,7 +40,7 @@
                     <hr class="my-4">
 
                     <p class="text-muted small">
-                        Changed your mind? You can <a href="{% url 'resubscribe' user.userprofile.unsubscribe_token %}">resubscribe here</a> at any time.
+                        Changed your mind? You can <a href="{% url 'resubscribe' token %}?confirm=1">resubscribe here</a> at any time.
                     </p>
 
                     <p class="text-muted small">

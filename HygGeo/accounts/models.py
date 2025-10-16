@@ -48,7 +48,8 @@ class UserProfile(models.Model):
 
     def get_unsubscribe_url(self):
         from django.urls import reverse
-        return reverse('unsubscribe', kwargs={'token': self.unsubscribe_token})
+        # Include ?confirm=1 for one-click unsubscribe (email best practice)
+        return reverse('unsubscribe', kwargs={'token': self.unsubscribe_token}) + '?confirm=1'
 
 class TravelSurvey(models.Model):
     """Survey responses for travel interests and preferences"""
