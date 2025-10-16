@@ -90,40 +90,66 @@
                     <!-- Linked Content -->
                     {% if blog.experience or blog.accommodation or blog.destination %}
                     <div class="border-top pt-4 mt-4">
-                        <h3 class="h5 fw-bold mb-3">Related To:</h3>
+                        <h3 class="h5 fw-bold mb-4" style="color: var(--hygge-green);">
+                            <i class="fas fa-link me-2"></i>Featured in this Post
+                        </h3>
                         <div class="row">
                             {% if blog.experience %}
                             <div class="col-md-6 mb-3">
-                                <div class="card">
-                                    <div class="card-body">
-                                        <p class="small text-muted mb-1">Experience</p>
-                                        <a href="{% url 'experiences:experience_detail' blog.experience.slug %}" class="fw-bold">
-                                            {{ blog.experience.title }}
-                                        </a>
+                                <div class="card h-100 border-0 shadow-sm hover-card">
+                                    <div class="card-body p-4">
+                                        <div class="d-flex align-items-start mb-2">
+                                            <div class="icon-badge me-3">
+                                                <i class="fas fa-star"></i>
+                                            </div>
+                                            <div>
+                                                <p class="small text-uppercase fw-bold mb-1" style="color: var(--hygge-gold); letter-spacing: 1px;">Experience</p>
+                                                <h6 class="fw-bold mb-2">{{ blog.experience.title }}</h6>
+                                                <a href="{% url 'experiences:experience_detail' blog.experience.slug %}" class="btn btn-sm btn-hygge">
+                                                    View Details <i class="fas fa-arrow-right ms-1"></i>
+                                                </a>
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
                             {% endif %}
                             {% if blog.accommodation %}
                             <div class="col-md-6 mb-3">
-                                <div class="card">
-                                    <div class="card-body">
-                                        <p class="small text-muted mb-1">Accommodation</p>
-                                        <a href="{% url 'experiences:accommodation_detail' blog.accommodation.slug %}" class="fw-bold">
-                                            {{ blog.accommodation.name }}
-                                        </a>
+                                <div class="card h-100 border-0 shadow-sm hover-card">
+                                    <div class="card-body p-4">
+                                        <div class="d-flex align-items-start mb-2">
+                                            <div class="icon-badge me-3">
+                                                <i class="fas fa-bed"></i>
+                                            </div>
+                                            <div>
+                                                <p class="small text-uppercase fw-bold mb-1" style="color: #9b59b6; letter-spacing: 1px;">Accommodation</p>
+                                                <h6 class="fw-bold mb-2">{{ blog.accommodation.name }}</h6>
+                                                <a href="{% url 'experiences:accommodation_detail' blog.accommodation.slug %}" class="btn btn-sm btn-hygge">
+                                                    View Details <i class="fas fa-arrow-right ms-1"></i>
+                                                </a>
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
                             {% endif %}
                             {% if blog.destination %}
                             <div class="col-md-6 mb-3">
-                                <div class="card">
-                                    <div class="card-body">
-                                        <p class="small text-muted mb-1">Destination</p>
-                                        <a href="{% url 'experiences:destination_detail' blog.destination.slug %}" class="fw-bold">
-                                            {{ blog.destination.name }}
-                                        </a>
+                                <div class="card h-100 border-0 shadow-sm hover-card">
+                                    <div class="card-body p-4">
+                                        <div class="d-flex align-items-start mb-2">
+                                            <div class="icon-badge me-3">
+                                                <i class="fas fa-map-marker-alt"></i>
+                                            </div>
+                                            <div>
+                                                <p class="small text-uppercase fw-bold mb-1" style="color: var(--hygge-soft-blue); letter-spacing: 1px;">Destination</p>
+                                                <h6 class="fw-bold mb-2">{{ blog.destination.name }}</h6>
+                                                <a href="{% url 'experiences:destination_detail' blog.destination.slug %}" class="btn btn-sm btn-hygge">
+                                                    Explore <i class="fas fa-arrow-right ms-1"></i>
+                                                </a>
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -340,25 +366,56 @@
     border-bottom-color: var(--hygge-green);
 }
 
-/* Book Now buttons styling */
+/* Enhanced Book Now buttons styling */
 .blog-content a[href*="book"],
-.blog-content a:has(strong) {
-    display: inline-block;
-    background: var(--hygge-green);
+.blog-content a[href*="experience"],
+.blog-content a[href*="accommodation"] {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    background: linear-gradient(135deg, var(--hygge-green) 0%, #357a52 100%);
     color: white !important;
-    padding: 0.75rem 1.5rem;
-    border-radius: 8px;
-    font-weight: 600;
+    padding: 1rem 2rem;
+    border-radius: 12px;
+    font-weight: 700;
+    font-size: 1.05rem;
     text-decoration: none;
-    border-bottom: none;
-    transition: all 0.3s ease;
-    margin: 0.5rem 0.5rem 0.5rem 0;
+    border-bottom: none !important;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    margin: 1rem 0.75rem 1rem 0;
+    box-shadow: 0 4px 15px rgba(45, 90, 61, 0.25);
+    position: relative;
+    overflow: hidden;
 }
 
-.blog-content a[href*="book"]:hover {
-    background: var(--hygge-dark-green);
-    transform: translateY(-2px);
-    box-shadow: 0 4px 12px rgba(45, 90, 61, 0.3);
+.blog-content a[href*="book"]::before,
+.blog-content a[href*="experience"]::before,
+.blog-content a[href*="accommodation"]::before {
+    content: '→';
+    margin-left: 8px;
+    transition: transform 0.3s ease;
+    font-weight: bold;
+    font-size: 1.2rem;
+}
+
+.blog-content a[href*="book"]:hover,
+.blog-content a[href*="experience"]:hover,
+.blog-content a[href*="accommodation"]:hover {
+    background: linear-gradient(135deg, #2d5a3d 0%, var(--hygge-dark-green) 100%);
+    transform: translateY(-3px) scale(1.02);
+    box-shadow: 0 8px 25px rgba(45, 90, 61, 0.4);
+}
+
+.blog-content a[href*="book"]:hover::before,
+.blog-content a[href*="experience"]:hover::before,
+.blog-content a[href*="accommodation"]:hover::before {
+    transform: translateX(5px);
+}
+
+.blog-content a[href*="book"]:active,
+.blog-content a[href*="experience"]:active,
+.blog-content a[href*="accommodation"]:active {
+    transform: translateY(-1px) scale(0.98);
 }
 
 /* List item cards for experiences */
@@ -440,6 +497,174 @@
     font-size: 1.25rem;
     color: #4a5568;
     line-height: 1.8;
+}
+
+/* Enhanced Card Hover Effects */
+.hover-card {
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    border: 1px solid transparent;
+}
+
+.hover-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 30px rgba(0,0,0,0.15) !important;
+    border-color: var(--hygge-green);
+}
+
+/* Icon Badge Styling */
+.icon-badge {
+    width: 48px;
+    height: 48px;
+    border-radius: 12px;
+    background: linear-gradient(135deg, var(--hygge-green), #357a52);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-size: 1.25rem;
+    flex-shrink: 0;
+    box-shadow: 0 4px 12px rgba(45, 90, 61, 0.2);
+}
+
+/* Improved Blog Card */
+article.card {
+    border: none;
+    box-shadow: 0 2px 15px rgba(0,0,0,0.08);
+    transition: all 0.3s ease;
+}
+
+article.card:hover {
+    box-shadow: 0 8px 30px rgba(0,0,0,0.12);
+}
+
+/* Featured Image Enhancement */
+article.card img {
+    border-radius: 15px 15px 0 0;
+}
+
+/* Improved Tags */
+.badge {
+    padding: 0.5rem 1rem;
+    font-weight: 600;
+    border-radius: 20px;
+    transition: all 0.2s ease;
+}
+
+.badge:hover {
+    transform: scale(1.05);
+    box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+}
+
+/* Meta Information Styling */
+.text-muted a {
+    color: var(--hygge-green);
+    text-decoration: none;
+    font-weight: 600;
+    transition: color 0.2s ease;
+}
+
+.text-muted a:hover {
+    color: var(--hygge-dark-green);
+    text-decoration: underline;
+}
+
+/* Experience/Item Cards in Content */
+.blog-content h3 + p {
+    background: linear-gradient(135deg, #f8faf9 0%, #ffffff 100%);
+    padding: 2rem;
+    border-radius: 15px;
+    margin: 2rem 0;
+    border-left: 5px solid var(--hygge-green);
+    box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+}
+
+/* Numbered List Enhancement */
+.blog-content ol {
+    counter-reset: custom-counter;
+    list-style: none;
+}
+
+.blog-content ol li {
+    counter-increment: custom-counter;
+    position: relative;
+    padding-left: 3rem;
+    margin-bottom: 2rem;
+}
+
+.blog-content ol li::before {
+    content: counter(custom-counter);
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 36px;
+    height: 36px;
+    background: linear-gradient(135deg, var(--hygge-green), #357a52);
+    color: white;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 700;
+    font-size: 1.1rem;
+    box-shadow: 0 3px 10px rgba(45, 90, 61, 0.3);
+}
+
+/* Sidebar Enhancements */
+.col-lg-4 .card {
+    border: none;
+    box-shadow: 0 2px 12px rgba(0,0,0,0.08);
+    transition: all 0.3s ease;
+}
+
+.col-lg-4 .card:hover {
+    box-shadow: 0 6px 20px rgba(0,0,0,0.12);
+    transform: translateY(-3px);
+}
+
+/* Comment Section Enhancement */
+.border-top.pt-3 {
+    background: #f8faf9;
+    padding: 1.5rem !important;
+    border-radius: 10px;
+    margin-top: 1.5rem !important;
+}
+
+/* Smooth Scrolling */
+html {
+    scroll-behavior: smooth;
+}
+
+/* Print Styles */
+@media print {
+    .hover-card,
+    article.card {
+        box-shadow: none !important;
+        border: 1px solid #ddd !important;
+    }
+
+    .blog-content a[href*="book"]::before {
+        content: '' !important;
+    }
+}
+
+/* Responsive Improvements */
+@media (max-width: 768px) {
+    .blog-content {
+        font-size: 1rem;
+    }
+
+    .blog-content a[href*="book"],
+    .blog-content a[href*="experience"],
+    .blog-content a[href*="accommodation"] {
+        width: 100%;
+        margin: 0.5rem 0;
+    }
+
+    .icon-badge {
+        width: 40px;
+        height: 40px;
+        font-size: 1rem;
+    }
 }
 </style>
 {% endblock %}
