@@ -14193,3 +14193,29 @@ INFO 2025-10-15 09:51:30,484 autoreload 73380 77616 C:\Users\DLSne\OneDrive\Desk
 INFO 2025-10-15 09:51:32,156 autoreload 52252 42536 Watching for file changes with StatReloader
 INFO 2025-10-15 09:53:10,835 autoreload 52252 42536 C:\Users\DLSne\OneDrive\Desktop\Code\webdev\HygGeo\HygGeo\accounts\views.py changed, reloading.
 INFO 2025-10-15 09:53:12,297 autoreload 71240 18400 Watching for file changes with StatReloader
+INFO 2025-10-15 20:24:43,315 autoreload 40120 95620 Watching for file changes with StatReloader
+INFO 2025-10-15 20:24:45,387 basehttp 40120 93784 "GET / HTTP/1.1" 200 103034
+INFO 2025-10-15 20:24:45,697 basehttp 40120 93784 "GET /static/css/base.css HTTP/1.1" 200 5306
+INFO 2025-10-15 20:24:45,705 basehttp 40120 89064 "GET /static/js/navbar.js HTTP/1.1" 200 2732
+INFO 2025-10-15 20:24:45,752 basehttp 40120 89064 "POST /accounts/track/page-view/ HTTP/1.1" 200 66
+INFO 2025-10-15 20:24:46,440 basehttp 40120 89064 "GET /static/favicon.ico HTTP/1.1" 200 15406
+INFO 2025-10-15 20:24:46,744 basehttp 40120 92944 "GET /static/site.webmanifest HTTP/1.1" 200 263
+INFO 2025-10-15 20:24:47,259 basehttp 40120 89064 "GET /admin/dashboard/ HTTP/1.1" 200 115890
+INFO 2025-10-15 20:24:47,312 basehttp 40120 89064 "POST /accounts/track/page-view/ HTTP/1.1" 200 66
+INFO 2025-10-15 20:24:50,282 basehttp 40120 89064 "GET /admin/analytics/ HTTP/1.1" 200 83265
+INFO 2025-10-15 20:24:50,546 basehttp 40120 89064 "POST /accounts/track/page-view/ HTTP/1.1" 200 66
+INFO 2025-10-15 20:25:56,220 autoreload 40120 95620 C:\Users\DLSne\OneDrive\Desktop\Code\webdev\HygGeo\HygGeo\accounts\views.py changed, reloading.
+INFO 2025-10-15 20:25:57,821 autoreload 89828 95508 Watching for file changes with StatReloader
+INFO 2025-10-15 20:26:15,106 autoreload 89828 95508 C:\Users\DLSne\OneDrive\Desktop\Code\webdev\HygGeo\HygGeo\accounts\views.py changed, reloading.
+INFO 2025-10-15 20:26:16,692 autoreload 93956 92864 Watching for file changes with StatReloader
+INFO 2025-10-15 20:27:41,179 basehttp 93956 59224 "POST /accounts/track/click/ HTTP/1.1" 200 60
+INFO 2025-10-15 20:27:41,825 basehttp 93956 59224 "POST /accounts/track/click/ HTTP/1.1" 200 60
+INFO 2025-10-15 20:27:42,147 basehttp 93956 59224 "GET /admin/analytics/?period=1y HTTP/1.1" 200 97150
+INFO 2025-10-15 20:27:42,357 basehttp 93956 59224 "POST /accounts/track/page-view/ HTTP/1.1" 200 66
+INFO 2025-10-15 20:28:12,067 basehttp 93956 59224 "POST /accounts/track/click/ HTTP/1.1" 200 60
+INFO 2025-10-15 20:28:12,091 basehttp 93956 59224 "GET / HTTP/1.1" 200 103059
+INFO 2025-10-15 20:28:12,145 basehttp 93956 59224 "POST /accounts/track/page-view/ HTTP/1.1" 200 66
+INFO 2025-10-15 20:28:14,089 basehttp 93956 59224 "GET /admin/dashboard/ HTTP/1.1" 200 115890
+INFO 2025-10-15 20:28:14,153 basehttp 93956 59224 "POST /accounts/track/page-view/ HTTP/1.1" 200 66
+INFO 2025-10-15 20:28:17,236 basehttp 93956 59224 "GET /admin/analytics/ HTTP/1.1" 200 94070
+INFO 2025-10-15 20:28:17,394 basehttp 93956 59224 "POST /accounts/track/page-view/ HTTP/1.1" 200 66

@@ -921,6 +921,106 @@ def analytics_dashboard(request):
     experiences_created_30_days = Experience.objects.filter(created_at__gte=last_30_days).count()
     experiences_created_90_days = Experience.objects.filter(created_at__gte=last_90_days).count()
 
+    # Traffic Tracking Analytics
+    from .models import PageView, ClickEvent
+
+    # Page view statistics
+    total_page_views = PageView.objects.count()
+    page_views_7_days = PageView.objects.filter(viewed_at__gte=last_7_days).count()
+    page_views_30_days = PageView.objects.filter(viewed_at__gte=last_30_days).count()
+    page_views_90_days = PageView.objects.filter(viewed_at__gte=last_90_days).count()
+
+    # Page views for selected period
+    if start_date:
+        page_views_period = PageView.objects.filter(viewed_at__gte=start_date).count()
+    else:
+        page_views_period = total_page_views
+
+    # Click event statistics
+    total_clicks = ClickEvent.objects.count()
+    clicks_7_days = ClickEvent.objects.filter(clicked_at__gte=last_7_days).count()
+    clicks_30_days = ClickEvent.objects.filter(clicked_at__gte=last_30_days).count()
+    external_clicks_30_days = ClickEvent.objects.filter(
+        clicked_at__gte=last_30_days,
+        is_external=True
+    ).count()
+
+    # Traffic source breakdown (last 30 days)
+    traffic_sources = PageView.objects.filter(
+        viewed_at__gte=last_30_days
+    ).values('referrer_source').annotate(
+        count=Count('id')
+    ).order_by('-count')[:10]
+
+    # Top clicked links (last 30 days)
+    top_clicked_links = ClickEvent.objects.filter(
+        clicked_at__gte=last_30_days
+    ).values('target_url', 'is_external').annotate(
+        click_count=Count('id')
+    ).order_by('-click_count')[:10]
+
+    # Device type breakdown (last 30 days)
+    device_breakdown = PageView.objects.filter(
+        viewed_at__gte=last_30_days
+    ).values('device_type').annotate(
+        count=Count('id')
+    ).order_by('-count')
+
+    # Top pages by views (last 30 days)
+    top_pages = PageView.objects.filter(
+        viewed_at__gte=last_30_days
+    ).values('page_path').annotate(
+        view_count=Count('id')
+    ).order_by('-view_count')[:10]
+
+    # UTM campaign performance (last 30 days)
+    utm_campaigns = PageView.objects.filter(
+        viewed_at__gte=last_30_days,
+        utm_campaign__isnull=False
+    ).exclude(utm_campaign='').values(
+        'utm_campaign', 'utm_source'
+    ).annotate(
+        views=Count('id')
+    ).order_by('-views')[:10]
+
+    # Page views over time chart data (based on selected period)
+    page_views_chart_data = []
+    for i in range(0, chart_days, step):
+        date = now - timedelta(days=chart_days-1-i)
+        start_of_day = date.replace(hour=0, minute=0, second=0, microsecond=0)
+        end_of_day = start_of_day + timedelta(days=step)
+        count = PageView.objects.filter(
+            viewed_at__gte=start_of_day,
+            viewed_at__lt=end_of_day
+        ).count()
+        page_views_chart_data.append({
+            'date': start_of_day.strftime(date_format),
+            'count': count
+        })
+
+    # Click events over time chart data (based on selected period)
+    click_events_chart_data = []
+    for i in range(0, chart_days, step):
+        date = now - timedelta(days=chart_days-1-i)
+        start_of_day = date.replace(hour=0, minute=0, second=0, microsecond=0)
+        end_of_day = start_of_day + timedelta(days=step)
+        count = ClickEvent.objects.filter(
+            clicked_at__gte=start_of_day,
+            clicked_at__lt=end_of_day
+        ).count()
+        click_events_chart_data.append({
+            'date': start_of_day.strftime(date_format),
+            'count': count
+        })
+
+    # Traffic sources chart data (last 30 days)
+    traffic_sources_chart_data = []
+    for source in traffic_sources[:8]:  # Top 8 sources
+        traffic_sources_chart_data.append({
+            'source': source['referrer_source'] or 'Unknown',
+            'count': source['count']
+        })
+
     context = {
         'current_period': period,
         'available_periods': [
@@ -984,15 +1084,34 @@ def analytics_dashboard(request):
             'booking_conversion_rate': round(booking_conversion_rate, 1),
             'avg_sustainability_score': round(avg_sustainability_score, 1),
             'avg_hygge_factor': round(avg_hygge_factor, 1),
+
+            # Traffic tracking metrics
+            'total_page_views': total_page_views,
+            'page_views_7_days': page_views_7_days,
+            'page_views_30_days': page_views_30_days,
+            'page_views_90_days': page_views_90_days,
+            'page_views_period': page_views_period,
+            'total_clicks': total_clicks,
+            'clicks_7_days': clicks_7_days,
+            'clicks_30_days': clicks_30_days,
+            'external_clicks_30_days': external_clicks_30_days,
         },
         'top_experiences': top_experiences,
         'top_destinations': top_destinations,
         'category_stats': category_stats,
+        'traffic_sources': traffic_sources,
+        'top_clicked_links': top_clicked_links,
+        'device_breakdown': device_breakdown,
+        'top_pages': top_pages,
+        'utm_campaigns': utm_campaigns,
         'chart_data': {
             'user_registrations': json.dumps(user_registration_data),
             'hourly_activity': json.dumps(hourly_activity_data),
             'booking_trends': json.dumps(booking_trend_data),
             'content_creation': json.dumps(content_creation_data),
+            'page_views': json.dumps(page_views_chart_data),
+            'click_events': json.dumps(click_events_chart_data),
+            'traffic_sources': json.dumps(traffic_sources_chart_data),
         }
     }
 
@@ -2125,3 +2244,201 @@ def generate_top_10_blog(request):
     except Exception as e:
         messages.error(request, f'Error generating blog: {str(e)}')
         return redirect('admin_dashboard')
+
+# Analytics Tracking Views
+from django.views.decorators.csrf import csrf_exempt
+from django.http import JsonResponse
+from .models import PageView, ClickEvent
+import json
+from urllib.parse import urlparse, parse_qs
+
+def parse_referrer_source(referrer_url):
+    """Parse referrer URL to identify traffic source"""
+    if not referrer_url:
+        return 'Direct'
+
+    try:
+        domain = urlparse(referrer_url).netloc.lower()
+
+        # Social media sources
+        if 'facebook.com' in domain or 'fb.com' in domain:
+            return 'Facebook'
+        elif 'twitter.com' in domain or 't.co' in domain:
+            return 'Twitter'
+        elif 'instagram.com' in domain:
+            return 'Instagram'
+        elif 'linkedin.com' in domain:
+            return 'LinkedIn'
+        elif 'pinterest.com' in domain:
+            return 'Pinterest'
+        elif 'reddit.com' in domain:
+            return 'Reddit'
+        elif 'tiktok.com' in domain:
+            return 'TikTok'
+
+        # Search engines
+        elif 'google.com' in domain or 'google.' in domain:
+            return 'Google'
+        elif 'bing.com' in domain:
+            return 'Bing'
+        elif 'yahoo.com' in domain:
+            return 'Yahoo'
+        elif 'duckduckgo.com' in domain:
+            return 'DuckDuckGo'
+
+        # Other common sources
+        elif domain == request.get_host():
+            return 'Internal'
+        else:
+            return domain
+
+    except Exception:
+        return 'Unknown'
+
+def detect_device_type(user_agent):
+    """Detect device type from user agent string"""
+    if not user_agent:
+        return 'unknown'
+
+    user_agent_lower = user_agent.lower()
+
+    if 'mobile' in user_agent_lower or 'android' in user_agent_lower or 'iphone' in user_agent_lower:
+        return 'mobile'
+    elif 'tablet' in user_agent_lower or 'ipad' in user_agent_lower:
+        return 'tablet'
+    else:
+        return 'desktop'
+
+@csrf_exempt
+def track_page_view(request):
+    """AJAX endpoint to track page views with referrer attribution"""
+    if request.method != 'POST':
+        return JsonResponse({'error': 'Method not allowed'}, status=405)
+
+    try:
+        data = json.loads(request.body)
+
+        # Get or create session ID for anonymous tracking
+        if not request.session.session_key:
+            request.session.create()
+        session_id = request.session.session_key
+
+        # Parse URL for UTM parameters
+        page_url = data.get('page_url', '')
+        parsed_url = urlparse(page_url)
+        query_params = parse_qs(parsed_url.query)
+
+        # Extract UTM parameters
+        utm_source = query_params.get('utm_source', [None])[0]
+        utm_medium = query_params.get('utm_medium', [None])[0]
+        utm_campaign = query_params.get('utm_campaign', [None])[0]
+        utm_term = query_params.get('utm_term', [None])[0]
+        utm_content = query_params.get('utm_content', [None])[0]
+
+        # Get referrer and parse source
+        referrer_url = data.get('referrer', '') or request.META.get('HTTP_REFERER', '')
+        referrer_source = parse_referrer_source(referrer_url)
+
+        # Prioritize UTM source over referrer source
+        if utm_source:
+            referrer_source = utm_source
+
+        # Get user agent and detect device
+        user_agent = request.META.get('HTTP_USER_AGENT', '')
+        device_type = detect_device_type(user_agent)
+
+        # Get IP address
+        x_forwarded_for = request.META.get('HTTP_X_FORWARDED_FOR')
+        if x_forwarded_for:
+            ip_address = x_forwarded_for.split(',')[0]
+        else:
+            ip_address = request.META.get('REMOTE_ADDR')
+
+        # Create page view record
+        page_view = PageView.objects.create(
+            user=request.user if request.user.is_authenticated else None,
+            session_id=session_id,
+            page_url=page_url,
+            page_path=data.get('page_path', parsed_url.path),
+            page_title=data.get('page_title', ''),
+            referrer_url=referrer_url,
+            referrer_source=referrer_source,
+            utm_source=utm_source,
+            utm_medium=utm_medium,
+            utm_campaign=utm_campaign,
+            utm_term=utm_term,
+            utm_content=utm_content,
+            user_agent=user_agent[:500],  # Limit length
+            ip_address=ip_address,
+            device_type=device_type
+        )
+
+        return JsonResponse({
+            'success': True,
+            'page_view_id': page_view.id,
+            'referrer_source': referrer_source
+        })
+
+    except Exception as e:
+        return JsonResponse({'error': str(e)}, status=500)
+
+@csrf_exempt
+def track_click_event(request):
+    """AJAX endpoint to track click events with referrer attribution"""
+    if request.method != 'POST':
+        return JsonResponse({'error': 'Method not allowed'}, status=405)
+
+    try:
+        data = json.loads(request.body)
+
+        # Get or create session ID for anonymous tracking
+        if not request.session.session_key:
+            request.session.create()
+        session_id = request.session.session_key
+
+        # Parse source page URL for UTM parameters
+        source_page = data.get('source_page', '')
+        parsed_url = urlparse(source_page)
+        query_params = parse_qs(parsed_url.query)
+
+        # Extract UTM parameters from source page
+        utm_source = query_params.get('utm_source', [None])[0]
+        utm_campaign = query_params.get('utm_campaign', [None])[0]
+
+        # Get referrer source from session data if available
+        # This would be inherited from the initial page view
+        referrer_source = data.get('referrer_source', None)
+
+        # Determine if link is external
+        target_url = data.get('target_url', '')
+        is_external = False
+        if target_url:
+            target_domain = urlparse(target_url).netloc
+            current_domain = request.get_host()
+            is_external = target_domain and target_domain != current_domain
+
+        # Create click event record
+        click_event = ClickEvent.objects.create(
+            user=request.user if request.user.is_authenticated else None,
+            session_id=session_id,
+            element_type=data.get('element_type', 'link'),
+            element_text=data.get('element_text', '')[:500],
+            element_id=data.get('element_id', '')[:200],
+            element_class=data.get('element_class', '')[:200],
+            target_url=target_url[:500],
+            is_external=is_external,
+            source_page=source_page[:500],
+            source_path=data.get('source_path', parsed_url.path)[:500],
+            referrer_source=referrer_source,
+            utm_source=utm_source,
+            utm_campaign=utm_campaign
+        )
+
+        return JsonResponse({
+            'success': True,
+            'click_event_id': click_event.id,
+            'is_external': is_external
+        })
+
+    except Exception as e:
+        return JsonResponse({'error': str(e)}, status=500)

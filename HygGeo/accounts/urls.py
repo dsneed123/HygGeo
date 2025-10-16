@@ -93,4 +93,8 @@ urlpatterns = [
     # Blog generator
     path('admin/generate-blog/', views.generate_top_10_blog, name='generate_top_10_blog'),
     path('admin/get-items-for-destination/', views.get_items_for_destination, name='get_items_for_destination'),
+
+    # Analytics tracking endpoints
+    path('track/page-view/', views.track_page_view, name='track_page_view'),
+    path('track/click/', views.track_click_event, name='track_click_event'),
 ]

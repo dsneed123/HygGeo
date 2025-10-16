@@ -473,3 +473,92 @@ class EmailLog(models.Model):
 
     def __str__(self):
         return f"{self.campaign.name} -> {self.recipient.email} ({self.status})"
+
+
+class PageView(models.Model):
+    """Track page views with referrer source attribution"""
+    # User information
+    user = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, blank=True, related_name='page_views')
+    session_id = models.CharField(max_length=100, help_text="Anonymous session tracking")
+
+    # Page information
+    page_url = models.CharField(max_length=500, help_text="Full URL of the page viewed")
+    page_path = models.CharField(max_length=500, help_text="Path component of URL")
+    page_title = models.CharField(max_length=300, blank=True)
+
+    # Referrer tracking (where they came from)
+    referrer_url = models.CharField(max_length=500, blank=True, null=True, help_text="Full referrer URL")
+    referrer_source = models.CharField(max_length=100, blank=True, null=True, help_text="Parsed source (e.g., Facebook, Google, Direct)")
+    utm_source = models.CharField(max_length=100, blank=True, null=True, help_text="UTM source parameter")
+    utm_medium = models.CharField(max_length=100, blank=True, null=True, help_text="UTM medium parameter")
+    utm_campaign = models.CharField(max_length=100, blank=True, null=True, help_text="UTM campaign parameter")
+    utm_term = models.CharField(max_length=100, blank=True, null=True)
+    utm_content = models.CharField(max_length=100, blank=True, null=True)
+
+    # Device/Browser information
+    user_agent = models.CharField(max_length=500, blank=True)
+    ip_address = models.GenericIPAddressField(null=True, blank=True)
+    device_type = models.CharField(max_length=20, blank=True, choices=[
+        ('desktop', 'Desktop'),
+        ('mobile', 'Mobile'),
+        ('tablet', 'Tablet'),
+        ('unknown', 'Unknown')
+    ], default='unknown')
+
+    # Timestamps
+    viewed_at = models.DateTimeField(auto_now_add=True, db_index=True)
+
+    class Meta:
+        ordering = ['-viewed_at']
+        indexes = [
+            models.Index(fields=['viewed_at']),
+            models.Index(fields=['page_path']),
+            models.Index(fields=['referrer_source']),
+            models.Index(fields=['utm_source']),
+        ]
+
+    def __str__(self):
+        user_str = self.user.username if self.user else 'Anonymous'
+        return f"{user_str} viewed {self.page_path} from {self.referrer_source or 'Direct'}"
+
+
+class ClickEvent(models.Model):
+    """Track clicks on specific elements (links, buttons, etc.)"""
+    # User information
+    user = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, blank=True, related_name='click_events')
+    session_id = models.CharField(max_length=100, help_text="Anonymous session tracking")
+
+    # Click information
+    element_type = models.CharField(max_length=50, help_text="Type of element clicked (link, button, etc.)")
+    element_text = models.CharField(max_length=500, blank=True, help_text="Text content of clicked element")
+    element_id = models.CharField(max_length=200, blank=True, help_text="HTML ID of clicked element")
+    element_class = models.CharField(max_length=200, blank=True, help_text="HTML class of clicked element")
+
+    # Destination
+    target_url = models.CharField(max_length=500, help_text="URL the link points to")
+    is_external = models.BooleanField(default=False, help_text="Is this an external link?")
+
+    # Source page
+    source_page = models.CharField(max_length=500, help_text="Page where the click occurred")
+    source_path = models.CharField(max_length=500, help_text="Path of source page")
+
+    # Referrer attribution (inherited from page view)
+    referrer_source = models.CharField(max_length=100, blank=True, null=True, help_text="Original traffic source")
+    utm_source = models.CharField(max_length=100, blank=True, null=True)
+    utm_campaign = models.CharField(max_length=100, blank=True, null=True)
+
+    # Click context
+    clicked_at = models.DateTimeField(auto_now_add=True, db_index=True)
+
+    class Meta:
+        ordering = ['-clicked_at']
+        indexes = [
+            models.Index(fields=['clicked_at']),
+            models.Index(fields=['target_url']),
+            models.Index(fields=['source_path']),
+            models.Index(fields=['referrer_source']),
+        ]
+
+    def __str__(self):
+        user_str = self.user.username if self.user else 'Anonymous'
+        return f"{user_str} clicked {self.element_text[:50]} on {self.source_path}"

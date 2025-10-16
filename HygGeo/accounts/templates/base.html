@@ -561,6 +561,104 @@
     <!-- HygGeo Navbar Script -->
     <script src="{% static 'js/navbar.js' %}" defer></script>
 
+    <!-- Analytics Tracking Script -->
+    <script>
+    (function() {
+        'use strict';
+
+        // Track page view on load
+        function trackPageView() {
+            const pageData = {
+                page_url: window.location.href,
+                page_path: window.location.pathname,
+                page_title: document.title,
+                referrer: document.referrer
+            };
+
+            fetch('{% url "track_page_view" %}', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(pageData)
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success && data.referrer_source) {
+                    // Store referrer source in session storage for click tracking
+                    sessionStorage.setItem('referrerSource', data.referrer_source);
+                }
+            })
+            .catch(error => {
+                // Silently fail - don't interrupt user experience
+                console.debug('Analytics tracking:', error);
+            });
+        }
+
+        // Track click events
+        function trackClickEvent(element, targetUrl) {
+            const referrerSource = sessionStorage.getItem('referrerSource') || null;
+
+            const clickData = {
+                element_type: element.tagName.toLowerCase(),
+                element_text: element.textContent.trim().substring(0, 500),
+                element_id: element.id || '',
+                element_class: element.className || '',
+                target_url: targetUrl,
+                source_page: window.location.href,
+                source_path: window.location.pathname,
+                referrer_source: referrerSource
+            };
+
+            fetch('{% url "track_click_event" %}', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(clickData)
+            })
+            .catch(error => {
+                // Silently fail - don't interrupt user experience
+                console.debug('Click tracking:', error);
+            });
+        }
+
+        // Add click tracking to all links and buttons
+        function attachClickTracking() {
+            // Track all anchor tags
+            document.addEventListener('click', function(e) {
+                const link = e.target.closest('a');
+                if (link && link.href) {
+                    // Don't track certain admin/internal links
+                    if (!link.href.includes('/admin/') &&
+                        !link.href.includes('/track/') &&
+                        !link.href.includes('javascript:')) {
+                        trackClickEvent(link, link.href);
+                    }
+                }
+
+                // Track button clicks
+                const button = e.target.closest('button');
+                if (button && button.type !== 'submit') {
+                    const targetUrl = button.getAttribute('data-url') || window.location.href;
+                    trackClickEvent(button, targetUrl);
+                }
+            }, true); // Use capture phase to track before navigation
+        }
+
+        // Initialize tracking when DOM is ready
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', function() {
+                trackPageView();
+                attachClickTracking();
+            });
+        } else {
+            trackPageView();
+            attachClickTracking();
+        }
+    })();
+    </script>
+
     {% block extra_js %}{% endblock %}
 </body>
 </html>
