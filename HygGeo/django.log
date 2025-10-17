@@ -14219,3 +14219,24 @@ INFO 2025-10-15 20:28:14,089 basehttp 93956 59224 "GET /admin/dashboard/ HTTP/1.
 INFO 2025-10-15 20:28:14,153 basehttp 93956 59224 "POST /accounts/track/page-view/ HTTP/1.1" 200 66
 INFO 2025-10-15 20:28:17,236 basehttp 93956 59224 "GET /admin/analytics/ HTTP/1.1" 200 94070
 INFO 2025-10-15 20:28:17,394 basehttp 93956 59224 "POST /accounts/track/page-view/ HTTP/1.1" 200 66
+INFO 2025-10-16 22:50:39,433 autoreload 115076 116064 Watching for file changes with StatReloader
+INFO 2025-10-16 22:50:45,310 basehttp 115076 59444 "GET / HTTP/1.1" 200 103047
+INFO 2025-10-16 22:50:45,628 basehttp 115076 59444 "GET /static/css/base.css HTTP/1.1" 200 5306
+INFO 2025-10-16 22:50:45,657 basehttp 115076 115120 "GET /static/js/navbar.js HTTP/1.1" 200 2732
+INFO 2025-10-16 22:50:45,706 basehttp 115076 115120 "POST /accounts/track/page-view/ HTTP/1.1" 200 66
+INFO 2025-10-16 22:50:47,658 basehttp 115076 115120 "GET /static/favicon.ico HTTP/1.1" 200 15406
+INFO 2025-10-16 22:50:48,301 basehttp 115076 115120 "GET /admin/dashboard/ HTTP/1.1" 200 100306
+INFO 2025-10-16 22:50:48,344 basehttp 115076 115120 "POST /accounts/track/page-view/ HTTP/1.1" 200 66
+INFO 2025-10-16 22:50:52,670 basehttp 115076 115120 "GET /admin/ HTTP/1.1" 200 21582
+INFO 2025-10-16 22:50:52,735 basehttp 115076 115120 "GET /static/admin/css/base.css HTTP/1.1" 200 22154
+INFO 2025-10-16 22:50:52,750 basehttp 115076 59444 "GET /static/admin/css/dark_mode.css HTTP/1.1" 200 2808
+INFO 2025-10-16 22:50:52,754 basehttp 115076 115120 "GET /static/admin/css/nav_sidebar.css HTTP/1.1" 200 2810
+INFO 2025-10-16 22:50:52,760 basehttp 115076 36020 "GET /static/admin/js/theme.js HTTP/1.1" 200 1653
+INFO 2025-10-16 22:50:52,765 basehttp 115076 59444 "GET /static/admin/css/dashboard.css HTTP/1.1" 200 441
+INFO 2025-10-16 22:50:52,766 basehttp 115076 115120 "GET /static/admin/css/responsive.css HTTP/1.1" 200 16632
+INFO 2025-10-16 22:50:52,788 basehttp 115076 59444 "GET /static/admin/img/icon-addlink.svg HTTP/1.1" 200 331
+INFO 2025-10-16 22:50:52,789 basehttp 115076 36020 "GET /static/admin/img/icon-changelink.svg HTTP/1.1" 200 380
+INFO 2025-10-16 22:50:52,794 basehttp 115076 115120 "GET /static/admin/js/nav_sidebar.js HTTP/1.1" 200 3063
+INFO 2025-10-16 22:50:56,313 basehttp 115076 115120 "GET /admin/analytics/ HTTP/1.1" 200 94070
+INFO 2025-10-16 22:50:56,534 basehttp 115076 115120 "POST /accounts/track/page-view/ HTTP/1.1" 200 67
+INFO 2025-10-16 22:51:02,064 basehttp 115076 115120 "GET /accounts/admin/export/business-report-pdf/ HTTP/1.1" 200 7806

@@ -1154,6 +1154,370 @@ def analytics_dashboard(request):
 
     return render(request, 'analytics.html', context)
 
+@user_passes_test(lambda u: u.is_staff, login_url='/accounts/login/')
+def export_business_report_pdf(request):
+    """Export comprehensive business analytics report as PDF"""
+    from reportlab.lib import colors
+    from reportlab.lib.pagesizes import letter
+    from reportlab.platypus import SimpleDocTemplate, Table, TableStyle, Paragraph, Spacer, PageBreak
+    from reportlab.lib.styles import getSampleStyleSheet, ParagraphStyle
+    from reportlab.lib.units import inch
+    from reportlab.lib.enums import TA_CENTER, TA_LEFT
+    from django.db.models import Count, Avg
+    from datetime import timedelta
+    from experiences.models import BookingTracking
+    from io import BytesIO
+
+    # Create the HttpResponse object with PDF headers
+    response = HttpResponse(content_type='application/pdf')
+    response['Content-Disposition'] = f'attachment; filename="HygGeo_Business_Report_{timezone.now().strftime("%Y%m%d")}.pdf"'
+
+    # Create the PDF object
+    buffer = BytesIO()
+    doc = SimpleDocTemplate(buffer, pagesize=letter,
+                          rightMargin=0.75*inch, leftMargin=0.75*inch,
+                          topMargin=1*inch, bottomMargin=0.75*inch)
+
+    # Container for PDF elements
+    elements = []
+
+    # Styles
+    styles = getSampleStyleSheet()
+    title_style = ParagraphStyle(
+        'CustomTitle',
+        parent=styles['Heading1'],
+        fontSize=24,
+        textColor=colors.HexColor('#2d5a3d'),
+        spaceAfter=30,
+        alignment=TA_CENTER
+    )
+    heading_style = ParagraphStyle(
+        'CustomHeading',
+        parent=styles['Heading2'],
+        fontSize=16,
+        textColor=colors.HexColor('#2d5a3d'),
+        spaceAfter=12,
+        spaceBefore=20
+    )
+    subheading_style = ParagraphStyle(
+        'CustomSubHeading',
+        parent=styles['Heading3'],
+        fontSize=12,
+        textColor=colors.HexColor('#357a52'),
+        spaceAfter=10
+    )
+
+    # Get analytics data
+    now = timezone.now()
+    last_30_days = now - timedelta(days=30)
+    last_7_days = now - timedelta(days=7)
+    last_90_days = now - timedelta(days=90)
+
+    # Calculate metrics
+    total_users = User.objects.count()
+    new_users_30_days = User.objects.filter(date_joined__gte=last_30_days).count()
+    active_users_30_days = User.objects.filter(last_login__gte=last_30_days).count()
+
+    total_experiences = Experience.objects.count()
+    active_experiences = Experience.objects.filter(is_active=True).count()
+
+    total_bookings = BookingTracking.objects.count()
+    bookings_30_days = BookingTracking.objects.filter(clicked_at__gte=last_30_days).count()
+
+    total_page_views = PageView.objects.count()
+    page_views_30_days = PageView.objects.filter(viewed_at__gte=last_30_days).count()
+
+    # --- TITLE PAGE ---
+    elements.append(Paragraph("HygGeo Business Analytics Report", title_style))
+    elements.append(Paragraph(f"Generated: {now.strftime('%B %d, %Y at %I:%M %p')}", styles['Normal']))
+    elements.append(Spacer(1, 0.5*inch))
+
+    # Executive Summary
+    elements.append(Paragraph("Executive Summary", heading_style))
+    summary_data = [
+        ['Metric', 'Total', 'Last 30 Days'],
+        ['Total Users', f'{total_users:,}', f'{new_users_30_days:,} new'],
+        ['Active Users', f'{active_users_30_days:,}', f'{(active_users_30_days/total_users*100):.1f}% of total' if total_users > 0 else '0%'],
+        ['Experiences', f'{total_experiences:,}', f'{active_experiences:,} active'],
+        ['Booking Clicks', f'{total_bookings:,}', f'{bookings_30_days:,}'],
+        ['Page Views', f'{total_page_views:,}', f'{page_views_30_days:,}'],
+    ]
+
+    summary_table = Table(summary_data, colWidths=[2.5*inch, 1.5*inch, 2*inch])
+    summary_table.setStyle(TableStyle([
+        ('BACKGROUND', (0, 0), (-1, 0), colors.HexColor('#2d5a3d')),
+        ('TEXTCOLOR', (0, 0), (-1, 0), colors.whitesmoke),
+        ('ALIGN', (0, 0), (-1, -1), 'LEFT'),
+        ('FONTNAME', (0, 0), (-1, 0), 'Helvetica-Bold'),
+        ('FONTSIZE', (0, 0), (-1, 0), 12),
+        ('BOTTOMPADDING', (0, 0), (-1, 0), 12),
+        ('BACKGROUND', (0, 1), (-1, -1), colors.beige),
+        ('GRID', (0, 0), (-1, -1), 1, colors.grey),
+        ('FONTNAME', (0, 1), (-1, -1), 'Helvetica'),
+        ('FONTSIZE', (0, 1), (-1, -1), 10),
+        ('TOPPADDING', (0, 1), (-1, -1), 8),
+        ('BOTTOMPADDING', (0, 1), (-1, -1), 8),
+    ]))
+    elements.append(summary_table)
+    elements.append(Spacer(1, 0.3*inch))
+
+    # Page Break
+    elements.append(PageBreak())
+
+    # --- USER ANALYTICS ---
+    elements.append(Paragraph("User Analytics", heading_style))
+
+    users_data = [
+        ['Period', 'New Users', 'Active Users'],
+        ['Last 7 Days', f'{User.objects.filter(date_joined__gte=last_7_days).count():,}', f'{User.objects.filter(last_login__gte=last_7_days).count():,}'],
+        ['Last 30 Days', f'{new_users_30_days:,}', f'{active_users_30_days:,}'],
+        ['Last 90 Days', f'{User.objects.filter(date_joined__gte=last_90_days).count():,}', f'{User.objects.filter(last_login__gte=last_90_days).count():,}'],
+        ['All Time', f'{total_users:,}', f'{User.objects.filter(last_login__isnull=False).count():,}'],
+    ]
+
+    users_table = Table(users_data, colWidths=[2*inch, 2*inch, 2*inch])
+    users_table.setStyle(TableStyle([
+        ('BACKGROUND', (0, 0), (-1, 0), colors.HexColor('#357a52')),
+        ('TEXTCOLOR', (0, 0), (-1, 0), colors.whitesmoke),
+        ('ALIGN', (0, 0), (-1, -1), 'CENTER'),
+        ('FONTNAME', (0, 0), (-1, 0), 'Helvetica-Bold'),
+        ('FONTSIZE', (0, 0), (-1, 0), 11),
+        ('BOTTOMPADDING', (0, 0), (-1, 0), 10),
+        ('BACKGROUND', (0, 1), (-1, -1), colors.lightgrey),
+        ('GRID', (0, 0), (-1, -1), 1, colors.grey),
+        ('ROWBACKGROUNDS', (0, 1), (-1, -1), [colors.white, colors.lightgrey]),
+    ]))
+    elements.append(users_table)
+    elements.append(Spacer(1, 0.3*inch))
+
+    # Travel Survey Completion
+    travel_surveys = TravelSurvey.objects.count()
+    survey_rate = (travel_surveys / total_users * 100) if total_users > 0 else 0
+    elements.append(Paragraph(f"Travel Survey Completion Rate: {survey_rate:.1f}% ({travel_surveys:,} of {total_users:,} users)", styles['Normal']))
+    elements.append(Spacer(1, 0.2*inch))
+
+    # --- CONTENT ANALYTICS ---
+    elements.append(Paragraph("Content Analytics", heading_style))
+
+    total_accommodations = Accommodation.objects.count()
+    total_destinations = Destination.objects.count()
+    avg_sustainability = Experience.objects.aggregate(avg=Avg('sustainability_score'))['avg'] or 0
+    avg_hygge = Experience.objects.aggregate(avg=Avg('hygge_factor'))['avg'] or 0
+
+    content_data = [
+        ['Content Type', 'Total', 'Active', 'Average Score'],
+        ['Experiences', f'{total_experiences:,}', f'{active_experiences:,}', f'Sustainability: {avg_sustainability:.1f}/10'],
+        ['Accommodations', f'{total_accommodations:,}', f'{Accommodation.objects.filter(is_active=True).count():,}', f'Hygge Factor: {avg_hygge:.1f}/10'],
+        ['Destinations', f'{total_destinations:,}', '-', '-'],
+        ['Categories', f'{Category.objects.count():,}', '-', '-'],
+    ]
+
+    content_table = Table(content_data, colWidths=[1.5*inch, 1.5*inch, 1.5*inch, 2*inch])
+    content_table.setStyle(TableStyle([
+        ('BACKGROUND', (0, 0), (-1, 0), colors.HexColor('#357a52')),
+        ('TEXTCOLOR', (0, 0), (-1, 0), colors.whitesmoke),
+        ('ALIGN', (0, 0), (-1, -1), 'CENTER'),
+        ('FONTNAME', (0, 0), (-1, 0), 'Helvetica-Bold'),
+        ('FONTSIZE', (0, 0), (-1, 0), 11),
+        ('BOTTOMPADDING', (0, 0), (-1, 0), 10),
+        ('GRID', (0, 0), (-1, -1), 1, colors.grey),
+        ('ROWBACKGROUNDS', (0, 1), (-1, -1), [colors.white, colors.lightgrey]),
+    ]))
+    elements.append(content_table)
+    elements.append(Spacer(1, 0.3*inch))
+
+    # Top Performing Experiences
+    elements.append(Paragraph("Top 5 Experiences by Booking Clicks", subheading_style))
+    top_experiences = Experience.objects.annotate(
+        booking_count=Count('bookingtracking')
+    ).filter(booking_count__gt=0).order_by('-booking_count')[:5]
+
+    if top_experiences:
+        top_exp_data = [['Rank', 'Experience', 'Bookings']]
+        for i, exp in enumerate(top_experiences, 1):
+            top_exp_data.append([f'{i}', exp.title[:40], f'{exp.booking_count:,}'])
+
+        top_exp_table = Table(top_exp_data, colWidths=[0.7*inch, 4*inch, 1.3*inch])
+        top_exp_table.setStyle(TableStyle([
+            ('BACKGROUND', (0, 0), (-1, 0), colors.HexColor('#2d5a3d')),
+            ('TEXTCOLOR', (0, 0), (-1, 0), colors.whitesmoke),
+            ('ALIGN', (0, 0), (0, -1), 'CENTER'),
+            ('FONTNAME', (0, 0), (-1, 0), 'Helvetica-Bold'),
+            ('GRID', (0, 0), (-1, -1), 1, colors.grey),
+            ('ROWBACKGROUNDS', (0, 1), (-1, -1), [colors.white, colors.lightgrey]),
+        ]))
+        elements.append(top_exp_table)
+    else:
+        elements.append(Paragraph("No booking data available yet.", styles['Normal']))
+
+    elements.append(PageBreak())
+
+    # --- TRAFFIC & ENGAGEMENT ---
+    elements.append(Paragraph("Traffic & Engagement Metrics", heading_style))
+
+    total_clicks = ClickEvent.objects.count()
+    clicks_30_days = ClickEvent.objects.filter(clicked_at__gte=last_30_days).count()
+
+    traffic_data = [
+        ['Metric', 'Last 7 Days', 'Last 30 Days', 'All Time'],
+        ['Page Views', f'{PageView.objects.filter(viewed_at__gte=last_7_days).count():,}', f'{page_views_30_days:,}', f'{total_page_views:,}'],
+        ['Click Events', f'{ClickEvent.objects.filter(clicked_at__gte=last_7_days).count():,}', f'{clicks_30_days:,}', f'{total_clicks:,}'],
+        ['Booking Clicks', f'{BookingTracking.objects.filter(clicked_at__gte=last_7_days).count():,}', f'{bookings_30_days:,}', f'{total_bookings:,}'],
+    ]
+
+    traffic_table = Table(traffic_data, colWidths=[2*inch, 1.5*inch, 1.5*inch, 1.5*inch])
+    traffic_table.setStyle(TableStyle([
+        ('BACKGROUND', (0, 0), (-1, 0), colors.HexColor('#357a52')),
+        ('TEXTCOLOR', (0, 0), (-1, 0), colors.whitesmoke),
+        ('ALIGN', (0, 0), (0, -1), 'LEFT'),
+        ('ALIGN', (1, 0), (-1, -1), 'CENTER'),
+        ('FONTNAME', (0, 0), (-1, 0), 'Helvetica-Bold'),
+        ('GRID', (0, 0), (-1, -1), 1, colors.grey),
+        ('ROWBACKGROUNDS', (0, 1), (-1, -1), [colors.white, colors.lightgrey]),
+    ]))
+    elements.append(traffic_table)
+    elements.append(Spacer(1, 0.3*inch))
+
+    # Traffic Sources
+    elements.append(Paragraph("Top Traffic Sources (Last 30 Days)", subheading_style))
+    traffic_sources = PageView.objects.filter(
+        viewed_at__gte=last_30_days
+    ).values('referrer_source').annotate(
+        count=Count('id')
+    ).order_by('-count')[:5]
+
+    if traffic_sources:
+        source_data = [['Source', 'Views']]
+        for source in traffic_sources:
+            source_name = source['referrer_source'] or 'Direct'
+            source_data.append([source_name, f'{source["count"]:,}'])
+
+        source_table = Table(source_data, colWidths=[4*inch, 2*inch])
+        source_table.setStyle(TableStyle([
+            ('BACKGROUND', (0, 0), (-1, 0), colors.HexColor('#2d5a3d')),
+            ('TEXTCOLOR', (0, 0), (-1, 0), colors.whitesmoke),
+            ('ALIGN', (1, 0), (1, -1), 'CENTER'),
+            ('FONTNAME', (0, 0), (-1, 0), 'Helvetica-Bold'),
+            ('GRID', (0, 0), (-1, -1), 1, colors.grey),
+            ('ROWBACKGROUNDS', (0, 1), (-1, -1), [colors.white, colors.lightgrey]),
+        ]))
+        elements.append(source_table)
+
+    elements.append(PageBreak())
+
+    # --- GOOGLE SEARCH CONSOLE SECTION ---
+    elements.append(Paragraph("Google Search Console Metrics", heading_style))
+    elements.append(Paragraph("(Manually Update These Metrics from Google Search Console)", styles['Italic']))
+    elements.append(Spacer(1, 0.2*inch))
+
+    gsc_data = [
+        ['Metric', 'Last 7 Days', 'Last 30 Days', 'Last 90 Days'],
+        ['Total Impressions', '_________', '_________', '_________'],
+        ['Total Clicks', '_________', '_________', '_________'],
+        ['Average CTR (%)', '_________', '_________', '_________'],
+        ['Average Position', '_________', '_________', '_________'],
+    ]
+
+    gsc_table = Table(gsc_data, colWidths=[2*inch, 1.5*inch, 1.5*inch, 1.5*inch])
+    gsc_table.setStyle(TableStyle([
+        ('BACKGROUND', (0, 0), (-1, 0), colors.HexColor('#4285F4')),  # Google Blue
+        ('TEXTCOLOR', (0, 0), (-1, 0), colors.whitesmoke),
+        ('ALIGN', (0, 0), (0, -1), 'LEFT'),
+        ('ALIGN', (1, 0), (-1, -1), 'CENTER'),
+        ('FONTNAME', (0, 0), (-1, 0), 'Helvetica-Bold'),
+        ('GRID', (0, 0), (-1, -1), 1, colors.grey),
+        ('ROWBACKGROUNDS', (0, 1), (-1, -1), [colors.white, colors.HexColor('#E8F0FE')]),
+        ('FONTSIZE', (0, 0), (-1, -1), 10),
+    ]))
+    elements.append(gsc_table)
+    elements.append(Spacer(1, 0.3*inch))
+
+    elements.append(Paragraph("Top Search Queries", subheading_style))
+    top_queries_data = [
+        ['Query', 'Clicks', 'Impressions', 'CTR', 'Position'],
+        ['_________________', '____', '________', '____', '____'],
+        ['_________________', '____', '________', '____', '____'],
+        ['_________________', '____', '________', '____', '____'],
+        ['_________________', '____', '________', '____', '____'],
+        ['_________________', '____', '________', '____', '____'],
+    ]
+
+    queries_table = Table(top_queries_data, colWidths=[2.5*inch, 0.8*inch, 1.2*inch, 0.8*inch, 0.8*inch])
+    queries_table.setStyle(TableStyle([
+        ('BACKGROUND', (0, 0), (-1, 0), colors.HexColor('#4285F4')),
+        ('TEXTCOLOR', (0, 0), (-1, 0), colors.whitesmoke),
+        ('ALIGN', (0, 0), (0, -1), 'LEFT'),
+        ('ALIGN', (1, 0), (-1, -1), 'CENTER'),
+        ('FONTNAME', (0, 0), (-1, 0), 'Helvetica-Bold'),
+        ('GRID', (0, 0), (-1, -1), 1, colors.grey),
+        ('ROWBACKGROUNDS', (0, 1), (-1, -1), [colors.white, colors.HexColor('#E8F0FE')]),
+    ]))
+    elements.append(queries_table)
+    elements.append(Spacer(1, 0.3*inch))
+
+    # Instructions
+    elements.append(Paragraph("How to get Google Search Console data:", subheading_style))
+    instructions = [
+        "1. Go to search.google.com/search-console",
+        "2. Select your property (hyggeo.com)",
+        "3. Navigate to Performance > Search Results",
+        "4. Export data and manually fill in the blanks above",
+        "5. You can also add this data programmatically using Google Search Console API"
+    ]
+    for instruction in instructions:
+        elements.append(Paragraph(instruction, styles['Normal']))
+
+    elements.append(PageBreak())
+
+    # --- KEY PERFORMANCE INDICATORS ---
+    elements.append(Paragraph("Key Performance Indicators", heading_style))
+
+    # Calculate conversion rates
+    booking_conversion = (bookings_30_days / page_views_30_days * 100) if page_views_30_days > 0 else 0
+    user_engagement = (active_users_30_days / total_users * 100) if total_users > 0 else 0
+
+    kpi_data = [
+        ['KPI', 'Value', 'Status'],
+        ['Booking Conversion Rate', f'{booking_conversion:.2f}%', 'Good' if booking_conversion > 2 else 'Needs Improvement'],
+        ['User Engagement Rate', f'{user_engagement:.1f}%', 'Excellent' if user_engagement > 30 else 'Good'],
+        ['Avg. Sustainability Score', f'{avg_sustainability:.1f}/10', 'Excellent' if avg_sustainability > 7 else 'Good'],
+        ['Survey Completion Rate', f'{survey_rate:.1f}%', 'Excellent' if survey_rate > 50 else 'Good'],
+    ]
+
+    kpi_table = Table(kpi_data, colWidths=[3*inch, 1.5*inch, 2*inch])
+    kpi_table.setStyle(TableStyle([
+        ('BACKGROUND', (0, 0), (-1, 0), colors.HexColor('#2d5a3d')),
+        ('TEXTCOLOR', (0, 0), (-1, 0), colors.whitesmoke),
+        ('ALIGN', (0, 0), (0, -1), 'LEFT'),
+        ('ALIGN', (1, 0), (-1, -1), 'CENTER'),
+        ('FONTNAME', (0, 0), (-1, 0), 'Helvetica-Bold'),
+        ('GRID', (0, 0), (-1, -1), 1, colors.grey),
+        ('ROWBACKGROUNDS', (0, 1), (-1, -1), [colors.white, colors.lightgrey]),
+    ]))
+    elements.append(kpi_table)
+    elements.append(Spacer(1, 0.5*inch))
+
+    # Footer
+    elements.append(Spacer(1, 0.5*inch))
+    elements.append(Paragraph(
+        f"This report was generated automatically on {now.strftime('%B %d, %Y at %I:%M %p')}",
+        ParagraphStyle('Footer', parent=styles['Normal'], fontSize=8, textColor=colors.grey, alignment=TA_CENTER)
+    ))
+    elements.append(Paragraph(
+        "HygGeo - Sustainable Travel Platform",
+        ParagraphStyle('Footer2', parent=styles['Normal'], fontSize=8, textColor=colors.grey, alignment=TA_CENTER)
+    ))
+
+    # Build PDF
+    doc.build(elements)
+
+    # Get the value of the BytesIO buffer and write it to the response
+    pdf = buffer.getvalue()
+    buffer.close()
+    response.write(pdf)
+
+    return response
+
 
 @login_required
 def create_trip(request):

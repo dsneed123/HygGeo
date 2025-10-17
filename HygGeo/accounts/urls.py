@@ -14,6 +14,9 @@ urlpatterns = [
     path('admin/export/active-emails-txt/', views.export_active_emails_text, name='export_active_emails_text'),
     path('admin/export/mail-merge-premium/', views.export_mail_merge_premium, name='export_mail_merge_premium'),
 
+    # Business report export
+    path('admin/export/business-report-pdf/', views.export_business_report_pdf, name='export_business_report_pdf'),
+
     # Email management URLs
     path('admin/email/', views.email_management, name='email_management'),
     path('admin/email/create-template/', views.create_email_template, name='create_email_template'),
