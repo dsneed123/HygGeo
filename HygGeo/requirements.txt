@@ -14,6 +14,7 @@ boto3>=1.34.0
 textstat>=0.7.0
 reportlab>=4.0.0
 matplotlib>=3.7.0
+django-crispy-forms>=2.1  # Already included but needed for task forms
 
 django-allauth>=0.65.0
 PyJWT>=2.8.0

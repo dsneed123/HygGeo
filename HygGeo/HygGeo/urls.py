@@ -24,6 +24,7 @@ urlpatterns = [
     path('accounts/', include('django.contrib.auth.urls')),  # Built-in auth views
     path('accounts/', include('allauth.urls')),  # Allauth OAuth URLs
     path('experiences/', include('experiences.urls')),
+    path('task-management/', include('task_management.urls')),
 
     # Top-level subscription management is handled in accounts.urls
 

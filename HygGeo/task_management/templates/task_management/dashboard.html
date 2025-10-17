@@ -1,0 +1,295 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Task Management Dashboard - HygGeo{% endblock %}
+
+{% block content %}
+<div class="container-fluid py-4">
+    <!-- Header -->
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="d-flex justify-content-between align-items-center">
+                <div>
+                    <h1 class="h2 fw-bold" style="color: var(--hygge-green);">
+                        <i class="fas fa-tasks me-2"></i>Task Management
+                    </h1>
+                    <p class="text-muted">Welcome back, {{ user.username }}! Here's your task overview.</p>
+                </div>
+                <div>
+                    <a href="{% url 'task_management:task_create' %}" class="btn btn-hygge me-2">
+                        <i class="fas fa-plus me-2"></i>New Task
+                    </a>
+                    {% if user.is_staff %}
+                    <a href="{% url 'task_management:project_create' %}" class="btn btn-outline-hygge">
+                        <i class="fas fa-folder-plus me-2"></i>New Project
+                    </a>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Quick Stats -->
+    <div class="row mb-4">
+        <div class="col-md-3 mb-3">
+            <div class="card h-100" style="border-left: 4px solid #3498db;">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <p class="text-muted mb-1">Total Tasks</p>
+                            <h3 class="fw-bold mb-0">{{ total_tasks }}</h3>
+                        </div>
+                        <div class="icon-box" style="background: #e3f2fd;">
+                            <i class="fas fa-clipboard-list fa-2x" style="color: #3498db;"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3 mb-3">
+            <div class="card h-100" style="border-left: 4px solid #f39c12;">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <p class="text-muted mb-1">Pending</p>
+                            <h3 class="fw-bold mb-0">{{ pending_tasks }}</h3>
+                        </div>
+                        <div class="icon-box" style="background: #fff3e0;">
+                            <i class="fas fa-hourglass-half fa-2x" style="color: #f39c12;"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3 mb-3">
+            <div class="card h-100" style="border-left: 4px solid #27ae60;">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <p class="text-muted mb-1">Completed</p>
+                            <h3 class="fw-bold mb-0">{{ completed_tasks }}</h3>
+                        </div>
+                        <div class="icon-box" style="background: #e8f5e9;">
+                            <i class="fas fa-check-circle fa-2x" style="color: #27ae60;"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3 mb-3">
+            <div class="card h-100" style="border-left: 4px solid #e74c3c;">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <p class="text-muted mb-1">Overdue</p>
+                            <h3 class="fw-bold mb-0">{{ overdue_tasks }}</h3>
+                        </div>
+                        <div class="icon-box" style="background: #ffebee;">
+                            <i class="fas fa-exclamation-triangle fa-2x" style="color: #e74c3c;"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Quick Navigation -->
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-body">
+                    <div class="btn-group w-100" role="group">
+                        <a href="{% url 'task_management:dashboard' %}" class="btn btn-hygge">
+                            <i class="fas fa-home me-2"></i>Dashboard
+                        </a>
+                        <a href="{% url 'task_management:task_list' %}" class="btn btn-outline-hygge">
+                            <i class="fas fa-list me-2"></i>All Tasks
+                        </a>
+                        <a href="{% url 'task_management:kanban' %}" class="btn btn-outline-hygge">
+                            <i class="fas fa-columns me-2"></i>Kanban
+                        </a>
+                        <a href="{% url 'task_management:calendar' %}" class="btn btn-outline-hygge">
+                            <i class="fas fa-calendar me-2"></i>Calendar
+                        </a>
+                        <a href="{% url 'task_management:project_list' %}" class="btn btn-outline-hygge">
+                            <i class="fas fa-folder me-2"></i>Projects
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <!-- Recent Tasks -->
+        <div class="col-lg-6 mb-4">
+            <div class="card h-100">
+                <div class="card-header bg-white">
+                    <h5 class="fw-bold mb-0">
+                        <i class="fas fa-clock me-2" style="color: var(--hygge-green);"></i>Recent Tasks
+                    </h5>
+                </div>
+                <div class="card-body p-0">
+                    {% if recent_tasks %}
+                    <div class="list-group list-group-flush">
+                        {% for task in recent_tasks %}
+                        <a href="{% url 'task_management:task_detail' task.pk %}" class="list-group-item list-group-item-action">
+                            <div class="d-flex justify-content-between align-items-start">
+                                <div class="flex-grow-1">
+                                    <h6 class="mb-1 fw-bold">{{ task.title }}</h6>
+                                    <p class="mb-1 small text-muted">
+                                        {% if task.project %}
+                                        <i class="fas fa-folder me-1"></i>{{ task.project.name }}
+                                        {% else %}
+                                        <i class="fas fa-inbox me-1"></i>No Project
+                                        {% endif %}
+                                    </p>
+                                </div>
+                                <div class="text-end">
+                                    <span class="badge" style="background-color: {{ task.get_priority_color }};">
+                                        {{ task.get_priority_display }}
+                                    </span>
+                                    <br>
+                                    <span class="badge mt-1" style="background-color: {{ task.get_status_color }};">
+                                        {{ task.get_status_display }}
+                                    </span>
+                                </div>
+                            </div>
+                        </a>
+                        {% endfor %}
+                    </div>
+                    {% else %}
+                    <div class="p-4 text-center text-muted">
+                        <i class="fas fa-inbox fa-3x mb-3"></i>
+                        <p>No tasks yet. Create your first task!</p>
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+
+        <!-- Upcoming Deadlines -->
+        <div class="col-lg-6 mb-4">
+            <div class="card h-100">
+                <div class="card-header bg-white">
+                    <h5 class="fw-bold mb-0">
+                        <i class="fas fa-calendar-alt me-2" style="color: #e74c3c;"></i>Upcoming Deadlines
+                    </h5>
+                </div>
+                <div class="card-body p-0">
+                    {% if upcoming_deadlines %}
+                    <div class="list-group list-group-flush">
+                        {% for task in upcoming_deadlines %}
+                        <a href="{% url 'task_management:task_detail' task.pk %}" class="list-group-item list-group-item-action">
+                            <div class="d-flex justify-content-between align-items-start">
+                                <div class="flex-grow-1">
+                                    <h6 class="mb-1 fw-bold">{{ task.title }}</h6>
+                                    <p class="mb-0 small">
+                                        <i class="fas fa-calendar me-1"></i>
+                                        Due: {{ task.due_date|date:"M d, Y g:i A" }}
+                                    </p>
+                                </div>
+                                <span class="badge" style="background-color: {{ task.get_priority_color }};">
+                                    {{ task.get_priority_display }}
+                                </span>
+                            </div>
+                        </a>
+                        {% endfor %}
+                    </div>
+                    {% else %}
+                    <div class="p-4 text-center text-muted">
+                        <i class="fas fa-calendar-check fa-3x mb-3"></i>
+                        <p>No upcoming deadlines</p>
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+
+        <!-- Projects -->
+        <div class="col-12 mb-4">
+            <div class="card">
+                <div class="card-header bg-white">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <h5 class="fw-bold mb-0">
+                            <i class="fas fa-folder me-2" style="color: var(--hygge-soft-blue);"></i>Your Projects
+                        </h5>
+                        {% if user.is_staff %}
+                        <a href="{% url 'task_management:project_create' %}" class="btn btn-sm btn-hygge">
+                            <i class="fas fa-plus me-1"></i>New Project
+                        </a>
+                        {% endif %}
+                    </div>
+                </div>
+                <div class="card-body">
+                    {% if projects %}
+                    <div class="row">
+                        {% for project in projects %}
+                        <div class="col-md-6 col-lg-4 mb-3">
+                            <a href="{% url 'task_management:project_detail' project.slug %}" class="text-decoration-none">
+                                <div class="card h-100 project-card" style="border-left: 4px solid {{ project.color }};">
+                                    <div class="card-body">
+                                        <h6 class="fw-bold mb-2">{{ project.name }}</h6>
+                                        <p class="small text-muted mb-3">{{ project.description|truncatewords:10 }}</p>
+                                        <div class="mb-2">
+                                            <small class="text-muted">Progress</small>
+                                            <div class="progress" style="height: 8px;">
+                                                <div class="progress-bar" role="progressbar"
+                                                     style="width: {{ project.progress_percentage }}%; background-color: {{ project.color }};"
+                                                     aria-valuenow="{{ project.progress_percentage }}"
+                                                     aria-valuemin="0" aria-valuemax="100">
+                                                </div>
+                                            </div>
+                                            <small class="text-muted">{{ project.progress_percentage }}%</small>
+                                        </div>
+                                        <div class="d-flex justify-content-between align-items-center">
+                                            <span class="badge bg-secondary">{{ project.get_task_count }} tasks</span>
+                                            <span class="badge" style="background-color: {{ project.color }};">{{ project.get_status_display }}</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </a>
+                        </div>
+                        {% endfor %}
+                    </div>
+                    {% else %}
+                    <div class="text-center text-muted py-4">
+                        <i class="fas fa-folder-open fa-3x mb-3"></i>
+                        <p>No projects yet.</p>
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+.icon-box {
+    width: 60px;
+    height: 60px;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.project-card {
+    transition: all 0.3s ease;
+    cursor: pointer;
+}
+
+.project-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 20px rgba(0,0,0,0.1);
+}
+
+.list-group-item {
+    transition: background-color 0.2s ease;
+}
+
+.list-group-item:hover {
+    background-color: #f8f9fa;
+}
+</style>
+{% endblock %}

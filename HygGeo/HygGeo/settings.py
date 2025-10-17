@@ -70,6 +70,7 @@ INSTALLED_APPS = [
     # Local apps
     'accounts',
     'experiences',
+    'task_management',
     # NOTE: Do NOT add 'survey' here - survey functionality is part of 'accounts' app
 ]
 

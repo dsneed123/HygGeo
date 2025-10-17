@@ -1,0 +1,324 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Calendar - Task Management - HygGeo{% endblock %}
+
+{% block extra_css %}
+<link href='https://cdn.jsdelivr.net/npm/fullcalendar@6.1.10/index.global.min.css' rel='stylesheet' />
+<style>
+.calendar-container {
+    background: white;
+    border-radius: 15px;
+    padding: 30px;
+    box-shadow: 0 10px 40px rgba(0,0,0,0.1);
+}
+
+.fc {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}
+
+.fc-toolbar-title {
+    font-size: 1.75rem !important;
+    font-weight: 700 !important;
+    color: var(--hygge-green) !important;
+}
+
+.fc-button {
+    background: var(--hygge-green) !important;
+    border: none !important;
+    padding: 10px 20px !important;
+    border-radius: 8px !important;
+    font-weight: 600 !important;
+    transition: all 0.3s ease !important;
+}
+
+.fc-button:hover {
+    background: #357a52 !important;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(45, 90, 61, 0.3) !important;
+}
+
+.fc-button-active {
+    background: #1a4d2e !important;
+}
+
+.fc-daygrid-day {
+    transition: background-color 0.2s ease;
+}
+
+.fc-daygrid-day:hover {
+    background-color: rgba(45, 90, 61, 0.05);
+}
+
+.fc-event {
+    border-radius: 6px !important;
+    padding: 4px 8px !important;
+    font-weight: 500 !important;
+    cursor: pointer !important;
+    transition: all 0.2s ease !important;
+}
+
+.fc-event:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.2) !important;
+}
+
+.filter-card {
+    background: white;
+    border-radius: 15px;
+    padding: 25px;
+    box-shadow: 0 5px 20px rgba(0,0,0,0.08);
+    margin-bottom: 20px;
+}
+
+.legend-item {
+    display: inline-flex;
+    align-items: center;
+    margin-right: 20px;
+    margin-bottom: 10px;
+}
+
+.legend-color {
+    width: 20px;
+    height: 20px;
+    border-radius: 4px;
+    margin-right: 8px;
+}
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="container-fluid py-4">
+    <!-- Header -->
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="d-flex justify-content-between align-items-center">
+                <div>
+                    <h1 class="h2 fw-bold" style="color: var(--hygge-green);">
+                        <i class="fas fa-calendar-alt me-2"></i>Task Calendar
+                    </h1>
+                    <p class="text-muted">View and manage your tasks in calendar view</p>
+                </div>
+                <div>
+                    <a href="{% url 'task_management:dashboard' %}" class="btn btn-outline-hygge me-2">
+                        <i class="fas fa-arrow-left me-2"></i>Dashboard
+                    </a>
+                    <a href="{% url 'task_management:task_create' %}" class="btn btn-hygge">
+                        <i class="fas fa-plus me-2"></i>New Task
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Quick Navigation -->
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-body">
+                    <div class="btn-group w-100" role="group">
+                        <a href="{% url 'task_management:dashboard' %}" class="btn btn-outline-hygge">
+                            <i class="fas fa-home me-2"></i>Dashboard
+                        </a>
+                        <a href="{% url 'task_management:task_list' %}" class="btn btn-outline-hygge">
+                            <i class="fas fa-list me-2"></i>All Tasks
+                        </a>
+                        <a href="{% url 'task_management:kanban' %}" class="btn btn-outline-hygge">
+                            <i class="fas fa-columns me-2"></i>Kanban
+                        </a>
+                        <a href="{% url 'task_management:calendar' %}" class="btn btn-hygge">
+                            <i class="fas fa-calendar me-2"></i>Calendar
+                        </a>
+                        <a href="{% url 'task_management:project_list' %}" class="btn btn-outline-hygge">
+                            <i class="fas fa-folder me-2"></i>Projects
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Filters -->
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="filter-card">
+                <h5 class="fw-bold mb-3">
+                    <i class="fas fa-filter me-2"></i>Filters
+                </h5>
+                <form method="get" id="filterForm">
+                    <div class="row g-3">
+                        <div class="col-md-4">
+                            <label class="form-label fw-bold">Project</label>
+                            <select name="project" id="projectFilter" class="form-select">
+                                <option value="">All Projects</option>
+                                {% for project in projects %}
+                                <option value="{{ project.id }}" {% if selected_project == project.id|stringformat:"s" %}selected{% endif %}>
+                                    {{ project.name }}
+                                </option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                        <div class="col-md-4">
+                            <label class="form-label fw-bold">Status</label>
+                            <select name="status" id="statusFilter" class="form-select">
+                                <option value="">All Statuses</option>
+                                <option value="todo" {% if selected_status == 'todo' %}selected{% endif %}>To Do</option>
+                                <option value="in_progress" {% if selected_status == 'in_progress' %}selected{% endif %}>In Progress</option>
+                                <option value="in_review" {% if selected_status == 'in_review' %}selected{% endif %}>In Review</option>
+                                <option value="completed" {% if selected_status == 'completed' %}selected{% endif %}>Completed</option>
+                                <option value="blocked" {% if selected_status == 'blocked' %}selected{% endif %}>Blocked</option>
+                            </select>
+                        </div>
+                        <div class="col-md-4 d-flex align-items-end">
+                            <button type="button" onclick="applyFilters()" class="btn btn-hygge me-2">
+                                <i class="fas fa-check me-2"></i>Apply Filters
+                            </button>
+                            <a href="{% url 'task_management:calendar' %}" class="btn btn-outline-secondary">
+                                <i class="fas fa-redo me-2"></i>Reset
+                            </a>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Legend -->
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="filter-card">
+                <h6 class="fw-bold mb-3">Legend</h6>
+                <div>
+                    <div class="legend-item">
+                        <div class="legend-color" style="background: #95a5a6;"></div>
+                        <span>To Do</span>
+                    </div>
+                    <div class="legend-item">
+                        <div class="legend-color" style="background: #3498db;"></div>
+                        <span>In Progress</span>
+                    </div>
+                    <div class="legend-item">
+                        <div class="legend-color" style="background: #9b59b6;"></div>
+                        <span>In Review</span>
+                    </div>
+                    <div class="legend-item">
+                        <div class="legend-color" style="background: #27ae60;"></div>
+                        <span>Completed</span>
+                    </div>
+                    <div class="legend-item">
+                        <div class="legend-color" style="background: #e74c3c;"></div>
+                        <span>Blocked</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Calendar -->
+    <div class="row">
+        <div class="col-12">
+            <div class="calendar-container">
+                <div id="calendar"></div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script src='https://cdn.jsdelivr.net/npm/fullcalendar@6.1.10/index.global.min.js'></script>
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    var calendarEl = document.getElementById('calendar');
+
+    var calendar = new FullCalendar.Calendar(calendarEl, {
+        initialView: 'dayGridMonth',
+        headerToolbar: {
+            left: 'prev,next today',
+            center: 'title',
+            right: 'dayGridMonth,timeGridWeek,timeGridDay,listWeek'
+        },
+        buttonText: {
+            today: 'Today',
+            month: 'Month',
+            week: 'Week',
+            day: 'Day',
+            list: 'List'
+        },
+        height: 'auto',
+        eventSources: [
+            {
+                url: '{% url "task_management:calendar_events_api" %}',
+                extraParams: function() {
+                    return {
+                        project: document.getElementById('projectFilter').value,
+                        status: document.getElementById('statusFilter').value
+                    };
+                }
+            }
+        ],
+        eventClick: function(info) {
+            info.jsEvent.preventDefault();
+            if (info.event.url) {
+                window.location.href = info.event.url;
+            }
+        },
+        eventMouseEnter: function(info) {
+            // Show tooltip
+            var tooltip = document.createElement('div');
+            tooltip.className = 'fc-tooltip';
+            tooltip.innerHTML = `
+                <strong>${info.event.title}</strong><br>
+                Priority: ${info.event.extendedProps.priority}<br>
+                Status: ${info.event.extendedProps.status}<br>
+                Project: ${info.event.extendedProps.project}
+            `;
+            tooltip.style.cssText = `
+                position: absolute;
+                background: #333;
+                color: white;
+                padding: 10px 15px;
+                border-radius: 8px;
+                font-size: 12px;
+                z-index: 9999;
+                pointer-events: none;
+                box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+            `;
+            document.body.appendChild(tooltip);
+
+            function updatePosition(e) {
+                tooltip.style.left = e.pageX + 15 + 'px';
+                tooltip.style.top = e.pageY + 15 + 'px';
+            }
+
+            updatePosition(info.jsEvent);
+            info.el._tooltip = tooltip;
+            info.el.addEventListener('mousemove', updatePosition);
+        },
+        eventMouseLeave: function(info) {
+            if (info.el._tooltip) {
+                info.el._tooltip.remove();
+                delete info.el._tooltip;
+            }
+        },
+        eventDidMount: function(info) {
+            // Add animation
+            info.el.style.opacity = '0';
+            info.el.style.transform = 'scale(0.8)';
+            setTimeout(() => {
+                info.el.style.transition = 'all 0.3s ease';
+                info.el.style.opacity = '1';
+                info.el.style.transform = 'scale(1)';
+            }, 50);
+        }
+    });
+
+    calendar.render();
+
+    // Apply filters function
+    window.applyFilters = function() {
+        calendar.refetchEvents();
+    };
+});
+</script>
+{% endblock %}
