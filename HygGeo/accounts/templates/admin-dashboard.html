@@ -354,18 +354,111 @@
                         <i class="fas fa-chart-pie" style="font-size: 3rem; color: var(--hygge-green);"></i>
                     </div>
                     <h6 class="fw-bold text-center mb-3">Comprehensive Business Report</h6>
-                    <p class="text-muted small text-center mb-3">Export a complete PDF report with user analytics, content metrics, traffic data, and space for Google Search Console insights</p>
+                    <p class="text-muted small text-center mb-3">Export a complete PDF report with user analytics, content metrics, traffic data, and Google Search Console insights</p>
                     <div class="d-grid">
-                        <a href="{% url 'export_business_report_pdf' %}" class="btn btn-success btn-lg">
+                        <button type="button" class="btn btn-success btn-lg" data-bs-toggle="modal" data-bs-target="#gscDataModal">
                             <i class="fas fa-file-pdf me-2"></i>Export Business Report (PDF)
-                        </a>
+                        </button>
                     </div>
                     <div class="alert alert-info mt-3 mb-0">
                         <small>
                             <i class="fas fa-info-circle me-1"></i>
-                            <strong>Includes:</strong> User analytics, content stats, traffic metrics, top performers, KPIs, and blank fields for Google Search Console data
+                            <strong>Includes:</strong> User analytics, content stats, traffic metrics, top performers, KPIs, and Google Search Console data
                         </small>
                     </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Google Search Console Data Modal -->
+    <div class="modal fade" id="gscDataModal" tabindex="-1" aria-labelledby="gscDataModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header" style="background: linear-gradient(135deg, var(--hygge-green) 0%, #357a52 100%); color: white;">
+                    <h5 class="modal-title" id="gscDataModalLabel">
+                        <i class="fas fa-chart-line me-2"></i>Google Search Console Data
+                    </h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="alert alert-info">
+                        <i class="fas fa-info-circle me-2"></i>
+                        <strong>Optional:</strong> Enter your Google Search Console metrics below for a complete report. Leave blank to generate without GSC data.
+                    </div>
+
+                    <form id="gscDataForm">
+                        <div class="row g-3">
+                            <div class="col-12">
+                                <h6 class="fw-bold text-primary">
+                                    <i class="fas fa-eye me-2"></i>Total Impressions
+                                </h6>
+                                <p class="small text-muted mb-3">How many times your site appeared in search results</p>
+                            </div>
+                            <div class="col-md-4">
+                                <label class="form-label fw-bold">Last 7 Days</label>
+                                <input type="number" class="form-control" id="impressions_7d" name="impressions_7d"
+                                       placeholder="e.g., 1500">
+                            </div>
+                            <div class="col-md-4">
+                                <label class="form-label fw-bold">Last 30 Days</label>
+                                <input type="number" class="form-control" id="impressions_30d" name="impressions_30d"
+                                       placeholder="e.g., 6000">
+                            </div>
+                            <div class="col-md-4">
+                                <label class="form-label fw-bold">Last 90 Days</label>
+                                <input type="number" class="form-control" id="impressions_90d" name="impressions_90d"
+                                       placeholder="e.g., 18000">
+                            </div>
+
+                            <div class="col-12 mt-4">
+                                <h6 class="fw-bold text-primary">
+                                    <i class="fas fa-sort-amount-up me-2"></i>Average Position
+                                </h6>
+                                <p class="small text-muted mb-3">Average ranking position in search results (lower is better)</p>
+                            </div>
+                            <div class="col-md-4">
+                                <label class="form-label fw-bold">Last 7 Days</label>
+                                <input type="number" step="0.1" class="form-control" id="position_7d" name="position_7d"
+                                       placeholder="e.g., 15.3">
+                            </div>
+                            <div class="col-md-4">
+                                <label class="form-label fw-bold">Last 30 Days</label>
+                                <input type="number" step="0.1" class="form-control" id="position_30d" name="position_30d"
+                                       placeholder="e.g., 14.8">
+                            </div>
+                            <div class="col-md-4">
+                                <label class="form-label fw-bold">Last 90 Days</label>
+                                <input type="number" step="0.1" class="form-control" id="position_90d" name="position_90d"
+                                       placeholder="e.g., 16.2">
+                            </div>
+
+                            <div class="col-12 mt-4">
+                                <div class="card" style="background: #f8f9fa; border-left: 4px solid #4285F4;">
+                                    <div class="card-body">
+                                        <h6 class="fw-bold mb-2">
+                                            <i class="fas fa-lightbulb me-2" style="color: #4285F4;"></i>How to find this data:
+                                        </h6>
+                                        <ol class="small mb-0">
+                                            <li>Go to <a href="https://search.google.com/search-console" target="_blank">search.google.com/search-console</a></li>
+                                            <li>Select your property (hyggeo.com)</li>
+                                            <li>Navigate to <strong>Performance > Search Results</strong></li>
+                                            <li>Select the date range (Last 7, 30, or 90 days)</li>
+                                            <li>View <strong>Total impressions</strong> and <strong>Average position</strong> at the top</li>
+                                        </ol>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                        <i class="fas fa-times me-2"></i>Cancel
+                    </button>
+                    <button type="button" class="btn btn-success" onclick="generateReportWithGSCData()">
+                        <i class="fas fa-file-pdf me-2"></i>Generate Report
+                    </button>
                 </div>
             </div>
         </div>
@@ -1378,6 +1471,48 @@ document.addEventListener('DOMContentLoaded', function() {
     // Update title preview when count changes
     document.querySelector('select[name="item_count"]').addEventListener('change', updateTitlePreview);
 });
+
+// Generate Business Report with GSC Data
+function generateReportWithGSCData() {
+    const form = document.getElementById('gscDataForm');
+    const formData = new FormData(form);
+
+    // Build URL with query parameters
+    const params = new URLSearchParams();
+
+    // Add all form fields as query parameters
+    for (let [key, value] of formData.entries()) {
+        if (value) {  // Only add non-empty values
+            params.append(key, value);
+        }
+    }
+
+    // Generate the URL
+    const baseUrl = '{% url "export_business_report_pdf" %}';
+    const fullUrl = params.toString() ? `${baseUrl}?${params.toString()}` : baseUrl;
+
+    // Close modal
+    const modal = bootstrap.Modal.getInstance(document.getElementById('gscDataModal'));
+    modal.hide();
+
+    // Show loading message
+    const toast = document.createElement('div');
+    toast.className = 'alert alert-info position-fixed';
+    toast.style.cssText = 'top: 20px; right: 20px; z-index: 9999; min-width: 300px;';
+    toast.innerHTML = `
+        <i class="fas fa-spinner fa-spin me-2"></i>
+        Generating your business report... This may take a moment.
+    `;
+    document.body.appendChild(toast);
+
+    // Navigate to download URL
+    window.location.href = fullUrl;
+
+    // Remove toast after 5 seconds
+    setTimeout(() => {
+        toast.remove();
+    }, 5000);
+}
 </script>
 {% endblock %}
 

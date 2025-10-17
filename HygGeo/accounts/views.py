@@ -1156,17 +1156,87 @@ def analytics_dashboard(request):
 
 @user_passes_test(lambda u: u.is_staff, login_url='/accounts/login/')
 def export_business_report_pdf(request):
-    """Export comprehensive business analytics report as PDF"""
+    """Export comprehensive business analytics report as PDF with graphs and projections"""
     from reportlab.lib import colors
     from reportlab.lib.pagesizes import letter
-    from reportlab.platypus import SimpleDocTemplate, Table, TableStyle, Paragraph, Spacer, PageBreak
+    from reportlab.platypus import SimpleDocTemplate, Table, TableStyle, Paragraph, Spacer, PageBreak, Image as RLImage
     from reportlab.lib.styles import getSampleStyleSheet, ParagraphStyle
     from reportlab.lib.units import inch
     from reportlab.lib.enums import TA_CENTER, TA_LEFT
     from django.db.models import Count, Avg
+    from django.db.models.functions import TruncDate
     from datetime import timedelta
     from experiences.models import BookingTracking
     from io import BytesIO
+    import matplotlib
+    matplotlib.use('Agg')  # Use non-GUI backend
+    import matplotlib.pyplot as plt
+    import matplotlib.dates as mdates
+    from datetime import datetime
+    import numpy as np
+
+    # Helper function to calculate trend and projections
+    def calculate_projections(daily_data, days_to_project):
+        """Calculate linear regression trend and project future values"""
+        if len(daily_data) < 2:
+            return 0
+
+        x = np.arange(len(daily_data))
+        y = np.array(daily_data)
+
+        # Calculate linear regression
+        coeffs = np.polyfit(x, y, 1)
+        slope = coeffs[0]
+
+        # Project future value
+        future_x = len(daily_data) + days_to_project - 1
+        projected_value = slope * days_to_project
+
+        return max(0, int(projected_value))
+
+    def create_trend_graph(dates, values, title, ylabel, color='#2d5a3d'):
+        """Create a line graph with trend line"""
+        fig, ax = plt.subplots(figsize=(8, 4))
+
+        # Plot actual data
+        ax.plot(dates, values, marker='o', linewidth=2, markersize=4,
+                color=color, label='Actual', alpha=0.8)
+
+        # Calculate and plot trend line
+        if len(values) >= 2:
+            x_numeric = np.arange(len(values))
+            coeffs = np.polyfit(x_numeric, values, 1)
+            trend_line = np.poly1d(coeffs)
+
+            # Extend trend line into future
+            future_days = 7
+            extended_x = np.arange(len(values) + future_days)
+            extended_dates = dates + [dates[-1] + timedelta(days=i+1) for i in range(future_days)]
+
+            ax.plot(extended_dates, trend_line(extended_x), '--',
+                   color='#e74c3c', linewidth=2, label='Trend + Projection', alpha=0.7)
+
+        ax.set_title(title, fontsize=14, fontweight='bold', color='#2d5a3d')
+        ax.set_xlabel('Date', fontsize=10)
+        ax.set_ylabel(ylabel, fontsize=10)
+        ax.legend(loc='best')
+        ax.grid(True, alpha=0.3)
+
+        # Format x-axis
+        ax.xaxis.set_major_formatter(mdates.DateFormatter('%m/%d'))
+        ax.xaxis.set_major_locator(mdates.DayLocator(interval=max(1, len(dates)//10)))
+        plt.xticks(rotation=45)
+
+        # Tight layout
+        plt.tight_layout()
+
+        # Save to BytesIO
+        img_buffer = BytesIO()
+        plt.savefig(img_buffer, format='png', dpi=150, bbox_inches='tight')
+        img_buffer.seek(0)
+        plt.close()
+
+        return img_buffer
 
     # Create the HttpResponse object with PDF headers
     response = HttpResponse(content_type='application/pdf')
@@ -1227,6 +1297,83 @@ def export_business_report_pdf(request):
     total_page_views = PageView.objects.count()
     page_views_30_days = PageView.objects.filter(viewed_at__gte=last_30_days).count()
 
+    # Collect historical data for trend analysis (last 45 days for better trend calculation)
+    trend_period = now - timedelta(days=45)
+
+    # Page views by day
+    page_views_daily = PageView.objects.filter(
+        viewed_at__gte=trend_period
+    ).annotate(
+        date=TruncDate('viewed_at')
+    ).values('date').annotate(
+        count=Count('id')
+    ).order_by('date')
+
+    # Click events by day
+    clicks_daily = ClickEvent.objects.filter(
+        clicked_at__gte=trend_period
+    ).annotate(
+        date=TruncDate('clicked_at')
+    ).values('date').annotate(
+        count=Count('id')
+    ).order_by('date')
+
+    # Booking clicks by day
+    bookings_daily = BookingTracking.objects.filter(
+        clicked_at__gte=trend_period
+    ).annotate(
+        date=TruncDate('clicked_at')
+    ).values('date').annotate(
+        count=Count('id')
+    ).order_by('date')
+
+    # User registrations by day
+    users_daily = User.objects.filter(
+        date_joined__gte=trend_period
+    ).annotate(
+        date=TruncDate('date_joined')
+    ).values('date').annotate(
+        count=Count('id')
+    ).order_by('date')
+
+    # Fill in missing dates with zeros and prepare data for graphs
+    def fill_dates(queryset, start_date, end_date):
+        """Fill missing dates with zero values"""
+        data_dict = {item['date']: item['count'] for item in queryset}
+        dates = []
+        values = []
+        current = start_date.date()
+        end = end_date.date()
+
+        while current <= end:
+            dates.append(datetime.combine(current, datetime.min.time()))
+            values.append(data_dict.get(current, 0))
+            current += timedelta(days=1)
+
+        return dates, values
+
+    pv_dates, pv_values = fill_dates(page_views_daily, trend_period, now)
+    click_dates, click_values = fill_dates(clicks_daily, trend_period, now)
+    booking_dates, booking_values = fill_dates(bookings_daily, trend_period, now)
+    user_dates, user_values = fill_dates(users_daily, trend_period, now)
+
+    # Calculate projections
+    pv_week_proj = calculate_projections(pv_values[-30:], 7)
+    pv_month_proj = calculate_projections(pv_values[-30:], 30)
+    pv_year_proj = calculate_projections(pv_values[-30:], 365)
+
+    click_week_proj = calculate_projections(click_values[-30:], 7)
+    click_month_proj = calculate_projections(click_values[-30:], 30)
+    click_year_proj = calculate_projections(click_values[-30:], 365)
+
+    booking_week_proj = calculate_projections(booking_values[-30:], 7)
+    booking_month_proj = calculate_projections(booking_values[-30:], 30)
+    booking_year_proj = calculate_projections(booking_values[-30:], 365)
+
+    user_week_proj = calculate_projections(user_values[-30:], 7)
+    user_month_proj = calculate_projections(user_values[-30:], 30)
+    user_year_proj = calculate_projections(user_values[-30:], 365)
+
     # --- TITLE PAGE ---
     elements.append(Paragraph("HygGeo Business Analytics Report", title_style))
     elements.append(Paragraph(f"Generated: {now.strftime('%B %d, %Y at %I:%M %p')}", styles['Normal']))
@@ -1260,6 +1407,76 @@ def export_business_report_pdf(request):
     ]))
     elements.append(summary_table)
     elements.append(Spacer(1, 0.3*inch))
+
+    # --- PROJECTIONS TABLE ---
+    elements.append(Paragraph("Growth Projections (Based on 30-Day Trends)", heading_style))
+    elements.append(Paragraph("Estimated growth based on linear regression analysis of recent trends", styles['Italic']))
+    elements.append(Spacer(1, 0.2*inch))
+
+    projections_data = [
+        ['Metric', 'Next Week (+7d)', 'Next Month (+30d)', 'Next Year (+365d)'],
+        ['Page Views', f'+{pv_week_proj:,}', f'+{pv_month_proj:,}', f'+{pv_year_proj:,}'],
+        ['Click Events', f'+{click_week_proj:,}', f'+{click_month_proj:,}', f'+{click_year_proj:,}'],
+        ['Booking Clicks', f'+{booking_week_proj:,}', f'+{booking_month_proj:,}', f'+{booking_year_proj:,}'],
+        ['New Users', f'+{user_week_proj:,}', f'+{user_month_proj:,}', f'+{user_year_proj:,}'],
+    ]
+
+    proj_table = Table(projections_data, colWidths=[2*inch, 1.5*inch, 1.5*inch, 1.5*inch])
+    proj_table.setStyle(TableStyle([
+        ('BACKGROUND', (0, 0), (-1, 0), colors.HexColor('#e74c3c')),
+        ('TEXTCOLOR', (0, 0), (-1, 0), colors.whitesmoke),
+        ('ALIGN', (0, 0), (0, -1), 'LEFT'),
+        ('ALIGN', (1, 0), (-1, -1), 'CENTER'),
+        ('FONTNAME', (0, 0), (-1, 0), 'Helvetica-Bold'),
+        ('FONTSIZE', (0, 0), (-1, 0), 11),
+        ('BOTTOMPADDING', (0, 0), (-1, 0), 10),
+        ('GRID', (0, 0), (-1, -1), 1, colors.grey),
+        ('ROWBACKGROUNDS', (0, 1), (-1, -1), [colors.HexColor('#ffe6e6'), colors.HexColor('#fff0f0')]),
+        ('FONTNAME', (0, 1), (-1, -1), 'Helvetica'),
+        ('FONTSIZE', (0, 1), (-1, -1), 10),
+    ]))
+    elements.append(proj_table)
+    elements.append(Spacer(1, 0.2*inch))
+
+    elements.append(Paragraph("Note: Projections assume current growth trends continue. Actual results may vary based on seasonal factors, marketing campaigns, and market conditions.",
+                             ParagraphStyle('Note', parent=styles['Italic'], fontSize=8, textColor=colors.grey)))
+
+    # Page Break
+    elements.append(PageBreak())
+
+    # --- TREND GRAPHS ---
+    elements.append(Paragraph("Traffic & Engagement Trends (Last 45 Days)", heading_style))
+    elements.append(Spacer(1, 0.2*inch))
+
+    # Page Views Graph
+    if len(pv_values) > 0:
+        elements.append(Paragraph("Page Views Over Time", subheading_style))
+        pv_graph = create_trend_graph(pv_dates, pv_values, 'Daily Page Views with 7-Day Projection', 'Page Views', '#2d5a3d')
+        elements.append(RLImage(pv_graph, width=6.5*inch, height=3.25*inch))
+        elements.append(Spacer(1, 0.3*inch))
+
+    # Click Events Graph
+    if len(click_values) > 0:
+        elements.append(Paragraph("Click Events Over Time", subheading_style))
+        click_graph = create_trend_graph(click_dates, click_values, 'Daily Click Events with 7-Day Projection', 'Click Events', '#4285F4')
+        elements.append(RLImage(click_graph, width=6.5*inch, height=3.25*inch))
+        elements.append(Spacer(1, 0.3*inch))
+
+    elements.append(PageBreak())
+
+    # Booking Clicks Graph
+    if len(booking_values) > 0:
+        elements.append(Paragraph("Booking Clicks Over Time", subheading_style))
+        booking_graph = create_trend_graph(booking_dates, booking_values, 'Daily Booking Clicks with 7-Day Projection', 'Booking Clicks', '#e74c3c')
+        elements.append(RLImage(booking_graph, width=6.5*inch, height=3.25*inch))
+        elements.append(Spacer(1, 0.3*inch))
+
+    # User Registrations Graph
+    if len(user_values) > 0:
+        elements.append(Paragraph("User Registrations Over Time", subheading_style))
+        user_graph = create_trend_graph(user_dates, user_values, 'Daily New User Registrations with 7-Day Projection', 'New Users', '#9b59b6')
+        elements.append(RLImage(user_graph, width=6.5*inch, height=3.25*inch))
+        elements.append(Spacer(1, 0.3*inch))
 
     # Page Break
     elements.append(PageBreak())
@@ -1407,15 +1624,33 @@ def export_business_report_pdf(request):
 
     # --- GOOGLE SEARCH CONSOLE SECTION ---
     elements.append(Paragraph("Google Search Console Metrics", heading_style))
-    elements.append(Paragraph("(Manually Update These Metrics from Google Search Console)", styles['Italic']))
+    elements.append(Paragraph("Data from Google Search Console Performance Report", styles['Italic']))
     elements.append(Spacer(1, 0.2*inch))
+
+    # Get GSC data from request parameters
+    impressions_7d = request.GET.get('impressions_7d', '')
+    impressions_30d = request.GET.get('impressions_30d', '')
+    impressions_90d = request.GET.get('impressions_90d', '')
+    position_7d = request.GET.get('position_7d', '')
+    position_30d = request.GET.get('position_30d', '')
+    position_90d = request.GET.get('position_90d', '')
+
+    # Format values for display
+    def format_gsc_value(value, is_position=False):
+        if not value or value == '':
+            return '_________'
+        try:
+            if is_position:
+                return f'{float(value):.1f}'
+            else:
+                return f'{int(value):,}'
+        except:
+            return value
 
     gsc_data = [
         ['Metric', 'Last 7 Days', 'Last 30 Days', 'Last 90 Days'],
-        ['Total Impressions', '_________', '_________', '_________'],
-        ['Total Clicks', '_________', '_________', '_________'],
-        ['Average CTR (%)', '_________', '_________', '_________'],
-        ['Average Position', '_________', '_________', '_________'],
+        ['Total Impressions', format_gsc_value(impressions_7d), format_gsc_value(impressions_30d), format_gsc_value(impressions_90d)],
+        ['Average Position', format_gsc_value(position_7d, True), format_gsc_value(position_30d, True), format_gsc_value(position_90d, True)],
     ]
 
     gsc_table = Table(gsc_data, colWidths=[2*inch, 1.5*inch, 1.5*inch, 1.5*inch])
@@ -1432,40 +1667,19 @@ def export_business_report_pdf(request):
     elements.append(gsc_table)
     elements.append(Spacer(1, 0.3*inch))
 
-    elements.append(Paragraph("Top Search Queries", subheading_style))
-    top_queries_data = [
-        ['Query', 'Clicks', 'Impressions', 'CTR', 'Position'],
-        ['_________________', '____', '________', '____', '____'],
-        ['_________________', '____', '________', '____', '____'],
-        ['_________________', '____', '________', '____', '____'],
-        ['_________________', '____', '________', '____', '____'],
-        ['_________________', '____', '________', '____', '____'],
-    ]
-
-    queries_table = Table(top_queries_data, colWidths=[2.5*inch, 0.8*inch, 1.2*inch, 0.8*inch, 0.8*inch])
-    queries_table.setStyle(TableStyle([
-        ('BACKGROUND', (0, 0), (-1, 0), colors.HexColor('#4285F4')),
-        ('TEXTCOLOR', (0, 0), (-1, 0), colors.whitesmoke),
-        ('ALIGN', (0, 0), (0, -1), 'LEFT'),
-        ('ALIGN', (1, 0), (-1, -1), 'CENTER'),
-        ('FONTNAME', (0, 0), (-1, 0), 'Helvetica-Bold'),
-        ('GRID', (0, 0), (-1, -1), 1, colors.grey),
-        ('ROWBACKGROUNDS', (0, 1), (-1, -1), [colors.white, colors.HexColor('#E8F0FE')]),
-    ]))
-    elements.append(queries_table)
-    elements.append(Spacer(1, 0.3*inch))
-
-    # Instructions
-    elements.append(Paragraph("How to get Google Search Console data:", subheading_style))
-    instructions = [
-        "1. Go to search.google.com/search-console",
-        "2. Select your property (hyggeo.com)",
-        "3. Navigate to Performance > Search Results",
-        "4. Export data and manually fill in the blanks above",
-        "5. You can also add this data programmatically using Google Search Console API"
-    ]
-    for instruction in instructions:
-        elements.append(Paragraph(instruction, styles['Normal']))
+    # Instructions (only show if no data was provided)
+    if not all([impressions_7d, impressions_30d, impressions_90d, position_7d, position_30d, position_90d]):
+        elements.append(Paragraph("How to get Google Search Console data:", subheading_style))
+        instructions = [
+            "1. Go to search.google.com/search-console",
+            "2. Select your property (hyggeo.com)",
+            "3. Navigate to Performance > Search Results",
+            "4. Select the date range (Last 7, 30, or 90 days)",
+            "5. View 'Total impressions' and 'Average position' metrics at the top",
+            "6. Enter these values when generating the report"
+        ]
+        for instruction in instructions:
+            elements.append(Paragraph(instruction, styles['Normal']))
 
     elements.append(PageBreak())
 
