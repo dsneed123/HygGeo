@@ -14558,3 +14558,9 @@ INFO 2025-10-19 18:15:34,583 basehttp 44860 44400 "POST /accounts/track/page-vie
 INFO 2025-10-19 18:15:36,393 basehttp 44860 44400 "POST /accounts/track/click/ HTTP/1.1" 200 61
 INFO 2025-10-19 18:15:36,412 basehttp 44860 43024 "GET /task-management/ HTTP/1.1" 200 50732
 INFO 2025-10-19 18:15:36,468 basehttp 44860 43024 "POST /accounts/track/page-view/ HTTP/1.1" 200 67
+INFO 2025-10-19 18:31:26,872 autoreload 38072 31004 Watching for file changes with StatReloader
+INFO 2025-10-19 18:31:27,694 basehttp 38072 37732 "GET / HTTP/1.1" 200 100474
+INFO 2025-10-19 18:31:27,851 basehttp 38072 37732 "GET /static/css/base.css HTTP/1.1" 200 5306
+INFO 2025-10-19 18:31:27,852 basehttp 38072 3912 "GET /static/js/navbar.js HTTP/1.1" 200 2732
+INFO 2025-10-19 18:31:27,905 basehttp 38072 3912 "POST /accounts/track/page-view/ HTTP/1.1" 200 67
+INFO 2025-10-19 18:31:28,563 basehttp 38072 36324 "GET /static/site.webmanifest HTTP/1.1" 200 263

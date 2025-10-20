@@ -424,8 +424,8 @@
                     </li>
                     {% endif %}
 
-                    <!-- Task Management - For all authenticated users -->
-                    {% if user.is_authenticated %}
+                    <!-- Task Management - Admin Only -->
+                    {% if user.is_staff %}
                     <li class="nav-item">
                         <a class="nav-link" href="{% url 'task_management:dashboard' %}">
                             <i class="fas fa-tasks me-1"></i>Tasks
