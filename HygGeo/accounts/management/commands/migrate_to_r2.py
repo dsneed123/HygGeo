@@ -20,6 +20,27 @@ User = get_user_model()
 class Command(BaseCommand):
     help = 'Migrate image URLs from DigitalOcean Spaces to Cloudflare R2'
 
+    def transform_url(self, old_url, old_domain, new_domain, bucket_prefix):
+        """
+        Transform URL from DigitalOcean Spaces to Cloudflare R2.
+
+        Example:
+            Old: https://hygoe-images.sfo3.cdn.digitaloceanspaces.com/media/destinations/file.jpg
+            New: https://www.hyggeo.com/hyggeo-images/media/destinations/file.jpg
+        """
+        # Replace the old domain with new domain
+        new_url = old_url.replace(old_domain, new_domain)
+
+        # Insert bucket prefix after the domain if it's not already there
+        if bucket_prefix and f'/{bucket_prefix}/' not in new_url:
+            # Find where to insert the bucket prefix (after https://domain/)
+            protocol_end = new_url.find('://') + 3
+            domain_end = new_url.find('/', protocol_end)
+            if domain_end != -1:
+                new_url = new_url[:domain_end] + f'/{bucket_prefix}' + new_url[domain_end:]
+
+        return new_url
+
     def add_arguments(self, parser):
         parser.add_argument(
             '--dry-run',
@@ -35,14 +56,21 @@ class Command(BaseCommand):
         parser.add_argument(
             '--new-domain',
             type=str,
-            default='pub-cfe28881db15475f88c173572f38ab10.r2.dev',
-            help='New Cloudflare R2 public domain (default: pub-cfe28881db15475f88c173572f38ab10.r2.dev)',
+            default='www.hyggeo.com',
+            help='New Cloudflare R2 public domain (default: www.hyggeo.com)',
+        )
+        parser.add_argument(
+            '--bucket-prefix',
+            type=str,
+            default='hyggeo-images',
+            help='Bucket name to include in path (default: hyggeo-images)',
         )
 
     def handle(self, *args, **options):
         dry_run = options['dry_run']
         old_domain = options['old_domain']
         new_domain = options['new_domain']
+        bucket_prefix = options['bucket_prefix']
 
         self.stdout.write(self.style.WARNING(f'\n{"="*70}'))
         self.stdout.write(self.style.WARNING('MIGRATING IMAGE URLS FROM DIGITALOCEAN SPACES TO CLOUDFLARE R2'))
@@ -54,7 +82,8 @@ class Command(BaseCommand):
             self.stdout.write(self.style.ERROR('LIVE MODE - Changes will be saved to database\n'))
 
         self.stdout.write(f'Old domain: {old_domain}')
-        self.stdout.write(f'New domain: {new_domain}\n')
+        self.stdout.write(f'New domain: {new_domain}')
+        self.stdout.write(f'Bucket prefix: {bucket_prefix}\n')
 
         # Track statistics
         stats = {
@@ -72,14 +101,17 @@ class Command(BaseCommand):
         for destination in Destination.objects.exclude(image=''):
             if old_domain in str(destination.image):
                 old_url = str(destination.image)
-                new_url = old_url.replace(old_domain, new_domain)
+                new_url = self.transform_url(old_url, old_domain, new_domain, bucket_prefix)
 
                 self.stdout.write(f'  Destination "{destination.name}":')
                 self.stdout.write(f'    Old: {old_url}')
                 self.stdout.write(f'    New: {new_url}')
 
                 if not dry_run:
-                    destination.image.name = new_url.split('/')[-2] + '/' + new_url.split('/')[-1]
+                    # Extract path after bucket/media/ for the field name
+                    path_parts = new_url.split(f'{bucket_prefix}/media/')
+                    if len(path_parts) > 1:
+                        destination.image.name = 'destinations/' + path_parts[1].split('/')[-1]
                     destination.save(update_fields=['image'])
 
                 stats['destinations'] += 1
@@ -89,14 +121,17 @@ class Command(BaseCommand):
         for provider in Provider.objects.exclude(logo=''):
             if old_domain in str(provider.logo):
                 old_url = str(provider.logo)
-                new_url = old_url.replace(old_domain, new_domain)
+                new_url = self.transform_url(old_url, old_domain, new_domain, bucket_prefix)
 
                 self.stdout.write(f'  Provider "{provider.name}":')
                 self.stdout.write(f'    Old: {old_url}')
                 self.stdout.write(f'    New: {new_url}')
 
                 if not dry_run:
-                    provider.logo.name = new_url.split('/')[-2] + '/' + new_url.split('/')[-1]
+                    # Extract path after bucket/media/ for the field name
+                    path_parts = new_url.split(f'{bucket_prefix}/media/')
+                    if len(path_parts) > 1:
+                        provider.logo.name = 'providers/' + path_parts[1].split('/')[-1]
                     provider.save(update_fields=['logo'])
 
                 stats['providers'] += 1
@@ -106,14 +141,17 @@ class Command(BaseCommand):
         for experience in Experience.objects.exclude(main_image=''):
             if old_domain in str(experience.main_image):
                 old_url = str(experience.main_image)
-                new_url = old_url.replace(old_domain, new_domain)
+                new_url = self.transform_url(old_url, old_domain, new_domain, bucket_prefix)
 
                 self.stdout.write(f'  Experience "{experience.title}":')
                 self.stdout.write(f'    Old: {old_url}')
                 self.stdout.write(f'    New: {new_url}')
 
                 if not dry_run:
-                    experience.main_image.name = new_url.split('/')[-2] + '/' + new_url.split('/')[-1]
+                    # Extract path after bucket/media/ for the field name
+                    path_parts = new_url.split(f'{bucket_prefix}/media/')
+                    if len(path_parts) > 1:
+                        experience.main_image.name = 'experiences/' + path_parts[1].split('/')[-1]
                     experience.save(update_fields=['main_image'])
 
                 stats['experiences'] += 1
@@ -123,14 +161,17 @@ class Command(BaseCommand):
         for accommodation in Accommodation.objects.exclude(main_image=''):
             if old_domain in str(accommodation.main_image):
                 old_url = str(accommodation.main_image)
-                new_url = old_url.replace(old_domain, new_domain)
+                new_url = self.transform_url(old_url, old_domain, new_domain, bucket_prefix)
 
                 self.stdout.write(f'  Accommodation "{accommodation.name}":')
                 self.stdout.write(f'    Old: {old_url}')
                 self.stdout.write(f'    New: {new_url}')
 
                 if not dry_run:
-                    accommodation.main_image.name = new_url.split('/')[-2] + '/' + new_url.split('/')[-1]
+                    # Extract path after bucket/media/ for the field name
+                    path_parts = new_url.split(f'{bucket_prefix}/media/')
+                    if len(path_parts) > 1:
+                        accommodation.main_image.name = 'accommodations/' + path_parts[1].split('/')[-1]
                     accommodation.save(update_fields=['main_image'])
 
                 stats['accommodations'] += 1
@@ -140,14 +181,17 @@ class Command(BaseCommand):
         for blog in TravelBlog.objects.exclude(featured_image=''):
             if old_domain in str(blog.featured_image):
                 old_url = str(blog.featured_image)
-                new_url = old_url.replace(old_domain, new_domain)
+                new_url = self.transform_url(old_url, old_domain, new_domain, bucket_prefix)
 
                 self.stdout.write(f'  Blog "{blog.title}":')
                 self.stdout.write(f'    Old: {old_url}')
                 self.stdout.write(f'    New: {new_url}')
 
                 if not dry_run:
-                    blog.featured_image.name = new_url.split('/')[-2] + '/' + new_url.split('/')[-1]
+                    # Extract path after bucket/media/ for the field name
+                    path_parts = new_url.split(f'{bucket_prefix}/media/')
+                    if len(path_parts) > 1:
+                        blog.featured_image.name = 'blog/' + path_parts[1].split('/')[-1]
                     blog.save(update_fields=['featured_image'])
 
                 stats['blogs'] += 1
@@ -157,14 +201,17 @@ class Command(BaseCommand):
         for profile in UserProfile.objects.exclude(avatar=''):
             if old_domain in str(profile.avatar):
                 old_url = str(profile.avatar)
-                new_url = old_url.replace(old_domain, new_domain)
+                new_url = self.transform_url(old_url, old_domain, new_domain, bucket_prefix)
 
                 self.stdout.write(f'  Profile "{profile.user.username}":')
                 self.stdout.write(f'    Old: {old_url}')
                 self.stdout.write(f'    New: {new_url}')
 
                 if not dry_run:
-                    profile.avatar.name = new_url.split('/')[-2] + '/' + new_url.split('/')[-1]
+                    # Extract path after bucket/media/ for the field name
+                    path_parts = new_url.split(f'{bucket_prefix}/media/')
+                    if len(path_parts) > 1:
+                        profile.avatar.name = 'avatars/' + path_parts[1].split('/')[-1]
                     profile.save(update_fields=['avatar'])
 
                 stats['profiles'] += 1
@@ -174,14 +221,17 @@ class Command(BaseCommand):
         for trip in Trip.objects.exclude(trip_image=''):
             if old_domain in str(trip.trip_image):
                 old_url = str(trip.trip_image)
-                new_url = old_url.replace(old_domain, new_domain)
+                new_url = self.transform_url(old_url, old_domain, new_domain, bucket_prefix)
 
                 self.stdout.write(f'  Trip "{trip.title}":')
                 self.stdout.write(f'    Old: {old_url}')
                 self.stdout.write(f'    New: {new_url}')
 
                 if not dry_run:
-                    trip.trip_image.name = new_url.split('/')[-2] + '/' + new_url.split('/')[-1]
+                    # Extract path after bucket/media/ for the field name
+                    path_parts = new_url.split(f'{bucket_prefix}/media/')
+                    if len(path_parts) > 1:
+                        trip.trip_image.name = 'trip_images/' + path_parts[1].split('/')[-1]
                     trip.save(update_fields=['trip_image'])
 
                 stats['trips'] += 1

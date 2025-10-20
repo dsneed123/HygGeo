@@ -397,12 +397,13 @@ AWS_QUERYSTRING_AUTH = False  # Don't add authentication to URLs
 # All objects in R2 are private by default, use custom domain for public access
 
 # R2 Public URL configuration
-# Use R2.dev public domain for serving images
+# Use custom domain for serving images in production
 AWS_S3_CUSTOM_DOMAIN = config('CLOUDFLARE_PUBLIC_DOMAIN',
-                              default='pub-cfe28881db15475f88c173572f38ab10.r2.dev')
+                              default='www.hyggeo.com')
 
 # Media files served from R2 public URL
-MEDIA_URL = f'https://{AWS_S3_CUSTOM_DOMAIN}/{AWS_LOCATION}/'
+# Include bucket name in path for proper URL structure
+MEDIA_URL = f'https://{AWS_S3_CUSTOM_DOMAIN}/{AWS_STORAGE_BUCKET_NAME}/{AWS_LOCATION}/'
 
 print(f"Cloudflare R2 configured:")
 print(f"   - Bucket: {AWS_STORAGE_BUCKET_NAME}")
