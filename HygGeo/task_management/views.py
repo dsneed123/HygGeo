@@ -347,6 +347,48 @@ def task_delete(request, pk):
 
 @login_required
 @user_passes_test(is_staff_or_team_member, login_url='/')
+def task_toggle_complete(request, pk):
+    """Quick toggle task completion status"""
+    if request.method != 'POST':
+        return JsonResponse({'success': False, 'error': 'Invalid method'}, status=405)
+
+    task = get_object_or_404(Task, pk=pk)
+
+    # Check permissions
+    user = request.user
+    if not user.is_staff:
+        if task.created_by != user and user not in task.assigned_to.all():
+            return JsonResponse({'success': False, 'error': 'Permission denied'}, status=403)
+
+    # Toggle status
+    if task.status == 'completed':
+        task.status = 'todo'
+        task.completed_at = None
+        message = f"{user.username} marked task as incomplete"
+    else:
+        task.status = 'completed'
+        task.completed_at = timezone.now()
+        message = f"{user.username} completed this task"
+
+    task.save()
+
+    # Log activity
+    TaskActivity.objects.create(
+        task=task,
+        user=user,
+        activity_type='status_changed',
+        description=message
+    )
+
+    return JsonResponse({
+        'success': True,
+        'status': task.status,
+        'completed': task.status == 'completed'
+    })
+
+
+@login_required
+@user_passes_test(is_staff_or_team_member, login_url='/')
 def project_list(request):
     """List all projects"""
     user = request.user
@@ -378,17 +420,23 @@ def project_detail(request, slug):
 
     tasks = project.tasks.all()
 
-    # Task statistics
+    # Task statistics by status
+    todo_count = tasks.filter(status='todo').count()
+    in_progress_count = tasks.filter(status='in_progress').count()
+    in_review_count = tasks.filter(status='in_review').count()
+    completed_count = tasks.filter(status='completed').count()
+    blocked_count = tasks.filter(status='blocked').count()
     total_tasks = tasks.count()
-    completed_tasks = tasks.filter(status='completed').count()
-    progress = (completed_tasks / total_tasks * 100) if total_tasks > 0 else 0
 
     context = {
         'project': project,
         'tasks': tasks,
         'total_tasks': total_tasks,
-        'completed_tasks': completed_tasks,
-        'progress': progress,
+        'todo_count': todo_count,
+        'in_progress_count': in_progress_count,
+        'in_review_count': in_review_count,
+        'completed_count': completed_count,
+        'blocked_count': blocked_count,
     }
 
     return render(request, 'task_management/project_detail.html', context)

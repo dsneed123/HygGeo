@@ -1,25 +1,46 @@
 from django import forms
 from django.contrib.auth.models import User
 from django.db import models as django_models
+from django.utils.text import slugify
 from .models import Project, Task, TaskComment
 
 
 class ProjectForm(forms.ModelForm):
     class Meta:
         model = Project
-        fields = ['name', 'slug', 'description', 'status', 'color', 'team_members',
-                  'start_date', 'end_date', 'progress_percentage']
+        fields = ['name', 'description', 'status', 'color', 'team_members',
+                  'start_date', 'end_date']
         widgets = {
             'description': forms.Textarea(attrs={'rows': 4, 'class': 'form-control'}),
             'name': forms.TextInput(attrs={'class': 'form-control'}),
-            'slug': forms.TextInput(attrs={'class': 'form-control'}),
             'status': forms.Select(attrs={'class': 'form-control'}),
             'color': forms.Select(attrs={'class': 'form-control'}),
             'team_members': forms.SelectMultiple(attrs={'class': 'form-control', 'size': '5'}),
             'start_date': forms.DateInput(attrs={'class': 'form-control', 'type': 'date'}),
             'end_date': forms.DateInput(attrs={'class': 'form-control', 'type': 'date'}),
-            'progress_percentage': forms.NumberInput(attrs={'class': 'form-control', 'min': '0', 'max': '100'}),
         }
+
+    def save(self, commit=True):
+        instance = super().save(commit=False)
+
+        # Auto-generate slug from name if not already set
+        if not instance.slug:
+            base_slug = slugify(instance.name)
+            slug = base_slug
+            counter = 1
+
+            # Ensure unique slug
+            while Project.objects.filter(slug=slug).exclude(pk=instance.pk).exists():
+                slug = f"{base_slug}-{counter}"
+                counter += 1
+
+            instance.slug = slug
+
+        if commit:
+            instance.save()
+            self.save_m2m()
+
+        return instance
 
 
 class TaskForm(forms.ModelForm):

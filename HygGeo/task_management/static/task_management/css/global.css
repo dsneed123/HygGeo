@@ -1,0 +1,592 @@
+/**
+ * HygGeo Task Management - Global Styles
+ * Enhanced UI components and responsive design
+ */
+
+/* ==================== CSS Variables ==================== */
+:root {
+    --hygge-green: #2d5a3d;
+    --hygge-green-light: #3a7350;
+    --hygge-green-dark: #1e4d2e;
+    --card-shadow: 0 8px 30px rgba(0,0,0,0.08);
+    --card-shadow-hover: 0 12px 40px rgba(0,0,0,0.12);
+    --transition-speed: 0.3s;
+    --border-radius: 15px;
+    --border-radius-lg: 20px;
+    --border-radius-xl: 25px;
+}
+
+/* ==================== Enhanced Transitions ==================== */
+* {
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+
+button,
+a,
+input,
+select,
+textarea,
+.card,
+.task-item,
+.project-card,
+.kanban-card {
+    transition: all var(--transition-speed) cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* ==================== Improved Button Styles ==================== */
+.btn {
+    position: relative;
+    overflow: hidden;
+    font-weight: 700;
+    border-radius: var(--border-radius);
+    padding: 12px 24px;
+}
+
+.btn::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 0;
+    height: 0;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.3);
+    transform: translate(-50%, -50%);
+    transition: width 0.6s, height 0.6s;
+}
+
+.btn:hover::before {
+    width: 300px;
+    height: 300px;
+}
+
+.btn-hygge {
+    background: linear-gradient(135deg, var(--hygge-green) 0%, var(--hygge-green-dark) 100%);
+    border: none;
+    color: white;
+    box-shadow: 0 4px 15px rgba(45, 90, 61, 0.3);
+}
+
+.btn-hygge:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(45, 90, 61, 0.4);
+    color: white;
+}
+
+.btn-outline-hygge {
+    border: 3px solid var(--hygge-green);
+    color: var(--hygge-green);
+    background: white;
+}
+
+.btn-outline-hygge:hover {
+    background: var(--hygge-green);
+    color: white;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 15px rgba(45, 90, 61, 0.2);
+}
+
+/* ==================== Enhanced Card Styles ==================== */
+.card-enhanced {
+    background: white;
+    border-radius: var(--border-radius-lg);
+    box-shadow: var(--card-shadow);
+    transition: all var(--transition-speed) ease;
+    border: 1px solid rgba(226, 232, 240, 0.6);
+}
+
+.card-enhanced:hover {
+    box-shadow: var(--card-shadow-hover);
+    transform: translateY(-4px);
+    border-color: rgba(45, 90, 61, 0.3);
+}
+
+/* ==================== Improved Form Controls ==================== */
+.form-control:focus,
+.form-select:focus {
+    border-color: var(--hygge-green);
+    box-shadow: 0 0 0 4px rgba(45, 90, 61, 0.1);
+    transform: translateY(-1px);
+}
+
+.form-control.is-invalid {
+    border-color: #e74c3c;
+    box-shadow: 0 0 0 4px rgba(231, 76, 60, 0.1);
+}
+
+/* ==================== Badge Improvements ==================== */
+.badge {
+    font-weight: 700;
+    padding: 6px 14px;
+    border-radius: 20px;
+    font-size: 0.85rem;
+    letter-spacing: 0.3px;
+}
+
+/* ==================== Enhanced Scrollbars ==================== */
+::-webkit-scrollbar {
+    width: 12px;
+    height: 12px;
+}
+
+::-webkit-scrollbar-track {
+    background: #f1f5f9;
+    border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb {
+    background: var(--hygge-green);
+    border-radius: 10px;
+    border: 2px solid #f1f5f9;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: var(--hygge-green-dark);
+}
+
+/* ==================== Loading States ==================== */
+.loading-skeleton {
+    background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+    background-size: 200% 100%;
+    animation: skeleton-loading 1.5s ease-in-out infinite;
+    border-radius: var(--border-radius);
+}
+
+@keyframes skeleton-loading {
+    0% {
+        background-position: 200% 0;
+    }
+    100% {
+        background-position: -200% 0;
+    }
+}
+
+/* ==================== Accessibility Improvements ==================== */
+*:focus-visible {
+    outline: 3px solid var(--hygge-green);
+    outline-offset: 2px;
+    border-radius: 4px;
+}
+
+.sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border-width: 0;
+}
+
+/* Skip to main content link */
+.skip-to-main {
+    position: absolute;
+    top: -40px;
+    left: 0;
+    background: var(--hygge-green);
+    color: white;
+    padding: 8px 16px;
+    text-decoration: none;
+    border-radius: 0 0 var(--border-radius) 0;
+    z-index: 100;
+    font-weight: 700;
+}
+
+.skip-to-main:focus {
+    top: 0;
+}
+
+/* ==================== Mobile Responsiveness ==================== */
+@media (max-width: 1200px) {
+    .container-fluid {
+        padding-left: 20px;
+        padding-right: 20px;
+    }
+}
+
+@media (max-width: 992px) {
+    /* Hero sections on mobile */
+    .dashboard-hero,
+    .kanban-hero,
+    .task-list-hero,
+    .task-hero,
+    .project-hero,
+    .form-hero {
+        padding: 35px 25px !important;
+    }
+
+    .hero-title,
+    .task-title-hero,
+    .project-title,
+    .form-hero-title {
+        font-size: 2rem !important;
+    }
+
+    .hero-subtitle,
+    .project-description,
+    .form-hero-subtitle {
+        font-size: 1rem !important;
+    }
+
+    /* Stat cards grid */
+    .stat-card {
+        padding: 20px !important;
+    }
+
+    .stat-number {
+        font-size: 2.5rem !important;
+    }
+}
+
+@media (max-width: 768px) {
+    /* Navigation pills */
+    .nav-pills-custom .nav-link {
+        padding: 12px 15px !important;
+        font-size: 0.9rem !important;
+    }
+
+    /* Kanban board */
+    .kanban-container {
+        flex-direction: column;
+    }
+
+    .kanban-column {
+        flex: 1 1 auto;
+        min-width: 100%;
+    }
+
+    /* Filter section */
+    .filter-card {
+        padding: 20px !important;
+    }
+
+    /* Task items */
+    .task-item {
+        flex-direction: column;
+        align-items: flex-start !important;
+        padding: 20px !important;
+    }
+
+    .task-badges {
+        width: 100%;
+        justify-content: flex-start;
+        margin-top: 10px;
+    }
+
+    /* Project cards */
+    .project-grid {
+        grid-template-columns: 1fr !important;
+    }
+
+    /* Forms */
+    .form-card {
+        padding: 25px !important;
+    }
+
+    .dates-grid {
+        grid-template-columns: 1fr !important;
+    }
+
+    .priority-selector,
+    .status-selector {
+        grid-template-columns: repeat(2, 1fr) !important;
+    }
+
+    /* Table view */
+    .task-table-container {
+        overflow-x: auto;
+    }
+
+    .task-table {
+        min-width: 800px;
+    }
+
+    /* Hero actions */
+    .hero-actions {
+        flex-direction: column;
+        gap: 10px !important;
+    }
+
+    .btn-hero,
+    .btn-hero-light {
+        width: 100%;
+        text-align: center;
+    }
+
+    /* Stats grid */
+    .stats-grid {
+        grid-template-columns: 1fr !important;
+    }
+}
+
+@media (max-width: 576px) {
+    /* Content cards */
+    .content-card,
+    .form-card {
+        padding: 20px !important;
+        border-radius: var(--border-radius) !important;
+    }
+
+    /* Section titles */
+    .section-title-card,
+    .section-title {
+        font-size: 1.3rem !important;
+    }
+
+    /* Info grid */
+    .info-grid {
+        grid-template-columns: 1fr !important;
+    }
+
+    /* Priority and status selectors on very small screens */
+    .priority-selector,
+    .status-selector {
+        grid-template-columns: 1fr !important;
+    }
+
+    /* Smaller fonts for mobile */
+    body {
+        font-size: 14px;
+    }
+
+    /* Reduce padding on stat cards */
+    .stat-card {
+        padding: 15px !important;
+    }
+
+    .stat-number {
+        font-size: 2rem !important;
+    }
+}
+
+/* ==================== Print Styles ==================== */
+@media print {
+    .nav-pills-custom,
+    .hero-actions,
+    .filter-card,
+    .btn,
+    .sidebar {
+        display: none !important;
+    }
+
+    .page-wrapper {
+        background: white !important;
+    }
+
+    .card,
+    .content-card {
+        box-shadow: none !important;
+        page-break-inside: avoid;
+    }
+
+    .task-item,
+    .project-card {
+        border: 1px solid #e2e8f0 !important;
+        box-shadow: none !important;
+        page-break-inside: avoid;
+    }
+}
+
+/* ==================== Dark Mode Support (if needed) ==================== */
+@media (prefers-color-scheme: dark) {
+    /* Add dark mode styles here if needed in the future */
+}
+
+/* ==================== Image Optimization for Cloudflare ==================== */
+.img-optimized {
+    display: block;
+    max-width: 100%;
+    height: auto;
+}
+
+.img-optimized[loading="lazy"] {
+    opacity: 0;
+    transition: opacity 0.3s;
+}
+
+.img-optimized[loading="lazy"].loaded {
+    opacity: 1;
+}
+
+/* Picture element for responsive images */
+picture {
+    display: block;
+}
+
+picture img {
+    width: 100%;
+    height: auto;
+    display: block;
+}
+
+/* ==================== Performance Optimizations ==================== */
+/* Use GPU acceleration for animations */
+.card,
+.task-item,
+.project-card,
+.kanban-card,
+.btn {
+    will-change: transform;
+    transform: translateZ(0);
+}
+
+/* Reduce motion for users who prefer it */
+@media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+    }
+}
+
+/* ==================== Utility Classes ==================== */
+.hover-lift:hover {
+    transform: translateY(-5px);
+    box-shadow: var(--card-shadow-hover);
+}
+
+.hover-grow:hover {
+    transform: scale(1.05);
+}
+
+.hover-glow:hover {
+    box-shadow: 0 0 25px rgba(45, 90, 61, 0.3);
+}
+
+.fade-in {
+    animation: fadeIn 0.5s ease;
+}
+
+.slide-in-right {
+    animation: slideInRight 0.5s ease;
+}
+
+.slide-in-left {
+    animation: slideInLeft 0.5s ease;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
+}
+
+@keyframes slideInRight {
+    from {
+        transform: translateX(100px);
+        opacity: 0;
+    }
+    to {
+        transform: translateX(0);
+        opacity: 1;
+    }
+}
+
+@keyframes slideInLeft {
+    from {
+        transform: translateX(-100px);
+        opacity: 0;
+    }
+    to {
+        transform: translateX(0);
+        opacity: 1;
+    }
+}
+
+/* ==================== Enhanced Empty States ==================== */
+.empty-state {
+    position: relative;
+    overflow: hidden;
+}
+
+.empty-state::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(45, 90, 61, 0.05), transparent);
+    animation: shimmer 3s infinite;
+}
+
+@keyframes shimmer {
+    0% {
+        left: -100%;
+    }
+    100% {
+        left: 100%;
+    }
+}
+
+/* ==================== Tooltip Improvements ==================== */
+[data-tooltip] {
+    position: relative;
+    cursor: help;
+}
+
+[data-tooltip]::after {
+    content: attr(data-tooltip);
+    position: absolute;
+    bottom: 100%;
+    left: 50%;
+    transform: translateX(-50%) translateY(-8px);
+    padding: 8px 12px;
+    background: #1e293b;
+    color: white;
+    font-size: 0.85rem;
+    font-weight: 600;
+    border-radius: 8px;
+    white-space: nowrap;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity var(--transition-speed), transform var(--transition-speed);
+    z-index: 1000;
+}
+
+[data-tooltip]:hover::after {
+    opacity: 1;
+    transform: translateX(-50%) translateY(-12px);
+}
+
+/* ==================== Success/Error States ==================== */
+.success-state {
+    background: linear-gradient(135deg, #f0fdf4 0%, #dcfce7 100%);
+    border: 3px solid #86efac;
+    animation: successPulse 0.6s ease;
+}
+
+.error-state {
+    background: linear-gradient(135deg, #fef2f2 0%, #fee2e2 100%);
+    border: 3px solid #fca5a5;
+    animation: errorShake 0.6s ease;
+}
+
+@keyframes successPulse {
+    0%, 100% {
+        transform: scale(1);
+    }
+    50% {
+        transform: scale(1.05);
+    }
+}
+
+@keyframes errorShake {
+    0%, 100% {
+        transform: translateX(0);
+    }
+    10%, 30%, 50%, 70%, 90% {
+        transform: translateX(-5px);
+    }
+    20%, 40%, 60%, 80% {
+        transform: translateX(5px);
+    }
+}

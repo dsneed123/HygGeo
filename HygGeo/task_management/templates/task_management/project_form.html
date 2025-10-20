@@ -1,0 +1,642 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}{% if form.instance.pk %}Edit Project{% else %}Create Project{% endif %} - HygGeo{% endblock %}
+
+{% block extra_css %}
+<style>
+:root {
+    --card-shadow: 0 8px 30px rgba(0,0,0,0.08);
+    --card-shadow-hover: 0 12px 40px rgba(0,0,0,0.12);
+}
+
+.form-page-wrapper {
+    background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
+    min-height: 100vh;
+    padding: 40px 0;
+}
+
+.form-container {
+    max-width: 1000px;
+    margin: 0 auto;
+}
+
+.form-hero {
+    background: linear-gradient(135deg, var(--hygge-green) 0%, #1e4d2e 100%);
+    color: white;
+    border-radius: 25px;
+    padding: 60px 50px;
+    margin-bottom: 40px;
+    box-shadow: var(--card-shadow);
+    position: relative;
+    overflow: hidden;
+}
+
+.form-hero::before {
+    content: '';
+    position: absolute;
+    top: -100px;
+    right: -100px;
+    width: 300px;
+    height: 300px;
+    background: radial-gradient(circle, rgba(255,255,255,0.15) 0%, transparent 70%);
+    border-radius: 50%;
+}
+
+.form-hero-content {
+    position: relative;
+    z-index: 1;
+    text-align: center;
+}
+
+.form-hero-icon {
+    font-size: 4rem;
+    margin-bottom: 20px;
+    opacity: 0.9;
+}
+
+.form-hero-title {
+    font-size: 3rem;
+    font-weight: 800;
+    margin-bottom: 15px;
+    letter-spacing: -0.5px;
+}
+
+.form-hero-subtitle {
+    font-size: 1.25rem;
+    opacity: 0.95;
+    font-weight: 400;
+    line-height: 1.6;
+}
+
+.form-card {
+    background: white;
+    border-radius: 20px;
+    padding: 45px;
+    box-shadow: var(--card-shadow);
+    margin-bottom: 30px;
+    transition: all 0.3s ease;
+}
+
+.form-card:hover {
+    box-shadow: var(--card-shadow-hover);
+}
+
+.section-title {
+    font-size: 1.6rem;
+    font-weight: 700;
+    color: #1e293b;
+    margin-bottom: 30px;
+    padding-bottom: 20px;
+    border-bottom: 3px solid #f1f5f9;
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.section-title i {
+    color: var(--hygge-green);
+    font-size: 1.4rem;
+}
+
+.form-group-custom {
+    margin-bottom: 30px;
+}
+
+.form-label {
+    font-weight: 700;
+    color: #334155;
+    margin-bottom: 12px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 1.05rem;
+}
+
+.form-label i {
+    color: var(--hygge-green);
+    font-size: 1rem;
+}
+
+.required-field::after {
+    content: '*';
+    color: #ef4444;
+    margin-left: 6px;
+    font-size: 1.2rem;
+}
+
+.form-control,
+.form-select {
+    border: 3px solid #e2e8f0;
+    border-radius: 15px;
+    padding: 16px 20px;
+    transition: all 0.3s ease;
+    font-size: 1rem;
+    font-weight: 500;
+}
+
+.form-control:focus,
+.form-select:focus {
+    border-color: var(--hygge-green);
+    box-shadow: 0 0 0 5px rgba(45, 90, 61, 0.12);
+    outline: none;
+}
+
+textarea.form-control {
+    min-height: 160px;
+    resize: vertical;
+    line-height: 1.7;
+}
+
+.form-text {
+    color: #64748b;
+    font-size: 0.9rem;
+    margin-top: 10px;
+    display: flex;
+    align-items: start;
+    gap: 8px;
+    line-height: 1.6;
+}
+
+.form-text i {
+    margin-top: 3px;
+    flex-shrink: 0;
+}
+
+.status-selector {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+    gap: 15px;
+    margin-top: 20px;
+}
+
+.status-option {
+    position: relative;
+}
+
+.status-option input {
+    position: absolute;
+    opacity: 0;
+    cursor: pointer;
+}
+
+.status-label {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+    padding: 20px 15px;
+    border: 3px solid #e2e8f0;
+    border-radius: 15px;
+    text-align: center;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-weight: 700;
+    background: white;
+}
+
+.status-label i {
+    font-size: 2rem;
+    color: #94a3b8;
+    transition: all 0.3s ease;
+}
+
+.status-option input:checked + .status-label {
+    border-color: var(--hygge-green);
+    background: linear-gradient(135deg, #f0fdf4 0%, #dcfce7 100%);
+    color: var(--hygge-green);
+    transform: translateY(-5px);
+    box-shadow: 0 8px 20px rgba(45, 90, 61, 0.2);
+}
+
+.status-option input:checked + .status-label i {
+    color: var(--hygge-green);
+}
+
+.status-label:hover {
+    border-color: var(--hygge-green);
+    transform: translateY(-3px);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+}
+
+.color-picker-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(70px, 1fr));
+    gap: 15px;
+    margin-top: 20px;
+}
+
+.color-option {
+    position: relative;
+}
+
+.color-option input {
+    position: absolute;
+    opacity: 0;
+    cursor: pointer;
+}
+
+.color-swatch {
+    width: 100%;
+    aspect-ratio: 1;
+    border-radius: 15px;
+    cursor: pointer;
+    border: 4px solid transparent;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-size: 1.8rem;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+}
+
+.color-option input:checked + .color-swatch {
+    border-color: #1e293b;
+    transform: scale(1.15);
+    box-shadow: 0 8px 24px rgba(0,0,0,0.25);
+}
+
+.color-swatch:hover {
+    transform: scale(1.08);
+    box-shadow: 0 6px 18px rgba(0,0,0,0.2);
+}
+
+.dates-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 25px;
+    margin-top: 20px;
+}
+
+.error-alert {
+    background: linear-gradient(135deg, #fef2f2 0%, #fee2e2 100%);
+    border: 3px solid #fca5a5;
+    border-radius: 20px;
+    padding: 25px;
+    margin-bottom: 30px;
+    color: #991b1b;
+}
+
+.error-alert strong {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 15px;
+    font-size: 1.1rem;
+}
+
+.error-alert ul {
+    margin: 0;
+    padding-left: 25px;
+}
+
+.form-actions {
+    display: flex;
+    gap: 20px;
+    justify-content: flex-end;
+    padding-top: 35px;
+    margin-top: 35px;
+    border-top: 3px solid #f1f5f9;
+}
+
+.btn-submit {
+    background: linear-gradient(135deg, var(--hygge-green) 0%, #1e7e4d 100%);
+    border: none;
+    color: white;
+    padding: 18px 45px;
+    font-size: 1.15rem;
+    font-weight: 700;
+    border-radius: 15px;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 15px rgba(45, 90, 61, 0.3);
+}
+
+.btn-submit:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 8px 25px rgba(45, 90, 61, 0.4);
+    color: white;
+}
+
+.btn-cancel {
+    background: white;
+    border: 3px solid #e2e8f0;
+    color: #64748b;
+    padding: 18px 45px;
+    font-size: 1.15rem;
+    font-weight: 700;
+    border-radius: 15px;
+    transition: all 0.3s ease;
+}
+
+.btn-cancel:hover {
+    background: #f8fafc;
+    border-color: #cbd5e0;
+    transform: translateY(-3px);
+}
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="form-page-wrapper">
+    <div class="container-fluid py-4">
+        <div class="form-container">
+            <!-- Hero -->
+            <div class="form-hero">
+                <div class="form-hero-content">
+                    <div class="form-hero-icon">
+                        <i class="fas fa-{% if form.instance.pk %}edit{% else %}folder-plus{% endif %}"></i>
+                    </div>
+                    <h1 class="form-hero-title">
+                        {% if form.instance.pk %}Edit Project{% else %}Create New Project{% endif %}
+                    </h1>
+                    <p class="form-hero-subtitle">
+                        {% if form.instance.pk %}
+                        Update your project settings and team assignments
+                        {% else %}
+                        Set up a new project to organize tasks and collaborate with your team
+                        {% endif %}
+                    </p>
+                </div>
+            </div>
+
+            <!-- Error Messages -->
+            {% if form.errors %}
+            <div class="error-alert">
+                <strong>
+                    <i class="fas fa-exclamation-triangle"></i>
+                    Please correct the following errors:
+                </strong>
+                <ul>
+                    {% for field, errors in form.errors.items %}
+                        {% for error in errors %}
+                        <li><strong>{{ field|title }}:</strong> {{ error }}</li>
+                        {% endfor %}
+                    {% endfor %}
+                </ul>
+            </div>
+            {% endif %}
+
+            <form method="post">
+                {% csrf_token %}
+
+                <!-- Basic Information -->
+                <div class="form-card">
+                    <h3 class="section-title">
+                        <i class="fas fa-info-circle"></i>
+                        Basic Information
+                    </h3>
+
+                    <div class="form-group-custom">
+                        <label for="{{ form.name.id_for_label }}" class="form-label required-field">
+                            <i class="fas fa-folder"></i>
+                            Project Name
+                        </label>
+                        {{ form.name }}
+                        <div class="form-text">
+                            <i class="fas fa-lightbulb"></i>
+                            Choose a clear, descriptive name that reflects the project's purpose
+                        </div>
+                    </div>
+
+                    <div class="form-group-custom">
+                        <label for="{{ form.description.id_for_label }}" class="form-label">
+                            <i class="fas fa-align-left"></i>
+                            Description
+                        </label>
+                        {{ form.description }}
+                        <div class="form-text">
+                            <i class="fas fa-info-circle"></i>
+                            Provide details about the project's goals, scope, and key deliverables
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Project Settings -->
+                <div class="form-card">
+                    <h3 class="section-title">
+                        <i class="fas fa-cog"></i>
+                        Project Settings
+                    </h3>
+
+                    <div class="form-group-custom">
+                        <label class="form-label required-field">
+                            <i class="fas fa-circle-notch"></i>
+                            Status
+                        </label>
+                        <div class="form-text mb-3">
+                            <i class="fas fa-info-circle"></i>
+                            Select the current stage of your project
+                        </div>
+                        <div class="status-selector">
+                            <div class="status-option">
+                                <input type="radio" name="status" value="planning" id="status-planning"
+                                       {% if form.instance.status == 'planning' or not form.instance.status %}checked{% endif %}>
+                                <label for="status-planning" class="status-label">
+                                    <i class="fas fa-lightbulb"></i>
+                                    <span>Planning</span>
+                                </label>
+                            </div>
+                            <div class="status-option">
+                                <input type="radio" name="status" value="active" id="status-active"
+                                       {% if form.instance.status == 'active' %}checked{% endif %}>
+                                <label for="status-active" class="status-label">
+                                    <i class="fas fa-rocket"></i>
+                                    <span>Active</span>
+                                </label>
+                            </div>
+                            <div class="status-option">
+                                <input type="radio" name="status" value="on_hold" id="status-on-hold"
+                                       {% if form.instance.status == 'on_hold' %}checked{% endif %}>
+                                <label for="status-on-hold" class="status-label">
+                                    <i class="fas fa-pause-circle"></i>
+                                    <span>On Hold</span>
+                                </label>
+                            </div>
+                            <div class="status-option">
+                                <input type="radio" name="status" value="completed" id="status-completed"
+                                       {% if form.instance.status == 'completed' %}checked{% endif %}>
+                                <label for="status-completed" class="status-label">
+                                    <i class="fas fa-check-circle"></i>
+                                    <span>Completed</span>
+                                </label>
+                            </div>
+                            <div class="status-option">
+                                <input type="radio" name="status" value="archived" id="status-archived"
+                                       {% if form.instance.status == 'archived' %}checked{% endif %}>
+                                <label for="status-archived" class="status-label">
+                                    <i class="fas fa-archive"></i>
+                                    <span>Archived</span>
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-group-custom">
+                        <label class="form-label required-field">
+                            <i class="fas fa-palette"></i>
+                            Project Color
+                        </label>
+                        <div class="form-text mb-3">
+                            <i class="fas fa-info-circle"></i>
+                            Choose a color to visually identify your project throughout the system
+                        </div>
+                        <div class="color-picker-grid">
+                            <div class="color-option">
+                                <input type="radio" name="color" value="#2d5a3d" id="color-1"
+                                       {% if form.instance.color == '#2d5a3d' or not form.instance.color %}checked{% endif %}>
+                                <label for="color-1" class="color-swatch" style="background: #2d5a3d;">
+                                    <i class="fas fa-check"></i>
+                                </label>
+                            </div>
+                            <div class="color-option">
+                                <input type="radio" name="color" value="#3498db" id="color-2"
+                                       {% if form.instance.color == '#3498db' %}checked{% endif %}>
+                                <label for="color-2" class="color-swatch" style="background: #3498db;">
+                                    <i class="fas fa-check"></i>
+                                </label>
+                            </div>
+                            <div class="color-option">
+                                <input type="radio" name="color" value="#9b59b6" id="color-3"
+                                       {% if form.instance.color == '#9b59b6' %}checked{% endif %}>
+                                <label for="color-3" class="color-swatch" style="background: #9b59b6;">
+                                    <i class="fas fa-check"></i>
+                                </label>
+                            </div>
+                            <div class="color-option">
+                                <input type="radio" name="color" value="#e74c3c" id="color-4"
+                                       {% if form.instance.color == '#e74c3c' %}checked{% endif %}>
+                                <label for="color-4" class="color-swatch" style="background: #e74c3c;">
+                                    <i class="fas fa-check"></i>
+                                </label>
+                            </div>
+                            <div class="color-option">
+                                <input type="radio" name="color" value="#f39c12" id="color-5"
+                                       {% if form.instance.color == '#f39c12' %}checked{% endif %}>
+                                <label for="color-5" class="color-swatch" style="background: #f39c12;">
+                                    <i class="fas fa-check"></i>
+                                </label>
+                            </div>
+                            <div class="color-option">
+                                <input type="radio" name="color" value="#1abc9c" id="color-6"
+                                       {% if form.instance.color == '#1abc9c' %}checked{% endif %}>
+                                <label for="color-6" class="color-swatch" style="background: #1abc9c;">
+                                    <i class="fas fa-check"></i>
+                                </label>
+                            </div>
+                            <div class="color-option">
+                                <input type="radio" name="color" value="#34495e" id="color-7"
+                                       {% if form.instance.color == '#34495e' %}checked{% endif %}>
+                                <label for="color-7" class="color-swatch" style="background: #34495e;">
+                                    <i class="fas fa-check"></i>
+                                </label>
+                            </div>
+                            <div class="color-option">
+                                <input type="radio" name="color" value="#e91e63" id="color-8"
+                                       {% if form.instance.color == '#e91e63' %}checked{% endif %}>
+                                <label for="color-8" class="color-swatch" style="background: #e91e63;">
+                                    <i class="fas fa-check"></i>
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Timeline -->
+                <div class="form-card">
+                    <h3 class="section-title">
+                        <i class="fas fa-calendar-alt"></i>
+                        Project Timeline
+                    </h3>
+
+                    <div class="form-text mb-4">
+                        <i class="fas fa-info-circle"></i>
+                        Define when your project starts and ends (optional)
+                    </div>
+
+                    <div class="dates-grid">
+                        <div class="form-group-custom">
+                            <label for="{{ form.start_date.id_for_label }}" class="form-label">
+                                <i class="fas fa-play-circle"></i>
+                                Start Date
+                            </label>
+                            {{ form.start_date }}
+                        </div>
+
+                        <div class="form-group-custom">
+                            <label for="{{ form.end_date.id_for_label }}" class="form-label">
+                                <i class="fas fa-flag-checkered"></i>
+                                End Date
+                            </label>
+                            {{ form.end_date }}
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Team Members -->
+                <div class="form-card">
+                    <h3 class="section-title">
+                        <i class="fas fa-users"></i>
+                        Team Members
+                    </h3>
+
+                    <div class="form-text mb-4">
+                        <i class="fas fa-info-circle"></i>
+                        Select team members who will collaborate on this project
+                    </div>
+
+                    <div class="form-group-custom">
+                        {{ form.team_members }}
+                    </div>
+                </div>
+
+                <!-- Form Actions -->
+                <div class="form-actions">
+                    <a href="{% if form.instance.pk %}{% url 'task_management:project_detail' form.instance.slug %}{% else %}{% url 'task_management:project_list' %}{% endif %}"
+                       class="btn btn-cancel">
+                        <i class="fas fa-times me-2"></i>Cancel
+                    </a>
+                    <button type="submit" class="btn btn-submit">
+                        <i class="fas fa-{% if form.instance.pk %}save{% else %}plus{% endif %} me-2"></i>
+                        {% if form.instance.pk %}Save Changes{% else %}Create Project{% endif %}
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Auto-resize textarea
+    const textarea = document.querySelector('textarea');
+    if (textarea) {
+        textarea.addEventListener('input', function() {
+            this.style.height = 'auto';
+            this.style.height = (this.scrollHeight) + 'px';
+        });
+    }
+
+    // Highlight checked color
+    document.querySelectorAll('.color-option input').forEach(input => {
+        input.addEventListener('change', function() {
+            document.querySelectorAll('.color-swatch i').forEach(icon => {
+                icon.style.display = 'none';
+            });
+            if (this.checked) {
+                this.nextElementSibling.querySelector('i').style.display = 'block';
+            }
+        });
+
+        // Initial state
+        if (input.checked) {
+            input.nextElementSibling.querySelector('i').style.display = 'block';
+        } else {
+            input.nextElementSibling.querySelector('i').style.display = 'none';
+        }
+    });
+});
+</script>
+{% endblock %}

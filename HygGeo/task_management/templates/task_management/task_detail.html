@@ -1,0 +1,796 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}{{ task.title }} - Task Management - HygGeo{% endblock %}
+
+{% block extra_css %}
+<style>
+:root {
+    --card-shadow: 0 8px 30px rgba(0,0,0,0.08);
+    --card-shadow-hover: 0 12px 40px rgba(0,0,0,0.12);
+}
+
+.page-wrapper {
+    background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
+    min-height: 100vh;
+    padding: 40px 0;
+}
+
+/* Hero Section */
+.task-hero {
+    background: linear-gradient(135deg, var(--hygge-green) 0%, #1e4d2e 100%);
+    color: white;
+    border-radius: 25px;
+    padding: 50px;
+    margin-bottom: 40px;
+    box-shadow: var(--card-shadow);
+    position: relative;
+    overflow: hidden;
+}
+
+.task-hero::before {
+    content: '';
+    position: absolute;
+    top: -100px;
+    right: -100px;
+    width: 400px;
+    height: 400px;
+    background: radial-gradient(circle, rgba(255,255,255,0.12) 0%, transparent 70%);
+    border-radius: 50%;
+}
+
+.hero-content {
+    position: relative;
+    z-index: 1;
+}
+
+.complete-checkbox-wrapper {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    margin-bottom: 25px;
+    padding: 20px;
+    background: rgba(255,255,255,0.15);
+    border-radius: 15px;
+    backdrop-filter: blur(10px);
+}
+
+.complete-checkbox {
+    width: 40px;
+    height: 40px;
+    cursor: pointer;
+    accent-color: #27ae60;
+    transform: scale(1.5);
+}
+
+.complete-text {
+    font-size: 1.3rem;
+    font-weight: 600;
+}
+
+.task-title-hero {
+    font-size: 2.8rem;
+    font-weight: 800;
+    margin-bottom: 20px;
+    line-height: 1.2;
+}
+
+.task-meta-pills {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    margin-bottom: 25px;
+}
+
+.meta-pill {
+    background: rgba(255,255,255,0.2);
+    backdrop-filter: blur(10px);
+    padding: 10px 20px;
+    border-radius: 25px;
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    font-weight: 600;
+}
+
+.hero-actions {
+    display: flex;
+    gap: 12px;
+    flex-wrap: wrap;
+}
+
+.btn-hero {
+    padding: 12px 28px;
+    border-radius: 12px;
+    font-weight: 700;
+    transition: all 0.3s ease;
+}
+
+.btn-hero-light {
+    background: white;
+    color: var(--hygge-green);
+}
+
+.btn-hero-light:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 6px 20px rgba(255,255,255,0.3);
+}
+
+/* Content Cards */
+.content-card {
+    background: white;
+    border-radius: 20px;
+    padding: 35px;
+    box-shadow: var(--card-shadow);
+    margin-bottom: 25px;
+    transition: all 0.3s ease;
+}
+
+.content-card:hover {
+    box-shadow: var(--card-shadow-hover);
+}
+
+.section-title-card {
+    font-size: 1.6rem;
+    font-weight: 700;
+    color: #1e293b;
+    margin-bottom: 25px;
+    padding-bottom: 20px;
+    border-bottom: 3px solid #f1f5f9;
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.section-title-card i {
+    color: var(--hygge-green);
+    font-size: 1.4rem;
+}
+
+/* Info Grid */
+.info-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 20px;
+    margin-bottom: 25px;
+}
+
+.info-item {
+    padding: 20px;
+    background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
+    border-radius: 15px;
+    border-left: 5px solid var(--hygge-green);
+    transition: all 0.3s ease;
+}
+
+.info-item:hover {
+    transform: translateX(5px);
+    box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+}
+
+.info-label {
+    font-size: 0.85rem;
+    color: #64748b;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.8px;
+    margin-bottom: 8px;
+}
+
+.info-value {
+    font-size: 1.1rem;
+    color: #1e293b;
+    font-weight: 600;
+}
+
+/* Comments Section */
+.comment-form-card {
+    background: linear-gradient(135deg, #f0fdf4 0%, #dcfce7 100%);
+    border: 3px solid #bbf7d0;
+    border-radius: 15px;
+    padding: 25px;
+    margin-bottom: 30px;
+}
+
+.comment-list {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.comment-item {
+    background: white;
+    border: 3px solid #f1f5f9;
+    border-radius: 15px;
+    padding: 25px;
+    transition: all 0.3s ease;
+}
+
+.comment-item:hover {
+    border-color: var(--hygge-green);
+    box-shadow: 0 4px 15px rgba(0,0,0,0.06);
+}
+
+.comment-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 15px;
+}
+
+.comment-author {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    font-weight: 700;
+    font-size: 1.05rem;
+}
+
+.author-avatar {
+    width: 45px;
+    height: 45px;
+    border-radius: 50%;
+    background: var(--hygge-green);
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.1rem;
+    font-weight: 700;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+}
+
+.comment-text {
+    color: #334155;
+    line-height: 1.8;
+    font-size: 1.05rem;
+}
+
+/* Activity Timeline */
+.activity-timeline {
+    position: relative;
+    padding-left: 50px;
+}
+
+.activity-item {
+    position: relative;
+    padding-bottom: 30px;
+}
+
+.activity-item::before {
+    content: '';
+    position: absolute;
+    left: -38px;
+    top: 0;
+    bottom: 0;
+    width: 3px;
+    background: #e2e8f0;
+}
+
+.activity-icon {
+    position: absolute;
+    left: -50px;
+    top: 0;
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    background: var(--hygge-green);
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.75rem;
+    box-shadow: 0 0 0 6px white;
+}
+
+.activity-content {
+    background: #f8fafc;
+    padding: 15px 20px;
+    border-radius: 12px;
+    border-left: 4px solid var(--hygge-green);
+}
+
+/* Sidebar Stats */
+.stat-card-sidebar {
+    background: linear-gradient(135deg, #f8fafc 0%, white 100%);
+    border: 3px solid #e2e8f0;
+    border-radius: 15px;
+    padding: 25px;
+    text-align: center;
+    transition: all 0.3s ease;
+    margin-bottom: 20px;
+}
+
+.stat-card-sidebar:hover {
+    border-color: var(--hygge-green);
+    transform: translateY(-5px);
+    box-shadow: 0 8px 20px rgba(0,0,0,0.1);
+}
+
+.stat-number-sidebar {
+    font-size: 3rem;
+    font-weight: 800;
+    color: var(--hygge-green);
+    line-height: 1;
+    margin-bottom: 10px;
+}
+
+.stat-label-sidebar {
+    font-size: 0.95rem;
+    color: #64748b;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+/* Assignees */
+.assignee-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 15px;
+}
+
+.assignee-card {
+    background: linear-gradient(135deg, #f8fafc 0%, white 100%);
+    border: 3px solid #e2e8f0;
+    border-radius: 15px;
+    padding: 15px 20px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    transition: all 0.3s ease;
+}
+
+.assignee-card:hover {
+    border-color: var(--hygge-green);
+    transform: translateY(-3px);
+    box-shadow: 0 6px 18px rgba(0,0,0,0.08);
+}
+
+.assignee-avatar-large {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    background: var(--hygge-green);
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.2rem;
+    font-weight: 700;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+}
+
+.empty-state {
+    text-align: center;
+    padding: 50px 20px;
+    color: #94a3b8;
+}
+
+.empty-state i {
+    font-size: 3.5rem;
+    margin-bottom: 20px;
+    opacity: 0.6;
+}
+
+.task-completed {
+    opacity: 0.85;
+}
+
+.task-completed .task-title-hero {
+    text-decoration: line-through;
+    opacity: 0.7;
+}
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="page-wrapper">
+    <div class="container-fluid py-4">
+        <!-- Hero Section -->
+        <div class="task-hero {% if task.status == 'completed' %}task-completed{% endif %}">
+            <div class="hero-content">
+                <!-- Quick Complete Checkbox -->
+                <div class="complete-checkbox-wrapper">
+                    <input type="checkbox"
+                           class="complete-checkbox"
+                           id="taskCompleteCheckbox"
+                           {% if task.status == 'completed' %}checked{% endif %}
+                           onchange="toggleTaskComplete({{ task.pk }})">
+                    <label for="taskCompleteCheckbox" class="complete-text mb-0" style="cursor: pointer;">
+                        <span id="completeText">
+                            {% if task.status == 'completed' %}
+                            ✓ Task Completed
+                            {% else %}
+                            Mark as Complete
+                            {% endif %}
+                        </span>
+                    </label>
+                </div>
+
+                <!-- Task Title -->
+                <h1 class="task-title-hero">{{ task.title }}</h1>
+
+                <!-- Meta Pills -->
+                <div class="task-meta-pills">
+                    <span class="meta-pill" style="background-color: {{ task.get_priority_color }};">
+                        <i class="fas fa-flag"></i>
+                        {{ task.get_priority_display }} Priority
+                    </span>
+                    <span class="meta-pill" style="background-color: {{ task.get_status_color }};">
+                        <i class="fas fa-circle"></i>
+                        {{ task.get_status_display }}
+                    </span>
+                    {% if task.project %}
+                    <span class="meta-pill">
+                        <i class="fas fa-folder"></i>
+                        {{ task.project.name }}
+                    </span>
+                    {% endif %}
+                    <span class="meta-pill">
+                        <i class="fas fa-user"></i>
+                        Created by {{ task.created_by.username }}
+                    </span>
+                </div>
+
+                <!-- Hero Actions -->
+                <div class="hero-actions">
+                    <a href="{% url 'task_management:task_list' %}" class="btn btn-hero btn-hero-light">
+                        <i class="fas fa-arrow-left me-2"></i>Back to List
+                    </a>
+                    <a href="{% url 'task_management:task_edit' task.pk %}" class="btn btn-hero btn-hero-light">
+                        <i class="fas fa-edit me-2"></i>Edit Task
+                    </a>
+                    <a href="{% url 'task_management:task_delete' task.pk %}" class="btn btn-hero btn-danger">
+                        <i class="fas fa-trash me-2"></i>Delete
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <!-- Main Content -->
+            <div class="col-lg-8">
+                <!-- Description -->
+                <div class="content-card">
+                    <h3 class="section-title-card">
+                        <i class="fas fa-align-left"></i>
+                        Description
+                    </h3>
+                    {% if task.description %}
+                    <p style="line-height: 1.8; font-size: 1.05rem; color: #475569;">{{ task.description|linebreaks }}</p>
+                    {% else %}
+                    <p class="text-muted fst-italic">No description provided.</p>
+                    {% endif %}
+                </div>
+
+                <!-- Task Details -->
+                <div class="content-card">
+                    <h3 class="section-title-card">
+                        <i class="fas fa-info-circle"></i>
+                        Task Details
+                    </h3>
+                    <div class="info-grid">
+                        <div class="info-item">
+                            <div class="info-label">Created At</div>
+                            <div class="info-value">{{ task.created_at|date:"M d, Y g:i A" }}</div>
+                        </div>
+                        {% if task.start_date %}
+                        <div class="info-item">
+                            <div class="info-label">Start Date</div>
+                            <div class="info-value">{{ task.start_date|date:"M d, Y g:i A" }}</div>
+                        </div>
+                        {% endif %}
+                        {% if task.due_date %}
+                        <div class="info-item" {% if task.is_overdue and task.status != 'completed' %}style="border-left-color: #e74c3c;"{% endif %}>
+                            <div class="info-label">Due Date</div>
+                            <div class="info-value" {% if task.is_overdue and task.status != 'completed' %}style="color: #e74c3c;"{% endif %}>
+                                {{ task.due_date|date:"M d, Y g:i A" }}
+                                {% if task.is_overdue and task.status != 'completed' %}
+                                <span class="badge bg-danger ms-2">Overdue</span>
+                                {% endif %}
+                            </div>
+                        </div>
+                        {% endif %}
+                        {% if task.completed_at %}
+                        <div class="info-item" style="border-left-color: #27ae60;">
+                            <div class="info-label">Completed At</div>
+                            <div class="info-value">{{ task.completed_at|date:"M d, Y g:i A" }}</div>
+                        </div>
+                        {% endif %}
+                        {% if task.estimated_hours %}
+                        <div class="info-item">
+                            <div class="info-label">Estimated Hours</div>
+                            <div class="info-value">{{ task.estimated_hours }} hours</div>
+                        </div>
+                        {% endif %}
+                        {% if task.actual_hours %}
+                        <div class="info-item">
+                            <div class="info-label">Actual Hours</div>
+                            <div class="info-value">{{ task.actual_hours }} hours</div>
+                        </div>
+                        {% endif %}
+                    </div>
+
+                    {% if task.tags %}
+                    <div class="mt-4">
+                        <div class="info-label mb-3">Tags</div>
+                        <div>
+                            {% for tag in task.tags.split %}
+                            <span class="badge bg-secondary me-2 mb-2" style="font-size: 0.95rem; padding: 8px 16px;">{{ tag }}</span>
+                            {% endfor %}
+                        </div>
+                    </div>
+                    {% endif %}
+                </div>
+
+                <!-- Comments Section -->
+                <div class="content-card">
+                    <h3 class="section-title-card">
+                        <i class="fas fa-comments"></i>
+                        Comments ({{ task.comments.count }})
+                    </h3>
+
+                    <!-- Comment Form -->
+                    <div class="comment-form-card">
+                        <form method="post">
+                            {% csrf_token %}
+                            <div class="mb-3">
+                                <label for="commentText" class="form-label fw-bold" style="font-size: 1.1rem;">Add a comment</label>
+                                <textarea class="form-control" style="border: 3px solid #86efac; border-radius: 12px; min-height: 120px; font-size: 1rem;"
+                                          id="commentText" name="comment_text" placeholder="Share your thoughts..."></textarea>
+                            </div>
+                            <button type="submit" name="add_comment" class="btn btn-hygge btn-lg">
+                                <i class="fas fa-paper-plane me-2"></i>Post Comment
+                            </button>
+                        </form>
+                    </div>
+
+                    <!-- Comments List -->
+                    <div class="comment-list">
+                        {% for comment in task.comments.all %}
+                        <div class="comment-item">
+                            <div class="comment-header">
+                                <div class="comment-author">
+                                    <div class="author-avatar">
+                                        {{ comment.user.username|slice:":1"|upper }}
+                                    </div>
+                                    <span>{{ comment.user.username }}</span>
+                                </div>
+                                <span class="text-muted">{{ comment.created_at|date:"M d, Y g:i A" }}</span>
+                            </div>
+                            <div class="comment-text">{{ comment.text|linebreaks }}</div>
+                        </div>
+                        {% empty %}
+                        <div class="empty-state">
+                            <i class="fas fa-comments"></i>
+                            <h5>No comments yet</h5>
+                            <p>Be the first to comment on this task!</p>
+                        </div>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+
+            <!-- Sidebar -->
+            <div class="col-lg-4">
+                <!-- Quick Stats -->
+                <div class="content-card">
+                    <h5 class="fw-bold mb-4" style="color: var(--hygge-green); font-size: 1.3rem;">
+                        <i class="fas fa-chart-bar me-2"></i>Quick Stats
+                    </h5>
+                    <div class="stat-card-sidebar">
+                        <div class="stat-number-sidebar">{{ task.comments.count }}</div>
+                        <div class="stat-label-sidebar">Comments</div>
+                    </div>
+                    <div class="stat-card-sidebar">
+                        <div class="stat-number-sidebar">{{ task.attachments.count }}</div>
+                        <div class="stat-label-sidebar">Attachments</div>
+                    </div>
+                    <div class="stat-card-sidebar">
+                        <div class="stat-number-sidebar">{{ task.activities.count }}</div>
+                        <div class="stat-label-sidebar">Activities</div>
+                    </div>
+                </div>
+
+                <!-- Assigned To -->
+                <div class="content-card">
+                    <h5 class="fw-bold mb-4" style="color: var(--hygge-green); font-size: 1.3rem;">
+                        <i class="fas fa-users me-2"></i>Assigned To
+                    </h5>
+                    {% if task.assigned_to.all %}
+                    <div class="assignee-list">
+                        {% for user in task.assigned_to.all %}
+                        <div class="assignee-card">
+                            <div class="assignee-avatar-large">
+                                {{ user.username|slice:":1"|upper }}
+                            </div>
+                            <div>
+                                <div class="fw-bold">{{ user.username }}</div>
+                                <div class="small text-muted">Team Member</div>
+                            </div>
+                        </div>
+                        {% endfor %}
+                    </div>
+                    {% else %}
+                    <p class="text-muted fst-italic">No one assigned yet</p>
+                    {% endif %}
+                </div>
+
+                <!-- Activity Log -->
+                <div class="content-card">
+                    <h5 class="fw-bold mb-4" style="color: var(--hygge-green); font-size: 1.3rem;">
+                        <i class="fas fa-history me-2"></i>Activity Log
+                    </h5>
+                    <div class="activity-timeline">
+                        {% for activity in task.activities.all|slice:":10" %}
+                        <div class="activity-item">
+                            <div class="activity-icon">
+                                <i class="fas fa-circle"></i>
+                            </div>
+                            <div class="activity-content">
+                                <div style="color: #1e293b; font-weight: 600; margin-bottom: 5px;">
+                                    {{ activity.description }}
+                                </div>
+                                <div class="small text-muted">{{ activity.created_at|date:"M d, Y g:i A" }}</div>
+                            </div>
+                        </div>
+                        {% empty %}
+                        <p class="text-muted fst-italic">No activity yet</p>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+function toggleTaskComplete(taskId) {
+    const checkbox = document.getElementById('taskCompleteCheckbox');
+    const completeText = document.getElementById('completeText');
+    const isChecked = checkbox.checked;
+
+    console.log('Toggle called for task:', taskId);
+
+    // Get CSRF token - try multiple methods
+    function getCookie(name) {
+        let cookieValue = null;
+        if (document.cookie && document.cookie !== '') {
+            const cookies = document.cookie.split(';');
+            for (let i = 0; i < cookies.length; i++) {
+                const cookie = cookies[i].trim();
+                if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                    cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                    break;
+                }
+            }
+        }
+        return cookieValue;
+    }
+
+    // Try to get CSRF token from multiple sources
+    let csrfToken = getCookie('csrftoken');
+
+    // Fallback: try to get from form
+    if (!csrfToken) {
+        const csrfInput = document.querySelector('[name=csrfmiddlewaretoken]');
+        if (csrfInput) {
+            csrfToken = csrfInput.value;
+        }
+    }
+
+    // Fallback: try to get from meta tag
+    if (!csrfToken) {
+        const csrfMeta = document.querySelector('meta[name="csrf-token"]');
+        if (csrfMeta) {
+            csrfToken = csrfMeta.getAttribute('content');
+        }
+    }
+
+    console.log('CSRF token found:', csrfToken ? 'Yes' : 'No');
+
+    if (!csrfToken) {
+        alert('Security token not found. Please refresh the page.');
+        checkbox.checked = !isChecked;
+        return;
+    }
+
+    // Send AJAX request
+    const url = `/task-management/tasks/${taskId}/toggle-complete/`;
+    console.log('Sending request to:', url);
+
+    fetch(url, {
+        method: 'POST',
+        headers: {
+            'X-CSRFToken': csrfToken,
+            'Content-Type': 'application/json',
+        },
+        credentials: 'same-origin'
+    })
+    .then(response => {
+        console.log('Response status:', response.status);
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        return response.json();
+    })
+    .then(data => {
+        console.log('Response data:', data);
+        if (data.success) {
+            // Update text
+            if (data.completed) {
+                completeText.textContent = '✓ Task Completed';
+                document.querySelector('.task-hero').classList.add('task-completed');
+            } else {
+                completeText.textContent = 'Mark as Complete';
+                document.querySelector('.task-hero').classList.remove('task-completed');
+            }
+
+            // Show success message
+            const toast = document.createElement('div');
+            toast.style.cssText = `
+                position: fixed;
+                bottom: 30px;
+                right: 30px;
+                background: var(--hygge-green);
+                color: white;
+                padding: 20px 30px;
+                border-radius: 15px;
+                box-shadow: 0 8px 25px rgba(0,0,0,0.2);
+                z-index: 9999;
+                font-weight: 600;
+                animation: slideIn 0.3s ease;
+            `;
+            toast.textContent = data.completed ? 'Task marked as complete!' : 'Task marked as incomplete';
+            document.body.appendChild(toast);
+
+            setTimeout(() => {
+                toast.style.animation = 'slideOut 0.3s ease';
+                setTimeout(() => toast.remove(), 300);
+            }, 2000);
+
+            // Reload page after brief delay to show updated activity
+            setTimeout(() => location.reload(), 2500);
+        } else {
+            const errorMsg = data.error || 'Failed to update task status';
+            alert(errorMsg);
+            checkbox.checked = !isChecked; // Revert checkbox
+        }
+    })
+    .catch(error => {
+        console.error('Error details:', error);
+        alert('An error occurred: ' + error.message);
+        checkbox.checked = !isChecked; // Revert checkbox
+    });
+}
+
+// Add animation styles
+const style = document.createElement('style');
+style.textContent = `
+    @keyframes slideIn {
+        from {
+            transform: translateX(400px);
+            opacity: 0;
+        }
+        to {
+            transform: translateX(0);
+            opacity: 1;
+        }
+    }
+    @keyframes slideOut {
+        from {
+            transform: translateX(0);
+            opacity: 1;
+        }
+        to {
+            transform: translateX(400px);
+            opacity: 0;
+        }
+    }
+`;
+document.head.appendChild(style);
+</script>
+{% endblock %}

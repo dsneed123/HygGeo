@@ -14,7 +14,32 @@
         {% for destination in featured_destinations %}
         <div class="banner-slide{% if forloop.first %} active{% endif %}">
             {% if destination.image %}
-                <img src="{{ destination.image.url }}" alt="{{ destination.name }}"{% if forloop.first %} fetchpriority="high"{% else %} loading="lazy"{% endif %} width="1920" height="1080">
+                <!-- Aspect ratio container to prevent CLS -->
+                <div class="img-aspect-container" style="aspect-ratio: 16/9;">
+                    <picture>
+                        <!-- Cloudflare WebP with optimization -->
+                        <source
+                            type="image/webp"
+                            srcset="{{ destination.image.url }}?format=webp&width=1920&quality=85 1920w,
+                                    {{ destination.image.url }}?format=webp&width=1280&quality=85 1280w,
+                                    {{ destination.image.url }}?format=webp&width=960&quality=85 960w,
+                                    {{ destination.image.url }}?format=webp&width=640&quality=85 640w"
+                            sizes="100vw">
+                        <!-- Fallback to original format -->
+                        <img
+                            src="{{ destination.image.url }}?width=1920&quality=85"
+                            srcset="{{ destination.image.url }}?width=1920&quality=85 1920w,
+                                    {{ destination.image.url }}?width=1280&quality=85 1280w,
+                                    {{ destination.image.url }}?width=960&quality=85 960w,
+                                    {{ destination.image.url }}?width=640&quality=85 640w"
+                            sizes="100vw"
+                            alt="{{ destination.name }}"
+                            {% if forloop.first %}fetchpriority="high"{% else %}loading="lazy"{% endif %}
+                            width="1920"
+                            height="1080"
+                            class="img-cover">
+                    </picture>
+                </div>
             {% else %}
                 <div class="placeholder-image {% cycle 'nordic' 'forest' 'coastal' %}">
                     <i class="fas fa-{% cycle 'mountain' 'tree' 'water' %}"></i>
@@ -142,7 +167,28 @@
                 <div class="experience-card">
                     <div class="experience-image">
                         {% if experience.main_image %}
-                            <img src="{{ experience.main_image.url }}" alt="{{ experience.title }}" loading="lazy" width="240" height="140">
+                            <!-- Aspect ratio container to prevent CLS -->
+                            <div class="img-aspect-container" style="aspect-ratio: 240/140;">
+                                <picture>
+                                    <!-- Cloudflare WebP with optimization -->
+                                    <source
+                                        type="image/webp"
+                                        srcset="{{ experience.main_image.url }}?format=webp&width=480&quality=85 480w,
+                                                {{ experience.main_image.url }}?format=webp&width=240&quality=85 240w"
+                                        sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 240px">
+                                    <!-- Fallback to original format -->
+                                    <img
+                                        src="{{ experience.main_image.url }}?width=240&quality=85"
+                                        srcset="{{ experience.main_image.url }}?width=480&quality=85 480w,
+                                                {{ experience.main_image.url }}?width=240&quality=85 240w"
+                                        sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 240px"
+                                        alt="{{ experience.title }}"
+                                        loading="lazy"
+                                        width="240"
+                                        height="140"
+                                        class="img-cover">
+                                </picture>
+                            </div>
                         {% else %}
                             <div class="experience-placeholder">
                                 <i class="fas fa-mountain"></i>
@@ -230,7 +276,28 @@
                 <div class="experience-card">
                     <div class="experience-image">
                         {% if accommodation.main_image %}
-                            <img src="{{ accommodation.main_image.url }}" alt="{{ accommodation.name }}" loading="lazy" width="240" height="140">
+                            <!-- Aspect ratio container to prevent CLS -->
+                            <div class="img-aspect-container" style="aspect-ratio: 240/140;">
+                                <picture>
+                                    <!-- Cloudflare WebP with optimization -->
+                                    <source
+                                        type="image/webp"
+                                        srcset="{{ accommodation.main_image.url }}?format=webp&width=480&quality=85 480w,
+                                                {{ accommodation.main_image.url }}?format=webp&width=240&quality=85 240w"
+                                        sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 240px">
+                                    <!-- Fallback to original format -->
+                                    <img
+                                        src="{{ accommodation.main_image.url }}?width=240&quality=85"
+                                        srcset="{{ accommodation.main_image.url }}?width=480&quality=85 480w,
+                                                {{ accommodation.main_image.url }}?width=240&quality=85 240w"
+                                        sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 240px"
+                                        alt="{{ accommodation.name }}"
+                                        loading="lazy"
+                                        width="240"
+                                        height="140"
+                                        class="img-cover">
+                                </picture>
+                            </div>
                         {% else %}
                             <div class="experience-placeholder" style="background: linear-gradient(135deg, #9b59b6, #8e44ad);">
                                 <i class="fas fa-bed"></i>
@@ -580,15 +647,58 @@
     visibility: visible;
 }
 
-.banner-slide img {
+/* CLS Prevention: Aspect Ratio Containers */
+.img-aspect-container {
+    position: relative;
     width: 100%;
     height: 100%;
+    overflow: hidden;
+    background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
+}
+
+.img-aspect-container::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 40px;
+    height: 40px;
+    border: 3px solid #e2e8f0;
+    border-top-color: var(--hygge-green);
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+    opacity: 0.5;
+}
+
+.img-aspect-container img {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+}
+
+.img-aspect-container.loaded::before {
+    display: none;
+}
+
+.img-cover {
     object-fit: cover;
+    object-position: center;
+    font-family: 'object-fit: cover;'; /* IE11 polyfill */
+}
+
+.banner-slide .img-aspect-container img {
     transition: transform 8s ease-out;
 }
 
-.banner-slide.active img {
+.banner-slide.active .img-aspect-container img {
     transform: scale(1.05);
+}
+
+@keyframes spin {
+    to { transform: translate(-50%, -50%) rotate(360deg); }
 }
 
 .banner-overlay {
@@ -714,6 +824,11 @@
     width: 100%;
     border: 1px solid rgba(255,255,255,0.2);
     transition: opacity 0.5s ease;
+    /* CLS Prevention: Reserve space for dynamic content */
+    min-height: 350px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
 }
 
 .destination-overlay-content.updating {
@@ -1124,6 +1239,10 @@
     overflow: hidden;
     transition: all 0.3s ease;
     border: 1px solid rgba(74, 124, 89, 0.05);
+    /* CLS Prevention: Consistent card height */
+    min-height: 380px;
+    display: flex;
+    flex-direction: column;
 }
 
 .experience-card:hover {
@@ -1132,6 +1251,8 @@
 }
 
 .experience-image {
+    /* CLS Prevention: Reserve space for image */
+    min-height: 140px;
     position: relative;
     height: 140px;
     overflow: hidden;
@@ -2368,6 +2489,26 @@ const destinationData = [
 ];
 
 document.addEventListener('DOMContentLoaded', function() {
+    // CLS Prevention: Handle image loading to remove spinner
+    const imageContainers = document.querySelectorAll('.img-aspect-container');
+    imageContainers.forEach(container => {
+        const img = container.querySelector('img');
+        if (img) {
+            // If image is already loaded (cached)
+            if (img.complete) {
+                container.classList.add('loaded');
+            } else {
+                // Wait for image to load
+                img.addEventListener('load', function() {
+                    container.classList.add('loaded');
+                });
+                img.addEventListener('error', function() {
+                    container.classList.add('loaded'); // Hide spinner even on error
+                });
+            }
+        }
+    });
+
     const bannerSlides = document.querySelectorAll('.banner-slide');
     const indicators = document.querySelectorAll('.indicator');
 

@@ -1,0 +1,989 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Kanban Board - Task Management - HygGeo{% endblock %}
+
+{% block extra_css %}
+<style>
+:root {
+    --card-shadow: 0 8px 30px rgba(0,0,0,0.08);
+    --card-shadow-hover: 0 12px 40px rgba(0,0,0,0.12);
+}
+
+.page-wrapper {
+    background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
+    min-height: 100vh;
+    padding: 40px 0;
+}
+
+/* Hero Header */
+.kanban-hero {
+    background: linear-gradient(135deg, var(--hygge-green) 0%, #1e4d2e 100%);
+    color: white;
+    border-radius: 25px;
+    padding: 50px;
+    margin-bottom: 40px;
+    box-shadow: var(--card-shadow);
+    position: relative;
+    overflow: hidden;
+}
+
+.kanban-hero::before {
+    content: '';
+    position: absolute;
+    top: -100px;
+    right: -100px;
+    width: 400px;
+    height: 400px;
+    background: radial-gradient(circle, rgba(255,255,255,0.12) 0%, transparent 70%);
+    border-radius: 50%;
+}
+
+.hero-content {
+    position: relative;
+    z-index: 1;
+}
+
+.hero-title {
+    font-size: 2.8rem;
+    font-weight: 800;
+    margin-bottom: 15px;
+}
+
+.hero-subtitle {
+    font-size: 1.15rem;
+    opacity: 0.95;
+}
+
+.hero-actions {
+    display: flex;
+    gap: 15px;
+    flex-wrap: wrap;
+    margin-top: 25px;
+}
+
+.btn-hero {
+    padding: 14px 30px;
+    border-radius: 12px;
+    font-weight: 700;
+    transition: all 0.3s ease;
+    background: white;
+    color: var(--hygge-green);
+    border: none;
+}
+
+.btn-hero:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 8px 25px rgba(255,255,255,0.3);
+    color: var(--hygge-green);
+}
+
+/* Navigation Pills */
+.nav-pills-custom {
+    background: white;
+    border-radius: 20px;
+    padding: 20px;
+    box-shadow: var(--card-shadow);
+    margin-bottom: 30px;
+}
+
+.nav-pills-custom .nav-link {
+    border-radius: 15px;
+    padding: 15px 25px;
+    font-weight: 700;
+    transition: all 0.3s ease;
+    border: 3px solid transparent;
+}
+
+.nav-pills-custom .nav-link:hover {
+    background: linear-gradient(135deg, #f0fdf4 0%, #dcfce7 100%);
+    border-color: var(--hygge-green);
+    transform: translateY(-2px);
+}
+
+.nav-pills-custom .nav-link.active {
+    background: linear-gradient(135deg, var(--hygge-green) 0%, #1e4d2e 100%);
+    border-color: var(--hygge-green);
+}
+
+/* Filter Section */
+.filter-card {
+    background: white;
+    border-radius: 20px;
+    padding: 30px;
+    box-shadow: var(--card-shadow);
+    margin-bottom: 30px;
+}
+
+.filter-title {
+    font-size: 1.4rem;
+    font-weight: 700;
+    color: #1e293b;
+    margin-bottom: 20px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.filter-title i {
+    color: var(--hygge-green);
+}
+
+.form-label {
+    font-weight: 700;
+    color: #1e293b;
+    margin-bottom: 10px;
+}
+
+.form-select {
+    border: 3px solid #e2e8f0;
+    border-radius: 15px;
+    padding: 12px 18px;
+    font-size: 1rem;
+}
+
+.form-select:focus {
+    border-color: var(--hygge-green);
+    box-shadow: 0 0 0 4px rgba(45, 90, 61, 0.1);
+}
+
+/* Kanban Container */
+.kanban-container {
+    display: flex;
+    gap: 25px;
+    overflow-x: auto;
+    padding-bottom: 30px;
+    min-height: calc(100vh - 500px);
+}
+
+.kanban-container::-webkit-scrollbar {
+    height: 12px;
+}
+
+.kanban-container::-webkit-scrollbar-track {
+    background: #f1f5f9;
+    border-radius: 10px;
+}
+
+.kanban-container::-webkit-scrollbar-thumb {
+    background: var(--hygge-green);
+    border-radius: 10px;
+}
+
+/* Kanban Columns */
+.kanban-column {
+    flex: 0 0 350px;
+    background: white;
+    border-radius: 20px;
+    padding: 25px;
+    box-shadow: var(--card-shadow);
+    display: flex;
+    flex-direction: column;
+    transition: all 0.3s ease;
+}
+
+.kanban-column:hover {
+    box-shadow: var(--card-shadow-hover);
+}
+
+.kanban-column-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+    padding-bottom: 20px;
+    border-bottom: 3px solid #f1f5f9;
+}
+
+.kanban-column-title {
+    font-weight: 700;
+    font-size: 1.3rem;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.kanban-column-count {
+    background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
+    border-radius: 20px;
+    padding: 8px 16px;
+    font-size: 0.95rem;
+    font-weight: 700;
+    border: 2px solid #e2e8f0;
+}
+
+/* Status Column Colors */
+.kanban-column[data-status="todo"] .kanban-column-title {
+    color: #95a5a6;
+}
+
+.kanban-column[data-status="todo"] .kanban-column-title i {
+    color: #95a5a6;
+}
+
+.kanban-column[data-status="in_progress"] .kanban-column-title {
+    color: #3498db;
+}
+
+.kanban-column[data-status="in_progress"] .kanban-column-title i {
+    color: #3498db;
+}
+
+.kanban-column[data-status="in_review"] .kanban-column-title {
+    color: #9b59b6;
+}
+
+.kanban-column[data-status="in_review"] .kanban-column-title i {
+    color: #9b59b6;
+}
+
+.kanban-column[data-status="completed"] .kanban-column-title {
+    color: #27ae60;
+}
+
+.kanban-column[data-status="completed"] .kanban-column-title i {
+    color: #27ae60;
+}
+
+.kanban-column[data-status="blocked"] .kanban-column-title {
+    color: #e74c3c;
+}
+
+.kanban-column[data-status="blocked"] .kanban-column-title i {
+    color: #e74c3c;
+}
+
+/* Kanban Cards */
+.kanban-cards {
+    flex: 1;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    min-height: 150px;
+    max-height: calc(100vh - 600px);
+    padding: 5px;
+}
+
+.kanban-cards::-webkit-scrollbar {
+    width: 8px;
+}
+
+.kanban-cards::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+.kanban-cards::-webkit-scrollbar-thumb {
+    background: #e2e8f0;
+    border-radius: 10px;
+}
+
+.kanban-cards::-webkit-scrollbar-thumb:hover {
+    background: #cbd5e0;
+}
+
+.kanban-card {
+    background: white;
+    border-radius: 15px;
+    padding: 20px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+    cursor: move;
+    transition: all 0.3s ease;
+    border-left: 5px solid;
+    text-decoration: none;
+    color: inherit;
+}
+
+.kanban-card:hover {
+    box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+    transform: translateY(-5px) scale(1.02);
+}
+
+.kanban-card.dragging {
+    opacity: 0.6;
+    transform: rotate(3deg);
+    cursor: grabbing;
+}
+
+.kanban-card-title {
+    font-weight: 700;
+    font-size: 1.1rem;
+    margin-bottom: 12px;
+    color: #1e293b;
+    line-height: 1.4;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+
+.kanban-card-project {
+    font-size: 0.9rem;
+    color: #64748b;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    margin-bottom: 12px;
+    padding: 6px 12px;
+    background: #f8fafc;
+    border-radius: 10px;
+    width: fit-content;
+}
+
+.kanban-card-project i {
+    color: var(--hygge-green);
+}
+
+.kanban-card-meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-top: 12px;
+    align-items: center;
+}
+
+.kanban-card-priority {
+    display: inline-block;
+    padding: 6px 14px;
+    border-radius: 12px;
+    font-size: 0.8rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.priority-low {
+    background: linear-gradient(135deg, #95a5a6 0%, #7f8c8d 100%);
+    color: white;
+}
+
+.priority-medium {
+    background: linear-gradient(135deg, #3498db 0%, #2980b9 100%);
+    color: white;
+}
+
+.priority-high {
+    background: linear-gradient(135deg, #f39c12 0%, #e67e22 100%);
+    color: white;
+}
+
+.priority-urgent {
+    background: linear-gradient(135deg, #e74c3c 0%, #c0392b 100%);
+    color: white;
+}
+
+.kanban-card-due-date {
+    font-size: 0.85rem;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    margin-top: 12px;
+    color: #64748b;
+    font-weight: 600;
+}
+
+.kanban-card-due-date i {
+    color: var(--hygge-green);
+}
+
+.kanban-card-due-date.overdue {
+    color: #e74c3c;
+}
+
+.kanban-card-due-date.overdue i {
+    color: #e74c3c;
+}
+
+.kanban-card-assignees {
+    display: flex;
+    gap: 6px;
+    margin-top: 12px;
+}
+
+.kanban-card-avatar {
+    width: 34px;
+    height: 34px;
+    border-radius: 50%;
+    background: var(--hygge-green);
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.8rem;
+    font-weight: 700;
+    border: 3px solid white;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+    transition: all 0.3s ease;
+}
+
+.kanban-card-avatar:hover {
+    transform: scale(1.15);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+}
+
+/* Add Card Button */
+.kanban-add-card {
+    background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
+    border: 3px dashed #cbd5e0;
+    border-radius: 15px;
+    padding: 16px;
+    text-align: center;
+    color: #64748b;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    margin-top: 15px;
+    font-weight: 700;
+    font-size: 1rem;
+}
+
+.kanban-add-card:hover {
+    border-color: var(--hygge-green);
+    border-style: solid;
+    color: var(--hygge-green);
+    background: linear-gradient(135deg, #f0fdf4 0%, #dcfce7 100%);
+    transform: translateY(-2px);
+}
+
+/* Completed Tasks Styling */
+.kanban-column[data-status="completed"] .kanban-card {
+    opacity: 0.8;
+}
+
+.kanban-column[data-status="completed"] .kanban-card-title {
+    text-decoration: line-through;
+    opacity: 0.7;
+}
+
+/* Empty State */
+.kanban-cards-empty {
+    text-align: center;
+    padding: 40px 20px;
+    color: #94a3b8;
+}
+
+.kanban-cards-empty i {
+    font-size: 3rem;
+    margin-bottom: 15px;
+    opacity: 0.4;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .kanban-container {
+        flex-direction: column;
+    }
+
+    .kanban-column {
+        flex: 1 1 auto;
+    }
+
+    .kanban-cards {
+        max-height: 400px;
+    }
+}
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="page-wrapper">
+    <div class="container-fluid py-4">
+        <!-- Hero Header -->
+        <div class="kanban-hero">
+            <div class="hero-content">
+                <h1 class="hero-title">
+                    <i class="fas fa-columns me-3"></i>Kanban Board
+                </h1>
+                <p class="hero-subtitle">Drag and drop tasks between columns to update their status</p>
+                <div class="hero-actions">
+                    <a href="{% url 'task_management:dashboard' %}" class="btn btn-hero">
+                        <i class="fas fa-arrow-left me-2"></i>Back to Dashboard
+                    </a>
+                    <a href="{% url 'task_management:task_create' %}" class="btn btn-hero">
+                        <i class="fas fa-plus me-2"></i>New Task
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Navigation Pills -->
+        <div class="nav-pills-custom">
+            <ul class="nav nav-pills d-flex flex-wrap" role="tablist">
+                <li class="nav-item flex-fill" role="presentation">
+                    <a class="nav-link text-center" href="{% url 'task_management:dashboard' %}">
+                        <i class="fas fa-home me-2"></i>Dashboard
+                    </a>
+                </li>
+                <li class="nav-item flex-fill" role="presentation">
+                    <a class="nav-link text-center" href="{% url 'task_management:task_list' %}">
+                        <i class="fas fa-list me-2"></i>All Tasks
+                    </a>
+                </li>
+                <li class="nav-item flex-fill" role="presentation">
+                    <a class="nav-link active text-center" href="{% url 'task_management:kanban' %}">
+                        <i class="fas fa-columns me-2"></i>Kanban
+                    </a>
+                </li>
+                <li class="nav-item flex-fill" role="presentation">
+                    <a class="nav-link text-center" href="{% url 'task_management:calendar' %}">
+                        <i class="fas fa-calendar me-2"></i>Calendar
+                    </a>
+                </li>
+                <li class="nav-item flex-fill" role="presentation">
+                    <a class="nav-link text-center" href="{% url 'task_management:project_list' %}">
+                        <i class="fas fa-folder me-2"></i>Projects
+                    </a>
+                </li>
+            </ul>
+        </div>
+
+        <!-- Filters -->
+        <div class="filter-card">
+            <h3 class="filter-title">
+                <i class="fas fa-filter"></i>
+                Filter Tasks
+            </h3>
+            <form method="get" id="filterForm">
+                <div class="row g-3">
+                    <div class="col-md-5">
+                        <label class="form-label"><i class="fas fa-folder me-2"></i>Project</label>
+                        <select name="project" class="form-select" onchange="this.form.submit()">
+                            <option value="">All Projects</option>
+                            {% for project in projects %}
+                            <option value="{{ project.id }}" {% if selected_project == project.id|stringformat:"s" %}selected{% endif %}>
+                                {{ project.name }}
+                            </option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div class="col-md-5">
+                        <label class="form-label"><i class="fas fa-flag me-2"></i>Priority</label>
+                        <select name="priority" class="form-select" onchange="this.form.submit()">
+                            <option value="">All Priorities</option>
+                            <option value="low" {% if selected_priority == 'low' %}selected{% endif %}>Low</option>
+                            <option value="medium" {% if selected_priority == 'medium' %}selected{% endif %}>Medium</option>
+                            <option value="high" {% if selected_priority == 'high' %}selected{% endif %}>High</option>
+                            <option value="urgent" {% if selected_priority == 'urgent' %}selected{% endif %}>Urgent</option>
+                        </select>
+                    </div>
+                    <div class="col-md-2 d-flex align-items-end">
+                        <a href="{% url 'task_management:kanban' %}" class="btn btn-outline-secondary btn-lg w-100">
+                            <i class="fas fa-redo me-2"></i>Reset
+                        </a>
+                    </div>
+                </div>
+            </form>
+        </div>
+
+        <!-- Kanban Board -->
+        <div class="kanban-container">
+            <!-- To Do Column -->
+            <div class="kanban-column" data-status="todo">
+                <div class="kanban-column-header">
+                    <div class="kanban-column-title">
+                        <i class="fas fa-circle"></i>
+                        To Do
+                    </div>
+                    <span class="kanban-column-count">{{ todo_tasks|length }}</span>
+                </div>
+                <div class="kanban-cards" data-status="todo">
+                    {% for task in todo_tasks %}
+                    <a href="{% url 'task_management:task_detail' task.pk %}" class="kanban-card" data-task-id="{{ task.id }}" style="border-left-color: {{ task.get_priority_color }};">
+                        <div class="kanban-card-title">{{ task.title }}</div>
+                        {% if task.project %}
+                        <div class="kanban-card-project">
+                            <i class="fas fa-folder"></i>
+                            {{ task.project.name }}
+                        </div>
+                        {% endif %}
+                        <div class="kanban-card-meta">
+                            <span class="kanban-card-priority priority-{{ task.priority }}">
+                                {{ task.get_priority_display }}
+                            </span>
+                        </div>
+                        {% if task.due_date %}
+                        <div class="kanban-card-due-date {% if task.is_overdue %}overdue{% endif %}">
+                            <i class="fas fa-clock"></i>
+                            Due {{ task.due_date|date:"M d" }}
+                        </div>
+                        {% endif %}
+                        {% if task.assigned_to.all %}
+                        <div class="kanban-card-assignees">
+                            {% for user in task.assigned_to.all|slice:":3" %}
+                            <div class="kanban-card-avatar" title="{{ user.username }}">
+                                {{ user.username|slice:":1"|upper }}
+                            </div>
+                            {% endfor %}
+                        </div>
+                        {% endif %}
+                    </a>
+                    {% endfor %}
+                </div>
+                <div class="kanban-add-card" onclick="window.location.href='{% url 'task_management:task_create' %}?status=todo'">
+                    <i class="fas fa-plus me-2"></i>Add Task
+                </div>
+            </div>
+
+            <!-- In Progress Column -->
+            <div class="kanban-column" data-status="in_progress">
+                <div class="kanban-column-header">
+                    <div class="kanban-column-title">
+                        <i class="fas fa-spinner fa-spin"></i>
+                        In Progress
+                    </div>
+                    <span class="kanban-column-count">{{ in_progress_tasks|length }}</span>
+                </div>
+                <div class="kanban-cards" data-status="in_progress">
+                    {% for task in in_progress_tasks %}
+                    <a href="{% url 'task_management:task_detail' task.pk %}" class="kanban-card" data-task-id="{{ task.id }}" style="border-left-color: {{ task.get_priority_color }};">
+                        <div class="kanban-card-title">{{ task.title }}</div>
+                        {% if task.project %}
+                        <div class="kanban-card-project">
+                            <i class="fas fa-folder"></i>
+                            {{ task.project.name }}
+                        </div>
+                        {% endif %}
+                        <div class="kanban-card-meta">
+                            <span class="kanban-card-priority priority-{{ task.priority }}">
+                                {{ task.get_priority_display }}
+                            </span>
+                        </div>
+                        {% if task.due_date %}
+                        <div class="kanban-card-due-date {% if task.is_overdue %}overdue{% endif %}">
+                            <i class="fas fa-clock"></i>
+                            Due {{ task.due_date|date:"M d" }}
+                        </div>
+                        {% endif %}
+                        {% if task.assigned_to.all %}
+                        <div class="kanban-card-assignees">
+                            {% for user in task.assigned_to.all|slice:":3" %}
+                            <div class="kanban-card-avatar" title="{{ user.username }}">
+                                {{ user.username|slice:":1"|upper }}
+                            </div>
+                            {% endfor %}
+                        </div>
+                        {% endif %}
+                    </a>
+                    {% endfor %}
+                </div>
+                <div class="kanban-add-card" onclick="window.location.href='{% url 'task_management:task_create' %}?status=in_progress'">
+                    <i class="fas fa-plus me-2"></i>Add Task
+                </div>
+            </div>
+
+            <!-- In Review Column -->
+            <div class="kanban-column" data-status="in_review">
+                <div class="kanban-column-header">
+                    <div class="kanban-column-title">
+                        <i class="fas fa-eye"></i>
+                        In Review
+                    </div>
+                    <span class="kanban-column-count">{{ in_review_tasks|length }}</span>
+                </div>
+                <div class="kanban-cards" data-status="in_review">
+                    {% for task in in_review_tasks %}
+                    <a href="{% url 'task_management:task_detail' task.pk %}" class="kanban-card" data-task-id="{{ task.id }}" style="border-left-color: {{ task.get_priority_color }};">
+                        <div class="kanban-card-title">{{ task.title }}</div>
+                        {% if task.project %}
+                        <div class="kanban-card-project">
+                            <i class="fas fa-folder"></i>
+                            {{ task.project.name }}
+                        </div>
+                        {% endif %}
+                        <div class="kanban-card-meta">
+                            <span class="kanban-card-priority priority-{{ task.priority }}">
+                                {{ task.get_priority_display }}
+                            </span>
+                        </div>
+                        {% if task.due_date %}
+                        <div class="kanban-card-due-date {% if task.is_overdue %}overdue{% endif %}">
+                            <i class="fas fa-clock"></i>
+                            Due {{ task.due_date|date:"M d" }}
+                        </div>
+                        {% endif %}
+                        {% if task.assigned_to.all %}
+                        <div class="kanban-card-assignees">
+                            {% for user in task.assigned_to.all|slice:":3" %}
+                            <div class="kanban-card-avatar" title="{{ user.username }}">
+                                {{ user.username|slice:":1"|upper }}
+                            </div>
+                            {% endfor %}
+                        </div>
+                        {% endif %}
+                    </a>
+                    {% endfor %}
+                </div>
+                <div class="kanban-add-card" onclick="window.location.href='{% url 'task_management:task_create' %}?status=in_review'">
+                    <i class="fas fa-plus me-2"></i>Add Task
+                </div>
+            </div>
+
+            <!-- Completed Column -->
+            <div class="kanban-column" data-status="completed">
+                <div class="kanban-column-header">
+                    <div class="kanban-column-title">
+                        <i class="fas fa-check-circle"></i>
+                        Completed
+                    </div>
+                    <span class="kanban-column-count">{{ completed_tasks|length }}</span>
+                </div>
+                <div class="kanban-cards" data-status="completed">
+                    {% for task in completed_tasks %}
+                    <a href="{% url 'task_management:task_detail' task.pk %}" class="kanban-card" data-task-id="{{ task.id }}" style="border-left-color: {{ task.get_priority_color }};">
+                        <div class="kanban-card-title">{{ task.title }}</div>
+                        {% if task.project %}
+                        <div class="kanban-card-project">
+                            <i class="fas fa-folder"></i>
+                            {{ task.project.name }}
+                        </div>
+                        {% endif %}
+                        <div class="kanban-card-meta">
+                            <span class="kanban-card-priority priority-{{ task.priority }}">
+                                {{ task.get_priority_display }}
+                            </span>
+                        </div>
+                        {% if task.completed_at %}
+                        <div class="kanban-card-due-date">
+                            <i class="fas fa-check"></i>
+                            Completed {{ task.completed_at|date:"M d" }}
+                        </div>
+                        {% endif %}
+                        {% if task.assigned_to.all %}
+                        <div class="kanban-card-assignees">
+                            {% for user in task.assigned_to.all|slice:":3" %}
+                            <div class="kanban-card-avatar" title="{{ user.username }}">
+                                {{ user.username|slice:":1"|upper }}
+                            </div>
+                            {% endfor %}
+                        </div>
+                        {% endif %}
+                    </a>
+                    {% endfor %}
+                </div>
+            </div>
+
+            <!-- Blocked Column -->
+            <div class="kanban-column" data-status="blocked">
+                <div class="kanban-column-header">
+                    <div class="kanban-column-title">
+                        <i class="fas fa-ban"></i>
+                        Blocked
+                    </div>
+                    <span class="kanban-column-count">{{ blocked_tasks|length }}</span>
+                </div>
+                <div class="kanban-cards" data-status="blocked">
+                    {% for task in blocked_tasks %}
+                    <a href="{% url 'task_management:task_detail' task.pk %}" class="kanban-card" data-task-id="{{ task.id }}" style="border-left-color: {{ task.get_priority_color }};">
+                        <div class="kanban-card-title">{{ task.title }}</div>
+                        {% if task.project %}
+                        <div class="kanban-card-project">
+                            <i class="fas fa-folder"></i>
+                            {{ task.project.name }}
+                        </div>
+                        {% endif %}
+                        <div class="kanban-card-meta">
+                            <span class="kanban-card-priority priority-{{ task.priority }}">
+                                {{ task.get_priority_display }}
+                            </span>
+                        </div>
+                        {% if task.due_date %}
+                        <div class="kanban-card-due-date {% if task.is_overdue %}overdue{% endif %}">
+                            <i class="fas fa-clock"></i>
+                            Due {{ task.due_date|date:"M d" }}
+                        </div>
+                        {% endif %}
+                        {% if task.assigned_to.all %}
+                        <div class="kanban-card-assignees">
+                            {% for user in task.assigned_to.all|slice:":3" %}
+                            <div class="kanban-card-avatar" title="{{ user.username }}">
+                                {{ user.username|slice:":1"|upper }}
+                            </div>
+                            {% endfor %}
+                        </div>
+                        {% endif %}
+                    </a>
+                    {% endfor %}
+                </div>
+                <div class="kanban-add-card" onclick="window.location.href='{% url 'task_management:task_create' %}?status=blocked'">
+                    <i class="fas fa-plus me-2"></i>Add Task
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script src="https://cdn.jsdelivr.net/npm/sortablejs@1.15.0/Sortable.min.js"></script>
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Get CSRF token - try multiple methods
+    function getCookie(name) {
+        let cookieValue = null;
+        if (document.cookie && document.cookie !== '') {
+            const cookies = document.cookie.split(';');
+            for (let i = 0; i < cookies.length; i++) {
+                const cookie = cookies[i].trim();
+                if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                    cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                    break;
+                }
+            }
+        }
+        return cookieValue;
+    }
+
+    let csrfToken = getCookie('csrftoken');
+
+    if (!csrfToken) {
+        const csrfInput = document.querySelector('[name=csrfmiddlewaretoken]');
+        if (csrfInput) {
+            csrfToken = csrfInput.value;
+        }
+    }
+
+    // Initialize Sortable for each column
+    const columns = document.querySelectorAll('.kanban-cards');
+
+    columns.forEach(column => {
+        new Sortable(column, {
+            group: 'kanban',
+            animation: 250,
+            ghostClass: 'dragging',
+            dragClass: 'dragging',
+            easing: 'cubic-bezier(0.4, 0.0, 0.2, 1)',
+            onEnd: function(evt) {
+                const taskId = evt.item.dataset.taskId;
+                const newStatus = evt.to.dataset.status;
+
+                console.log(`Moving task ${taskId} to ${newStatus}`);
+
+                // Update task status via AJAX
+                fetch(`/task-management/tasks/${taskId}/edit/`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/x-www-form-urlencoded',
+                        'X-CSRFToken': csrfToken,
+                        'X-Requested-With': 'XMLHttpRequest'
+                    },
+                    body: `status=${newStatus}&quick_update=true`
+                })
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error(`HTTP error! status: ${response.status}`);
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    if (data.success) {
+                        // Update column counts
+                        updateColumnCounts();
+
+                        // Show success toast
+                        showToast('Task status updated successfully!');
+
+                        console.log('Task status updated successfully');
+                    } else {
+                        // Revert the drag if failed
+                        revertDrag(evt);
+                        alert('Failed to update task status');
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    // Revert the drag on error
+                    revertDrag(evt);
+                    alert('An error occurred while updating task status');
+                });
+            }
+        });
+    });
+
+    // Function to revert drag on error
+    function revertDrag(evt) {
+        evt.item.remove();
+        evt.from.insertBefore(evt.item, evt.from.children[evt.oldIndex]);
+    }
+
+    // Function to update column counts
+    function updateColumnCounts() {
+        document.querySelectorAll('.kanban-column').forEach(column => {
+            const cards = column.querySelector('.kanban-cards');
+            const count = cards.querySelectorAll('.kanban-card').length;
+            column.querySelector('.kanban-column-count').textContent = count;
+        });
+    }
+
+    // Toast notification
+    function showToast(message) {
+        const toast = document.createElement('div');
+        toast.style.cssText = `
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            background: var(--hygge-green);
+            color: white;
+            padding: 20px 30px;
+            border-radius: 15px;
+            box-shadow: 0 8px 25px rgba(0,0,0,0.2);
+            z-index: 9999;
+            font-weight: 600;
+            animation: slideIn 0.3s ease;
+        `;
+        toast.textContent = message;
+        document.body.appendChild(toast);
+
+        setTimeout(() => {
+            toast.style.animation = 'slideOut 0.3s ease';
+            setTimeout(() => toast.remove(), 300);
+        }, 2000);
+    }
+
+    // Prevent default link behavior when dragging
+    document.querySelectorAll('.kanban-card').forEach(card => {
+        let isDragging = false;
+
+        card.addEventListener('dragstart', function(e) {
+            isDragging = true;
+        });
+
+        card.addEventListener('dragend', function(e) {
+            setTimeout(() => {
+                isDragging = false;
+            }, 100);
+        });
+
+        card.addEventListener('click', function(e) {
+            if (isDragging) {
+                e.preventDefault();
+            }
+        });
+    });
+
+    // Add animation styles
+    const style = document.createElement('style');
+    style.textContent = `
+        @keyframes slideIn {
+            from {
+                transform: translateX(400px);
+                opacity: 0;
+            }
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
+        @keyframes slideOut {
+            from {
+                transform: translateX(0);
+                opacity: 1;
+            }
+            to {
+                transform: translateX(400px);
+                opacity: 0;
+            }
+        }
+    `;
+    document.head.appendChild(style);
+});
+</script>
+{% endblock %}
