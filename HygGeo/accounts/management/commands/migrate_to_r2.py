@@ -98,6 +98,15 @@ class Command(BaseCommand):
 
         # Migrate Destinations
         self.stdout.write(self.style.HTTP_INFO('\n[1/7] Processing Destinations...'))
+        destinations_total = Destination.objects.exclude(image='').count()
+        self.stdout.write(f'  Found {destinations_total} destinations with images')
+
+        # Debug: Show sample image value
+        if destinations_total > 0 and dry_run:
+            sample_dest = Destination.objects.exclude(image='').first()
+            self.stdout.write(f'  DEBUG - Sample image field value: "{sample_dest.image}"')
+            self.stdout.write(f'  DEBUG - Looking for domain: "{old_domain}"')
+
         for destination in Destination.objects.exclude(image=''):
             if old_domain in str(destination.image):
                 old_url = str(destination.image)
@@ -116,8 +125,14 @@ class Command(BaseCommand):
 
                 stats['destinations'] += 1
 
+        if stats['destinations'] == 0 and destinations_total > 0:
+            self.stdout.write(f'  No destinations need migration (checked {destinations_total} records)')
+
         # Migrate Providers
         self.stdout.write(self.style.HTTP_INFO('\n[2/7] Processing Providers...'))
+        providers_total = Provider.objects.exclude(logo='').count()
+        self.stdout.write(f'  Found {providers_total} providers with logos')
+
         for provider in Provider.objects.exclude(logo=''):
             if old_domain in str(provider.logo):
                 old_url = str(provider.logo)
@@ -136,8 +151,14 @@ class Command(BaseCommand):
 
                 stats['providers'] += 1
 
+        if stats['providers'] == 0 and providers_total > 0:
+            self.stdout.write(f'  No providers need migration (checked {providers_total} records)')
+
         # Migrate Experiences
         self.stdout.write(self.style.HTTP_INFO('\n[3/7] Processing Experiences...'))
+        experiences_total = Experience.objects.exclude(main_image='').count()
+        self.stdout.write(f'  Found {experiences_total} experiences with images')
+
         for experience in Experience.objects.exclude(main_image=''):
             if old_domain in str(experience.main_image):
                 old_url = str(experience.main_image)
@@ -156,8 +177,20 @@ class Command(BaseCommand):
 
                 stats['experiences'] += 1
 
+        if stats['experiences'] == 0 and experiences_total > 0:
+            self.stdout.write(f'  No experiences need migration (checked {experiences_total} records)')
+
         # Migrate Accommodations
         self.stdout.write(self.style.HTTP_INFO('\n[4/7] Processing Accommodations...'))
+        accommodations_total = Accommodation.objects.exclude(main_image='').count()
+        self.stdout.write(f'  Found {accommodations_total} accommodations with images')
+
+        # Debug: Show sample image value
+        if accommodations_total > 0 and dry_run:
+            sample_acc = Accommodation.objects.exclude(main_image='').first()
+            self.stdout.write(f'  DEBUG - Sample image field value: "{sample_acc.main_image}"')
+            self.stdout.write(f'  DEBUG - Looking for domain: "{old_domain}"')
+
         for accommodation in Accommodation.objects.exclude(main_image=''):
             if old_domain in str(accommodation.main_image):
                 old_url = str(accommodation.main_image)
@@ -176,8 +209,14 @@ class Command(BaseCommand):
 
                 stats['accommodations'] += 1
 
+        if stats['accommodations'] == 0 and accommodations_total > 0:
+            self.stdout.write(f'  No accommodations need migration (checked {accommodations_total} records)')
+
         # Migrate Travel Blogs
         self.stdout.write(self.style.HTTP_INFO('\n[5/7] Processing Travel Blogs...'))
+        blogs_total = TravelBlog.objects.exclude(featured_image='').count()
+        self.stdout.write(f'  Found {blogs_total} blogs with images')
+
         for blog in TravelBlog.objects.exclude(featured_image=''):
             if old_domain in str(blog.featured_image):
                 old_url = str(blog.featured_image)
@@ -196,8 +235,14 @@ class Command(BaseCommand):
 
                 stats['blogs'] += 1
 
+        if stats['blogs'] == 0 and blogs_total > 0:
+            self.stdout.write(f'  No blogs need migration (checked {blogs_total} records)')
+
         # Migrate User Profiles
         self.stdout.write(self.style.HTTP_INFO('\n[6/7] Processing User Profiles...'))
+        profiles_total = UserProfile.objects.exclude(avatar='').count()
+        self.stdout.write(f'  Found {profiles_total} profiles with avatars')
+
         for profile in UserProfile.objects.exclude(avatar=''):
             if old_domain in str(profile.avatar):
                 old_url = str(profile.avatar)
@@ -216,8 +261,14 @@ class Command(BaseCommand):
 
                 stats['profiles'] += 1
 
+        if stats['profiles'] == 0 and profiles_total > 0:
+            self.stdout.write(f'  No profiles need migration (checked {profiles_total} records)')
+
         # Migrate Trips
         self.stdout.write(self.style.HTTP_INFO('\n[7/7] Processing Trips...'))
+        trips_total = Trip.objects.exclude(trip_image='').count()
+        self.stdout.write(f'  Found {trips_total} trips with images')
+
         for trip in Trip.objects.exclude(trip_image=''):
             if old_domain in str(trip.trip_image):
                 old_url = str(trip.trip_image)
@@ -235,6 +286,9 @@ class Command(BaseCommand):
                     trip.save(update_fields=['trip_image'])
 
                 stats['trips'] += 1
+
+        if stats['trips'] == 0 and trips_total > 0:
+            self.stdout.write(f'  No trips need migration (checked {trips_total} records)')
 
         # Print summary
         self.stdout.write(self.style.WARNING(f'\n{"="*70}'))
