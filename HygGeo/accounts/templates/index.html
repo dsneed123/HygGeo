@@ -31,13 +31,24 @@
 .img-cover{object-fit:cover;object-position:center}
 .banner-overlay{position:absolute;top:0;left:0;width:100%;height:100%;background:linear-gradient(to right,rgba(0,0,0,0.6) 0%,rgba(0,0,0,0.3) 50%,rgba(0,0,0,0.5) 100%);z-index:2}
 .container{position:relative;z-index:10}
-/* Prevent text reflow */
-.display-2{font-size:3.5rem;line-height:1.2}
-.lead{font-size:1.25rem;line-height:1.5}
+/* Prevent text reflow - explicit dimensions */
+.display-2{font-size:3.5rem;line-height:1.2;min-height:84px;font-weight:700;margin-bottom:1rem}
+.lead{font-size:1.25rem;line-height:1.5;min-height:37px;margin-bottom:2rem}
+.btn-lg{min-height:58px;padding:0.5rem 1rem;font-size:1.25rem;display:inline-flex;align-items:center;justify-content:center}
+.destination-badge{display:inline-flex;align-items:center;min-height:38px;padding:0.5rem 1rem;border-radius:25px;margin-bottom:1.5rem}
+.destination-name{font-size:2.2rem;font-weight:800;line-height:1.1;min-height:48px;margin-bottom:0.4rem}
+.position-absolute{position:absolute}
+.top-0{top:0}
+.end-0,.start-0{right:0}
+.bottom-0{bottom:0}
+.p-4{padding:1.5rem}
+.fas,.fa{display:inline-block;width:1em;text-align:center}
 @media(max-width:767px){
 .hero-banner{height:60vh;min-height:60vh}
-.display-2{font-size:2.5rem}
-.lead{font-size:1.1rem}
+.display-2{font-size:2.5rem;min-height:60px}
+.lead{font-size:1.1rem;min-height:33px}
+.btn-lg{min-height:48px;font-size:1.1rem}
+.destination-badge{font-size:0.85rem;padding:0.45rem 0.9rem;min-height:34px}
 }
 </style>
 {% endblock %}
