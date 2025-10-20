@@ -397,9 +397,9 @@ AWS_QUERYSTRING_AUTH = False  # Don't add authentication to URLs
 # All objects in R2 are private by default, use custom domain for public access
 
 # R2 Public URL configuration
-# Use custom R2.dev domain or custom domain for public access
+# Use R2.dev public domain for serving images
 AWS_S3_CUSTOM_DOMAIN = config('CLOUDFLARE_PUBLIC_DOMAIN',
-                              default=f'pub-{AWS_STORAGE_BUCKET_NAME}.r2.dev')
+                              default='pub-cfe28881db15475f88c173572f38ab10.r2.dev')
 
 # Media files served from R2 public URL
 MEDIA_URL = f'https://{AWS_S3_CUSTOM_DOMAIN}/{AWS_LOCATION}/'

@@ -35,8 +35,8 @@ class Command(BaseCommand):
         parser.add_argument(
             '--new-domain',
             type=str,
-            default='pub-hyggeo-images.r2.dev',
-            help='New Cloudflare R2 public domain (default: pub-hyggeo-images.r2.dev)',
+            default='pub-cfe28881db15475f88c173572f38ab10.r2.dev',
+            help='New Cloudflare R2 public domain (default: pub-cfe28881db15475f88c173572f38ab10.r2.dev)',
         )
 
     def handle(self, *args, **options):
