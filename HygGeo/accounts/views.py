@@ -60,18 +60,16 @@ def index(request):
     # Select 3 random facts for display
     featured_facts = random.sample(sustainability_facts, 3)
 
-    # Try to get cached featured destinations (cache for 15 minutes)
-    featured_destinations = cache.get('index_featured_destinations')
+    # Try to get cached featured destinations (cache for 1 hour for better performance)
+    featured_destinations = cache.get('index_featured_destinations_v2')
     if featured_destinations is None:
-        # Optimized query: Only fetch needed fields and use efficient ordering
+        # Optimized query: Only fetch needed fields, efficient ordering
         featured_destinations = Destination.objects.filter(
             experiences__isnull=False
         ).distinct().only(
             'id', 'name', 'country', 'description', 'image',
-            'sustainability_score', 'hygge_factor', 'created_at'
-        ).prefetch_related(
-            'experiences'
-        ).order_by('-created_at')[:6]
+            'sustainability_score', 'hygge_factor'
+        ).order_by('-sustainability_score', '-hygge_factor')[:6]
 
         # Convert to list to cache the queryset
         featured_destinations = list(featured_destinations)
@@ -81,53 +79,53 @@ def index(request):
             featured_destinations = list(
                 Destination.objects.only(
                     'id', 'name', 'country', 'description', 'image',
-                    'sustainability_score', 'hygge_factor', 'created_at'
-                ).order_by('-created_at')[:6]
+                    'sustainability_score', 'hygge_factor'
+                ).order_by('-sustainability_score', '-hygge_factor')[:6]
             )
 
-        # Cache for 15 minutes
-        cache.set('index_featured_destinations', featured_destinations, 60 * 15)
+        # Cache for 1 hour for better performance
+        cache.set('index_featured_destinations_v2', featured_destinations, 60 * 60)
 
-    # Try to get cached featured experiences (cache for 10 minutes)
-    # Changed cache key to invalidate old cache with fallback logic
-    featured_experiences = cache.get('index_featured_experiences_v2')
+    # Try to get cached featured experiences (cache for 30 minutes)
+    featured_experiences = cache.get('index_featured_experiences_v3')
     if featured_experiences is None:
-        # Optimized query: ONLY show featured experiences, no fallback
+        # Optimized query: Efficient ordering instead of random
         featured_experiences = Experience.objects.filter(
             is_featured=True,
             is_active=True
         ).select_related(
-            'destination', 'experience_type', 'provider'
+            'destination', 'experience_type'
         ).only(
             'id', 'title', 'description', 'main_image', 'price_from', 'slug',
             'destination__id', 'destination__name',
-            'experience_type__id', 'experience_type__name',
-            'provider__id', 'provider__name'
-        ).order_by('?')[:8]
+            'experience_type__id', 'experience_type__name'
+        ).order_by('-created_at')[:8]
 
         # Convert to list to cache
         featured_experiences = list(featured_experiences)
 
-        # Cache for 10 minutes
-        cache.set('index_featured_experiences_v2', featured_experiences, 60 * 10)
+        # Cache for 30 minutes for better performance
+        cache.set('index_featured_experiences_v3', featured_experiences, 60 * 30)
 
-    # Try to get cached featured accommodations (cache for 10 minutes)
-    featured_accommodations = cache.get('index_featured_accommodations')
+    # Try to get cached featured accommodations (cache for 30 minutes)
+    featured_accommodations = cache.get('index_featured_accommodations_v2')
     if featured_accommodations is None:
-        # Optimized query for featured accommodations - ONLY show featured ones
-        # Note: Removed .only() to ensure ImageField loads properly
+        # Optimized query: Efficient ordering instead of random
         featured_accommodations = Accommodation.objects.filter(
             is_featured=True,
             is_active=True
         ).select_related(
-            'destination', 'provider'
-        ).order_by('?')[:8]
+            'destination'
+        ).only(
+            'id', 'name', 'description', 'main_image', 'slug',
+            'destination__id', 'destination__name'
+        ).order_by('-created_at')[:8]
 
         # Convert to list to cache
         featured_accommodations = list(featured_accommodations)
 
-        # Cache for 10 minutes
-        cache.set('index_featured_accommodations', featured_accommodations, 60 * 10)
+        # Cache for 30 minutes for better performance
+        cache.set('index_featured_accommodations_v2', featured_accommodations, 60 * 30)
 
     # Check if user has completed a survey (only for authenticated users)
     has_survey = False
