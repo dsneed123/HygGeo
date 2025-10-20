@@ -69,18 +69,18 @@ def index(request):
         ).distinct().only(
             'id', 'name', 'country', 'description', 'image',
             'sustainability_score', 'hygge_factor'
-        ).order_by('-sustainability_score', '-hygge_factor')[:6]
+        ).order_by('-sustainability_score', '-hygge_factor')[:3] #amount of featured destinations
 
         # Convert to list to cache the queryset
         featured_destinations = list(featured_destinations)
 
-        # If no destinations with experiences, get any 6 destinations
+        # If no destinations with experiences, get any 3 destinations
         if not featured_destinations:
             featured_destinations = list(
                 Destination.objects.only(
                     'id', 'name', 'country', 'description', 'image',
                     'sustainability_score', 'hygge_factor'
-                ).order_by('-sustainability_score', '-hygge_factor')[:6]
+                ).order_by('-sustainability_score', '-hygge_factor')[:3]
             )
 
         # Cache for 1 hour for better performance

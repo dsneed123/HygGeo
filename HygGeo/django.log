@@ -14564,3 +14564,8 @@ INFO 2025-10-19 18:31:27,851 basehttp 38072 37732 "GET /static/css/base.css HTTP
 INFO 2025-10-19 18:31:27,852 basehttp 38072 3912 "GET /static/js/navbar.js HTTP/1.1" 200 2732
 INFO 2025-10-19 18:31:27,905 basehttp 38072 3912 "POST /accounts/track/page-view/ HTTP/1.1" 200 67
 INFO 2025-10-19 18:31:28,563 basehttp 38072 36324 "GET /static/site.webmanifest HTTP/1.1" 200 263
+INFO 2025-10-19 21:21:35,481 autoreload 54716 37496 Watching for file changes with StatReloader
+INFO 2025-10-19 21:21:36,361 basehttp 54716 19284 "GET / HTTP/1.1" 200 106076
+INFO 2025-10-19 21:21:36,500 basehttp 54716 19284 "GET /static/css/base.css HTTP/1.1" 200 5306
+INFO 2025-10-19 21:21:36,503 basehttp 54716 19284 "GET /static/js/navbar.js HTTP/1.1" 200 2732
+INFO 2025-10-19 21:21:38,576 basehttp 54716 19284 "POST /accounts/track/page-view/ HTTP/1.1" 200 67
