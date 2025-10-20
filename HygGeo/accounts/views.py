@@ -308,7 +308,10 @@ from .models import User, TravelSurvey
 # Replace your existing user_list_view with this updated version:
 
 def user_list_view(request):
-    users = User.objects.select_related('userprofile').prefetch_related('travel_surveys')
+    # Only get users that have userprofiles to prevent 500 errors
+    users = User.objects.select_related('userprofile').prefetch_related('travel_surveys').filter(
+        userprofile__isnull=False
+    )
 
     # Filter by destination (search in dream_destination)
     destination_query = request.GET.get('destination', '')
@@ -331,19 +334,20 @@ def user_list_view(request):
 
     # Sort by newest members (default and only option)
     users = users.order_by('-date_joined')
-    
-    # Get recent trips from all users (including current user)
+
+    # Get recent trips from all users - only from users with userprofiles
     recent_trips = Trip.objects.filter(
-        visibility__in=['public', 'community']
+        visibility__in=['public', 'community'],
+        creator__userprofile__isnull=False
     ).select_related(
         'creator__userprofile'
     ).order_by('-created_at')[:12]  # Get 12 most recent trips
-    
+
     # Pagination for users
     paginator = Paginator(users, 12)
     page_number = request.GET.get('page')
     page_obj = paginator.get_page(page_number)
-    
+
     context = {
         'users': page_obj,
         'recent_trips': recent_trips,

@@ -1,4 +1,5 @@
 {% extends 'base.html' %}
+{% load cloudflare_images %}
 
 {% block title %}Find Your Travel Buddy - HygGeo Community{% endblock %}
 
@@ -334,7 +335,7 @@
                 <div class="buddy-header">
                     <div class="buddy-avatar">
                         {% if user.userprofile.avatar %}
-                            <img src="{{ user.userprofile.avatar.url }}" alt="{{ user.first_name }}" class="avatar-img">
+                            <img src="{{ user.userprofile.avatar.url|cf_image:'format=webp,width=200,quality=30,fit=cover' }}" alt="{{ user.first_name }}" class="avatar-img">
                         {% else %}
                             <div class="avatar-placeholder">
                                 <i class="fas fa-user"></i>

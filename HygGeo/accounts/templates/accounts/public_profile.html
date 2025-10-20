@@ -1,4 +1,5 @@
 {% extends "base.html" %}
+{% load cloudflare_images %}
 
 {% block title %}{{ profile_user.username }} - HygGeo Profile{% endblock %}
 
@@ -12,7 +13,7 @@
 
         <!-- Avatar -->
         {% if profile_user.userprofile.avatar %}
-          <img src="{{ profile_user.userprofile.avatar.url }}"
+          <img src="{{ profile_user.userprofile.avatar.url|cf_image:'format=webp,width=200,quality=30,fit=cover' }}"
                alt="{{ profile_user.username }}"
                class="rounded-circle img-fluid mb-3"
                style="width:140px; height:140px; object-fit:cover; border: 4px solid var(--hygge-green);">

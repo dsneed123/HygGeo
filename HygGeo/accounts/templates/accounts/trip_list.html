@@ -1,4 +1,5 @@
 {% extends 'base.html' %}
+{% load cloudflare_images %}
 
 {% block title %}Browse Trips - HygGeo{% endblock %}
 
@@ -64,7 +65,7 @@
             <div class="card my-trip-card h-100 border-0 shadow-sm" data-trip-status="{{ trip.trip_status }}">
                 <div class="position-relative">
                     {% if trip.trip_image %}
-                    <img src="{{ trip.trip_image.url }}" alt="{{ trip.trip_name }}"
+                    <img src="{{ trip.trip_image.url|cf_image:'format=webp,width=400,quality=30,fit=cover' }}" alt="{{ trip.trip_name }}"
                          class="card-img-top" style="height: 200px; object-fit: cover;">
                     {% else %}
                     <div class="card-img-top bg-light d-flex align-items-center justify-content-center" style="height: 200px;">
@@ -236,7 +237,7 @@
                     <div class="d-flex align-items-center mb-3 pb-3 border-bottom">
                         <div class="me-2">
                             {% if trip.creator.userprofile.avatar %}
-                            <img src="{{ trip.creator.userprofile.avatar.url }}" class="rounded-circle" style="width: 32px; height: 32px; object-fit: cover;" alt="{{ trip.creator.username }}">
+                            <img src="{{ trip.creator.userprofile.avatar.url|cf_image:'format=webp,width=150,quality=25,fit=cover' }}" class="rounded-circle" style="width: 32px; height: 32px; object-fit: cover;" alt="{{ trip.creator.username }}">
                             {% else %}
                             <div class="rounded-circle bg-secondary d-flex align-items-center justify-content-center" style="width: 32px; height: 32px;">
                                 <i class="fas fa-user text-white small"></i>

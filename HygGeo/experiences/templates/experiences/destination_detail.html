@@ -1,4 +1,5 @@
 {% extends 'base.html' %}
+{% load cloudflare_images %}
 
 {% block title %}{{ destination.name }}, {{ destination.country }} - Sustainable Travel - HygGeo{% endblock %}
 
@@ -17,7 +18,7 @@
     <div class="hero-section">
         {% if destination.image %}
         <div class="hero-image-wrapper">
-            <img src="{{ destination.image.url }}" alt="{{ destination.name }}" class="hero-image">
+            <img src="{{ destination.image.url|cf_image:'format=webp,width=1280,quality=40,fit=cover' }}" alt="{{ destination.name }}" class="hero-image">
             <div class="hero-gradient-overlay"></div>
         </div>
         {% else %}
@@ -162,7 +163,7 @@
                             <div class="experience-card">
                                 {% if experience.main_image %}
                                 <div class="card-image">
-                                    <img src="{{ experience.main_image.url }}" alt="{{ experience.title }}">
+                                    <img src="{{ experience.main_image.url|cf_image:'format=webp,width=400,quality=30,fit=cover' }}" alt="{{ experience.title }}">
                                     <div class="card-badges">
                                         {% if experience.is_featured %}
                                         <span class="badge badge-featured">Featured</span>

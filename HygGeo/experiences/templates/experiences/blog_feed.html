@@ -1,4 +1,5 @@
 {% extends 'base.html' %}
+{% load cloudflare_images %}
 
 {% block title %}Travel Blogs - HygGeo{% endblock %}
 
@@ -79,7 +80,7 @@
                 <div class="card h-100 blog-card border-0 shadow-sm">
                     {% if blog.featured_image %}
                     <div class="blog-image-wrapper">
-                        <img src="{{ blog.featured_image.url }}" class="card-img-top" alt="{{ blog.title }}">
+                        <img src="{{ blog.featured_image.url|cf_image:'format=webp,width=400,quality=30,fit=cover' }}" class="card-img-top" alt="{{ blog.title }}">
                         <div class="blog-overlay">
                             <span class="reading-time">
                                 <i class="fas fa-clock me-1"></i>{{ blog.get_reading_time }} min

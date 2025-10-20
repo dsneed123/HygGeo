@@ -1,4 +1,5 @@
 {% extends 'base.html' %}
+{% load cloudflare_images %}
 
 {% block title %}Sustainable Accommodations - HygGeo{% endblock %}
 
@@ -81,7 +82,7 @@
             <div class="col-md-6 col-lg-4 mb-4">
                 <div class="card card-hygge h-100">
                     {% if accommodation.main_image %}
-                    <img src="{{ accommodation.main_image.url }}" class="card-img-top" alt="{{ accommodation.name }}"
+                    <img src="{{ accommodation.main_image.url|cf_image:'format=webp,width=400,quality=30,fit=cover' }}" class="card-img-top" alt="{{ accommodation.name }}"
                          style="height: 200px; object-fit: cover;">
                     {% else %}
                     <div style="height: 200px; background: var(--hygge-cream); display: flex; align-items: center; justify-content: center;">

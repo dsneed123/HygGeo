@@ -1,4 +1,5 @@
 {% extends 'base.html' %}
+{% load cloudflare_images %}
 
 {% block title %}{{ experience.title }} - {{ experience.destination.name }} | HygGeo{% endblock %}
 
@@ -75,7 +76,7 @@
             <!-- Hero Image -->
             <div class="card card-hygge mb-4">
                 {% if experience.main_image %}
-                <img src="{{ experience.main_image.url }}" class="card-img-top" alt="{{ experience.title }}" style="height: 400px; object-fit: cover;">
+                <img src="{{ experience.main_image.url|cf_image:'format=webp,width=1280,quality=40,fit=cover' }}" class="card-img-top" alt="{{ experience.title }}" style="height: 400px; object-fit: cover;">
                 {% else %}
                 <div class="card-img-top bg-light d-flex align-items-center justify-content-center" style="height: 400px;">
                     <i class="fas fa-image text-muted" style="font-size: 5rem;"></i>
@@ -237,7 +238,7 @@
                         <div class="col-md-6 mb-4">
                             <div class="card h-100">
                                 {% if blog.featured_image %}
-                                <img src="{{ blog.featured_image.url }}" class="card-img-top" alt="{{ blog.title }}"
+                                <img src="{{ blog.featured_image.url|cf_image:'format=webp,width=400,quality=30,fit=cover' }}" class="card-img-top" alt="{{ blog.title }}"
                                      style="height: 150px; object-fit: cover;">
                                 {% else %}
                                 <div style="height: 150px; background: var(--hygge-cream); display: flex; align-items: center; justify-content: center;">
@@ -340,7 +341,7 @@
                         <h6 class="fw-bold mb-2">Provided by</h6>
                         <div class="d-flex align-items-center">
                             {% if experience.provider.logo %}
-                            <img src="{{ experience.provider.logo.url }}" alt="{{ experience.provider.name }}" class="rounded me-2" style="width: 40px; height: 40px; object-fit: cover;">
+                            <img src="{{ experience.provider.logo.url|cf_image:'format=webp,width=150,quality=25,fit=cover' }}" alt="{{ experience.provider.name }}" class="rounded me-2" style="width: 40px; height: 40px; object-fit: cover;">
                             {% endif %}
                             <div>
                                 <div class="fw-bold">{{ experience.provider.name }}</div>
@@ -372,7 +373,7 @@
                     {% for similar in similar_experiences %}
                     <div class="d-flex mb-3 {% if forloop.last %}mb-0{% endif %}">
                         {% if similar.main_image %}
-                        <img src="{{ similar.main_image.url }}" alt="{{ similar.title }}" class="rounded me-3" style="width: 60px; height: 60px; object-fit: cover;">
+                        <img src="{{ similar.main_image.url|cf_image:'format=webp,width=150,quality=25,fit=cover' }}" alt="{{ similar.title }}" class="rounded me-3" style="width: 60px; height: 60px; object-fit: cover;">
                         {% else %}
                         <div class="bg-light rounded me-3 d-flex align-items-center justify-content-center" style="width: 60px; height: 60px;">
                             <i class="fas fa-image text-muted"></i>

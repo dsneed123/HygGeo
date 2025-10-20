@@ -1,4 +1,5 @@
 {% extends 'base.html' %}
+{% load cloudflare_images %}
 
 {% block title %}{{ accommodation.name }} - HygGeo{% endblock %}
 
@@ -22,7 +23,7 @@
         <div class="col-lg-8">
             <!-- Accommodation Image -->
             {% if accommodation.main_image %}
-            <img src="{{ accommodation.main_image.url }}" class="img-fluid rounded mb-4" alt="{{ accommodation.name }}">
+            <img src="{{ accommodation.main_image.url|cf_image:'format=webp,width=1280,quality=40,fit=cover' }}" class="img-fluid rounded mb-4" alt="{{ accommodation.name }}">
             {% else %}
             <div class="mb-4 rounded" style="height: 400px; background: var(--hygge-cream); display: flex; align-items: center; justify-content: center;">
                 <i class="fas fa-bed fa-5x text-muted"></i>
@@ -79,7 +80,7 @@
                             <div class="col-md-6 mb-3">
                                 <div class="card h-100">
                                     {% if blog.featured_image %}
-                                    <img src="{{ blog.featured_image.url }}" class="card-img-top" alt="{{ blog.title }}"
+                                    <img src="{{ blog.featured_image.url|cf_image:'format=webp,width=400,quality=30,fit=cover' }}" class="card-img-top" alt="{{ blog.title }}"
                                          style="height: 120px; object-fit: cover;">
                                     {% else %}
                                     <div style="height: 120px; background: var(--hygge-cream); display: flex; align-items: center; justify-content: center;">
@@ -188,7 +189,7 @@
         <div class="col-md-6 col-lg-3 mb-4">
             <div class="card card-hygge h-100">
                 {% if similar.main_image %}
-                <img src="{{ similar.main_image.url }}" class="card-img-top" alt="{{ similar.name }}"
+                <img src="{{ similar.main_image.url|cf_image:'format=webp,width=400,quality=30,fit=cover' }}" class="card-img-top" alt="{{ similar.name }}"
                      style="height: 150px; object-fit: cover;">
                 {% endif %}
                 <div class="card-body">

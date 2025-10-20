@@ -1,4 +1,5 @@
 {% extends 'base.html' %}
+{% load cloudflare_images %}
 
 {% block title %}My Trips - HygGeo{% endblock %}
 
@@ -33,7 +34,7 @@
             <div class="card my-trip-card h-100 border-0 shadow-sm">
                 {% if trip.trip_image %}
                 <div class="position-relative">
-                    <img src="{{ trip.trip_image.url }}" alt="{{ trip.trip_name }}"
+                    <img src="{{ trip.trip_image.url|cf_image:'format=webp,width=400,quality=30,fit=cover' }}" alt="{{ trip.trip_name }}"
                          class="card-img-top" style="height: 200px; object-fit: cover;">
                     <div class="position-absolute top-0 end-0 m-2">
                         {% if trip.trip_status == 'planning' %}
