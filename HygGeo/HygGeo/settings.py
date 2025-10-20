@@ -389,7 +389,9 @@ AWS_S3_ENDPOINT_URL = config('CLOUDFLARE_ENDPOINT_URL',
 AWS_S3_OBJECT_PARAMETERS = {
     'CacheControl': 'max-age=31536000, immutable',  # 1 year cache for media files
 }
-AWS_LOCATION = 'media'
+# AWS_LOCATION must include bucket name for custom domain URL structure
+# Files are at: www.hyggeo.com/hyggeo-images/media/...
+AWS_LOCATION = f'{AWS_STORAGE_BUCKET_NAME}/media'
 AWS_S3_FILE_OVERWRITE = False
 AWS_QUERYSTRING_AUTH = False  # Don't add authentication to URLs
 
@@ -402,8 +404,9 @@ AWS_S3_CUSTOM_DOMAIN = config('CLOUDFLARE_PUBLIC_DOMAIN',
                               default='www.hyggeo.com')
 
 # Media files served from R2 public URL
-# Include bucket name in path for proper URL structure
-MEDIA_URL = f'https://{AWS_S3_CUSTOM_DOMAIN}/{AWS_STORAGE_BUCKET_NAME}/{AWS_LOCATION}/'
+# Note: django-storages constructs URLs automatically using AWS_S3_CUSTOM_DOMAIN + AWS_LOCATION
+# This MEDIA_URL is for reference/fallback only
+MEDIA_URL = f'https://{AWS_S3_CUSTOM_DOMAIN}/{AWS_LOCATION}/'
 
 print(f"Cloudflare R2 configured:")
 print(f"   - Bucket: {AWS_STORAGE_BUCKET_NAME}")
