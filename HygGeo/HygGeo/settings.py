@@ -187,6 +187,30 @@ STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 # WhiteNoise caching configuration for better performance
 WHITENOISE_MAX_AGE = 31536000  # 1 year in seconds for static files
 WHITENOISE_IMMUTABLE_FILE_TEST = lambda path, url: True  # All static files are immutable
+WHITENOISE_COMPRESS_OFFLINE = True  # Pre-compress files for better performance
+
+# Additional Performance Settings
+# Enable browser caching headers
+if not DEBUG:
+    # Add cache control headers for better performance
+    MIDDLEWARE.insert(1, 'django.middleware.cache.UpdateCacheMiddleware')
+    MIDDLEWARE.append('django.middleware.cache.FetchFromCacheMiddleware')
+
+    # Cache configuration for page caching
+    CACHES = {
+        'default': {
+            'BACKEND': 'django.core.cache.backends.locmem.LocMemCache',
+            'LOCATION': 'unique-snowflake',
+            'OPTIONS': {
+                'MAX_ENTRIES': 1000
+            }
+        }
+    }
+
+    # Cache time settings
+    CACHE_MIDDLEWARE_ALIAS = 'default'
+    CACHE_MIDDLEWARE_SECONDS = 600  # 10 minutes
+    CACHE_MIDDLEWARE_KEY_PREFIX = ''
 
 # Default primary key field type
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'

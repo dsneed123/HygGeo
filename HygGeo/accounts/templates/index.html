@@ -1260,6 +1260,8 @@
     scroll-behavior: smooth;
     scrollbar-width: none;
     -ms-overflow-style: none;
+    contain: layout style;
+    will-change: scroll-position;
 }
 
 .experiences-carousel::-webkit-scrollbar {
@@ -1273,6 +1275,8 @@
     box-shadow: 0 4px 15px rgba(0,0,0,0.08);
     overflow: hidden;
     transition: all 0.3s ease;
+    contain: layout style paint;
+    content-visibility: auto;
     border: 1px solid rgba(74, 124, 89, 0.05);
     /* CLS Prevention: Consistent card height */
     min-height: 380px;
@@ -2821,34 +2825,51 @@ function scrollExperiences(direction) {
     });
 }
 
-// Accommodations Carousel Functionality - Enhanced for desktop
+// Accommodations Carousel Functionality - Optimized to prevent forced reflows
+// Cache measurements to avoid layout thrashing
+const carouselCache = new Map();
+
 function scrollAccommodations(direction) {
     const carousel = document.getElementById('accommodationsCarousel');
     if (!carousel) return;
 
-    // Calculate exact card width including gap
-    const firstCard = carousel.querySelector('.experience-card');
-    if (!firstCard) return;
+    // Use cached measurements or calculate once
+    if (!carouselCache.has('accommodations')) {
+        const firstCard = carousel.querySelector('.experience-card');
+        if (!firstCard) return;
 
-    const cardStyle = window.getComputedStyle(firstCard);
-    const cardWidth = firstCard.offsetWidth;
-    const gap = parseFloat(window.getComputedStyle(carousel).gap) || 32; // 2rem = 32px default
+        // Batch all DOM reads together
+        requestAnimationFrame(() => {
+            const cardWidth = firstCard.offsetWidth;
+            const gap = 32; // Fixed gap value to avoid getComputedStyle
+            carouselCache.set('accommodations', { cardWidth, gap });
+        });
+        return; // Exit and wait for cache to be populated
+    }
+
+    const { cardWidth, gap } = carouselCache.get('accommodations');
 
     // On desktop, scroll multiple cards for better UX
     const isDesktop = window.innerWidth > 1024;
     const cardsToScroll = isDesktop ? 3 : (window.innerWidth > 768 ? 2 : 1);
 
     const scrollAmount = (cardWidth + gap) * cardsToScroll;
-    const targetScroll = direction === 'next'
-        ? carousel.scrollLeft + scrollAmount
-        : carousel.scrollLeft - scrollAmount;
 
-    // Smooth scroll with easing
-    carousel.scrollTo({
-        left: targetScroll,
+    // Use scrollBy instead of reading scrollLeft
+    carousel.scrollBy({
+        left: direction === 'next' ? scrollAmount : -scrollAmount,
         behavior: 'smooth'
     });
 }
+
+// Clear cache on resize to recalculate
+let resizeTimer;
+window.addEventListener('resize', function() {
+    clearTimeout(resizeTimer);
+    resizeTimer = setTimeout(() => {
+        carouselCache.clear();
+    }, 250);
+});
 
 // Add mouse wheel support for accommodations carousel on desktop
 document.addEventListener('DOMContentLoaded', function() {
@@ -2934,19 +2955,39 @@ function handleExperiencesSwipe() {
     }
 }
 
-// Auto-hide navigation on mobile if not needed
+// Auto-hide navigation on mobile if not needed - Optimized to prevent forced reflows
 document.addEventListener('DOMContentLoaded', function() {
     const carousel = document.getElementById('experiencesCarousel');
     const navButtons = document.querySelector('.experiences-nav');
 
     if (carousel && navButtons) {
+        let scrollCheckPending = false;
+
         function checkScrollability() {
-            const isScrollable = carousel.scrollWidth > carousel.clientWidth;
-            navButtons.style.display = isScrollable ? 'flex' : 'none';
+            if (scrollCheckPending) return;
+            scrollCheckPending = true;
+
+            // Batch DOM reads in requestAnimationFrame
+            requestAnimationFrame(() => {
+                const isScrollable = carousel.scrollWidth > carousel.clientWidth;
+
+                // Batch DOM writes separately
+                requestAnimationFrame(() => {
+                    navButtons.style.display = isScrollable ? 'flex' : 'none';
+                    scrollCheckPending = false;
+                });
+            });
         }
 
-        checkScrollability();
-        window.addEventListener('resize', checkScrollability);
+        // Use setTimeout to defer initial check until after paint
+        setTimeout(checkScrollability, 100);
+
+        // Debounce resize events
+        let resizeCheckTimer;
+        window.addEventListener('resize', function() {
+            clearTimeout(resizeCheckTimer);
+            resizeCheckTimer = setTimeout(checkScrollability, 150);
+        });
     }
 });
 </script>
