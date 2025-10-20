@@ -4,84 +4,30 @@
 {% block title %}HygGeo - Sustainable Travel with Danish Hygge{% endblock %}
 
 {% block extra_head %}
-<!-- Preload hero image for LCP optimization - aggressive mobile optimization -->
+<!-- Preload hero image for LCP optimization - ultra aggressive compression -->
 {% if featured_destinations.0.image %}
 <link rel="preload"
       as="image"
-      href="{{ featured_destinations.0.image.url }}?format=webp&width=640&quality=50"
+      href="{{ featured_destinations.0.image.url }}?format=webp&width=640&quality=30"
       type="image/webp"
       fetchpriority="high"
-      imagesrcset="{{ featured_destinations.0.image.url }}?format=webp&width=320&quality=50 320w,
-                   {{ featured_destinations.0.image.url }}?format=webp&width=640&quality=50 640w,
-                   {{ featured_destinations.0.image.url }}?format=webp&width=960&quality=60 960w,
-                   {{ featured_destinations.0.image.url }}?format=webp&width=1280&quality=65 1280w,
-                   {{ featured_destinations.0.image.url }}?format=webp&width=1920&quality=70 1920w"
+      imagesrcset="{{ featured_destinations.0.image.url }}?format=webp&width=640&quality=30 640w,
+                   {{ featured_destinations.0.image.url }}?format=webp&width=1280&quality=35 1280w,
+                   {{ featured_destinations.0.image.url }}?format=webp&width=1920&quality=40 1920w"
       imagesizes="100vw">
 {% endif %}
 
-<!-- Critical CSS for hero section (inline to prevent render blocking) -->
+<!-- Critical CSS - Minified for speed -->
 <style>
-/* Critical Hero Section Styles */
-.hero-banner {
-    position: relative;
-    background: #2d5a3d;
-    display: flex;
-    align-items: center;
-    min-height: 70vh;
-    overflow: hidden;
-}
-.banner-carousel {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    z-index: 1;
-}
-.banner-slide {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    opacity: 0;
-    visibility: hidden;
-}
-.banner-slide.active {
-    opacity: 1;
-    visibility: visible;
-}
-.img-aspect-container {
-    position: relative;
-    width: 100%;
-    height: 100%;
-    overflow: hidden;
-    background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
-}
-.img-aspect-container img {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-}
-.img-cover {
-    object-fit: cover;
-    object-position: center;
-}
-.banner-overlay {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: linear-gradient(to right, rgba(0,0,0,0.6) 0%, rgba(0,0,0,0.3) 50%, rgba(0,0,0,0.5) 100%);
-    z-index: 2;
-}
-.container {
-    position: relative;
-    z-index: 10;
-}
+.hero-banner{position:relative;background:#2d5a3d;display:flex;align-items:center;min-height:70vh;overflow:hidden}
+.banner-carousel{position:absolute;top:0;left:0;width:100%;height:100%;z-index:1}
+.banner-slide{position:absolute;top:0;left:0;width:100%;height:100%;opacity:0;visibility:hidden}
+.banner-slide.active{opacity:1;visibility:visible}
+.img-aspect-container{position:relative;width:100%;height:100%;overflow:hidden;background:#f8fafc}
+.img-aspect-container img{position:absolute;top:0;left:0;width:100%;height:100%}
+.img-cover{object-fit:cover;object-position:center}
+.banner-overlay{position:absolute;top:0;left:0;width:100%;height:100%;background:linear-gradient(to right,rgba(0,0,0,0.6) 0%,rgba(0,0,0,0.3) 50%,rgba(0,0,0,0.5) 100%);z-index:2}
+.container{position:relative;z-index:10}
 </style>
 {% endblock %}
 
@@ -96,23 +42,19 @@
                 <!-- Aspect ratio container to prevent CLS -->
                 <div class="img-aspect-container" style="aspect-ratio: 16/9;">
                     <picture>
-                        <!-- Cloudflare WebP with aggressive compression for speed -->
+                        <!-- Cloudflare WebP with ultra aggressive compression, properly sized -->
                         <source
                             type="image/webp"
-                            srcset="{{ destination.image.url }}?format=webp&width=320&quality=50 320w,
-                                    {{ destination.image.url }}?format=webp&width=640&quality=50 640w,
-                                    {{ destination.image.url }}?format=webp&width=960&quality=60 960w,
-                                    {{ destination.image.url }}?format=webp&width=1280&quality=65 1280w,
-                                    {{ destination.image.url }}?format=webp&width=1920&quality=70 1920w"
+                            srcset="{{ destination.image.url }}?format=webp&width=640&quality=30 640w,
+                                    {{ destination.image.url }}?format=webp&width=1280&quality=35 1280w,
+                                    {{ destination.image.url }}?format=webp&width=1920&quality=40 1920w"
                             sizes="100vw">
                         <!-- Fallback to original format -->
                         <img
-                            src="{{ destination.image.url }}?width=640&quality=50"
-                            srcset="{{ destination.image.url }}?width=320&quality=50 320w,
-                                    {{ destination.image.url }}?width=640&quality=50 640w,
-                                    {{ destination.image.url }}?width=960&quality=60 960w,
-                                    {{ destination.image.url }}?width=1280&quality=65 1280w,
-                                    {{ destination.image.url }}?width=1920&quality=70 1920w"
+                            src="{{ destination.image.url }}?width=640&quality=30"
+                            srcset="{{ destination.image.url }}?width=640&quality=30 640w,
+                                    {{ destination.image.url }}?width=1280&quality=35 1280w,
+                                    {{ destination.image.url }}?width=1920&quality=40 1920w"
                             sizes="100vw"
                             alt="{{ destination.name }}"
                             {% if forloop.first %}fetchpriority="high"{% else %}loading="lazy"{% endif %}
@@ -251,18 +193,14 @@
                             <!-- Aspect ratio container to prevent CLS -->
                             <div class="img-aspect-container" style="aspect-ratio: 240/140;">
                                 <picture>
-                                    <!-- Cloudflare WebP with optimization - reduced quality for speed -->
+                                    <!-- Cloudflare WebP with ultra compression -->
                                     <source
                                         type="image/webp"
-                                        srcset="{{ experience.main_image.url }}?format=webp&width=480&quality=60 480w,
-                                                {{ experience.main_image.url }}?format=webp&width=240&quality=60 240w"
-                                        sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 240px">
+                                        srcset="{{ experience.main_image.url }}?format=webp&width=240&quality=30 240w"
+                                        sizes="240px">
                                     <!-- Fallback to original format -->
                                     <img
-                                        src="{{ experience.main_image.url }}?width=240&quality=60"
-                                        srcset="{{ experience.main_image.url }}?width=480&quality=60 480w,
-                                                {{ experience.main_image.url }}?width=240&quality=60 240w"
-                                        sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 240px"
+                                        src="{{ experience.main_image.url }}?width=240&quality=30"
                                         alt="{{ experience.title }}"
                                         loading="lazy"
                                         width="240"
@@ -360,18 +298,14 @@
                             <!-- Aspect ratio container to prevent CLS -->
                             <div class="img-aspect-container" style="aspect-ratio: 240/140;">
                                 <picture>
-                                    <!-- Cloudflare WebP with optimization - reduced quality for speed -->
+                                    <!-- Cloudflare WebP with ultra compression -->
                                     <source
                                         type="image/webp"
-                                        srcset="{{ accommodation.main_image.url }}?format=webp&width=480&quality=60 480w,
-                                                {{ accommodation.main_image.url }}?format=webp&width=240&quality=60 240w"
-                                        sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 240px">
+                                        srcset="{{ accommodation.main_image.url }}?format=webp&width=240&quality=30 240w"
+                                        sizes="240px">
                                     <!-- Fallback to original format -->
                                     <img
-                                        src="{{ accommodation.main_image.url }}?width=240&quality=60"
-                                        srcset="{{ accommodation.main_image.url }}?width=480&quality=60 480w,
-                                                {{ accommodation.main_image.url }}?width=240&quality=60 240w"
-                                        sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 240px"
+                                        src="{{ accommodation.main_image.url }}?width=240&quality=30"
                                         alt="{{ accommodation.name }}"
                                         loading="lazy"
                                         width="240"
