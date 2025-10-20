@@ -50,15 +50,16 @@
     <meta name="application-name" content="HygGeo">
 
     <!-- Preconnect to external domains for faster loading -->
-    <link rel="preconnect" href="https://hygoe-images.sfo3.cdn.digitaloceanspaces.com">
-    <link rel="dns-prefetch" href="https://hygoe-images.sfo3.cdn.digitaloceanspaces.com">
+    <link rel="preconnect" href="https://www.hyggeo.com">
+    <link rel="dns-prefetch" href="https://www.hyggeo.com">
     <link rel="preconnect" href="https://cdn.jsdelivr.net">
     <link rel="dns-prefetch" href="https://cdn.jsdelivr.net">
-    <link rel="preconnect" href="https://cdnjs.cloudflare.com">
-    <link rel="dns-prefetch" href="https://cdnjs.cloudflare.com">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link rel="dns-prefetch" href="https://fonts.googleapis.com">
+
+    <!-- Preload critical font to prevent CLS -->
+    <link rel="preload" href="https://fonts.gstatic.com/s/poppins/v20/pxiEyp8kv8JHgFVrJJfecg.woff2" as="font" type="font/woff2" crossorigin>
 
     <!-- Site Structure and Organization Schema -->
     <script type="application/ld+json">
@@ -160,8 +161,18 @@
             --hygge-gold: #d4a574;
         }
 
+        /* Font fallback with size-adjust to prevent CLS */
+        @font-face {
+            font-family: 'Poppins-fallback';
+            src: local('Arial');
+            size-adjust: 105%;
+            ascent-override: 95%;
+            descent-override: 25%;
+            line-gap-override: 0%;
+        }
+
         /* Critical CSS - Navbar and basic layout */
-        body{margin:0;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,'Helvetica Neue',Arial,sans-serif;line-height:1.5;color:#212529;background-color:#fff}
+        body{margin:0;font-family:'Poppins','Poppins-fallback',-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,'Helvetica Neue',Arial,sans-serif;line-height:1.5;color:#212529;background-color:#fff}
 
         /* Navbar styles - prevent flash */
         .navbar{
@@ -207,9 +218,8 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" media="print" onload="this.media='all';this.onload=null">
     <noscript><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"></noscript>
 
-    <!-- Google Fonts - Deferred for performance -->
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet" media="print" onload="this.media='all';this.onload=null">
-    <noscript><link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet"></noscript>
+    <!-- Google Fonts - Preloaded and with font-display swap to prevent CLS -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 
     <!-- HygGeo Base Styles -->
     <link rel="stylesheet" href="{% static 'css/base.css' %}" media="print" onload="this.media='all';this.onload=null">
@@ -222,7 +232,7 @@
     <nav class="navbar navbar-expand-lg navbar-dark">
         <div class="container">
             <a class="navbar-brand" href="{% url 'index' %}">
-                <i class="fas fa-leaf me-2" style="font-size: 1.5rem; color: white;"></i>HygGeo
+                <svg class="me-2" style="width: 1.5rem; height: 1.5rem; vertical-align: middle;" viewBox="0 0 512 512" fill="white" aria-hidden="true"><path d="M272 96c-78.6 0-145.1 51.5-167.7 122.5c33.6-17 71.5-26.5 111.7-26.5h88c8.8 0 16 7.2 16 16s-7.2 16-16 16H288 216s0 0 0 0c-16.6 0-32.7 1.9-48.3 5.4c-25.9 5.9-49.9 16.4-71.4 30.7c0 0 0 0 0 0C38.3 298.8 0 364.9 0 440v16c0 13.3 10.7 24 24 24s24-10.7 24-24V440c0-48.7 20.7-92.5 53.8-123.2C121.6 392.3 190.3 448 272 448l1 0c132.1-.7 239-130.9 239-291.4c0-42.6-7.5-83.1-21.1-119.6c-2.6-6.9-12.7-6.6-16.2-.1C455.9 72.1 418.7 96 376 96L272 96z"/></svg>HygGeo
             </a>
             
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation menu">
@@ -654,15 +664,22 @@
             }, true); // Use capture phase to track before navigation
         }
 
-        // Initialize tracking when DOM is ready
-        if (document.readyState === 'loading') {
-            document.addEventListener('DOMContentLoaded', function() {
-                trackPageView();
-                attachClickTracking();
-            });
-        } else {
+        // Initialize tracking after page is fully loaded and idle
+        // This prevents blocking page interactivity
+        function initTracking() {
             trackPageView();
             attachClickTracking();
+        }
+
+        // Use requestIdleCallback if available, otherwise delay after load
+        if ('requestIdleCallback' in window) {
+            window.addEventListener('load', function() {
+                requestIdleCallback(initTracking, { timeout: 2000 });
+            });
+        } else {
+            window.addEventListener('load', function() {
+                setTimeout(initTracking, 1000);
+            });
         }
     })();
     </script>

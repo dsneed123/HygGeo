@@ -5,36 +5,46 @@
 {% block title %}HygGeo - Sustainable Travel with Danish Hygge{% endblock %}
 
 {% block extra_head %}
-<!-- Preload hero image for LCP optimization - ultra aggressive compression -->
+<!-- Preload hero image for LCP optimization - mobile optimized -->
 {% if featured_destinations.0.image %}
 <link rel="preload"
       as="image"
-      href="{{ featured_destinations.0.image.url|cf_image:'format=webp,width=640,quality=30' }}"
+      href="{{ featured_destinations.0.image.url|cf_image:'format=webp,width=640,quality=25' }}"
       type="image/webp"
       fetchpriority="high"
-      imagesrcset="{{ featured_destinations.0.image.url|cf_image:'format=webp,width=640,quality=30' }} 640w,
-                   {{ featured_destinations.0.image.url|cf_image:'format=webp,width=1280,quality=35' }} 1280w,
-                   {{ featured_destinations.0.image.url|cf_image:'format=webp,width=1920,quality=40' }} 1920w"
-      imagesizes="100vw">
+      imagesrcset="{{ featured_destinations.0.image.url|cf_image:'format=webp,width=480,quality=25' }} 480w,
+                   {{ featured_destinations.0.image.url|cf_image:'format=webp,width=640,quality=25' }} 640w,
+                   {{ featured_destinations.0.image.url|cf_image:'format=webp,width=1280,quality=35' }} 1280w"
+      imagesizes="(max-width: 767px) 100vw, (max-width: 1199px) 100vw, 1280px">
 {% endif %}
 
-<!-- Critical CSS - Minified for speed -->
+<!-- Critical CSS - Minified for speed, prevents CLS -->
 <style>
-.hero-banner{position:relative;background:#2d5a3d;display:flex;align-items:center;min-height:70vh;overflow:hidden}
+/* Hero banner - fixed height prevents CLS */
+.hero-banner{position:relative;background:#2d5a3d;display:flex;align-items:center;min-height:70vh;height:70vh;overflow:hidden}
 .banner-carousel{position:absolute;top:0;left:0;width:100%;height:100%;z-index:1}
-.banner-slide{position:absolute;top:0;left:0;width:100%;height:100%;opacity:0;visibility:hidden}
+.banner-slide{position:absolute;top:0;left:0;width:100%;height:100%;opacity:0;visibility:hidden;transition:opacity 0.8s ease-in-out}
 .banner-slide.active{opacity:1;visibility:visible}
-.img-aspect-container{position:relative;width:100%;height:100%;overflow:hidden;background:#f8fafc}
-.img-aspect-container img{position:absolute;top:0;left:0;width:100%;height:100%}
+/* Image container with aspect ratio prevents CLS */
+.img-aspect-container{position:relative;width:100%;height:100%;overflow:hidden;background:#2d5a3d}
+.img-aspect-container img{position:absolute;top:0;left:0;width:100%;height:100%;object-fit:cover;object-position:center}
 .img-cover{object-fit:cover;object-position:center}
 .banner-overlay{position:absolute;top:0;left:0;width:100%;height:100%;background:linear-gradient(to right,rgba(0,0,0,0.6) 0%,rgba(0,0,0,0.3) 50%,rgba(0,0,0,0.5) 100%);z-index:2}
 .container{position:relative;z-index:10}
+/* Prevent text reflow */
+.display-2{font-size:3.5rem;line-height:1.2}
+.lead{font-size:1.25rem;line-height:1.5}
+@media(max-width:767px){
+.hero-banner{height:60vh;min-height:60vh}
+.display-2{font-size:2.5rem}
+.lead{font-size:1.1rem}
+}
 </style>
 {% endblock %}
 
 {% block content %}
 <!-- Hero Banner Section -->
-<section class="hero-banner position-relative overflow-hidden" style="min-height: 70vh;">
+<section class="hero-banner position-relative overflow-hidden">
     <!-- Background Carousel -->
     <div class="banner-carousel" id="bannerCarousel">
         {% for destination in featured_destinations %}
@@ -43,20 +53,29 @@
                 <!-- Aspect ratio container to prevent CLS -->
                 <div class="img-aspect-container" style="aspect-ratio: 16/9;">
                     <picture>
-                        <!-- Cloudflare WebP with ultra aggressive compression, properly sized -->
+                        <!-- Mobile: Small WebP -->
+                        <source
+                            media="(max-width: 767px)"
+                            type="image/webp"
+                            srcset="{{ destination.image.url|cf_image:'format=webp,width=480,quality=25' }} 480w,
+                                    {{ destination.image.url|cf_image:'format=webp,width=640,quality=25' }} 640w"
+                            sizes="100vw">
+                        <!-- Tablet: Medium WebP -->
+                        <source
+                            media="(max-width: 1199px)"
+                            type="image/webp"
+                            srcset="{{ destination.image.url|cf_image:'format=webp,width=800,quality=30' }} 800w,
+                                    {{ destination.image.url|cf_image:'format=webp,width=1024,quality=30' }} 1024w"
+                            sizes="100vw">
+                        <!-- Desktop: Large WebP -->
                         <source
                             type="image/webp"
-                            srcset="{{ destination.image.url|cf_image:'format=webp,width=640,quality=30' }} 640w,
-                                    {{ destination.image.url|cf_image:'format=webp,width=1280,quality=35' }} 1280w,
-                                    {{ destination.image.url|cf_image:'format=webp,width=1920,quality=40' }} 1920w"
+                            srcset="{{ destination.image.url|cf_image:'format=webp,width=1280,quality=35' }} 1280w,
+                                    {{ destination.image.url|cf_image:'format=webp,width=1920,quality=35' }} 1920w"
                             sizes="100vw">
-                        <!-- Fallback to original format -->
+                        <!-- Fallback -->
                         <img
-                            src="{{ destination.image.url|cf_image:'width=640,quality=30' }}"
-                            srcset="{{ destination.image.url|cf_image:'width=640,quality=30' }} 640w,
-                                    {{ destination.image.url|cf_image:'width=1280,quality=35' }} 1280w,
-                                    {{ destination.image.url|cf_image:'width=1920,quality=40' }} 1920w"
-                            sizes="100vw"
+                            src="{{ destination.image.url|cf_image:'format=webp,width=640,quality=25' }}"
                             alt="{{ destination.name }}"
                             {% if forloop.first %}fetchpriority="high"{% else %}loading="lazy"{% endif %}
                             width="1920"
