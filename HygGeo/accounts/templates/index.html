@@ -1,5 +1,6 @@
 {% extends 'base.html' %}
 {% load static %}
+{% load cloudflare_images %}
 
 {% block title %}HygGeo - Sustainable Travel with Danish Hygge{% endblock %}
 
@@ -8,12 +9,12 @@
 {% if featured_destinations.0.image %}
 <link rel="preload"
       as="image"
-      href="{{ featured_destinations.0.image.url }}?format=webp&width=640&quality=30"
+      href="{{ featured_destinations.0.image.url|cf_image:'format=webp,width=640,quality=30' }}"
       type="image/webp"
       fetchpriority="high"
-      imagesrcset="{{ featured_destinations.0.image.url }}?format=webp&width=640&quality=30 640w,
-                   {{ featured_destinations.0.image.url }}?format=webp&width=1280&quality=35 1280w,
-                   {{ featured_destinations.0.image.url }}?format=webp&width=1920&quality=40 1920w"
+      imagesrcset="{{ featured_destinations.0.image.url|cf_image:'format=webp,width=640,quality=30' }} 640w,
+                   {{ featured_destinations.0.image.url|cf_image:'format=webp,width=1280,quality=35' }} 1280w,
+                   {{ featured_destinations.0.image.url|cf_image:'format=webp,width=1920,quality=40' }} 1920w"
       imagesizes="100vw">
 {% endif %}
 
@@ -45,16 +46,16 @@
                         <!-- Cloudflare WebP with ultra aggressive compression, properly sized -->
                         <source
                             type="image/webp"
-                            srcset="{{ destination.image.url }}?format=webp&width=640&quality=30 640w,
-                                    {{ destination.image.url }}?format=webp&width=1280&quality=35 1280w,
-                                    {{ destination.image.url }}?format=webp&width=1920&quality=40 1920w"
+                            srcset="{{ destination.image.url|cf_image:'format=webp,width=640,quality=30' }} 640w,
+                                    {{ destination.image.url|cf_image:'format=webp,width=1280,quality=35' }} 1280w,
+                                    {{ destination.image.url|cf_image:'format=webp,width=1920,quality=40' }} 1920w"
                             sizes="100vw">
                         <!-- Fallback to original format -->
                         <img
-                            src="{{ destination.image.url }}?width=640&quality=30"
-                            srcset="{{ destination.image.url }}?width=640&quality=30 640w,
-                                    {{ destination.image.url }}?width=1280&quality=35 1280w,
-                                    {{ destination.image.url }}?width=1920&quality=40 1920w"
+                            src="{{ destination.image.url|cf_image:'width=640,quality=30' }}"
+                            srcset="{{ destination.image.url|cf_image:'width=640,quality=30' }} 640w,
+                                    {{ destination.image.url|cf_image:'width=1280,quality=35' }} 1280w,
+                                    {{ destination.image.url|cf_image:'width=1920,quality=40' }} 1920w"
                             sizes="100vw"
                             alt="{{ destination.name }}"
                             {% if forloop.first %}fetchpriority="high"{% else %}loading="lazy"{% endif %}
@@ -196,11 +197,11 @@
                                     <!-- Cloudflare WebP with ultra compression -->
                                     <source
                                         type="image/webp"
-                                        srcset="{{ experience.main_image.url }}?format=webp&width=240&quality=30 240w"
+                                        srcset="{{ experience.main_image.url|cf_image:'format=webp,width=240,quality=30' }} 240w"
                                         sizes="240px">
                                     <!-- Fallback to original format -->
                                     <img
-                                        src="{{ experience.main_image.url }}?width=240&quality=30"
+                                        src="{{ experience.main_image.url|cf_image:'width=240,quality=30' }}"
                                         alt="{{ experience.title }}"
                                         loading="lazy"
                                         width="240"
@@ -301,11 +302,11 @@
                                     <!-- Cloudflare WebP with ultra compression -->
                                     <source
                                         type="image/webp"
-                                        srcset="{{ accommodation.main_image.url }}?format=webp&width=240&quality=30 240w"
+                                        srcset="{{ accommodation.main_image.url|cf_image:'format=webp,width=240,quality=30' }} 240w"
                                         sizes="240px">
                                     <!-- Fallback to original format -->
                                     <img
-                                        src="{{ accommodation.main_image.url }}?width=240&quality=30"
+                                        src="{{ accommodation.main_image.url|cf_image:'width=240,quality=30' }}"
                                         alt="{{ accommodation.name }}"
                                         loading="lazy"
                                         width="240"

@@ -101,12 +101,6 @@ class Command(BaseCommand):
         destinations_total = Destination.objects.exclude(image='').count()
         self.stdout.write(f'  Found {destinations_total} destinations with images')
 
-        # Debug: Show sample image value
-        if destinations_total > 0 and dry_run:
-            sample_dest = Destination.objects.exclude(image='').first()
-            self.stdout.write(f'  DEBUG - Sample image field value: "{sample_dest.image}"')
-            self.stdout.write(f'  DEBUG - Looking for domain: "{old_domain}"')
-
         for destination in Destination.objects.exclude(image=''):
             if old_domain in str(destination.image):
                 old_url = str(destination.image)
@@ -184,12 +178,6 @@ class Command(BaseCommand):
         self.stdout.write(self.style.HTTP_INFO('\n[4/7] Processing Accommodations...'))
         accommodations_total = Accommodation.objects.exclude(main_image='').count()
         self.stdout.write(f'  Found {accommodations_total} accommodations with images')
-
-        # Debug: Show sample image value
-        if accommodations_total > 0 and dry_run:
-            sample_acc = Accommodation.objects.exclude(main_image='').first()
-            self.stdout.write(f'  DEBUG - Sample image field value: "{sample_acc.main_image}"')
-            self.stdout.write(f'  DEBUG - Looking for domain: "{old_domain}"')
 
         for accommodation in Accommodation.objects.exclude(main_image=''):
             if old_domain in str(accommodation.main_image):
