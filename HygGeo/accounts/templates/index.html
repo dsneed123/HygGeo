@@ -4,18 +4,18 @@
 {% block title %}HygGeo - Sustainable Travel with Danish Hygge{% endblock %}
 
 {% block extra_head %}
-<!-- Preload hero image for LCP optimization - optimized for mobile first -->
+<!-- Preload hero image for LCP optimization - aggressive mobile optimization -->
 {% if featured_destinations.0.image %}
 <link rel="preload"
       as="image"
-      href="{{ featured_destinations.0.image.url }}?format=webp&width=640&quality=70"
+      href="{{ featured_destinations.0.image.url }}?format=webp&width=640&quality=50"
       type="image/webp"
       fetchpriority="high"
-      imagesrcset="{{ featured_destinations.0.image.url }}?format=webp&width=320&quality=70 320w,
-                   {{ featured_destinations.0.image.url }}?format=webp&width=640&quality=70 640w,
-                   {{ featured_destinations.0.image.url }}?format=webp&width=960&quality=75 960w,
-                   {{ featured_destinations.0.image.url }}?format=webp&width=1280&quality=75 1280w,
-                   {{ featured_destinations.0.image.url }}?format=webp&width=1920&quality=75 1920w"
+      imagesrcset="{{ featured_destinations.0.image.url }}?format=webp&width=320&quality=50 320w,
+                   {{ featured_destinations.0.image.url }}?format=webp&width=640&quality=50 640w,
+                   {{ featured_destinations.0.image.url }}?format=webp&width=960&quality=60 960w,
+                   {{ featured_destinations.0.image.url }}?format=webp&width=1280&quality=65 1280w,
+                   {{ featured_destinations.0.image.url }}?format=webp&width=1920&quality=70 1920w"
       imagesizes="100vw">
 {% endif %}
 
@@ -96,23 +96,23 @@
                 <!-- Aspect ratio container to prevent CLS -->
                 <div class="img-aspect-container" style="aspect-ratio: 16/9;">
                     <picture>
-                        <!-- Cloudflare WebP with optimization - mobile first -->
+                        <!-- Cloudflare WebP with aggressive compression for speed -->
                         <source
                             type="image/webp"
-                            srcset="{{ destination.image.url }}?format=webp&width=320&quality=70 320w,
-                                    {{ destination.image.url }}?format=webp&width=640&quality=70 640w,
-                                    {{ destination.image.url }}?format=webp&width=960&quality=75 960w,
-                                    {{ destination.image.url }}?format=webp&width=1280&quality=75 1280w,
-                                    {{ destination.image.url }}?format=webp&width=1920&quality=75 1920w"
+                            srcset="{{ destination.image.url }}?format=webp&width=320&quality=50 320w,
+                                    {{ destination.image.url }}?format=webp&width=640&quality=50 640w,
+                                    {{ destination.image.url }}?format=webp&width=960&quality=60 960w,
+                                    {{ destination.image.url }}?format=webp&width=1280&quality=65 1280w,
+                                    {{ destination.image.url }}?format=webp&width=1920&quality=70 1920w"
                             sizes="100vw">
                         <!-- Fallback to original format -->
                         <img
-                            src="{{ destination.image.url }}?width=640&quality=70"
-                            srcset="{{ destination.image.url }}?width=320&quality=70 320w,
-                                    {{ destination.image.url }}?width=640&quality=70 640w,
-                                    {{ destination.image.url }}?width=960&quality=75 960w,
-                                    {{ destination.image.url }}?width=1280&quality=75 1280w,
-                                    {{ destination.image.url }}?width=1920&quality=75 1920w"
+                            src="{{ destination.image.url }}?width=640&quality=50"
+                            srcset="{{ destination.image.url }}?width=320&quality=50 320w,
+                                    {{ destination.image.url }}?width=640&quality=50 640w,
+                                    {{ destination.image.url }}?width=960&quality=60 960w,
+                                    {{ destination.image.url }}?width=1280&quality=65 1280w,
+                                    {{ destination.image.url }}?width=1920&quality=70 1920w"
                             sizes="100vw"
                             alt="{{ destination.name }}"
                             {% if forloop.first %}fetchpriority="high"{% else %}loading="lazy"{% endif %}
