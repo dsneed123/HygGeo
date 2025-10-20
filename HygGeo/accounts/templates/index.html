@@ -279,9 +279,9 @@
                             </div>
                             {% endif %}
                         </div>
-                        <a href="{{ experience.get_absolute_url }}" class="btn btn-experience">
+                        <a href="{{ experience.get_absolute_url }}" class="btn btn-experience" aria-label="{{ experience.title }} - {% if experience.description %}{{ experience.description|truncatewords:10|striptags }}{% else %}Sustainable travel experience{% endif %}">
                             <i class="fas fa-arrow-right me-2"></i>
-                            Learn More
+                            View Details
                         </a>
                     </div>
                 </div>
@@ -386,7 +386,7 @@
                             </div>
                             {% endif %}
                         </div>
-                        <a href="{% url 'experiences:accommodation_detail' accommodation.slug %}" class="btn btn-experience" style="background: #9b59b6;">
+                        <a href="{% url 'experiences:accommodation_detail' accommodation.slug %}" class="btn btn-experience" style="background: #9b59b6;" aria-label="{{ accommodation.name }} - {% if accommodation.short_description %}{{ accommodation.short_description|truncatewords:10|striptags }}{% elif accommodation.description %}{{ accommodation.description|truncatewords:10|striptags }}{% else %}Sustainable accommodation{% endif %}">
                             <i class="fas fa-arrow-right me-2"></i>
                             View Details
                         </a>
