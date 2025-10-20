@@ -370,47 +370,53 @@ if DEBUG:
         pass
 
 # =============================================================================
-# MEDIA FILES CONFIGURATION - CONDITIONAL BASED ON ENVIRONMENT
+# MEDIA FILES CONFIGURATION - CLOUDFLARE R2
 # =============================================================================
 
-# DigitalOcean Spaces configuration (works in both development and production)
-print(f"Configuring DigitalOcean Spaces for media files (DEBUG={DEBUG})")
+# Cloudflare R2 configuration (S3-compatible storage)
+print(f"Configuring Cloudflare R2 for media files (DEBUG={DEBUG})")
 
-# DigitalOcean Spaces configuration
-AWS_ACCESS_KEY_ID = config('SPACES_ACCESS_KEY', default='')
-AWS_SECRET_ACCESS_KEY = config('SPACES_SECRET_KEY', default='')
-AWS_STORAGE_BUCKET_NAME = config('SPACES_BUCKET_NAME', default='hygoe-images')
-AWS_S3_ENDPOINT_URL = config('SPACES_ENDPOINT_URL', default='https://sfo3.digitaloceanspaces.com')
+# Cloudflare R2 credentials and configuration
+AWS_ACCESS_KEY_ID = config('CLOUDFLARE_ACCESS_ID', default='')
+AWS_SECRET_ACCESS_KEY = config('CLOUDFLARE_SECRET_KEY', default='')
+AWS_STORAGE_BUCKET_NAME = config('CLOUDFLARE_BUCKET_NAME', default='hyggeo-images')
 
-# Spaces file settings - Optimized for performance with long cache times
+# R2 endpoint - Account ID: 601ebb5191a1c06898f94fac4a9cc451
+AWS_S3_ENDPOINT_URL = config('CLOUDFLARE_ENDPOINT_URL',
+                              default='https://601ebb5191a1c06898f94fac4a9cc451.r2.cloudflarestorage.com')
+
+# R2 file settings - Optimized for performance with long cache times
 AWS_S3_OBJECT_PARAMETERS = {
     'CacheControl': 'max-age=31536000, immutable',  # 1 year cache for media files
-    'ACL': 'public-read',
 }
 AWS_LOCATION = 'media'
-AWS_DEFAULT_ACL = 'public-read'
 AWS_S3_FILE_OVERWRITE = False
 AWS_QUERYSTRING_AUTH = False  # Don't add authentication to URLs
 
-# CDN configuration
-AWS_S3_CUSTOM_DOMAIN = config('SPACES_CDN_ENDPOINT',
-                              default=f'{AWS_STORAGE_BUCKET_NAME}.{AWS_S3_ENDPOINT_URL.replace("https://", "")}')
+# Important: R2 doesn't use ACLs by default, so we don't set AWS_DEFAULT_ACL
+# All objects in R2 are private by default, use custom domain for public access
 
-# Media files served from CDN
+# R2 Public URL configuration
+# Use custom R2.dev domain or custom domain for public access
+AWS_S3_CUSTOM_DOMAIN = config('CLOUDFLARE_PUBLIC_DOMAIN',
+                              default=f'pub-{AWS_STORAGE_BUCKET_NAME}.r2.dev')
+
+# Media files served from R2 public URL
 MEDIA_URL = f'https://{AWS_S3_CUSTOM_DOMAIN}/{AWS_LOCATION}/'
 
-print(f"DigitalOcean Spaces configured:")
+print(f"Cloudflare R2 configured:")
 print(f"   - Bucket: {AWS_STORAGE_BUCKET_NAME}")
 print(f"   - Endpoint: {AWS_S3_ENDPOINT_URL}")
+print(f"   - Public Domain: {AWS_S3_CUSTOM_DOMAIN}")
 print(f"   - Media URL: {MEDIA_URL}")
 
-# Fallback for local development if S3 credentials are not set
+# Fallback for local development if R2 credentials are not set
 if not AWS_ACCESS_KEY_ID or not AWS_SECRET_ACCESS_KEY:
-    print("WARNING: S3 credentials not found, falling back to local storage")
+    print("WARNING: R2 credentials not found, falling back to local storage")
     MEDIA_URL = '/media/'
     MEDIA_ROOT = BASE_DIR / 'media'
 
-print(f"Django DEBUG: {DEBUG}, Storage: Spaces")
+print(f"Django DEBUG: {DEBUG}, Storage: Cloudflare R2")
 
 # Set DEFAULT_FILE_STORAGE setting for all environments
 DEFAULT_FILE_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
