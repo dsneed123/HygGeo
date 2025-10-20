@@ -4,16 +4,18 @@
 {% block title %}HygGeo - Sustainable Travel with Danish Hygge{% endblock %}
 
 {% block extra_head %}
-<!-- Preload hero image for LCP optimization -->
+<!-- Preload hero image for LCP optimization - optimized for mobile first -->
 {% if featured_destinations.0.image %}
 <link rel="preload"
       as="image"
-      href="{{ featured_destinations.0.image.url }}?format=webp&width=1920&quality=85"
+      href="{{ featured_destinations.0.image.url }}?format=webp&width=640&quality=70"
       type="image/webp"
       fetchpriority="high"
-      imagesrcset="{{ featured_destinations.0.image.url }}?format=webp&width=1920&quality=85 1920w,
-                   {{ featured_destinations.0.image.url }}?format=webp&width=1280&quality=85 1280w,
-                   {{ featured_destinations.0.image.url }}?format=webp&width=960&quality=85 960w"
+      imagesrcset="{{ featured_destinations.0.image.url }}?format=webp&width=320&quality=70 320w,
+                   {{ featured_destinations.0.image.url }}?format=webp&width=640&quality=70 640w,
+                   {{ featured_destinations.0.image.url }}?format=webp&width=960&quality=75 960w,
+                   {{ featured_destinations.0.image.url }}?format=webp&width=1280&quality=75 1280w,
+                   {{ featured_destinations.0.image.url }}?format=webp&width=1920&quality=75 1920w"
       imagesizes="100vw">
 {% endif %}
 
@@ -94,21 +96,23 @@
                 <!-- Aspect ratio container to prevent CLS -->
                 <div class="img-aspect-container" style="aspect-ratio: 16/9;">
                     <picture>
-                        <!-- Cloudflare WebP with optimization -->
+                        <!-- Cloudflare WebP with optimization - mobile first -->
                         <source
                             type="image/webp"
-                            srcset="{{ destination.image.url }}?format=webp&width=1920&quality=85 1920w,
-                                    {{ destination.image.url }}?format=webp&width=1280&quality=85 1280w,
-                                    {{ destination.image.url }}?format=webp&width=960&quality=85 960w,
-                                    {{ destination.image.url }}?format=webp&width=640&quality=85 640w"
+                            srcset="{{ destination.image.url }}?format=webp&width=320&quality=70 320w,
+                                    {{ destination.image.url }}?format=webp&width=640&quality=70 640w,
+                                    {{ destination.image.url }}?format=webp&width=960&quality=75 960w,
+                                    {{ destination.image.url }}?format=webp&width=1280&quality=75 1280w,
+                                    {{ destination.image.url }}?format=webp&width=1920&quality=75 1920w"
                             sizes="100vw">
                         <!-- Fallback to original format -->
                         <img
-                            src="{{ destination.image.url }}?width=1920&quality=85"
-                            srcset="{{ destination.image.url }}?width=1920&quality=85 1920w,
-                                    {{ destination.image.url }}?width=1280&quality=85 1280w,
-                                    {{ destination.image.url }}?width=960&quality=85 960w,
-                                    {{ destination.image.url }}?width=640&quality=85 640w"
+                            src="{{ destination.image.url }}?width=640&quality=70"
+                            srcset="{{ destination.image.url }}?width=320&quality=70 320w,
+                                    {{ destination.image.url }}?width=640&quality=70 640w,
+                                    {{ destination.image.url }}?width=960&quality=75 960w,
+                                    {{ destination.image.url }}?width=1280&quality=75 1280w,
+                                    {{ destination.image.url }}?width=1920&quality=75 1920w"
                             sizes="100vw"
                             alt="{{ destination.name }}"
                             {% if forloop.first %}fetchpriority="high"{% else %}loading="lazy"{% endif %}
@@ -247,17 +251,17 @@
                             <!-- Aspect ratio container to prevent CLS -->
                             <div class="img-aspect-container" style="aspect-ratio: 240/140;">
                                 <picture>
-                                    <!-- Cloudflare WebP with optimization -->
+                                    <!-- Cloudflare WebP with optimization - reduced quality for speed -->
                                     <source
                                         type="image/webp"
-                                        srcset="{{ experience.main_image.url }}?format=webp&width=480&quality=85 480w,
-                                                {{ experience.main_image.url }}?format=webp&width=240&quality=85 240w"
+                                        srcset="{{ experience.main_image.url }}?format=webp&width=480&quality=60 480w,
+                                                {{ experience.main_image.url }}?format=webp&width=240&quality=60 240w"
                                         sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 240px">
                                     <!-- Fallback to original format -->
                                     <img
-                                        src="{{ experience.main_image.url }}?width=240&quality=85"
-                                        srcset="{{ experience.main_image.url }}?width=480&quality=85 480w,
-                                                {{ experience.main_image.url }}?width=240&quality=85 240w"
+                                        src="{{ experience.main_image.url }}?width=240&quality=60"
+                                        srcset="{{ experience.main_image.url }}?width=480&quality=60 480w,
+                                                {{ experience.main_image.url }}?width=240&quality=60 240w"
                                         sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 240px"
                                         alt="{{ experience.title }}"
                                         loading="lazy"
@@ -356,17 +360,17 @@
                             <!-- Aspect ratio container to prevent CLS -->
                             <div class="img-aspect-container" style="aspect-ratio: 240/140;">
                                 <picture>
-                                    <!-- Cloudflare WebP with optimization -->
+                                    <!-- Cloudflare WebP with optimization - reduced quality for speed -->
                                     <source
                                         type="image/webp"
-                                        srcset="{{ accommodation.main_image.url }}?format=webp&width=480&quality=85 480w,
-                                                {{ accommodation.main_image.url }}?format=webp&width=240&quality=85 240w"
+                                        srcset="{{ accommodation.main_image.url }}?format=webp&width=480&quality=60 480w,
+                                                {{ accommodation.main_image.url }}?format=webp&width=240&quality=60 240w"
                                         sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 240px">
                                     <!-- Fallback to original format -->
                                     <img
-                                        src="{{ accommodation.main_image.url }}?width=240&quality=85"
-                                        srcset="{{ accommodation.main_image.url }}?width=480&quality=85 480w,
-                                                {{ accommodation.main_image.url }}?width=240&quality=85 240w"
+                                        src="{{ accommodation.main_image.url }}?width=240&quality=60"
+                                        srcset="{{ accommodation.main_image.url }}?width=480&quality=60 480w,
+                                                {{ accommodation.main_image.url }}?width=240&quality=60 240w"
                                         sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 240px"
                                         alt="{{ accommodation.name }}"
                                         loading="lazy"

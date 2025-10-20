@@ -100,50 +100,52 @@
       gtag('config', 'G-8L2ZHG9R99');
 
       // Load analytics after initial content and with idle callback
+      // Delayed significantly to not interfere with LCP
       function loadAnalytics() {
-        // Google Analytics - load one at a time to reduce blocking
+        // Google Analytics - load one at a time with significant delays
         setTimeout(function() {
           var ga1 = document.createElement('script');
           ga1.async = true;
           ga1.src = 'https://www.googletagmanager.com/gtag/js?id=G-TSVRNN9JFB';
           document.head.appendChild(ga1);
-        }, 100);
+        }, 3000);
 
         setTimeout(function() {
           var ga2 = document.createElement('script');
           ga2.async = true;
           ga2.src = 'https://www.googletagmanager.com/gtag/js?id=AW-17493025780';
           document.head.appendChild(ga2);
-        }, 200);
+        }, 4000);
 
         setTimeout(function() {
           var ga3 = document.createElement('script');
           ga3.async = true;
           ga3.src = 'https://www.googletagmanager.com/gtag/js?id=G-8L2ZHG9R99';
           document.head.appendChild(ga3);
-        }, 300);
+        }, 5000);
 
-        // AdSense - lowest priority
+        // AdSense - lowest priority, load much later
         setTimeout(function() {
           var ads = document.createElement('script');
           ads.async = true;
           ads.src = 'https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-3243152138999761';
           ads.crossOrigin = 'anonymous';
           document.head.appendChild(ads);
-        }, 1000);
+        }, 6000);
 
-        // Other ad script - lowest priority
+        // Other ad script - lowest priority, load much later
         setTimeout(function() {
           var adScript = document.createElement('script');
           adScript.async = true;
           adScript.src = 'https://emrldtp.com/NDYwMDk2.js?t=460096';
           document.head.appendChild(adScript);
-        }, 1500);
+        }, 8000);
       }
 
       // Use requestIdleCallback if available, otherwise fallback to load event
+      // Increased timeout to ensure page is fully loaded first
       if ('requestIdleCallback' in window) {
-        requestIdleCallback(loadAnalytics, { timeout: 2000 });
+        requestIdleCallback(loadAnalytics, { timeout: 5000 });
       } else {
         window.addEventListener('load', loadAnalytics);
       }
@@ -421,15 +423,6 @@
                                 <i class="fas fa-plus me-2"></i>Create New Trip
                             </a></li>
                         </ul>
-                    </li>
-                    {% endif %}
-
-                    <!-- Task Management - Admin Only -->
-                    {% if user.is_staff %}
-                    <li class="nav-item">
-                        <a class="nav-link" href="{% url 'task_management:dashboard' %}">
-                            <i class="fas fa-tasks me-1"></i>Tasks
-                        </a>
                     </li>
                     {% endif %}
 
