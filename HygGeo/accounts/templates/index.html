@@ -2821,21 +2821,31 @@ function scrollExperiences(direction) {
     });
 }
 
-// Accommodations Carousel Functionality - Simplified for performance
+// Accommodations Carousel Functionality - Enhanced for desktop
 function scrollAccommodations(direction) {
     const carousel = document.getElementById('accommodationsCarousel');
     if (!carousel) return;
 
-    // Simple fixed scroll amounts based on screen size
+    // Calculate exact card width including gap
+    const firstCard = carousel.querySelector('.experience-card');
+    if (!firstCard) return;
+
+    const cardStyle = window.getComputedStyle(firstCard);
+    const cardWidth = firstCard.offsetWidth;
+    const gap = parseFloat(window.getComputedStyle(carousel).gap) || 32; // 2rem = 32px default
+
+    // On desktop, scroll multiple cards for better UX
     const isDesktop = window.innerWidth > 1024;
-    const cardWidth = 240; // Base card width
-    const gap = 32; // 2rem gap
     const cardsToScroll = isDesktop ? 3 : (window.innerWidth > 768 ? 2 : 1);
 
     const scrollAmount = (cardWidth + gap) * cardsToScroll;
+    const targetScroll = direction === 'next'
+        ? carousel.scrollLeft + scrollAmount
+        : carousel.scrollLeft - scrollAmount;
 
-    carousel.scrollBy({
-        left: direction === 'next' ? scrollAmount : -scrollAmount,
+    // Smooth scroll with easing
+    carousel.scrollTo({
+        left: targetScroll,
         behavior: 'smooth'
     });
 }
@@ -2936,13 +2946,7 @@ document.addEventListener('DOMContentLoaded', function() {
         }
 
         checkScrollability();
-
-        // Debounce resize
-        let resizeTimer;
-        window.addEventListener('resize', function() {
-            clearTimeout(resizeTimer);
-            resizeTimer = setTimeout(checkScrollability, 200);
-        });
+        window.addEventListener('resize', checkScrollability);
     }
 });
 </script>
