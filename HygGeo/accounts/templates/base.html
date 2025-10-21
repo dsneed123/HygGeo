@@ -253,24 +253,56 @@
         .overflow-hidden{overflow:hidden !important}
 
         /* Button base */
-        .btn{display:inline-block;font-weight:400;line-height:1.5;color:#212529;text-align:center;text-decoration:none;vertical-align:middle;cursor:pointer;user-select:none;background-color:transparent;border:1px solid transparent;padding:0.375rem 0.75rem;font-size:1rem;border-radius:0.25rem}
+        .btn{display:inline-block;font-weight:400;line-height:1.5;color:#212529;text-align:center;text-decoration:none;vertical-align:middle;cursor:pointer;user-select:none;background-color:transparent;border:1px solid transparent;padding:0.375rem 0.75rem;font-size:1rem;border-radius:0.25rem;min-height:44px}
         .btn-light{color:#000;background-color:#f8f9fa;border-color:#f8f9fa}
-        .btn-lg{padding:0.5rem 1rem;font-size:1.25rem;border-radius:0.3rem}
+        .btn-lg{padding:0.5rem 1rem;font-size:1.25rem;border-radius:0.3rem;min-height:48px}
+
+        /* Hero/above-fold critical styles */
+        .hero-banner{background-size:cover;background-position:center;min-height:500px;position:relative}
+        .hero-content{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:100%;text-align:center;z-index:2}
+        .display-2{font-size:3.5rem;font-weight:700;line-height:1.2}
+        .lead{font-size:1.25rem;font-weight:300}
+        .text-shadow{text-shadow:2px 2px 4px rgba(0,0,0,0.5)}
+
+        /* Gap utilities */
+        .gap-3{gap:1rem !important}
+        .flex-wrap{flex-wrap:wrap !important}
+
+        /* Mobile responsive */
+        @media (max-width:768px){
+            .hero-banner{min-height:400px}
+            .display-2{font-size:2.5rem}
+        }
     </style>
 
-    <!-- Load critical fonts immediately with font-display:swap for instant text rendering -->
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;700&display=swap">
+    <!-- Load fonts async - preloaded above for faster download -->
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;700&display=swap" media="print" onload="this.media='all'">
 
-    <!-- Load Bootstrap synchronously (needed for layout) -->
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css">
+    <!-- Load Bootstrap async - critical CSS inlined above -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" media="print" onload="this.media='all'">
 
-    <!-- FontAwesome: Load synchronously with font-display:swap to prevent icon shifts -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/fontawesome.min.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/solid.min.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/brands.min.css">
+    <!-- FontAwesome: Load async - icon space reserved in critical CSS -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/fontawesome.min.css" media="print" onload="this.media='all'">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/solid.min.css" media="print" onload="this.media='all'">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/brands.min.css" media="print" onload="this.media='all'">
 
-    <!-- Load custom CSS -->
-    <link rel="stylesheet" href="{% static 'css/base.css' %}">
+    <!-- Load custom CSS async -->
+    <link rel="stylesheet" href="{% static 'css/base.css' %}" media="print" onload="this.media='all'">
+
+    <!-- Noscript fallback -->
+    <noscript>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;700&display=swap">
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/fontawesome.min.css">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/solid.min.css">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/brands.min.css">
+        <link rel="stylesheet" href="{% static 'css/base.css' %}">
+    </noscript>
+
+    <!-- Ensure async CSS loads on older browsers -->
+    <script>
+    (function(){var l=document.querySelectorAll('link[media="print"][onload]');for(var i=0;i<l.length;i++){l[i].addEventListener('load',function(){this.media='all'})}})();
+    </script>
 
     {% block extra_head %}{% endblock %}
 </head>
