@@ -1,17 +1,18 @@
 {% extends 'base.html' %}
 {% load static %}
 
-{% block title %}{{ project.name }} - Projects - HygGeo{% endblock %}
+{% block title %}{{ project.name }} - Projects{% endblock %}
 
-{% block extra_css %}
+{% block extra_head %}
+<link rel="stylesheet" href="{% static 'task_management/css/task_management.css' %}">
 <style>
 .project-hero {
-    background: linear-gradient(135deg, {{ project.color }} 0%, #2d5a3d 100%);
+    background: linear-gradient(135deg, var(--hygge-green) 0%, var(--hygge-dark-green) 100%);
     color: white;
-    border-radius: 20px;
+    border-radius: var(--border-radius-lg);
     padding: 50px;
     margin-bottom: 35px;
-    box-shadow: 0 15px 40px rgba(0,0,0,0.15);
+    box-shadow: var(--card-shadow-lg);
     position: relative;
     overflow: hidden;
 }
@@ -63,86 +64,10 @@
     font-size: 0.95rem;
 }
 
-.action-buttons {
-    display: flex;
-    gap: 12px;
-    margin-top: 25px;
-}
-
-.content-section {
-    background: white;
-    border-radius: 15px;
-    padding: 30px;
-    box-shadow: 0 5px 20px rgba(0,0,0,0.05);
-    margin-bottom: 25px;
-}
-
-.section-header {
-    display: flex;
-    justify-content: between;
-    align-items: center;
-    margin-bottom: 25px;
-    padding-bottom: 20px;
-    border-bottom: 2px solid #e2e8f0;
-}
-
-.section-title {
-    font-size: 1.5rem;
-    font-weight: 700;
-    color: var(--hygge-green);
-    display: flex;
-    align-items: center;
-    gap: 12px;
-}
-
-.stats-grid {
+.detail-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-    gap: 20px;
-    margin-bottom: 30px;
-}
-
-.stat-card {
-    background: linear-gradient(135deg, #f8fafc 0%, #ffffff 100%);
-    border: 2px solid #e2e8f0;
-    border-radius: 12px;
-    padding: 25px;
-    text-align: center;
-    transition: all 0.3s ease;
-}
-
-.stat-card:hover {
-    border-color: var(--hygge-green);
-    transform: translateY(-5px);
-    box-shadow: 0 8px 20px rgba(0,0,0,0.1);
-}
-
-.stat-icon {
-    width: 60px;
-    height: 60px;
-    margin: 0 auto 15px;
-    background: var(--hygge-green);
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    color: white;
-    font-size: 1.5rem;
-}
-
-.stat-number {
-    font-size: 2.5rem;
-    font-weight: 700;
-    color: var(--hygge-green);
-    margin-bottom: 8px;
-}
-
-.stat-label {
-    font-size: 0.9rem;
-    color: #64748b;
-    font-weight: 600;
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
+    grid-template-columns: 1fr 380px;
+    gap: 30px;
 }
 
 .progress-card {
@@ -158,7 +83,7 @@
     margin-bottom: 25px;
 }
 
-.progress-percentage {
+.progress-percentage-large {
     font-size: 4rem;
     font-weight: 700;
     color: var(--hygge-green);
@@ -168,7 +93,7 @@
 
 .progress-text {
     font-size: 1.1rem;
-    color: #64748b;
+    color: var(--text-secondary);
     font-weight: 600;
 }
 
@@ -182,7 +107,7 @@
 
 .progress-fill {
     height: 100%;
-    background: linear-gradient(90deg, var(--hygge-green) 0%, #27ae60 100%);
+    background: linear-gradient(90deg, var(--hygge-green) 0%, var(--hygge-light-green) 100%);
     border-radius: 12px;
     transition: width 0.5s ease;
     position: relative;
@@ -201,7 +126,7 @@
 
 .progress-breakdown {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
     gap: 15px;
 }
 
@@ -220,17 +145,51 @@
 
 .breakdown-label {
     font-size: 0.85rem;
-    color: #64748b;
+    color: var(--text-secondary);
 }
 
-.team-section {
-    margin-top: 30px;
+.task-filter-tabs {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 20px;
+    flex-wrap: wrap;
 }
 
-.team-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
-    gap: 20px;
+.filter-tab {
+    padding: 10px 20px;
+    border: 2px solid #e2e8f0;
+    border-radius: 10px;
+    background: white;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-weight: 600;
+    font-size: 0.9rem;
+    color: var(--text-secondary);
+}
+
+.filter-tab:hover,
+.filter-tab.active {
+    border-color: var(--hygge-green);
+    background: var(--hygge-green);
+    color: white;
+}
+
+.task-item-project {
+    background: #f8fafc;
+    border: 2px solid #e2e8f0;
+    border-left: 4px solid transparent;
+    border-radius: 12px;
+    padding: 20px;
+    margin-bottom: 15px;
+    transition: all 0.3s ease;
+    cursor: pointer;
+}
+
+.task-item-project:hover {
+    border-color: var(--hygge-green);
+    background: white;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+    transform: translateX(5px);
 }
 
 .team-member-card {
@@ -241,6 +200,7 @@
     display: flex;
     align-items: center;
     gap: 15px;
+    margin-bottom: 15px;
     transition: all 0.3s ease;
 }
 
@@ -270,128 +230,44 @@
 
 .team-member-name {
     font-weight: 700;
-    color: #2d3748;
+    color: var(--text-primary);
     margin-bottom: 5px;
 }
 
 .team-member-role {
     font-size: 0.85rem;
-    color: #64748b;
+    color: var(--text-secondary);
     display: flex;
     align-items: center;
     gap: 6px;
-}
-
-.task-list {
-    display: flex;
-    flex-direction: column;
-    gap: 15px;
-}
-
-.task-item {
-    background: #f8fafc;
-    border: 2px solid #e2e8f0;
-    border-left: 4px solid transparent;
-    border-radius: 12px;
-    padding: 20px;
-    transition: all 0.3s ease;
-    cursor: pointer;
-}
-
-.task-item:hover {
-    border-color: var(--hygge-green);
-    background: white;
-    box-shadow: 0 4px 12px rgba(0,0,0,0.05);
-    transform: translateX(5px);
-}
-
-.task-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: start;
-    margin-bottom: 12px;
-}
-
-.task-title-text {
-    font-size: 1.1rem;
-    font-weight: 600;
-    color: #2d3748;
-    margin-bottom: 8px;
-}
-
-.task-badges {
-    display: flex;
-    gap: 8px;
-}
-
-.task-meta-row {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 15px;
-    align-items: center;
-    font-size: 0.9rem;
-    color: #64748b;
-}
-
-.task-meta-item {
-    display: flex;
-    align-items: center;
-    gap: 6px;
-}
-
-.empty-state-small {
-    text-align: center;
-    padding: 40px;
-    color: #94a3b8;
-}
-
-.empty-state-small i {
-    font-size: 3rem;
-    margin-bottom: 15px;
-    opacity: 0.5;
-}
-
-.filter-tabs {
-    display: flex;
-    gap: 8px;
-    margin-bottom: 20px;
-    flex-wrap: wrap;
-}
-
-.filter-tab {
-    padding: 10px 20px;
-    border: 2px solid #e2e8f0;
-    border-radius: 10px;
-    background: white;
-    cursor: pointer;
-    transition: all 0.3s ease;
-    font-weight: 600;
-    font-size: 0.9rem;
-}
-
-.filter-tab:hover,
-.filter-tab.active {
-    border-color: var(--hygge-green);
-    background: var(--hygge-green);
-    color: white;
 }
 
 @keyframes shimmer {
     0% { transform: translateX(-100%); }
     100% { transform: translateX(100%); }
 }
+
+@media (max-width: 992px) {
+    .detail-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .project-title {
+        font-size: 2rem;
+    }
+}
 </style>
 {% endblock %}
 
 {% block content %}
-<div class="container-fluid py-4">
+<div class="container-fluid" style="max-width: 1600px; padding: var(--spacing-xl) 24px;">
     <!-- Project Hero -->
     <div class="project-hero">
         <div class="project-hero-content">
-            <div class="d-flex justify-content-between align-items-start">
+            <div class="d-flex justify-content-between align-items-start flex-wrap gap-3">
                 <div class="flex-grow-1">
                     <h1 class="project-title">
-                        <i class="fas fa-folder-open me-3"></i>{{ project.name }}
+                        <i class="fas fa-folder-open"></i> {{ project.name }}
                     </h1>
                     {% if project.description %}
                     <p class="project-description">{{ project.description }}</p>
@@ -412,9 +288,10 @@
                     </div>
                 </div>
                 {% if user.is_staff or user == project.owner %}
-                <div class="action-buttons">
-                    <a href="{% url 'task_management:project_edit' project.slug %}" class="btn btn-light">
-                        <i class="fas fa-edit me-2"></i>Edit Project
+                <div>
+                    <a href="{% url 'task_management:project_edit' project.slug %}" class="btn-hero btn-hero-outline" style="border-color: white; color: white;">
+                        <i class="fas fa-edit"></i>
+                        Edit Project
                     </a>
                 </div>
                 {% endif %}
@@ -422,13 +299,13 @@
         </div>
     </div>
 
-    <div class="row">
+    <div class="detail-grid">
         <!-- Main Content -->
-        <div class="col-lg-8">
+        <div>
             <!-- Progress Overview -->
             <div class="progress-card">
                 <div class="progress-main">
-                    <div class="progress-percentage">{{ project.progress_percentage }}%</div>
+                    <div class="progress-percentage-large">{{ project.progress_percentage }}%</div>
                     <div class="progress-text">Project Completion</div>
                 </div>
                 <div class="progress-bar-large">
@@ -436,42 +313,43 @@
                 </div>
                 <div class="progress-breakdown">
                     <div class="breakdown-item">
-                        <div class="breakdown-number" style="color: #95a5a6;">{{ todo_count }}</div>
+                        <div class="breakdown-number" style="color: #94a3b8;">{{ todo_count }}</div>
                         <div class="breakdown-label">To Do</div>
                     </div>
                     <div class="breakdown-item">
-                        <div class="breakdown-number" style="color: #3498db;">{{ in_progress_count }}</div>
+                        <div class="breakdown-number" style="color: #3b82f6;">{{ in_progress_count }}</div>
                         <div class="breakdown-label">In Progress</div>
                     </div>
                     <div class="breakdown-item">
-                        <div class="breakdown-number" style="color: #9b59b6;">{{ in_review_count }}</div>
+                        <div class="breakdown-number" style="color: #8b5cf6;">{{ in_review_count }}</div>
                         <div class="breakdown-label">In Review</div>
                     </div>
                     <div class="breakdown-item">
-                        <div class="breakdown-number" style="color: #27ae60;">{{ completed_count }}</div>
+                        <div class="breakdown-number" style="color: #10b981;">{{ completed_count }}</div>
                         <div class="breakdown-label">Completed</div>
                     </div>
                     <div class="breakdown-item">
-                        <div class="breakdown-number" style="color: #e74c3c;">{{ blocked_count }}</div>
+                        <div class="breakdown-number" style="color: #ef4444;">{{ blocked_count }}</div>
                         <div class="breakdown-label">Blocked</div>
                     </div>
                 </div>
             </div>
 
             <!-- Tasks -->
-            <div class="content-section">
-                <div class="section-header">
-                    <h3 class="section-title">
+            <div class="content-card-modern">
+                <div class="card-header-modern">
+                    <h3 class="card-title-modern">
                         <i class="fas fa-tasks"></i>
                         Project Tasks
                     </h3>
-                    <a href="{% url 'task_management:task_create' %}?project={{ project.id }}" class="btn btn-hygge">
-                        <i class="fas fa-plus me-2"></i>Add Task
+                    <a href="{% url 'task_management:task_create' %}?project={{ project.id }}" class="btn-hero" style="padding: 10px 20px; font-size: 13px;">
+                        <i class="fas fa-plus"></i>
+                        Add Task
                     </a>
                 </div>
 
                 <!-- Task Filter Tabs -->
-                <div class="filter-tabs">
+                <div class="task-filter-tabs">
                     <button class="filter-tab active" onclick="filterTasks('all')">
                         All ({{ project.tasks.count }})
                     </button>
@@ -488,16 +366,16 @@
 
                 <!-- Task List -->
                 {% if project.tasks.all %}
-                <div class="task-list" id="taskList">
+                <div id="taskList">
                     {% for task in project.tasks.all %}
-                    <div class="task-item" data-status="{{ task.status }}" style="border-left-color: {{ task.get_priority_color }};"
+                    <div class="task-item-project" data-status="{{ task.status }}"
                          onclick="window.location.href='{% url 'task_management:task_detail' task.pk %}'">
-                        <div class="task-header">
-                            <div>
-                                <div class="task-title-text">{{ task.title }}</div>
-                                <div class="task-meta-row">
+                        <div class="d-flex justify-content-between align-items-start">
+                            <div class="flex-grow-1">
+                                <div class="task-title-modern">{{ task.title }}</div>
+                                <div class="task-meta-modern">
                                     {% if task.assigned_to.all %}
-                                    <span class="task-meta-item">
+                                    <span>
                                         <i class="fas fa-user"></i>
                                         {{ task.assigned_to.first.username }}
                                         {% if task.assigned_to.count > 1 %}
@@ -506,32 +384,31 @@
                                     </span>
                                     {% endif %}
                                     {% if task.due_date %}
-                                    <span class="task-meta-item {% if task.is_overdue %}text-danger{% endif %}">
-                                        <i class="fas fa-clock"></i>
+                                    <span {% if task.is_overdue and task.status != 'completed' %}style="color: #ef4444; font-weight: 700;"{% endif %}>
+                                        <i class="fas fa-calendar"></i>
                                         {{ task.due_date|date:"M d, Y" }}
                                     </span>
                                     {% endif %}
                                 </div>
                             </div>
-                            <div class="task-badges">
-                                <span class="badge" style="background-color: {{ task.get_priority_color }};">
-                                    {{ task.get_priority_display }}
-                                </span>
-                                <span class="badge" style="background-color: {{ task.get_status_color }};">
-                                    {{ task.get_status_display }}
-                                </span>
+                            <div class="task-badges-modern">
+                                <span class="badge-modern badge-status-{{ task.status }}">{{ task.get_status_display }}</span>
+                                <span class="badge-modern badge-priority-{{ task.priority }}">{{ task.get_priority_display }}</span>
                             </div>
                         </div>
                     </div>
                     {% endfor %}
                 </div>
                 {% else %}
-                <div class="empty-state-small">
-                    <i class="fas fa-tasks"></i>
-                    <h5>No tasks yet</h5>
-                    <p>Start by adding your first task to this project</p>
-                    <a href="{% url 'task_management:task_create' %}?project={{ project.id }}" class="btn btn-hygge mt-3">
-                        <i class="fas fa-plus me-2"></i>Add First Task
+                <div class="empty-state-modern">
+                    <div class="empty-icon">
+                        <i class="fas fa-tasks"></i>
+                    </div>
+                    <div class="empty-title">No tasks yet</div>
+                    <div class="empty-text">Start by adding your first task to this project</div>
+                    <a href="{% url 'task_management:task_create' %}?project={{ project.id }}" class="btn-hero" style="margin-top: 20px;">
+                        <i class="fas fa-plus"></i>
+                        Add First Task
                     </a>
                 </div>
                 {% endif %}
@@ -539,33 +416,35 @@
         </div>
 
         <!-- Sidebar -->
-        <div class="col-lg-4">
+        <div>
             <!-- Stats -->
-            <div class="content-section">
-                <h5 class="fw-bold mb-4" style="color: var(--hygge-green);">
-                    <i class="fas fa-chart-bar me-2"></i>Statistics
-                </h5>
+            <div class="content-card-modern">
+                <h3 class="card-title-modern" style="margin-bottom: 20px;">
+                    <i class="fas fa-chart-bar"></i>
+                    Statistics
+                </h3>
                 <div class="stats-grid" style="grid-template-columns: 1fr;">
-                    <div class="stat-card">
+                    <div class="stat-card-modern green">
                         <div class="stat-number">{{ project.get_task_count }}</div>
                         <div class="stat-label">Total Tasks</div>
                     </div>
-                    <div class="stat-card">
+                    <div class="stat-card-modern blue">
                         <div class="stat-number">{{ project.team_members.count|add:"1" }}</div>
                         <div class="stat-label">Team Members</div>
                     </div>
-                    <div class="stat-card">
+                    <div class="stat-card-modern purple">
                         <div class="stat-number">{{ completed_count }}</div>
-                        <div class="stat-label">Completed Tasks</div>
+                        <div class="stat-label">Completed</div>
                     </div>
                 </div>
             </div>
 
             <!-- Team Members -->
-            <div class="content-section">
-                <h5 class="fw-bold mb-4" style="color: var(--hygge-green);">
-                    <i class="fas fa-users me-2"></i>Team
-                </h5>
+            <div class="content-card-modern">
+                <h3 class="card-title-modern" style="margin-bottom: 20px;">
+                    <i class="fas fa-users"></i>
+                    Team
+                </h3>
 
                 <!-- Owner -->
                 <div class="team-member-card" style="border-color: var(--hygge-green); background: #f0fdf4;">
@@ -583,43 +462,45 @@
 
                 <!-- Team Members -->
                 {% if project.team_members.all %}
-                <div class="team-section">
-                    <h6 class="fw-bold mb-3 text-muted">Members</h6>
-                    {% for member in project.team_members.all %}
-                    <div class="team-member-card mb-2">
-                        <div class="team-avatar-large" style="width: 50px; height: 50px; font-size: 1.2rem;">
-                            {{ member.username|slice:":1"|upper }}
-                        </div>
-                        <div class="team-member-info">
-                            <div class="team-member-name">{{ member.username }}</div>
-                            <div class="team-member-role">
-                                <i class="fas fa-user"></i>
-                                Team Member
-                            </div>
+                {% for member in project.team_members.all %}
+                <div class="team-member-card">
+                    <div class="team-avatar-large" style="width: 50px; height: 50px; font-size: 1.2rem;">
+                        {{ member.username|slice:":1"|upper }}
+                    </div>
+                    <div class="team-member-info">
+                        <div class="team-member-name">{{ member.username }}</div>
+                        <div class="team-member-role">
+                            <i class="fas fa-user"></i>
+                            Team Member
                         </div>
                     </div>
-                    {% endfor %}
                 </div>
+                {% endfor %}
                 {% endif %}
             </div>
 
             <!-- Quick Actions -->
-            <div class="content-section">
-                <h5 class="fw-bold mb-3" style="color: var(--hygge-green);">
-                    <i class="fas fa-bolt me-2"></i>Quick Actions
-                </h5>
+            <div class="content-card-modern">
+                <h3 class="card-title-modern" style="margin-bottom: 20px;">
+                    <i class="fas fa-bolt"></i>
+                    Quick Actions
+                </h3>
                 <div class="d-grid gap-2">
-                    <a href="{% url 'task_management:task_create' %}?project={{ project.id }}" class="btn btn-hygge">
-                        <i class="fas fa-plus me-2"></i>New Task
+                    <a href="{% url 'task_management:task_create' %}?project={{ project.id }}" class="btn-hero">
+                        <i class="fas fa-plus"></i>
+                        New Task
                     </a>
-                    <a href="{% url 'task_management:kanban' %}?project={{ project.id }}" class="btn btn-outline-hygge">
-                        <i class="fas fa-columns me-2"></i>View in Kanban
+                    <a href="{% url 'task_management:kanban' %}?project={{ project.id }}" class="btn-hero btn-hero-outline">
+                        <i class="fas fa-columns"></i>
+                        View in Kanban
                     </a>
-                    <a href="{% url 'task_management:calendar' %}?project={{ project.id }}" class="btn btn-outline-hygge">
-                        <i class="fas fa-calendar me-2"></i>View in Calendar
+                    <a href="{% url 'task_management:calendar' %}?project={{ project.id }}" class="btn-hero btn-hero-outline">
+                        <i class="fas fa-calendar"></i>
+                        View in Calendar
                     </a>
-                    <a href="{% url 'task_management:project_list' %}" class="btn btn-outline-secondary">
-                        <i class="fas fa-arrow-left me-2"></i>All Projects
+                    <a href="{% url 'task_management:project_list' %}" class="btn-hero btn-hero-outline">
+                        <i class="fas fa-arrow-left"></i>
+                        All Projects
                     </a>
                 </div>
             </div>
@@ -631,7 +512,7 @@
 {% block extra_js %}
 <script>
 function filterTasks(status) {
-    const tasks = document.querySelectorAll('.task-item');
+    const tasks = document.querySelectorAll('.task-item-project');
     const tabs = document.querySelectorAll('.filter-tab');
 
     // Update active tab
