@@ -26,11 +26,23 @@ class Category(models.Model):
     icon = models.CharField(max_length=50, default='fas fa-map-marker-alt', help_text="FontAwesome icon class")
     color = models.CharField(max_length=7, default='#2d5a3d', help_text="Hex color code")
     created_at = models.DateTimeField(auto_now_add=True)
-    
+
     class Meta:
         verbose_name_plural = "Categories"
         ordering = ['name']
-    
+
+    def save(self, *args, **kwargs):
+        if not self.slug:
+            from django.utils.text import slugify
+            # Generate slug from name, removing leading/trailing dashes
+            self.slug = slugify(self.name).strip('-')
+            # If slug is empty after stripping, use the name as-is
+            if not self.slug:
+                self.slug = slugify(self.name.replace(' ', '-'))
+        # Clean up slug: remove leading/trailing dashes
+        self.slug = self.slug.strip('-')
+        super().save(*args, **kwargs)
+
     def __str__(self):
         return self.name
 
@@ -406,6 +418,18 @@ class ExperienceType(models.Model):
 
     class Meta:
         ordering = ['name']
+
+    def save(self, *args, **kwargs):
+        if not self.slug:
+            from django.utils.text import slugify
+            # Generate slug from name, removing leading/trailing dashes
+            self.slug = slugify(self.name).strip('-')
+            # If slug is empty after stripping, use the name as-is
+            if not self.slug:
+                self.slug = slugify(self.name.replace(' ', '-'))
+        # Clean up slug: remove leading/trailing dashes
+        self.slug = self.slug.strip('-')
+        super().save(*args, **kwargs)
 
     def __str__(self):
         return self.name

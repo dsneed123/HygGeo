@@ -14658,3 +14658,61 @@ INFO 2025-10-20 14:05:12,057 basehttp 4516 30044 "POST /accounts/track/click/ HT
 INFO 2025-10-20 14:05:12,872 basehttp 4516 30044 "POST /accounts/track/click/ HTTP/1.1" 200 61
 INFO 2025-10-20 14:05:12,932 basehttp 4516 30044 "GET /experiences/ HTTP/1.1" 200 59662
 INFO 2025-10-20 14:05:13,049 basehttp 4516 30044 "POST /accounts/track/page-view/ HTTP/1.1" 200 67
+INFO 2025-10-20 16:46:10,048 autoreload 44380 43548 Watching for file changes with StatReloader
+INFO 2025-10-20 16:46:14,067 basehttp 44380 45932 "GET / HTTP/1.1" 200 109989
+INFO 2025-10-20 16:46:14,365 basehttp 44380 44392 "GET /static/js/navbar.js HTTP/1.1" 200 2732
+INFO 2025-10-20 16:46:14,374 basehttp 44380 45932 "GET /static/css/base.css HTTP/1.1" 200 5306
+INFO 2025-10-20 16:46:14,684 basehttp 44380 45932 "GET /static/favicon.ico HTTP/1.1" 200 15406
+INFO 2025-10-20 16:46:14,698 basehttp 44380 44392 "POST /accounts/track/page-view/ HTTP/1.1" 200 67
+INFO 2025-10-20 16:46:14,985 basehttp 44380 49644 "GET /static/site.webmanifest HTTP/1.1" 200 263
+INFO 2025-10-20 16:46:15,515 basehttp 44380 44392 "POST /accounts/track/click/ HTTP/1.1" 200 61
+INFO 2025-10-20 16:46:15,545 basehttp 44380 45932 "GET /task-management/ HTTP/1.1" 200 53022
+INFO 2025-10-20 16:46:15,608 basehttp 44380 45932 "GET /static/task_management/css/global.css HTTP/1.1" 200 12636
+INFO 2025-10-20 16:46:15,617 basehttp 44380 44392 "GET /static/task_management/js/app.js HTTP/1.1" 200 21857
+INFO 2025-10-20 16:46:15,724 basehttp 44380 44392 "POST /accounts/track/page-view/ HTTP/1.1" 200 67
+WARNING 2025-10-20 16:47:30,838 log 44380 44392 Not Found: /experiences/category/-heritage-preservation/
+WARNING 2025-10-20 16:47:30,839 basehttp 44380 44392 "GET /experiences/category/-heritage-preservation/ HTTP/1.1" 404 10530
+WARNING 2025-10-20 16:48:35,826 log 44380 44392 Not Found: /experiences/category/heritage-preservation/
+WARNING 2025-10-20 16:48:35,827 basehttp 44380 44392 "GET /experiences/category/heritage-preservation/ HTTP/1.1" 404 10527
+INFO 2025-10-20 16:49:43,111 basehttp 44380 51572 "GET / HTTP/1.1" 200 103760
+INFO 2025-10-20 16:49:43,336 basehttp 44380 51572 "POST /accounts/track/page-view/ HTTP/1.1" 200 67
+INFO 2025-10-20 16:49:44,966 basehttp 44380 51572 "POST /accounts/track/click/ HTTP/1.1" 200 61
+INFO 2025-10-20 16:49:44,977 basehttp 44380 51824 "GET /accounts/login/ HTTP/1.1" 200 32878
+INFO 2025-10-20 16:49:45,035 basehttp 44380 51824 "POST /accounts/track/page-view/ HTTP/1.1" 200 67
+INFO 2025-10-20 16:49:54,156 basehttp 44380 51824 - Broken pipe from ('127.0.0.1', 55376)
+INFO 2025-10-20 16:49:54,409 basehttp 44380 51572 "POST /accounts/login/ HTTP/1.1" 200 33118
+INFO 2025-10-20 16:49:54,489 basehttp 44380 51572 "POST /accounts/track/page-view/ HTTP/1.1" 200 67
+INFO 2025-10-20 16:49:59,460 basehttp 44380 44392 "GET / HTTP/1.1" 200 110001
+INFO 2025-10-20 16:49:59,798 basehttp 44380 44392 "POST /accounts/track/page-view/ HTTP/1.1" 200 67
+INFO 2025-10-20 16:50:01,222 basehttp 44380 44392 "POST /accounts/track/click/ HTTP/1.1" 200 61
+INFO 2025-10-20 16:50:01,285 basehttp 44380 44392 "GET /task-management/ HTTP/1.1" 200 54540
+INFO 2025-10-20 16:50:01,643 basehttp 44380 44392 "POST /accounts/track/page-view/ HTTP/1.1" 200 67
+INFO 2025-10-20 16:50:07,722 basehttp 44380 44392 "POST /accounts/track/click/ HTTP/1.1" 200 61
+INFO 2025-10-20 16:50:07,846 basehttp 44380 44392 "GET /task-management/projects/create/ HTTP/1.1" 200 48096
+INFO 2025-10-20 16:50:08,009 basehttp 44380 44392 "POST /accounts/track/page-view/ HTTP/1.1" 200 67
+INFO 2025-10-20 16:50:23,961 basehttp 44380 44392 "POST /task-management/projects/create/ HTTP/1.1" 302 0
+INFO 2025-10-20 16:50:24,019 basehttp 44380 44392 "GET /task-management/projects/test/ HTTP/1.1" 200 44019
+INFO 2025-10-20 16:50:24,263 basehttp 44380 44392 "POST /accounts/track/page-view/ HTTP/1.1" 200 67
+INFO 2025-10-20 16:50:29,934 basehttp 44380 44392 "POST /accounts/track/click/ HTTP/1.1" 200 61
+INFO 2025-10-20 16:50:30,005 basehttp 44380 44392 "GET /task-management/tasks/create/?project=2 HTTP/1.1" 200 48401
+INFO 2025-10-20 16:50:30,302 basehttp 44380 44392 "POST /accounts/track/page-view/ HTTP/1.1" 200 67
+INFO 2025-10-20 16:50:39,373 basehttp 44380 44392 "POST /task-management/tasks/create/?project=2 HTTP/1.1" 302 0
+INFO 2025-10-20 16:50:39,424 basehttp 44380 44392 "GET /task-management/tasks/2/ HTTP/1.1" 200 47902
+INFO 2025-10-20 16:50:39,729 basehttp 44380 44392 "POST /accounts/track/page-view/ HTTP/1.1" 200 67
+INFO 2025-10-20 16:50:42,268 basehttp 44380 44392 "POST /accounts/track/click/ HTTP/1.1" 200 61
+INFO 2025-10-20 16:50:42,277 basehttp 44380 45932 "GET / HTTP/1.1" 200 109981
+INFO 2025-10-20 16:50:42,414 basehttp 44380 45932 "POST /accounts/track/page-view/ HTTP/1.1" 200 67
+INFO 2025-10-20 18:20:29,544 autoreload 44380 43548 C:\Users\DLSne\OneDrive\Desktop\Code\webdev\HygGeo\HygGeo\experiences\models.py changed, reloading.
+INFO 2025-10-20 18:20:31,237 autoreload 50716 56640 Watching for file changes with StatReloader
+INFO 2025-10-20 19:08:51,139 autoreload 50716 56640 C:\Users\DLSne\OneDrive\Desktop\Code\webdev\HygGeo\HygGeo\experiences\models.py changed, reloading.
+INFO 2025-10-20 19:08:52,691 autoreload 60604 27100 Watching for file changes with StatReloader
+INFO 2025-10-20 19:10:00,925 autoreload 60604 27100 C:\Users\DLSne\OneDrive\Desktop\Code\webdev\HygGeo\HygGeo\HygGeo\settings.py changed, reloading.
+INFO 2025-10-20 19:10:02,414 autoreload 62916 60064 Watching for file changes with StatReloader
+INFO 2025-10-20 19:10:10,961 basehttp 62916 58092 "GET / HTTP/1.1" 200 109993
+INFO 2025-10-20 19:10:11,457 basehttp 62916 58092 "POST /accounts/track/page-view/ HTTP/1.1" 200 67
+INFO 2025-10-20 19:15:36,919 basehttp 62916 66540 "GET / HTTP/1.1" 200 106047
+INFO 2025-10-20 19:15:37,111 basehttp 62916 66540 "POST /accounts/track/page-view/ HTTP/1.1" 200 67
+INFO 2025-10-20 19:15:40,105 basehttp 62916 66540 "GET / HTTP/1.1" 200 106047
+INFO 2025-10-20 19:15:40,224 basehttp 62916 66540 "POST /accounts/track/page-view/ HTTP/1.1" 200 67
+INFO 2025-10-20 19:15:40,971 basehttp 62916 66540 "GET / HTTP/1.1" 200 106038
+INFO 2025-10-20 19:15:41,089 basehttp 62916 66540 "POST /accounts/track/page-view/ HTTP/1.1" 200 67

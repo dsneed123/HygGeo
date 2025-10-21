@@ -83,6 +83,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'allauth.account.middleware.AccountMiddleware',  # Required for allauth
     'django.contrib.messages.middleware.MessageMiddleware',
+    'experiences.middleware.BrokenSlugRedirectMiddleware',  # Handle broken category/type URLs
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 

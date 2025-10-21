@@ -1,687 +1,700 @@
 {% extends 'base.html' %}
 {% load static %}
 
-{% block title %}Task Management Dashboard - HygGeo{% endblock %}
+{% block title %}Task Management - HygGeo{% endblock %}
 
 {% block extra_head %}
-<!-- Task Management Global CSS -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="{% static 'task_management/css/global.css' %}">
-{% endblock %}
-
-{% block extra_css %}
-<!-- Chart.js for data visualization -->
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
 
 <style>
-:root {
-    --card-shadow: 0 8px 30px rgba(0,0,0,0.08);
-    --card-shadow-hover: 0 12px 40px rgba(0,0,0,0.12);
+* {
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
 }
 
-.page-wrapper {
-    background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
+body {
+    background: linear-gradient(135deg, #f5f7fa 0%, #e4e9f2 100%);
     min-height: 100vh;
-    padding: 40px 0;
 }
 
-/* Hero Header */
-.dashboard-hero {
-    background: linear-gradient(135deg, var(--hygge-green) 0%, #1e4d2e 100%);
-    color: white;
-    border-radius: 25px;
-    padding: 50px;
-    margin-bottom: 40px;
-    box-shadow: var(--card-shadow);
+/* Modern Hero Section */
+.modern-hero {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    border-radius: 32px;
+    padding: 60px;
+    margin: 40px 0;
     position: relative;
     overflow: hidden;
+    box-shadow: 0 20px 60px rgba(102, 126, 234, 0.3);
 }
 
-.dashboard-hero::before {
+.modern-hero::before {
     content: '';
     position: absolute;
-    top: -100px;
-    right: -100px;
+    top: -50%;
+    right: -10%;
+    width: 600px;
+    height: 600px;
+    background: radial-gradient(circle, rgba(255,255,255,0.15) 0%, transparent 70%);
+    border-radius: 50%;
+}
+
+.modern-hero::after {
+    content: '';
+    position: absolute;
+    bottom: -30%;
+    left: -5%;
     width: 400px;
     height: 400px;
-    background: radial-gradient(circle, rgba(255,255,255,0.12) 0%, transparent 70%);
+    background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 70%);
     border-radius: 50%;
 }
 
 .hero-content {
     position: relative;
-    z-index: 1;
+    z-index: 2;
 }
 
 .hero-title {
-    font-size: 3rem;
-    font-weight: 800;
-    margin-bottom: 15px;
+    font-size: 3.5rem;
+    font-weight: 900;
+    color: white;
+    margin-bottom: 16px;
+    letter-spacing: -1px;
+    text-shadow: 0 2px 20px rgba(0,0,0,0.1);
 }
 
 .hero-subtitle {
-    font-size: 1.2rem;
-    opacity: 0.95;
+    font-size: 1.25rem;
+    color: rgba(255,255,255,0.95);
+    font-weight: 500;
+    margin-bottom: 32px;
 }
 
 .hero-actions {
     display: flex;
-    gap: 15px;
+    gap: 16px;
     flex-wrap: wrap;
-    margin-top: 25px;
 }
 
 .btn-hero {
-    padding: 14px 30px;
-    border-radius: 12px;
-    font-weight: 700;
-    transition: all 0.3s ease;
     background: white;
-    color: var(--hygge-green);
+    color: #667eea;
     border: none;
+    padding: 16px 32px;
+    border-radius: 16px;
+    font-weight: 700;
+    font-size: 15px;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
 }
 
 .btn-hero:hover {
     transform: translateY(-3px);
-    box-shadow: 0 8px 25px rgba(255,255,255,0.3);
-    color: var(--hygge-green);
+    box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+    color: #667eea;
 }
 
-/* Stat Cards */
-.stat-card {
+.btn-hero-outline {
+    background: transparent;
+    color: white;
+    border: 2px solid white;
+}
+
+.btn-hero-outline:hover {
     background: white;
-    border-radius: 20px;
-    padding: 35px;
-    box-shadow: var(--card-shadow);
-    transition: all 0.3s ease;
-    border-left: 5px solid;
+    color: #667eea;
+}
+
+/* Redesigned Stat Cards */
+.stats-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 24px;
+    margin: 40px 0;
+}
+
+.stat-card-modern {
+    background: white;
+    border-radius: 24px;
+    padding: 32px;
     position: relative;
     overflow: hidden;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.06);
+    transition: all 0.3s ease;
+    border: 1px solid rgba(0,0,0,0.05);
 }
 
-.stat-card::before {
+.stat-card-modern:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 12px 40px rgba(0,0,0,0.12);
+}
+
+.stat-card-modern::before {
     content: '';
     position: absolute;
     top: 0;
     right: 0;
-    width: 150px;
-    height: 150px;
+    width: 120px;
+    height: 120px;
     border-radius: 50%;
-    opacity: 0.1;
-    transition: all 0.3s ease;
+    opacity: 0.08;
 }
 
-.stat-card:hover {
-    transform: translateY(-8px);
-    box-shadow: var(--card-shadow-hover);
+.stat-card-modern.blue::before { background: #3b82f6; }
+.stat-card-modern.purple::before { background: #8b5cf6; }
+.stat-card-modern.green::before { background: #10b981; }
+.stat-card-modern.red::before { background: #ef4444; }
+
+.stat-icon {
+    width: 56px;
+    height: 56px;
+    border-radius: 16px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 20px;
+    font-size: 24px;
 }
 
-.stat-card:hover::before {
-    transform: scale(1.3);
-}
-
-.stat-card-total { border-left-color: #3498db; }
-.stat-card-total::before { background: #3498db; }
-
-.stat-card-pending { border-left-color: #f39c12; }
-.stat-card-pending::before { background: #f39c12; }
-
-.stat-card-completed { border-left-color: #27ae60; }
-.stat-card-completed::before { background: #27ae60; }
-
-.stat-card-overdue { border-left-color: #e74c3c; }
-.stat-card-overdue::before { background: #e74c3c; }
+.stat-icon.blue { background: #dbeafe; color: #1e40af; }
+.stat-icon.purple { background: #ede9fe; color: #6b21a8; }
+.stat-icon.green { background: #d1fae5; color: #065f46; }
+.stat-icon.red { background: #fee2e2; color: #991b1b; }
 
 .stat-number {
-    font-size: 3.5rem;
+    font-size: 2.75rem;
     font-weight: 800;
+    color: #1e293b;
     line-height: 1;
-    margin-bottom: 10px;
+    margin-bottom: 8px;
 }
 
 .stat-label {
-    font-size: 1.1rem;
+    font-size: 0.95rem;
     color: #64748b;
-    font-weight: 700;
+    font-weight: 600;
     text-transform: uppercase;
     letter-spacing: 0.5px;
 }
 
-.stat-icon {
-    font-size: 3rem;
-    opacity: 0.2;
-    position: absolute;
-    right: 25px;
-    top: 25px;
+.stat-change {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    margin-top: 12px;
+    font-size: 0.875rem;
+    font-weight: 600;
+    padding: 4px 10px;
+    border-radius: 9999px;
 }
 
-/* Navigation Pills */
-.nav-pills-custom {
+.stat-change.positive {
+    background: #d1fae5;
+    color: #065f46;
+}
+
+.stat-change.negative {
+    background: #fee2e2;
+    color: #991b1b;
+}
+
+/* Modern Navigation */
+.nav-modern {
     background: white;
     border-radius: 20px;
-    padding: 20px;
-    box-shadow: var(--card-shadow);
-    margin-bottom: 40px;
-}
-
-.nav-pills-custom .nav-link {
-    border-radius: 15px;
-    padding: 15px 25px;
-    font-weight: 700;
-    transition: all 0.3s ease;
-    border: 3px solid transparent;
-}
-
-.nav-pills-custom .nav-link:hover {
-    background: linear-gradient(135deg, #f0fdf4 0%, #dcfce7 100%);
-    border-color: var(--hygge-green);
-    transform: translateY(-2px);
-}
-
-.nav-pills-custom .nav-link.active {
-    background: linear-gradient(135deg, var(--hygge-green) 0%, #1e4d2e 100%);
-    border-color: var(--hygge-green);
-}
-
-/* Content Cards */
-.content-card {
-    background: white;
-    border-radius: 20px;
-    box-shadow: var(--card-shadow);
-    margin-bottom: 30px;
-    overflow: hidden;
-    transition: all 0.3s ease;
-}
-
-.content-card:hover {
-    box-shadow: var(--card-shadow-hover);
-}
-
-.card-header-custom {
-    background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
-    border-bottom: 3px solid #e2e8f0;
-    padding: 25px 30px;
-}
-
-.card-header-title {
-    font-size: 1.6rem;
-    font-weight: 700;
-    color: #1e293b;
-    margin: 0;
-    display: flex;
-    align-items: center;
-    gap: 12px;
-}
-
-.card-header-title i {
-    color: var(--hygge-green);
-}
-
-/* Task Items with Checkboxes */
-.task-item {
-    padding: 25px 30px;
-    border-bottom: 2px solid #f1f5f9;
-    transition: all 0.3s ease;
-    display: flex;
-    align-items: center;
-    gap: 20px;
-    text-decoration: none;
-    color: inherit;
-}
-
-.task-item:last-child {
-    border-bottom: none;
-}
-
-.task-item:hover {
-    background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
-    transform: translateX(5px);
-}
-
-.task-checkbox-wrapper {
-    flex-shrink: 0;
-}
-
-.task-checkbox {
-    width: 28px;
-    height: 28px;
-    cursor: pointer;
-    accent-color: var(--hygge-green);
-    transform: scale(1.3);
-}
-
-.task-content {
-    flex-grow: 1;
-    min-width: 0;
-}
-
-.task-title {
-    font-size: 1.15rem;
-    font-weight: 700;
-    color: #1e293b;
-    margin-bottom: 8px;
-    transition: all 0.3s ease;
-}
-
-.task-item:hover .task-title {
-    color: var(--hygge-green);
-}
-
-.task-meta {
-    font-size: 0.95rem;
-    color: #64748b;
-    display: flex;
-    align-items: center;
-    gap: 15px;
-    flex-wrap: wrap;
-}
-
-.task-badges {
+    padding: 8px;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.06);
+    margin: 40px 0;
     display: flex;
     gap: 8px;
     flex-wrap: wrap;
-    align-items: center;
 }
 
-.task-badge {
-    padding: 6px 14px;
-    border-radius: 20px;
-    font-size: 0.85rem;
+.nav-modern .nav-link {
+    border-radius: 14px;
+    padding: 14px 24px;
     font-weight: 700;
-    white-space: nowrap;
+    font-size: 14px;
+    color: #64748b;
+    border: none;
+    background: transparent;
+    transition: all 0.2s ease;
 }
 
-.task-completed .task-title {
-    text-decoration: line-through;
-    opacity: 0.6;
+.nav-modern .nav-link:hover {
+    background: #f1f5f9;
+    color: #1e293b;
 }
 
-.task-completed {
-    opacity: 0.75;
+.nav-modern .nav-link.active {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
 }
 
-/* Project Cards */
-.project-card {
+/* Modern Content Cards */
+.content-card-modern {
     background: white;
-    border-radius: 20px;
-    padding: 30px;
-    box-shadow: var(--card-shadow);
-    transition: all 0.3s ease;
-    border-left: 5px solid;
-    text-decoration: none;
-    color: inherit;
-    display: block;
-    height: 100%;
+    border-radius: 24px;
+    padding: 32px;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.06);
+    margin-bottom: 32px;
+    border: 1px solid rgba(0,0,0,0.05);
 }
 
-.project-card:hover {
-    transform: translateY(-8px);
-    box-shadow: var(--card-shadow-hover);
+.card-header-modern {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 28px;
+    padding-bottom: 20px;
+    border-bottom: 2px solid #f1f5f9;
 }
 
-.project-name {
-    font-size: 1.4rem;
+.card-title-modern {
+    font-size: 1.5rem;
+    font-weight: 800;
+    color: #1e293b;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin: 0;
+}
+
+.card-title-modern i {
+    width: 40px;
+    height: 40px;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    font-size: 18px;
+}
+
+/* Modern Task Item */
+.task-item-modern {
+    background: #f8fafc;
+    border-radius: 16px;
+    padding: 20px 24px;
+    margin-bottom: 12px;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    transition: all 0.2s ease;
+    border: 2px solid transparent;
+    cursor: pointer;
+}
+
+.task-item-modern:hover {
+    background: white;
+    border-color: #667eea;
+    transform: translateX(4px);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+}
+
+.task-checkbox {
+    width: 24px;
+    height: 24px;
+    border-radius: 8px;
+    border: 2px solid #cbd5e1;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    flex-shrink: 0;
+}
+
+.task-checkbox:checked {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    border-color: #667eea;
+}
+
+.task-content-modern {
+    flex: 1;
+}
+
+.task-title-modern {
+    font-size: 1rem;
     font-weight: 700;
     color: #1e293b;
-    margin-bottom: 12px;
+    margin-bottom: 6px;
 }
 
-.project-description {
+.task-meta-modern {
+    font-size: 0.875rem;
     color: #64748b;
-    margin-bottom: 20px;
-    line-height: 1.6;
-}
-
-.progress-custom {
-    height: 12px;
-    border-radius: 10px;
-    background: #f1f5f9;
-    overflow: hidden;
-    margin-bottom: 10px;
-}
-
-.progress-bar-custom {
-    height: 100%;
-    border-radius: 10px;
-    transition: width 0.3s ease;
-    background: linear-gradient(90deg, var(--color) 0%, var(--color-dark) 100%);
-}
-
-.project-footer {
     display: flex;
-    justify-content: space-between;
     align-items: center;
-    margin-top: 20px;
+    gap: 16px;
 }
+
+.task-badges-modern {
+    display: flex;
+    gap: 8px;
+}
+
+.badge-modern {
+    padding: 6px 12px;
+    border-radius: 9999px;
+    font-size: 0.75rem;
+    font-weight: 700;
+    letter-spacing: 0.3px;
+}
+
+.badge-priority-low { background: #f1f5f9; color: #475569; }
+.badge-priority-medium { background: #dbeafe; color: #1e40af; }
+.badge-priority-high { background: #fef3c7; color: #92400e; }
+.badge-priority-urgent { background: #fee2e2; color: #991b1b; }
+
+.badge-status-todo { background: #f1f5f9; color: #475569; }
+.badge-status-progress { background: #dbeafe; color: #1e40af; }
+.badge-status-review { background: #ede9fe; color: #6b21a8; }
+.badge-status-done { background: #d1fae5; color: #065f46; }
 
 /* Empty State */
-.empty-state {
+.empty-state-modern {
     text-align: center;
     padding: 60px 20px;
+}
+
+.empty-icon {
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+    background: #f1f5f9;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 24px;
+    font-size: 40px;
     color: #94a3b8;
 }
 
-.empty-state i {
-    font-size: 4rem;
-    margin-bottom: 20px;
-    opacity: 0.5;
+.empty-title {
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: #1e293b;
+    margin-bottom: 8px;
 }
 
-.empty-state h5 {
-    font-size: 1.3rem;
-    font-weight: 700;
-    margin-bottom: 10px;
+.empty-text {
+    font-size: 1rem;
+    color: #64748b;
+}
+
+/* Charts Container */
+.charts-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+    gap: 32px;
+    margin: 40px 0;
+}
+
+@media (max-width: 768px) {
+    .hero-title {
+        font-size: 2.25rem;
+    }
+
+    .modern-hero {
+        padding: 40px 24px;
+        border-radius: 24px;
+    }
+
+    .stats-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .charts-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .nav-modern {
+        flex-direction: column;
+    }
+
+    .nav-modern .nav-link {
+        text-align: center;
+    }
 }
 </style>
 {% endblock %}
 
 {% block content %}
-<div class="page-wrapper">
-    <div class="container-fluid py-4">
-        <!-- Hero Header -->
-        <div class="dashboard-hero">
-            <div class="hero-content">
-                <h1 class="hero-title">
-                    <i class="fas fa-tasks me-3"></i>Task Management
-                </h1>
-                <p class="hero-subtitle">Welcome back, {{ user.username }}! Here's your task overview.</p>
-                <div class="hero-actions">
-                    <a href="{% url 'task_management:task_create' %}" class="btn btn-hero">
-                        <i class="fas fa-plus me-2"></i>New Task
-                    </a>
-                    {% if user.is_staff %}
-                    <a href="{% url 'task_management:project_create' %}" class="btn btn-hero">
-                        <i class="fas fa-folder-plus me-2"></i>New Project
-                    </a>
-                    {% endif %}
-                </div>
+<div class="container-fluid" style="max-width: 1400px; padding: 0 24px;">
+    <!-- Modern Hero -->
+    <div class="modern-hero">
+        <div class="hero-content">
+            <div class="hero-title">
+                <i class="fas fa-tasks"></i> Task Management
+            </div>
+            <div class="hero-subtitle">
+                Welcome back, <strong>{{ user.username }}</strong>! You have {{ pending_tasks }} tasks pending.
+            </div>
+            <div class="hero-actions">
+                <a href="{% url 'task_management:task_create' %}" class="btn-hero">
+                    <i class="fas fa-plus"></i>
+                    New Task
+                </a>
+                {% if user.is_staff %}
+                <a href="{% url 'task_management:project_create' %}" class="btn-hero btn-hero-outline">
+                    <i class="fas fa-folder-plus"></i>
+                    New Project
+                </a>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+
+    <!-- Stats Grid -->
+    <div class="stats-grid">
+        <div class="stat-card-modern blue">
+            <div class="stat-icon blue">
+                <i class="fas fa-clipboard-list"></i>
+            </div>
+            <div class="stat-number">{{ total_tasks }}</div>
+            <div class="stat-label">Total Tasks</div>
+            <div class="stat-change positive">
+                <i class="fas fa-arrow-up"></i> 12% this week
             </div>
         </div>
 
-        <!-- Quick Stats -->
-        <div class="row mb-4">
-            <div class="col-md-3 mb-3">
-                <div class="stat-card stat-card-total">
-                    <i class="fas fa-clipboard-list stat-icon" style="color: #3498db;"></i>
-                    <div class="stat-number" style="color: #3498db;">{{ total_tasks }}</div>
-                    <div class="stat-label">Total Tasks</div>
-                </div>
+        <div class="stat-card-modern purple">
+            <div class="stat-icon purple">
+                <i class="fas fa-hourglass-half"></i>
             </div>
-            <div class="col-md-3 mb-3">
-                <div class="stat-card stat-card-pending">
-                    <i class="fas fa-hourglass-half stat-icon" style="color: #f39c12;"></i>
-                    <div class="stat-number" style="color: #f39c12;">{{ pending_tasks }}</div>
-                    <div class="stat-label">Pending</div>
-                </div>
-            </div>
-            <div class="col-md-3 mb-3">
-                <div class="stat-card stat-card-completed">
-                    <i class="fas fa-check-circle stat-icon" style="color: #27ae60;"></i>
-                    <div class="stat-number" style="color: #27ae60;">{{ completed_tasks }}</div>
-                    <div class="stat-label">Completed</div>
-                </div>
-            </div>
-            <div class="col-md-3 mb-3">
-                <div class="stat-card stat-card-overdue">
-                    <i class="fas fa-exclamation-triangle stat-icon" style="color: #e74c3c;"></i>
-                    <div class="stat-number" style="color: #e74c3c;">{{ overdue_tasks }}</div>
-                    <div class="stat-label">Overdue</div>
-                </div>
+            <div class="stat-number">{{ pending_tasks }}</div>
+            <div class="stat-label">In Progress</div>
+            <div class="stat-change positive">
+                <i class="fas fa-arrow-up"></i> 5 active
             </div>
         </div>
 
-        <!-- Navigation Pills -->
-        <div class="nav-pills-custom">
-            <ul class="nav nav-pills d-flex flex-wrap" role="tablist">
-                <li class="nav-item flex-fill" role="presentation">
-                    <a class="nav-link active text-center" href="{% url 'task_management:dashboard' %}">
-                        <i class="fas fa-home me-2"></i>Dashboard
-                    </a>
-                </li>
-                <li class="nav-item flex-fill" role="presentation">
-                    <a class="nav-link text-center" href="{% url 'task_management:task_list' %}">
-                        <i class="fas fa-list me-2"></i>All Tasks
-                    </a>
-                </li>
-                <li class="nav-item flex-fill" role="presentation">
-                    <a class="nav-link text-center" href="{% url 'task_management:kanban' %}">
-                        <i class="fas fa-columns me-2"></i>Kanban
-                    </a>
-                </li>
-                <li class="nav-item flex-fill" role="presentation">
-                    <a class="nav-link text-center" href="{% url 'task_management:calendar' %}">
-                        <i class="fas fa-calendar me-2"></i>Calendar
-                    </a>
-                </li>
-                <li class="nav-item flex-fill" role="presentation">
-                    <a class="nav-link text-center" href="{% url 'task_management:project_list' %}">
-                        <i class="fas fa-folder me-2"></i>Projects
-                    </a>
-                </li>
-            </ul>
-        </div>
-
-        <!-- Data Visualization Charts -->
-        <div class="row mb-4">
-            <!-- Task Status Distribution -->
-            <div class="col-lg-6 mb-4">
-                <div class="content-card">
-                    <div class="card-header-custom">
-                        <h3 class="card-header-title">
-                            <i class="fas fa-chart-pie"></i>
-                            Task Status Distribution
-                        </h3>
-                    </div>
-                    <div style="padding: 30px;">
-                        <canvas id="statusChart" style="max-height: 300px;"></canvas>
-                    </div>
-                </div>
+        <div class="stat-card-modern green">
+            <div class="stat-icon green">
+                <i class="fas fa-check-circle"></i>
             </div>
-
-            <!-- Task Priority Distribution -->
-            <div class="col-lg-6 mb-4">
-                <div class="content-card">
-                    <div class="card-header-custom">
-                        <h3 class="card-header-title">
-                            <i class="fas fa-chart-bar"></i>
-                            Task Priority Distribution
-                        </h3>
-                    </div>
-                    <div style="padding: 30px;">
-                        <canvas id="priorityChart" style="max-height: 300px;"></canvas>
-                    </div>
-                </div>
+            <div class="stat-number">{{ completed_tasks }}</div>
+            <div class="stat-label">Completed</div>
+            <div class="stat-change positive">
+                <i class="fas fa-arrow-up"></i> 8 today
             </div>
         </div>
 
-        <div class="row">
-            <!-- Recent Tasks -->
-            <div class="col-lg-6 mb-4">
-                <div class="content-card">
-                    <div class="card-header-custom">
-                        <h3 class="card-header-title">
-                            <i class="fas fa-clock"></i>
-                            Recent Tasks
-                        </h3>
-                    </div>
-                    <div>
-                        {% if recent_tasks %}
-                            {% for task in recent_tasks %}
-                            <div class="task-item {% if task.status == 'completed' %}task-completed{% endif %}">
-                                <div class="task-checkbox-wrapper" onclick="event.stopPropagation();">
-                                    <input type="checkbox"
-                                           class="task-checkbox"
-                                           {% if task.status == 'completed' %}checked{% endif %}
-                                           onchange="toggleTaskComplete({{ task.pk }}, this)"
-                                           data-task-id="{{ task.pk }}">
-                                </div>
-                                <div class="task-content" onclick="window.location.href='{% url 'task_management:task_detail' task.pk %}'" style="cursor: pointer;">
-                                    <div class="task-title">{{ task.title }}</div>
-                                    <div class="task-meta">
-                                        <span>
-                                            {% if task.project %}
-                                            <i class="fas fa-folder me-1"></i>{{ task.project.name }}
-                                            {% else %}
-                                            <i class="fas fa-inbox me-1"></i>No Project
-                                            {% endif %}
-                                        </span>
-                                        {% if task.due_date %}
-                                        <span>
-                                            <i class="fas fa-calendar me-1"></i>{{ task.due_date|date:"M d" }}
-                                        </span>
-                                        {% endif %}
-                                    </div>
-                                </div>
-                                <div class="task-badges">
-                                    <span class="task-badge" style="background-color: {{ task.get_priority_color }}; color: white;">
-                                        {{ task.get_priority_display }}
-                                    </span>
-                                    <span class="task-badge" style="background-color: {{ task.get_status_color }}; color: white;">
-                                        {{ task.get_status_display }}
-                                    </span>
-                                </div>
-                            </div>
-                            {% endfor %}
-                        {% else %}
-                        <div class="empty-state">
-                            <i class="fas fa-inbox"></i>
-                            <h5>No tasks yet</h5>
-                            <p>Create your first task to get started!</p>
-                        </div>
-                        {% endif %}
-                    </div>
-                </div>
+        <div class="stat-card-modern red">
+            <div class="stat-icon red">
+                <i class="fas fa-exclamation-triangle"></i>
             </div>
+            <div class="stat-number">{{ overdue_tasks }}</div>
+            <div class="stat-label">Overdue</div>
+            {% if overdue_tasks > 0 %}
+            <div class="stat-change negative">
+                <i class="fas fa-arrow-down"></i> Needs attention
+            </div>
+            {% else %}
+            <div class="stat-change positive">
+                <i class="fas fa-check"></i> All clear!
+            </div>
+            {% endif %}
+        </div>
+    </div>
 
-            <!-- Upcoming Deadlines -->
-            <div class="col-lg-6 mb-4">
-                <div class="content-card">
-                    <div class="card-header-custom">
-                        <h3 class="card-header-title">
-                            <i class="fas fa-calendar-alt" style="color: #e74c3c;"></i>
-                            Upcoming Deadlines
-                        </h3>
-                    </div>
-                    <div>
-                        {% if upcoming_deadlines %}
-                            {% for task in upcoming_deadlines %}
-                            <div class="task-item {% if task.status == 'completed' %}task-completed{% endif %}">
-                                <div class="task-checkbox-wrapper" onclick="event.stopPropagation();">
-                                    <input type="checkbox"
-                                           class="task-checkbox"
-                                           {% if task.status == 'completed' %}checked{% endif %}
-                                           onchange="toggleTaskComplete({{ task.pk }}, this)"
-                                           data-task-id="{{ task.pk }}">
-                                </div>
-                                <div class="task-content" onclick="window.location.href='{% url 'task_management:task_detail' task.pk %}'" style="cursor: pointer;">
-                                    <div class="task-title">{{ task.title }}</div>
-                                    <div class="task-meta">
-                                        <span style="color: #e74c3c; font-weight: 700;">
-                                            <i class="fas fa-calendar me-1"></i>Due: {{ task.due_date|date:"M d, Y g:i A" }}
-                                        </span>
-                                    </div>
-                                </div>
-                                <div class="task-badges">
-                                    <span class="task-badge" style="background-color: {{ task.get_priority_color }}; color: white;">
-                                        {{ task.get_priority_display }}
-                                    </span>
-                                </div>
-                            </div>
-                            {% endfor %}
-                        {% else %}
-                        <div class="empty-state">
-                            <i class="fas fa-calendar-check"></i>
-                            <h5>No upcoming deadlines</h5>
-                            <p>You're all caught up!</p>
-                        </div>
-                        {% endif %}
-                    </div>
-                </div>
+    <!-- Modern Navigation -->
+    <div class="nav-modern">
+        <a href="{% url 'task_management:dashboard' %}" class="nav-link active">
+            <i class="fas fa-home"></i> Dashboard
+        </a>
+        <a href="{% url 'task_management:task_list' %}" class="nav-link">
+            <i class="fas fa-list"></i> All Tasks
+        </a>
+        <a href="{% url 'task_management:kanban' %}" class="nav-link">
+            <i class="fas fa-columns"></i> Kanban
+        </a>
+        <a href="{% url 'task_management:calendar' %}" class="nav-link">
+            <i class="fas fa-calendar"></i> Calendar
+        </a>
+        <a href="{% url 'task_management:project_list' %}" class="nav-link">
+            <i class="fas fa-folder"></i> Projects
+        </a>
+    </div>
+
+    <!-- Charts Section -->
+    <div class="charts-grid">
+        <div class="content-card-modern">
+            <div class="card-header-modern">
+                <h3 class="card-title-modern">
+                    <i class="fas fa-chart-pie"></i>
+                    Task Distribution
+                </h3>
             </div>
+            <canvas id="statusChart" style="max-height: 300px;"></canvas>
         </div>
 
-        <!-- Projects -->
-        <div class="content-card">
-            <div class="card-header-custom">
-                <div class="d-flex justify-content-between align-items-center">
-                    <h3 class="card-header-title mb-0">
-                        <i class="fas fa-folder"></i>
-                        Your Projects
+        <div class="content-card-modern">
+            <div class="card-header-modern">
+                <h3 class="card-title-modern">
+                    <i class="fas fa-chart-bar"></i>
+                    Priority Breakdown
+                </h3>
+            </div>
+            <canvas id="priorityChart" style="max-height: 300px;"></canvas>
+        </div>
+    </div>
+
+    <!-- Recent Tasks & Upcoming -->
+    <div class="row">
+        <div class="col-lg-6 mb-4">
+            <div class="content-card-modern">
+                <div class="card-header-modern">
+                    <h3 class="card-title-modern">
+                        <i class="fas fa-clock"></i>
+                        Recent Tasks
                     </h3>
-                    {% if user.is_staff %}
-                    <a href="{% url 'task_management:project_create' %}" class="btn btn-hygge">
-                        <i class="fas fa-plus me-2"></i>New Project
+                    <a href="{% url 'task_management:task_list' %}" class="btn-hero" style="padding: 10px 20px; font-size: 13px;">
+                        View All
                     </a>
-                    {% endif %}
                 </div>
-            </div>
-            <div style="padding: 30px;">
-                {% if projects %}
-                <div class="row">
-                    {% for project in projects %}
-                    <div class="col-md-6 col-lg-4 mb-4">
-                        <a href="{% url 'task_management:project_detail' project.slug %}" class="project-card" style="border-left-color: {{ project.color }};">
-                            <h4 class="project-name">{{ project.name }}</h4>
-                            <p class="project-description">{{ project.description|truncatewords:15 }}</p>
 
-                            <div class="mb-3">
-                                <div class="d-flex justify-content-between mb-2">
-                                    <small class="text-muted fw-bold">Progress</small>
-                                    <small class="fw-bold" style="color: {{ project.color }};">{{ project.progress_percentage }}%</small>
-                                </div>
-                                <div class="progress-custom">
-                                    <div class="progress-bar-custom"
-                                         style="width: {{ project.progress_percentage }}%; --color: {{ project.color }}; --color-dark: {{ project.color }};">
-                                    </div>
-                                </div>
+                {% if recent_tasks %}
+                    {% for task in recent_tasks %}
+                    <div class="task-item-modern" onclick="window.location.href='{% url 'task_management:task_detail' task.pk %}'">
+                        <input type="checkbox" class="task-checkbox" {% if task.status == 'completed' %}checked{% endif %} onclick="event.stopPropagation(); toggleTaskComplete({{ task.pk }}, this);">
+                        <div class="task-content-modern">
+                            <div class="task-title-modern">{{ task.title }}</div>
+                            <div class="task-meta-modern">
+                                <span><i class="fas fa-folder"></i> {% if task.project %}{{ task.project.name }}{% else %}No Project{% endif %}</span>
+                                {% if task.due_date %}
+                                <span><i class="fas fa-calendar"></i> {{ task.due_date|date:"M d" }}</span>
+                                {% endif %}
                             </div>
-
-                            <div class="project-footer">
-                                <span class="task-badge" style="background: #f1f5f9; color: #1e293b;">
-                                    <i class="fas fa-tasks me-1"></i>{{ project.get_task_count }} tasks
-                                </span>
-                                <span class="task-badge" style="background-color: {{ project.color }}; color: white;">
-                                    {{ project.get_status_display }}
-                                </span>
-                            </div>
-                        </a>
+                        </div>
+                        <div class="task-badges-modern">
+                            <span class="badge-modern badge-priority-{{ task.priority }}">{{ task.get_priority_display }}</span>
+                        </div>
                     </div>
                     {% endfor %}
-                </div>
                 {% else %}
-                <div class="empty-state">
-                    <i class="fas fa-folder-open"></i>
-                    <h5>No projects yet</h5>
-                    <p>Create your first project to organize your tasks!</p>
+                <div class="empty-state-modern">
+                    <div class="empty-icon">
+                        <i class="fas fa-inbox"></i>
+                    </div>
+                    <div class="empty-title">No tasks yet</div>
+                    <div class="empty-text">Create your first task to get started</div>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+
+        <div class="col-lg-6 mb-4">
+            <div class="content-card-modern">
+                <div class="card-header-modern">
+                    <h3 class="card-title-modern">
+                        <i class="fas fa-calendar-alt"></i>
+                        Upcoming Deadlines
+                    </h3>
+                </div>
+
+                {% if upcoming_deadlines %}
+                    {% for task in upcoming_deadlines %}
+                    <div class="task-item-modern" onclick="window.location.href='{% url 'task_management:task_detail' task.pk %}'">
+                        <input type="checkbox" class="task-checkbox" {% if task.status == 'completed' %}checked{% endif %} onclick="event.stopPropagation(); toggleTaskComplete({{ task.pk }}, this);">
+                        <div class="task-content-modern">
+                            <div class="task-title-modern">{{ task.title }}</div>
+                            <div class="task-meta-modern" style="color: #ef4444; font-weight: 600;">
+                                <span><i class="fas fa-clock"></i> Due: {{ task.due_date|date:"M d, g:i A" }}</span>
+                            </div>
+                        </div>
+                        <div class="task-badges-modern">
+                            <span class="badge-modern badge-priority-{{ task.priority }}">{{ task.get_priority_display }}</span>
+                        </div>
+                    </div>
+                    {% endfor %}
+                {% else %}
+                <div class="empty-state-modern">
+                    <div class="empty-icon">
+                        <i class="fas fa-calendar-check"></i>
+                    </div>
+                    <div class="empty-title">No upcoming deadlines</div>
+                    <div class="empty-text">You're all caught up!</div>
                 </div>
                 {% endif %}
             </div>
         </div>
     </div>
 </div>
+
+<style>
+.toast-container {
+    position: fixed;
+    top: 24px;
+    right: 24px;
+    z-index: 9999;
+}
+
+.toast {
+    background: white;
+    border-radius: 16px;
+    padding: 16px 20px;
+    margin-bottom: 12px;
+    box-shadow: 0 8px 30px rgba(0,0,0,0.12);
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    animation: slideIn 0.3s ease;
+}
+
+.toast-success { border-left: 4px solid #10b981; }
+.toast-error { border-left: 4px solid #ef4444; }
+
+@keyframes slideIn {
+    from { transform: translateX(400px); opacity: 0; }
+    to { transform: translateX(0); opacity: 1; }
+}
+</style>
+
+<div class="toast-container" id="toastContainer"></div>
+
 {% endblock %}
 
 {% block extra_js %}
-<!-- Task Management Enhanced UI JS -->
 <script src="{% static 'task_management/js/app.js' %}"></script>
 
 <script>
-// Task completion toggle function
+// Modern Toast System
+const toast = {
+    success: (message) => showToast(message, 'success'),
+    error: (message) => showToast(message, 'error'),
+    info: (message) => showToast(message, 'info')
+};
+
+function showToast(message, type) {
+    const container = document.getElementById('toastContainer');
+    const toastEl = document.createElement('div');
+    toastEl.className = `toast toast-${type}`;
+    toastEl.innerHTML = `
+        <i class="fas fa-${type === 'success' ? 'check-circle' : type === 'error' ? 'exclamation-circle' : 'info-circle'}"></i>
+        <span>${message}</span>
+    `;
+    container.appendChild(toastEl);
+
+    setTimeout(() => {
+        toastEl.style.animation = 'slideOut 0.3s ease forwards';
+        setTimeout(() => toastEl.remove(), 300);
+    }, 3000);
+}
+
+// Task completion toggle
 function toggleTaskComplete(taskId, checkbox) {
-    const csrfToken = TaskManagement.getCsrfToken();
+    const csrfToken = document.querySelector('[name=csrfmiddlewaretoken]')?.value ||
+                      document.cookie.split('; ').find(row => row.startsWith('csrftoken='))?.split('=')[1];
 
-    if (!csrfToken) {
-        toast.error('Security token not found. Please refresh the page.');
-        checkbox.checked = !checkbox.checked;
-        return;
-    }
-
-    const isChecked = checkbox.checked;
-    const taskItem = checkbox.closest('.task-item');
-
-    // Send AJAX request
-    const url = `/task-management/tasks/${taskId}/toggle-complete/`;
-
-    fetch(url, {
+    fetch(`/task-management/tasks/${taskId}/toggle-complete/`, {
         method: 'POST',
         headers: {
             'X-CSRFToken': csrfToken,
@@ -689,48 +702,25 @@ function toggleTaskComplete(taskId, checkbox) {
         },
         credentials: 'same-origin'
     })
-    .then(response => {
-        if (!response.ok) {
-            throw new Error(`HTTP error! status: ${response.status}`);
-        }
-        return response.json();
-    })
+    .then(response => response.json())
     .then(data => {
         if (data.success) {
-            // Update UI
-            if (data.completed) {
-                taskItem.classList.add('task-completed');
-            } else {
-                taskItem.classList.remove('task-completed');
-            }
-
-            // Show success toast using our new toast system
-            toast.success(data.completed ? 'Task marked as complete!' : 'Task marked as incomplete');
-
-            // Reload after brief delay to update stats and charts
+            toast.success(data.completed ? 'Task completed!' : 'Task reopened');
             setTimeout(() => location.reload(), 1500);
         } else {
-            toast.error(data.error || 'Failed to update task status');
-            checkbox.checked = !isChecked; // Revert checkbox
+            toast.error('Failed to update task');
+            checkbox.checked = !checkbox.checked;
         }
     })
     .catch(error => {
-        console.error('Error details:', error);
-        toast.error('An error occurred: ' + error.message);
-        checkbox.checked = !isChecked; // Revert checkbox
+        toast.error('An error occurred');
+        checkbox.checked = !checkbox.checked;
     });
 }
 
-// Initialize Charts on page load
+// Initialize Charts
 document.addEventListener('DOMContentLoaded', function() {
-    // Get task status data from the page
-    const todoCount = {{ todo_tasks|default:0 }};
-    const inProgressCount = {{ in_progress_tasks|default:0 }};
-    const inReviewCount = {{ in_review_tasks|default:0 }};
-    const completedCount = {{ completed_tasks|default:0 }};
-    const blockedCount = {{ blocked_tasks|default:0 }};
-
-    // Task Status Distribution Chart (Doughnut)
+    // Status Chart
     const statusCtx = document.getElementById('statusChart');
     if (statusCtx) {
         new Chart(statusCtx, {
@@ -738,16 +728,15 @@ document.addEventListener('DOMContentLoaded', function() {
             data: {
                 labels: ['To Do', 'In Progress', 'In Review', 'Completed', 'Blocked'],
                 datasets: [{
-                    data: [todoCount, inProgressCount, inReviewCount, completedCount, blockedCount],
-                    backgroundColor: [
-                        '#95a5a6',  // To Do - Gray
-                        '#3498db',  // In Progress - Blue
-                        '#9b59b6',  // In Review - Purple
-                        '#27ae60',  // Completed - Green
-                        '#e74c3c'   // Blocked - Red
+                    data: [
+                        {{ todo_tasks|default:0 }},
+                        {{ in_progress_tasks|default:0 }},
+                        {{ in_review_tasks|default:0 }},
+                        {{ completed_tasks|default:0 }},
+                        {{ blocked_tasks|default:0 }}
                     ],
-                    borderWidth: 3,
-                    borderColor: '#fff'
+                    backgroundColor: ['#94a3b8', '#3b82f6', '#8b5cf6', '#10b981', '#ef4444'],
+                    borderWidth: 0
                 }]
             },
             options: {
@@ -757,37 +746,16 @@ document.addEventListener('DOMContentLoaded', function() {
                     legend: {
                         position: 'bottom',
                         labels: {
-                            padding: 15,
-                            font: {
-                                size: 13,
-                                weight: '600'
-                            }
+                            padding: 20,
+                            font: { size: 13, weight: '600', family: 'Inter' }
                         }
-                    },
-                    tooltip: {
-                        backgroundColor: 'rgba(45, 90, 61, 0.95)',
-                        titleFont: {
-                            size: 14,
-                            weight: 'bold'
-                        },
-                        bodyFont: {
-                            size: 13
-                        },
-                        padding: 12,
-                        cornerRadius: 8
                     }
                 }
             }
         });
     }
 
-    // Get priority data from the page
-    const lowCount = {{ low_priority_tasks|default:0 }};
-    const mediumCount = {{ medium_priority_tasks|default:0 }};
-    const highCount = {{ high_priority_tasks|default:0 }};
-    const urgentCount = {{ urgent_priority_tasks|default:0 }};
-
-    // Task Priority Distribution Chart (Bar)
+    // Priority Chart
     const priorityCtx = document.getElementById('priorityChart');
     if (priorityCtx) {
         new Chart(priorityCtx, {
@@ -795,90 +763,38 @@ document.addEventListener('DOMContentLoaded', function() {
             data: {
                 labels: ['Low', 'Medium', 'High', 'Urgent'],
                 datasets: [{
-                    label: 'Number of Tasks',
-                    data: [lowCount, mediumCount, highCount, urgentCount],
-                    backgroundColor: [
-                        'rgba(149, 165, 166, 0.8)',  // Low - Gray
-                        'rgba(52, 152, 219, 0.8)',   // Medium - Blue
-                        'rgba(243, 156, 18, 0.8)',   // High - Orange
-                        'rgba(231, 76, 60, 0.8)'     // Urgent - Red
+                    label: 'Tasks',
+                    data: [
+                        {{ low_priority_tasks|default:0 }},
+                        {{ medium_priority_tasks|default:0 }},
+                        {{ high_priority_tasks|default:0 }},
+                        {{ urgent_priority_tasks|default:0 }}
                     ],
-                    borderColor: [
-                        '#95a5a6',
-                        '#3498db',
-                        '#f39c12',
-                        '#e74c3c'
-                    ],
-                    borderWidth: 3,
-                    borderRadius: 8
+                    backgroundColor: ['#94a3b8', '#3b82f6', '#f59e0b', '#ef4444'],
+                    borderRadius: 12,
+                    borderSkipped: false,
                 }]
             },
             options: {
                 responsive: true,
                 maintainAspectRatio: true,
                 plugins: {
-                    legend: {
-                        display: false
-                    },
-                    tooltip: {
-                        backgroundColor: 'rgba(45, 90, 61, 0.95)',
-                        titleFont: {
-                            size: 14,
-                            weight: 'bold'
-                        },
-                        bodyFont: {
-                            size: 13
-                        },
-                        padding: 12,
-                        cornerRadius: 8
-                    }
+                    legend: { display: false }
                 },
                 scales: {
                     y: {
                         beginAtZero: true,
-                        ticks: {
-                            stepSize: 1,
-                            font: {
-                                size: 12,
-                                weight: '600'
-                            }
-                        },
-                        grid: {
-                            color: 'rgba(0, 0, 0, 0.05)'
-                        }
+                        grid: { color: '#f1f5f9' },
+                        ticks: { font: { family: 'Inter', weight: '600' } }
                     },
                     x: {
-                        ticks: {
-                            font: {
-                                size: 13,
-                                weight: '700'
-                            }
-                        },
-                        grid: {
-                            display: false
-                        }
+                        grid: { display: false },
+                        ticks: { font: { family: 'Inter', weight: '700' } }
                     }
                 }
             }
         });
     }
-
-    // Add fade-in animation to all cards
-    const cards = document.querySelectorAll('.stat-card, .content-card, .project-card');
-    cards.forEach((card, index) => {
-        card.style.opacity = '0';
-        card.style.transform = 'translateY(20px)';
-        setTimeout(() => {
-            card.style.transition = 'all 0.5s ease';
-            card.style.opacity = '1';
-            card.style.transform = 'translateY(0)';
-        }, index * 50); // Stagger the animations
-    });
-
-    // Show welcome toast
-    setTimeout(() => {
-        toast.info('Welcome to Task Management! Press ? to see keyboard shortcuts.');
-    }, 500);
 });
 </script>
 {% endblock %}
