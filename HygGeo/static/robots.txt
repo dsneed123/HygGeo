@@ -58,6 +58,3 @@ Disallow: /accounts/admin/toggle-featured/
 
 # Sitemap location
 Sitemap: https://hyggeo.com/sitemap.xml
-
-# Crawl delay (be nice to our servers)
-Crawl-delay: 1
