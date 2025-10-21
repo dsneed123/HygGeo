@@ -5,19 +5,22 @@
 {% block title %}HygGeo - Sustainable Travel with Danish Hygge{% endblock %}
 
 {% block extra_head %}
-<!-- Preload ultra-compressed hero image for instant LCP -->
+<!-- Preload hero image optimized for mobile-first -->
 {% if featured_destinations.0.image %}
 <link rel="preload"
       as="image"
-      href="{{ featured_destinations.0.image.url|cf_image:'format=webp,width=640,quality=10,fit=cover' }}"
+      href="{{ featured_destinations.0.image.url|cf_image:'format=webp,width=800,quality=25,fit=cover' }}"
       type="image/webp"
-      fetchpriority="high">
+      fetchpriority="high"
+      imagesrcset="{{ featured_destinations.0.image.url|cf_image:'format=webp,width=800,quality=25,fit=cover' }} 800w,
+                   {{ featured_destinations.0.image.url|cf_image:'format=webp,width=1200,quality=30,fit=cover' }} 1200w"
+      imagesizes="100vw">
 {% endif %}
 
 <!-- Critical CSS - Expanded for faster initial render -->
 <style>
-/* Hero section - all styles needed for above-the-fold */
-.hero-banner{position:relative;background:linear-gradient(135deg,#1a3a2a 0%,#2d5a3d 50%,#1a3a2a 100%);display:flex;align-items:center;min-height:70vh;overflow:hidden}
+/* Hero section - exact heights to prevent CLS */
+.hero-banner{position:relative;background:linear-gradient(135deg,#1a3a2a 0%,#2d5a3d 50%,#1a3a2a 100%);display:flex;align-items:center;height:70vh;overflow:hidden}
 .banner-carousel{position:absolute;top:0;left:0;width:100%;height:100%;z-index:1}
 .banner-slide{position:absolute;top:0;left:0;width:100%;height:100%;opacity:0;visibility:hidden;transition:opacity 0.8s ease-in-out}
 .banner-slide.active{opacity:1;visibility:visible}
@@ -53,7 +56,7 @@
 .col-lg-6{flex:0 0 100%;max-width:100%}
 }
 @media(max-width:767px){
-.hero-banner{min-height:60vh}
+.hero-banner{height:60vh}
 .display-2{font-size:2.5rem}
 .lead{font-size:1.1rem}
 .btn-lg{font-size:1rem;padding:0.4rem 1rem}
@@ -71,18 +74,26 @@
             {% if destination.image %}
                 <div class="img-aspect-container">
                     {% if forloop.first %}
-                        <!-- First slide: Ultra-compressed for fastest LCP (~3-5KB) -->
+                        <!-- First slide: Responsive image for good quality + performance -->
                         <img
-                            src="{{ destination.image.url|cf_image:'format=webp,width=640,quality=10,fit=cover' }}"
+                            srcset="{{ destination.image.url|cf_image:'format=webp,width=800,quality=25,fit=cover' }} 800w,
+                                    {{ destination.image.url|cf_image:'format=webp,width=1200,quality=30,fit=cover' }} 1200w,
+                                    {{ destination.image.url|cf_image:'format=webp,width=1600,quality=35,fit=cover' }} 1600w"
+                            sizes="100vw"
+                            src="{{ destination.image.url|cf_image:'format=webp,width=1200,quality=30,fit=cover' }}"
                             alt="{{ destination.name }}"
                             fetchpriority="high"
                             width="1920"
                             height="1080"
                             style="object-fit:cover;width:100%;height:100%">
                     {% else %}
-                        <!-- Other slides: Lazy load -->
+                        <!-- Other slides: Lazy load with good quality -->
                         <img
-                            src="{{ destination.image.url|cf_image:'format=webp,width=1000,quality=25,fit=cover' }}"
+                            srcset="{{ destination.image.url|cf_image:'format=webp,width=800,quality=25,fit=cover' }} 800w,
+                                    {{ destination.image.url|cf_image:'format=webp,width=1200,quality=30,fit=cover' }} 1200w,
+                                    {{ destination.image.url|cf_image:'format=webp,width=1600,quality=35,fit=cover' }} 1600w"
+                            sizes="100vw"
+                            src="{{ destination.image.url|cf_image:'format=webp,width=1200,quality=30,fit=cover' }}"
                             alt="{{ destination.name }}"
                             loading="lazy"
                             width="1920"
@@ -217,10 +228,10 @@
                 <div class="experience-card">
                     <div class="experience-image">
                         {% if experience.main_image %}
-                            <!-- Simplified for faster render -->
+                            <!-- Optimized for sharpness -->
                             <div class="img-aspect-container" style="aspect-ratio:240/140">
                                 <img
-                                    src="{{ experience.main_image.url|cf_image:'format=webp,width=240,quality=15,fit=cover' }}"
+                                    src="{{ experience.main_image.url|cf_image:'format=webp,width=320,quality=30,fit=cover' }}"
                                     alt="{{ experience.title }}"
                                     loading="lazy"
                                     width="240"
@@ -314,10 +325,10 @@
                 <div class="experience-card">
                     <div class="experience-image">
                         {% if accommodation.main_image %}
-                            <!-- Simplified for faster render -->
+                            <!-- Optimized for sharpness -->
                             <div class="img-aspect-container" style="aspect-ratio:240/140">
                                 <img
-                                    src="{{ accommodation.main_image.url|cf_image:'format=webp,width=240,quality=15,fit=cover' }}"
+                                    src="{{ accommodation.main_image.url|cf_image:'format=webp,width=320,quality=30,fit=cover' }}"
                                     alt="{{ accommodation.name }}"
                                     loading="lazy"
                                     width="240"
