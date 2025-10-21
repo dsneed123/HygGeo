@@ -23,17 +23,25 @@ body {
 }
 
 /* Touch target accessibility - minimum 44x44px for better mobile UX */
-.btn, .nav-link, a.btn {
+/* Only apply to primary interactive elements, not all buttons/links */
+.btn {
     min-height: 44px;
-    min-width: 44px;
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
+    padding: 0.5rem 1rem;
 }
 
-/* Ensure proper focus indicators for keyboard navigation */
-a:focus, button:focus, .btn:focus, .nav-link:focus, input:focus, textarea:focus, select:focus {
-    outline: 3px solid var(--hygge-gold);
+.btn-lg {
+    min-height: 48px;
+}
+
+.nav-link {
+    min-height: 44px;
+    padding: 0.5rem 1rem;
+}
+
+/* Keyboard navigation focus - use browser default for better performance */
+/* Only enhance for primary interactive elements */
+a:focus-visible, button:focus-visible, .btn:focus-visible {
+    outline: 2px solid var(--hygge-gold);
     outline-offset: 2px;
 }
 
