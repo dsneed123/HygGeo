@@ -5,67 +5,50 @@
 {% block title %}HygGeo - Sustainable Travel with Danish Hygge{% endblock %}
 
 {% block extra_head %}
-<!-- Preload hero image - responsive for mobile/desktop -->
+<!-- Preload hero image for LCP optimization - aggressive mobile compression -->
 {% if featured_destinations.0.image %}
-<!-- Mobile: smaller size for faster LCP on slow networks -->
 <link rel="preload"
       as="image"
-      href="{{ featured_destinations.0.image.url|cf_image:'format=webp,width=640,quality=22,fit=cover' }}"
+      href="{{ featured_destinations.0.image.url|cf_image:'format=webp,width=480,quality=20,fit=cover' }}"
       type="image/webp"
       fetchpriority="high"
-      media="(max-width: 767px)">
-<!-- Desktop: higher quality for larger screens -->
-<link rel="preload"
-      as="image"
-      href="{{ featured_destinations.0.image.url|cf_image:'format=webp,width=1200,quality=25,fit=cover' }}"
-      type="image/webp"
-      fetchpriority="high"
-      media="(min-width: 768px)">
+      imagesrcset="{{ featured_destinations.0.image.url|cf_image:'format=webp,width=480,quality=20,fit=cover' }} 480w,
+                   {{ featured_destinations.0.image.url|cf_image:'format=webp,width=640,quality=20,fit=cover' }} 640w,
+                   {{ featured_destinations.0.image.url|cf_image:'format=webp,width=1280,quality=30,fit=cover' }} 1280w"
+      imagesizes="(max-width: 767px) 100vw, (max-width: 1199px) 100vw, 1280px">
 {% endif %}
 
-<!-- Critical CSS - Expanded for faster initial render -->
+<!-- Critical CSS - Minified for speed, prevents CLS -->
 <style>
-/* Hero section - exact heights to prevent CLS */
-.hero-banner{position:relative;background:linear-gradient(135deg,#1a3a2a 0%,#2d5a3d 50%,#1a3a2a 100%);display:flex;align-items:center;height:70vh;min-height:500px;overflow:hidden}
+/* Hero banner - fixed height prevents CLS */
+.hero-banner{position:relative;background:#2d5a3d;display:flex;align-items:center;min-height:70vh;height:70vh;overflow:hidden}
 .banner-carousel{position:absolute;top:0;left:0;width:100%;height:100%;z-index:1}
 .banner-slide{position:absolute;top:0;left:0;width:100%;height:100%;opacity:0;visibility:hidden;transition:opacity 0.8s ease-in-out}
 .banner-slide.active{opacity:1;visibility:visible}
-.img-aspect-container{position:relative;width:100%;height:100%;overflow:hidden;aspect-ratio:16/9}
+/* Image container with aspect ratio prevents CLS */
+.img-aspect-container{position:relative;width:100%;height:100%;overflow:hidden;background:#2d5a3d}
 .img-aspect-container img{position:absolute;top:0;left:0;width:100%;height:100%;object-fit:cover;object-position:center}
+.img-cover{object-fit:cover;object-position:center}
 .banner-overlay{position:absolute;top:0;left:0;width:100%;height:100%;background:linear-gradient(to right,rgba(0,0,0,0.6) 0%,rgba(0,0,0,0.3) 50%,rgba(0,0,0,0.5) 100%);z-index:2}
-/* Hero content container - explicit height to prevent shifts */
-.hero-content-container{height:70vh;min-height:500px}
-/* Text elements - prevent reflow */
-.display-2{font-size:3.5rem;line-height:1.2;font-weight:700!important;margin-bottom:1.5rem!important}
-.h3{font-size:1.75rem;margin-top:1rem}
-.lead{font-size:1.25rem;line-height:1.5;margin-bottom:1.5rem}
-.text-shadow{text-shadow:2px 2px 4px rgba(0,0,0,0.8)}
-.text-white{color:#fff}
-.text-warning{color:#ffc107}
-/* Buttons - explicit sizing to prevent CLS */
-.btn{display:inline-block;padding:0.5rem 1rem;font-weight:600;text-align:center;text-decoration:none;border-radius:0.25rem;transition:transform 0.2s;line-height:1.5;min-height:38px}
-.btn-light{background:#f8f9fa;color:#000;border:1px solid #f8f9fa}
-.btn-warning{background:#ffc107;color:#000;border:1px solid #ffc107}
-.btn-lg{padding:0.5rem 1.5rem;font-size:1.25rem;min-height:46px}
-.btn:hover{transform:translateY(-2px)}
-.btn i{min-width:1em;display:inline-block}
-/* Layout - use base.html responsive containers */
-.row{display:flex;flex-wrap:wrap;margin:0 -15px}
-.col-lg-6{flex:0 0 50%;max-width:50%;padding:0 15px}
-.h-100{height:100%}
-.align-items-center{align-items:center}
-.flex-wrap{flex-wrap:wrap}
-.gap-3{gap:1rem}
-.mt-3{margin-top:1rem}
-@media(max-width:991px){
-.col-lg-6{flex:0 0 100%;max-width:100%}
-}
+.container{position:relative;z-index:10}
+/* Prevent text reflow - explicit dimensions */
+.display-2{font-size:3.5rem;line-height:1.2;min-height:84px;font-weight:700;margin-bottom:1rem}
+.lead{font-size:1.25rem;line-height:1.5;min-height:37px;margin-bottom:2rem}
+.btn-lg{min-height:58px;padding:0.5rem 1rem;font-size:1.25rem;display:inline-flex;align-items:center;justify-content:center}
+.destination-badge{display:inline-flex;align-items:center;min-height:38px;padding:0.5rem 1rem;border-radius:25px;margin-bottom:1.5rem}
+.destination-name{font-size:2.2rem;font-weight:800;line-height:1.1;min-height:48px;margin-bottom:0.4rem}
+.position-absolute{position:absolute}
+.top-0{top:0}
+.end-0,.start-0{right:0}
+.bottom-0{bottom:0}
+.p-4{padding:1.5rem}
+.fas,.fa{display:inline-block;width:1em;text-align:center}
 @media(max-width:767px){
-.hero-banner{height:60vh;min-height:400px}
-.hero-content-container{height:60vh;min-height:400px}
-.display-2{font-size:2.5rem}
-.lead{font-size:1.1rem}
-.btn-lg{font-size:1rem;padding:0.4rem 1rem}
+.hero-banner{height:60vh;min-height:60vh}
+.display-2{font-size:2.5rem;min-height:60px}
+.lead{font-size:1.1rem;min-height:33px}
+.btn-lg{min-height:48px;font-size:1.1rem}
+.destination-badge{font-size:0.85rem;padding:0.45rem 0.9rem;min-height:34px}
 }
 </style>
 {% endblock %}
@@ -78,34 +61,38 @@
         {% for destination in featured_destinations %}
         <div class="banner-slide{% if forloop.first %} active{% endif %}">
             {% if destination.image %}
-                <div class="img-aspect-container">
-                    {% if forloop.first %}
-                        <!-- First slide: Optimized for fast mobile LCP -->
-                        <picture>
-                            <source media="(max-width: 767px)"
-                                    srcset="{{ destination.image.url|cf_image:'format=webp,width=640,quality=22,fit=cover' }}">
-                            <img
-                                src="{{ destination.image.url|cf_image:'format=webp,width=1200,quality=25,fit=cover' }}"
-                                alt="{{ destination.name }}"
-                                fetchpriority="high"
-                                width="1200"
-                                height="675"
-                                style="object-fit:cover;width:100%;height:100%">
-                        </picture>
-                    {% else %}
-                        <!-- Other slides: Lazy load optimized -->
-                        <picture>
-                            <source media="(max-width: 767px)"
-                                    srcset="{{ destination.image.url|cf_image:'format=webp,width=640,quality=22,fit=cover' }}">
-                            <img
-                                src="{{ destination.image.url|cf_image:'format=webp,width=1200,quality=25,fit=cover' }}"
-                                alt="{{ destination.name }}"
-                                loading="lazy"
-                                width="1200"
-                                height="675"
-                                style="object-fit:cover;width:100%;height:100%">
-                        </picture>
-                    {% endif %}
+                <!-- Aspect ratio container to prevent CLS -->
+                <div class="img-aspect-container" style="aspect-ratio: 16/9;">
+                    <picture>
+                        <!-- Mobile: Ultra compressed WebP -->
+                        <source
+                            media="(max-width: 767px)"
+                            type="image/webp"
+                            srcset="{{ destination.image.url|cf_image:'format=webp,width=480,quality=20,fit=cover' }} 480w,
+                                    {{ destination.image.url|cf_image:'format=webp,width=640,quality=20,fit=cover' }} 640w"
+                            sizes="100vw">
+                        <!-- Tablet: Medium WebP -->
+                        <source
+                            media="(max-width: 1199px)"
+                            type="image/webp"
+                            srcset="{{ destination.image.url|cf_image:'format=webp,width=800,quality=25,fit=cover' }} 800w,
+                                    {{ destination.image.url|cf_image:'format=webp,width=1024,quality=25,fit=cover' }} 1024w"
+                            sizes="100vw">
+                        <!-- Desktop: Large WebP -->
+                        <source
+                            type="image/webp"
+                            srcset="{{ destination.image.url|cf_image:'format=webp,width=1280,quality=30,fit=cover' }} 1280w,
+                                    {{ destination.image.url|cf_image:'format=webp,width=1920,quality=30,fit=cover' }} 1920w"
+                            sizes="100vw">
+                        <!-- Fallback -->
+                        <img
+                            src="{{ destination.image.url|cf_image:'format=webp,width=480,quality=20,fit=cover' }}"
+                            alt="{{ destination.name }}"
+                            {% if forloop.first %}fetchpriority="high"{% else %}loading="lazy"{% endif %}
+                            width="1920"
+                            height="1080"
+                            class="img-cover">
+                    </picture>
                 </div>
             {% else %}
                 <div class="placeholder-image {% cycle 'nordic' 'forest' 'coastal' %}">
@@ -118,8 +105,8 @@
     </div>
 
     <!-- Content Container -->
-    <div class="container hero-content-container position-relative" style="z-index: 10;">
-        <div class="row hero-content-container align-items-center">
+    <div class="container h-100 position-relative" style="z-index: 10;">
+        <div class="row h-100 align-items-center">
             <!-- Left Side - HygGeo Branding -->
             <div class="col-lg-6 col-md-12 text-white">
                 <div class="brand-content">
@@ -162,9 +149,9 @@
                             <i class="fas fa-leaf"></i>
                             <span id="badgeText">Eco-Friendly</span>
                         </div>
-                        <h2 class="destination-name" id="destinationName">{{ featured_destinations.0.name }}</h2>
-                        <p class="destination-country" id="destinationCountry"></p>
-                        <p class="destination-description" id="destinationDescription"></p>
+                        <h2 class="destination-name" id="destinationName">Loading...</h2>
+                        <p class="destination-country" id="destinationCountry">Beautiful Destination</p>
+                        <p class="destination-description" id="destinationDescription">Discover amazing sustainable travel experiences.</p>
                         <div class="destination-stats">
                             <div class="stat">
                                 <i class="fas fa-heart"></i>
@@ -234,15 +221,23 @@
                 <div class="experience-card">
                     <div class="experience-image">
                         {% if experience.main_image %}
-                            <!-- Sized exactly for display (240x140) -->
-                            <div class="img-aspect-container" style="aspect-ratio:240/140">
-                                <img
-                                    src="{{ experience.main_image.url|cf_image:'format=webp,width=240,quality=25,fit=cover' }}"
-                                    alt="{{ experience.title }}"
-                                    loading="lazy"
-                                    width="240"
-                                    height="140"
-                                    style="object-fit:cover;width:100%;height:100%">
+                            <!-- Aspect ratio container to prevent CLS -->
+                            <div class="img-aspect-container" style="aspect-ratio: 240/140;">
+                                <picture>
+                                    <!-- Cloudflare WebP with ultra compression -->
+                                    <source
+                                        type="image/webp"
+                                        srcset="{{ experience.main_image.url|cf_image:'format=webp,width=240,quality=20,fit=cover' }} 240w"
+                                        sizes="240px">
+                                    <!-- Fallback -->
+                                    <img
+                                        src="{{ experience.main_image.url|cf_image:'format=webp,width=240,quality=20,fit=cover' }}"
+                                        alt="{{ experience.title }}"
+                                        loading="lazy"
+                                        width="240"
+                                        height="140"
+                                        class="img-cover">
+                                </picture>
                             </div>
                         {% else %}
                             <div class="experience-placeholder">
@@ -260,7 +255,7 @@
                         </div>
                     </div>
                     <div class="experience-content">
-                        <h3 class="experience-title">{{ experience.title }}</h3>
+                        <h4 class="experience-title">{{ experience.title }}</h4>
                         <p class="experience-location">
                             <i class="fas fa-map-marker-alt me-2"></i>
                             {% if experience.destination %}{{ experience.destination.name }}{% else %}Amazing Location{% endif %}
@@ -331,15 +326,23 @@
                 <div class="experience-card">
                     <div class="experience-image">
                         {% if accommodation.main_image %}
-                            <!-- Sized exactly for display (240x140) -->
-                            <div class="img-aspect-container" style="aspect-ratio:240/140">
-                                <img
-                                    src="{{ accommodation.main_image.url|cf_image:'format=webp,width=240,quality=25,fit=cover' }}"
-                                    alt="{{ accommodation.name }}"
-                                    loading="lazy"
-                                    width="240"
-                                    height="140"
-                                    style="object-fit:cover;width:100%;height:100%">
+                            <!-- Aspect ratio container to prevent CLS -->
+                            <div class="img-aspect-container" style="aspect-ratio: 240/140;">
+                                <picture>
+                                    <!-- Cloudflare WebP with ultra compression -->
+                                    <source
+                                        type="image/webp"
+                                        srcset="{{ accommodation.main_image.url|cf_image:'format=webp,width=240,quality=20,fit=cover' }} 240w"
+                                        sizes="240px">
+                                    <!-- Fallback -->
+                                    <img
+                                        src="{{ accommodation.main_image.url|cf_image:'format=webp,width=240,quality=20,fit=cover' }}"
+                                        alt="{{ accommodation.name }}"
+                                        loading="lazy"
+                                        width="240"
+                                        height="140"
+                                        class="img-cover">
+                                </picture>
                             </div>
                         {% else %}
                             <div class="experience-placeholder" style="background: linear-gradient(135deg, #9b59b6, #8e44ad);">
@@ -357,7 +360,7 @@
                         </div>
                     </div>
                     <div class="experience-content">
-                        <h3 class="experience-title">{{ accommodation.name }}</h3>
+                        <h4 class="experience-title">{{ accommodation.name }}</h4>
                         <p class="experience-location">
                             <i class="fas fa-map-marker-alt me-2"></i>
                             {% if accommodation.destination %}{{ accommodation.destination.name }}{% else %}Prime Location{% endif %}
@@ -401,7 +404,7 @@
                         </div>
                     </div>
                     <div class="experience-content">
-                        <h3 class="experience-title">Sustainable Forest Retreat</h3>
+                        <h4 class="experience-title">Sustainable Forest Retreat</h4>
                         <p class="experience-location">
                             <i class="fas fa-map-marker-alt me-2"></i>
                             Swedish Wilderness
@@ -462,7 +465,7 @@
                     <div class="mb-2">
                         <i class="fas fa-heart" style="font-size: 2rem; color: var(--hygge-green);"></i>
                     </div>
-                    <h3 class="h5 fw-bold mb-2" style="color: var(--hygge-green);">Mindful Moments</h3>
+                    <h5 class="fw-bold mb-2" style="color: var(--hygge-green);">Mindful Moments</h5>
                     <p class="small mb-0" style="color: #5a5a5a;">
                         Slow down and savor each experience with intention and presence.
                     </p>
@@ -473,7 +476,7 @@
                     <div class="mb-2">
                         <i class="fas fa-users" style="font-size: 2rem; color: var(--hygge-green);"></i>
                     </div>
-                    <h3 class="h5 fw-bold mb-2" style="color: var(--hygge-green);">Connection</h3>
+                    <h5 class="fw-bold mb-2" style="color: var(--hygge-green);">Connection</h5>
                     <p class="small mb-0" style="color: #5a5a5a;">
                         Build genuine relationships with communities and environments.
                     </p>
@@ -484,7 +487,7 @@
                     <div class="mb-2">
                         <i class="fas fa-leaf" style="font-size: 2rem; color: var(--hygge-green);"></i>
                     </div>
-                    <h3 class="h5 fw-bold mb-2" style="color: var(--hygge-green);">Sustainability</h3>
+                    <h5 class="fw-bold mb-2" style="color: var(--hygge-green);">Sustainability</h5>
                     <p class="small mb-0" style="color: #5a5a5a;">
                         Travel responsibly with eco-friendly choices and local support.
                     </p>
@@ -520,7 +523,7 @@
                             </div>
                         </div>
                         <div class="flex-grow-1">
-                            <h3 class="h5 fw-bold mb-3" style="color: var(--hygge-green);">Did You Know?</h3>
+                            <h5 class="fw-bold mb-3" style="color: var(--hygge-green);">Did You Know?</h5>
                             <p class="text-muted mb-3">{{ fact.fact }}</p>
                             <div class="p-3 rounded" style="background-color: var(--hygge-warm-white);">
                                 <strong style="color: var(--hygge-green);">What You Can Do:</strong>
@@ -605,7 +608,7 @@
                     <div class="mb-3">
                         <i class="fas fa-hotel text-success" style="font-size: 3rem;"></i>
                     </div>
-                    <h3 class="h5 fw-bold" style="color: var(--hygge-green);">Eco Accommodations</h3>
+                    <h5 class="fw-bold" style="color: var(--hygge-green);">Eco Accommodations</h5>
                     <p class="text-muted">Certified sustainable hotels, hostels, and unique stays</p>
                 </div>
             </div>
@@ -614,7 +617,7 @@
                     <div class="mb-3">
                         <i class="fas fa-route text-info" style="font-size: 3rem;"></i>
                     </div>
-                    <h3 class="h5 fw-bold" style="color: var(--hygge-green);">Green Transportation</h3>
+                    <h5 class="fw-bold" style="color: var(--hygge-green);">Green Transportation</h5>
                     <p class="text-muted">Low-carbon travel options and route planning</p>
                 </div>
             </div>
@@ -623,7 +626,7 @@
                     <div class="mb-3">
                         <i class="fas fa-utensils text-warning" style="font-size: 3rem;"></i>
                     </div>
-                    <h3 class="h5 fw-bold" style="color: var(--hygge-green);">Local Experiences</h3>
+                    <h5 class="fw-bold" style="color: var(--hygge-green);">Local Experiences</h5>
                     <p class="text-muted">Authentic cultural activities and local food experiences</p>
                 </div>
             </div>
@@ -632,7 +635,7 @@
                     <div class="mb-3">
                         <i class="fas fa-hands-helping text-primary" style="font-size: 3rem;"></i>
                     </div>
-                    <h3 class="h5 fw-bold" style="color: var(--hygge-green);">Impact Tracking</h3>
+                    <h5 class="fw-bold" style="color: var(--hygge-green);">Impact Tracking</h5>
                     <p class="text-muted">See your positive environmental and social impact</p>
                 </div>
             </div>
@@ -1258,7 +1261,6 @@
     position: relative;
     max-width: 100%;
     overflow: hidden;
-    min-height: 420px;
 }
 
 .experiences-carousel {
@@ -1367,7 +1369,6 @@
     -webkit-line-clamp: 2;
     -webkit-box-orient: vertical;
     overflow: hidden;
-    min-height: 2.4em;
 }
 
 .experience-location {
@@ -1375,7 +1376,6 @@
     font-size: 0.75rem;
     margin-bottom: 0.75rem;
     font-weight: 500;
-    min-height: 1.2em;
 }
 
 .experience-description {
@@ -1387,7 +1387,6 @@
     gap: 0.5rem;
     margin-bottom: 0.75rem;
     flex-wrap: wrap;
-    min-height: 28px;
 }
 
 .experience-stats .stat {
@@ -1423,7 +1422,6 @@
     width: 100%;
     justify-content: center;
     box-shadow: 0 2px 8px rgba(74, 124, 89, 0.2);
-    min-height: 36px;
 }
 
 .btn-experience:hover {
@@ -1471,10 +1469,6 @@
 
 /* Mobile Optimizations */
 @media (max-width: 768px) {
-    .experiences-carousel-wrapper {
-        min-height: 380px;
-    }
-
     .experience-card {
         flex: 0 0 200px;
     }
@@ -1485,7 +1479,6 @@
 
     .experience-title {
         font-size: 0.9rem;
-        min-height: 2.2em;
     }
 
     .experience-image {
@@ -1494,10 +1487,6 @@
 }
 
 @media (max-width: 576px) {
-    .experiences-carousel-wrapper {
-        min-height: 360px;
-    }
-
     .experiences-carousel {
         gap: 1rem;
         padding: 0.5rem 0;
@@ -2545,20 +2534,43 @@ const destinationData = [
     {% endfor %}
 ];
 
-// Initialize immediately for faster content display
-const bannerSlides = document.querySelectorAll('.banner-slide');
-const indicators = document.querySelectorAll('.indicator');
+document.addEventListener('DOMContentLoaded', function() {
+    // CLS Prevention: Handle image loading to remove spinner
+    const imageContainers = document.querySelectorAll('.img-aspect-container');
+    imageContainers.forEach(container => {
+        const img = container.querySelector('img');
+        if (img) {
+            // If image is already loaded (cached)
+            if (img.complete) {
+                container.classList.add('loaded');
+            } else {
+                // Wait for image to load
+                img.addEventListener('load', function() {
+                    container.classList.add('loaded');
+                });
+                img.addEventListener('error', function() {
+                    container.classList.add('loaded'); // Hide spinner even on error
+                });
+            }
+        }
+    });
 
-if (bannerSlides.length > 0) {
-    // Update content immediately
+    const bannerSlides = document.querySelectorAll('.banner-slide');
+    const indicators = document.querySelectorAll('.indicator');
+
+    console.log('Banner Debug: Found', bannerSlides.length, 'banner slides');
+    console.log('Destination Data:', destinationData);
+
+    if (bannerSlides.length === 0) {
+        console.log('No banner slides found - carousel will not work');
+        return;
+    }
+
+    // Initialize first slide
     updateSlide(0);
 
-    // Defer auto-rotation only
-    if ('requestIdleCallback' in window) {
-        requestIdleCallback(startSlideShow, { timeout: 2000 });
-    } else {
-        setTimeout(startSlideShow, 100);
-    }
+    // Start auto-rotation
+    startSlideShow();
 
     // Pause on hover for destination panel
     const destinationPanel = document.querySelector('.destination-info-overlay');
@@ -2566,7 +2578,7 @@ if (bannerSlides.length > 0) {
         destinationPanel.addEventListener('mouseenter', stopSlideShow);
         destinationPanel.addEventListener('mouseleave', startSlideShow);
     }
-}
+});
 
 function changeSlide(direction) {
     const bannerSlides = document.querySelectorAll('.banner-slide');
@@ -2597,6 +2609,8 @@ function updateSlide(index) {
     const bannerSlides = document.querySelectorAll('.banner-slide');
     const indicators = document.querySelectorAll('.indicator');
 
+    console.log(`Updating slide to index: ${index}, total slides: ${bannerSlides.length}`);
+
     if (bannerSlides.length === 0 || !destinationData[index]) return;
 
     // Update banner slides
@@ -2605,6 +2619,7 @@ function updateSlide(index) {
 
     if (bannerSlides[index]) {
         bannerSlides[index].classList.add('active');
+        console.log(`Activated banner slide ${index}`);
     }
     if (indicators[index]) {
         indicators[index].classList.add('active');
@@ -2615,6 +2630,8 @@ function updateSlide(index) {
 }
 
 function updateDestinationInfo(destination) {
+    console.log('Updating destination info:', destination);
+
     const infoContent = document.getElementById('destinationInfo');
     if (!infoContent) return;
 
@@ -2661,10 +2678,15 @@ function updateDestinationInfo(destination) {
 
 function startSlideShow() {
     const bannerSlides = document.querySelectorAll('.banner-slide');
+    console.log(`Starting slideshow with ${bannerSlides.length} slides`);
 
-    if (bannerSlides.length <= 1) return;
+    if (bannerSlides.length <= 1) {
+        console.log('Not enough slides for slideshow');
+        return;
+    }
 
     slideInterval = setInterval(() => {
+        console.log('Auto-changing slide...');
         changeSlide(1);
     }, 5000); // Change slide every 5 seconds
 }

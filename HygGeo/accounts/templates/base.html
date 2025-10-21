@@ -6,24 +6,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{% block title %}HygGeo - Sustainable Traveling{% endblock %}</title>
 
-    <!-- DNS prefetch and preconnect for critical third-party resources -->
-    <!-- Fonts - highest priority, preconnect to both Google Fonts API and CDN -->
-    <link rel="dns-prefetch" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="dns-prefetch" href="https://fonts.gstatic.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <!-- CDN for CSS/JS - critical resources, preconnect for faster loading -->
-    <link rel="preconnect" href="https://cdn.jsdelivr.net">
-    <link rel="preconnect" href="https://cdnjs.cloudflare.com">
-
-    <!-- Preload critical fonts - all weights used above fold to prevent CLS -->
-    <!-- Poppins Regular 400 - body text, nav links -->
-    <link rel="preload" href="https://fonts.gstatic.com/s/poppins/v20/pxiEyp8kv8JHgFVrJJfecnFHGPc.woff2" as="font" type="font/woff2" crossorigin>
-    <!-- Poppins Medium 500 - nav links, headings -->
-    <link rel="preload" href="https://fonts.gstatic.com/s/poppins/v20/pxiByp8kv8JHgFVrLGT9Z1xlFd2JQEk.woff2" as="font" type="font/woff2" crossorigin>
-    <!-- Poppins Bold 700 - H1, hero text -->
-    <link rel="preload" href="https://fonts.gstatic.com/s/poppins/v20/pxiByp8kv8JHgFVrLCz7Z1xlFd2JQEk.woff2" as="font" type="font/woff2" crossorigin>
-
     <!-- Favicon and Icon Links - Optimized, deduplicated -->
     <link rel="icon" type="image/png" sizes="192x192" href="{% static 'android-chrome-192x192.png' %}">
     <link rel="apple-touch-icon" sizes="180x180" href="{% static 'apple-touch-icon.png' %}">
@@ -67,63 +49,106 @@
     <meta name="msapplication-config" content="{% static 'browserconfig.xml' %}">
     <meta name="application-name" content="HygGeo">
 
-    <!-- Defer Analytics/Ad scripts to improve initial page load - optimized for performance -->
+    <!-- Preconnect to external domains for faster loading -->
+    <link rel="preconnect" href="https://www.hyggeo.com">
+    <link rel="dns-prefetch" href="https://www.hyggeo.com">
+    <link rel="preconnect" href="https://cdn.jsdelivr.net">
+    <link rel="dns-prefetch" href="https://cdn.jsdelivr.net">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="dns-prefetch" href="https://fonts.googleapis.com">
+
+    <!-- Preload critical font to prevent CLS -->
+    <link rel="preload" href="https://fonts.gstatic.com/s/poppins/v20/pxiEyp8kv8JHgFVrJJfecg.woff2" as="font" type="font/woff2" crossorigin>
+
+    <!-- Site Structure and Organization Schema -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "WebSite",
+      "name": "HygGeo - Sustainable Traveling",
+      "alternateName": "HygGeo",
+      "url": "{{ request.scheme }}://{{ request.get_host }}",
+      "description": "Explore sustainable travel experiences in our directory. Eco-friendly adventures, mindful journeys, responsible tourism & green getaways for conscious travelers.",
+      "potentialAction": {
+        "@type": "SearchAction",
+        "target": {
+          "@type": "EntryPoint",
+          "urlTemplate": "{{ request.scheme }}://{{ request.get_host }}/experiences/?search={search_term_string}"
+        },
+        "query-input": "required name=search_term_string"
+      },
+      "mainEntity": {
+        "@type": "Organization",
+        "name": "HygGeo",
+        "url": "{{ request.scheme }}://{{ request.get_host }}",
+        "description": "Sustainable travel platform promoting hygge and responsible tourism",
+        "sameAs": [
+          "{% block organization_social %}{% endblock %}"
+        ]
+      }
+    }
+    </script>
+
+    <!-- Defer Analytics/Ad scripts to improve initial page load -->
     <script>
       // Initialize dataLayer early but defer loading
       window.dataLayer = window.dataLayer || [];
       function gtag(){dataLayer.push(arguments);}
       gtag('js', new Date());
-      // Configure all analytics IDs upfront
       gtag('config', 'G-TSVRNN9JFB');
       gtag('config', 'AW-17493025780');
       gtag('config', 'G-8L2ZHG9R99');
 
-      // Load analytics after page is interactive and idle
-      // Use single gtag.js bundle for all GA properties to reduce unused JS
+      // Load analytics after initial content and with idle callback
+      // Delayed significantly to not interfere with LCP
       function loadAnalytics() {
-        // Single gtag.js for all Google Analytics properties (reduces 140KB+ to ~45KB)
-        var ga = document.createElement('script');
-        ga.async = true;
-        ga.src = 'https://www.googletagmanager.com/gtag/js?id=G-TSVRNN9JFB';
-        document.head.appendChild(ga);
+        // Google Analytics - load one at a time with significant delays
+        setTimeout(function() {
+          var ga1 = document.createElement('script');
+          ga1.async = true;
+          ga1.src = 'https://www.googletagmanager.com/gtag/js?id=G-TSVRNN9JFB';
+          document.head.appendChild(ga1);
+        }, 3000);
 
-        // AdSense - very low priority, only after user interaction or 10s
+        setTimeout(function() {
+          var ga2 = document.createElement('script');
+          ga2.async = true;
+          ga2.src = 'https://www.googletagmanager.com/gtag/js?id=AW-17493025780';
+          document.head.appendChild(ga2);
+        }, 4000);
+
+        setTimeout(function() {
+          var ga3 = document.createElement('script');
+          ga3.async = true;
+          ga3.src = 'https://www.googletagmanager.com/gtag/js?id=G-8L2ZHG9R99';
+          document.head.appendChild(ga3);
+        }, 5000);
+
+        // AdSense - lowest priority, load much later
         setTimeout(function() {
           var ads = document.createElement('script');
           ads.async = true;
           ads.src = 'https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-3243152138999761';
           ads.crossOrigin = 'anonymous';
           document.head.appendChild(ads);
-        }, 10000);
+        }, 6000);
 
-        // Other ad script - lowest priority
+        // Other ad script - lowest priority, load much later
         setTimeout(function() {
           var adScript = document.createElement('script');
           adScript.async = true;
           adScript.src = 'https://emrldtp.com/NDYwMDk2.js?t=460096';
           document.head.appendChild(adScript);
-        }, 12000);
+        }, 8000);
       }
 
-      // Load analytics only after user interaction OR after 5 seconds idle
-      var analyticsLoaded = false;
-      function loadAnalyticsOnce() {
-        if (!analyticsLoaded) {
-          analyticsLoaded = true;
-          loadAnalytics();
-        }
-      }
-
-      // Load on first user interaction (scroll, click, touch)
-      ['scroll', 'click', 'touchstart', 'mousemove', 'keydown'].forEach(function(event) {
-        window.addEventListener(event, loadAnalyticsOnce, { once: true, passive: true });
-      });
-
-      // Fallback: load after idle or 5 seconds
+      // Use requestIdleCallback if available, otherwise fallback to load event
+      // Increased timeout to ensure page is fully loaded first
       if ('requestIdleCallback' in window) {
-        requestIdleCallback(loadAnalyticsOnce, { timeout: 5000 });
+        requestIdleCallback(loadAnalytics, { timeout: 5000 });
       } else {
-        setTimeout(loadAnalyticsOnce, 5000);
+        window.addEventListener('load', loadAnalytics);
       }
     </script>
 
@@ -137,99 +162,32 @@
             --bs-gutter-x: .75rem;
         }
 
-        /* Font fallback with size-adjust to prevent CLS - Poppins Regular 400 */
+        /* Font fallback with size-adjust to prevent CLS */
         @font-face {
             font-family: 'Poppins-fallback';
             src: local('Arial');
-            font-weight: 400;
             size-adjust: 107%;
             ascent-override: 92%;
             descent-override: 24%;
             line-gap-override: 0%;
-        }
-
-        /* Font fallback for Poppins Medium 500 */
-        @font-face {
-            font-family: 'Poppins-fallback';
-            src: local('Arial');
-            font-weight: 500;
-            size-adjust: 107%;
-            ascent-override: 92%;
-            descent-override: 24%;
-            line-gap-override: 0%;
-        }
-
-        /* Font fallback for Poppins Bold 700 */
-        @font-face {
-            font-family: 'Poppins-fallback';
-            src: local('Arial');
-            font-weight: 700;
-            size-adjust: 107%;
-            ascent-override: 92%;
-            descent-override: 24%;
-            line-gap-override: 0%;
-        }
-
-        /* FontAwesome fallback to prevent icon shifts - reserve icon space */
-        @font-face {
-            font-family: 'FontAwesome-fallback';
-            src: local('Arial');
-            size-adjust: 100%;
         }
 
         /* Critical CSS - Minimal Bootstrap + Layout */
         *,::after,::before{box-sizing:border-box}
         body{margin:0;font-family:'Poppins','Poppins-fallback',-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,'Helvetica Neue',Arial,sans-serif;font-size:1rem;font-weight:400;line-height:1.5;color:#212529;background-color:#fff}
-        h1{margin-top:0;margin-bottom:1.5rem;font-weight:700;line-height:1.2}
-        h2,h3,h4,h5,h6{margin-top:0;margin-bottom:0.5rem;font-weight:500;line-height:1.2}
+        h1,h2,h3,h4,h5,h6{margin-top:0;margin-bottom:0.5rem;font-weight:500;line-height:1.2}
         p{margin-top:0;margin-bottom:1rem}
         a{color:#0d6efd;text-decoration:underline}
         a:hover{color:#0a58ca}
         img{vertical-align:middle}
 
-        /* Main element - let content define height naturally */
-        main{display:block;position:relative}
-
-        /* FontAwesome base styles - reserve space to prevent CLS */
-        .fa,.fas,.far,.fab,.fal,.fad{font-family:'Font Awesome 6 Free','FontAwesome-fallback',sans-serif;font-weight:900;display:inline-block;font-style:normal;font-variant:normal;text-rendering:auto;line-height:1;min-width:1.25em;width:1.25em;height:1em;text-align:center;vertical-align:-0.125em}
-        /* Reserve space for icons in navbar */
-        .navbar-nav .nav-link i{min-width:1.25em;display:inline-block}
-        .navbar-brand i{min-width:1.5rem;display:inline-block}
-
-        /* Navbar - Complete styles to prevent CLS */
-        .navbar{position:relative;z-index:1030;display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;padding:0.5rem 0;background:linear-gradient(135deg, #2d5a3d, #4a7c59);box-shadow:0 2px 10px rgba(0,0,0,0.1);min-height:70px}
+        /* Navbar - prevent flash */
+        .navbar{position:relative;display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;padding:0.5rem 0;background:linear-gradient(135deg, #2d5a3d, #4a7c59);box-shadow:0 2px 10px rgba(0,0,0,0.1)}
         .navbar-brand{padding:0.25rem 0;margin-right:1rem;font-size:1.8rem;font-weight:700;color:#fff !important;text-decoration:none;white-space:nowrap;display:flex;align-items:center}
-        .navbar-brand i{margin-right:0.5rem;font-size:1.5rem}
-        .navbar-nav{display:flex;flex-direction:column;padding-left:0;margin-bottom:0;list-style:none;width:100%}
-        .navbar-nav .nav-item{margin:0}
-        .navbar-nav .nav-link{color:rgba(255,255,255,0.9) !important;font-weight:500;padding:0.5rem 1rem;white-space:nowrap;text-decoration:none;display:block;transition:background-color 0.15s ease-in-out}
-        .navbar-nav .nav-link:hover{background-color:rgba(255,255,255,0.1);border-radius:0.25rem}
-        .navbar-toggler{padding:0.25rem 0.75rem;font-size:1.25rem;line-height:1;background-color:transparent;border:1px solid rgba(255,255,255,0.5);border-radius:0.25rem;cursor:pointer}
-        .navbar-toggler:focus{box-shadow:0 0 0 0.25rem rgba(255,255,255,0.25)}
+        .navbar-nav{display:flex;flex-direction:column;padding-left:0;margin-bottom:0;list-style:none}
+        .navbar-nav .nav-link{color:rgba(255,255,255,0.9) !important;font-weight:500;padding:0.5rem 1rem;white-space:nowrap;text-decoration:none}
+        .navbar-toggler{padding:0.25rem 0.75rem;font-size:1.25rem;line-height:1;background-color:transparent;border:1px solid rgba(255,255,255,0.5);border-radius:0.25rem}
         .navbar-toggler-icon{display:inline-block;width:1.5em;height:1.5em;vertical-align:middle;background-image:url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 30 30'%3e%3cpath stroke='rgba(255, 255, 255, 0.9)' stroke-linecap='round' stroke-miterlimit='10' stroke-width='2' d='M4 7h22M4 15h22M4 23h22'/%3e%3c/svg%3e");background-repeat:no-repeat;background-position:center;background-size:100%}
-        .navbar-collapse{flex-basis:100%;flex-grow:1;align-items:center;display:none}
-        .navbar-collapse.show{display:block}
-        .navbar-collapse.collapsing{height:0;overflow:hidden;transition:height 0.35s ease}
-
-        /* Navbar expand at large screens */
-        @media (min-width:992px){
-            .navbar-expand-lg{flex-wrap:nowrap;justify-content:flex-start}
-            .navbar-expand-lg .navbar-nav{flex-direction:row;width:auto}
-            .navbar-expand-lg .navbar-nav .nav-link{padding-right:1rem;padding-left:1rem}
-            .navbar-expand-lg .navbar-collapse{display:flex !important;flex-basis:auto}
-            .navbar-expand-lg .navbar-toggler{display:none}
-        }
-
-        /* Navigation items spacing */
-        .ms-auto{margin-left:auto !important}
-        .me-auto{margin-right:auto !important}
-        .nav-item{list-style:none}
-
-        /* Dropdown support */
-        .dropdown-menu{position:absolute;z-index:1000;display:none;min-width:10rem;padding:0.5rem 0;margin:0;font-size:1rem;color:#212529;text-align:left;list-style:none;background-color:#fff;background-clip:padding-box;border:1px solid rgba(0,0,0,0.15);border-radius:0.25rem}
-        .dropdown-menu.show{display:block}
-        .dropdown-item{display:block;width:100%;padding:0.25rem 1rem;clear:both;font-weight:400;color:#212529;text-align:inherit;text-decoration:none;white-space:nowrap;background-color:transparent;border:0}
-        .dropdown-item:hover{background-color:#f8f9fa}
 
         /* Layout */
         .container{width:100%;padding-right:var(--bs-gutter-x);padding-left:var(--bs-gutter-x);margin-right:auto;margin-left:auto}
@@ -253,56 +211,37 @@
         .overflow-hidden{overflow:hidden !important}
 
         /* Button base */
-        .btn{display:inline-block;font-weight:400;line-height:1.5;color:#212529;text-align:center;text-decoration:none;vertical-align:middle;cursor:pointer;user-select:none;background-color:transparent;border:1px solid transparent;padding:0.375rem 0.75rem;font-size:1rem;border-radius:0.25rem;min-height:44px}
+        .btn{display:inline-block;font-weight:400;line-height:1.5;color:#212529;text-align:center;text-decoration:none;vertical-align:middle;cursor:pointer;user-select:none;background-color:transparent;border:1px solid transparent;padding:0.375rem 0.75rem;font-size:1rem;border-radius:0.25rem}
         .btn-light{color:#000;background-color:#f8f9fa;border-color:#f8f9fa}
-        .btn-lg{padding:0.5rem 1rem;font-size:1.25rem;border-radius:0.3rem;min-height:48px}
-
-        /* Hero/above-fold critical styles */
-        .hero-banner{background-size:cover;background-position:center;min-height:500px;position:relative}
-        .hero-content{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:100%;text-align:center;z-index:2}
-        .display-2{font-size:3.5rem;font-weight:700;line-height:1.2}
-        .lead{font-size:1.25rem;font-weight:300}
-        .text-shadow{text-shadow:2px 2px 4px rgba(0,0,0,0.5)}
-
-        /* Gap utilities */
-        .gap-3{gap:1rem !important}
-        .flex-wrap{flex-wrap:wrap !important}
-
-        /* Mobile responsive */
-        @media (max-width:768px){
-            .hero-banner{min-height:400px}
-            .display-2{font-size:2.5rem}
-        }
+        .btn-lg{padding:0.5rem 1rem;font-size:1.25rem;border-radius:0.3rem}
     </style>
 
-    <!-- Load fonts async - preloaded above for faster download -->
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;700&display=swap" media="print" onload="this.media='all'">
+    <!-- Load CSS asynchronously to not block LCP -->
+    <script>
+    // Load CSS immediately but non-blocking
+    (function() {
+        function loadCSS(href) {
+            var link = document.createElement('link');
+            link.rel = 'stylesheet';
+            link.href = href;
+            document.head.appendChild(link);
+        }
 
-    <!-- Load Bootstrap async - critical CSS inlined above -->
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" media="print" onload="this.media='all'">
-
-    <!-- FontAwesome: Load async - icon space reserved in critical CSS -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/fontawesome.min.css" media="print" onload="this.media='all'">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/solid.min.css" media="print" onload="this.media='all'">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/brands.min.css" media="print" onload="this.media='all'">
-
-    <!-- Load custom CSS async -->
-    <link rel="stylesheet" href="{% static 'css/base.css' %}" media="print" onload="this.media='all'">
+        // Load fonts first, then other CSS
+        loadCSS('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
+        loadCSS('https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css');
+        loadCSS('https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css');
+        loadCSS('{% static "css/base.css" %}');
+    })();
+    </script>
 
     <!-- Noscript fallback -->
     <noscript>
-        <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;700&display=swap">
-        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css">
-        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/fontawesome.min.css">
-        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/solid.min.css">
-        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/brands.min.css">
-        <link rel="stylesheet" href="{% static 'css/base.css' %}">
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+        <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+        <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+        <link href="{% static 'css/base.css' %}" rel="stylesheet">
     </noscript>
-
-    <!-- Ensure async CSS loads on older browsers -->
-    <script>
-    (function(){var l=document.querySelectorAll('link[media="print"][onload]');for(var i=0;i<l.length;i++){l[i].addEventListener('load',function(){this.media='all'})}})();
-    </script>
 
     {% block extra_head %}{% endblock %}
 </head>
@@ -761,35 +700,6 @@
             });
         }
     })();
-    </script>
-
-    <!-- Site Structure and Organization Schema (deferred to end for faster LCP) -->
-    <script type="application/ld+json">
-    {
-      "@context": "https://schema.org",
-      "@type": "WebSite",
-      "name": "HygGeo - Sustainable Traveling",
-      "alternateName": "HygGeo",
-      "url": "{{ request.scheme }}://{{ request.get_host }}",
-      "description": "Explore sustainable travel experiences in our directory. Eco-friendly adventures, mindful journeys, responsible tourism & green getaways for conscious travelers.",
-      "potentialAction": {
-        "@type": "SearchAction",
-        "target": {
-          "@type": "EntryPoint",
-          "urlTemplate": "{{ request.scheme }}://{{ request.get_host }}/experiences/?search={search_term_string}"
-        },
-        "query-input": "required name=search_term_string"
-      },
-      "mainEntity": {
-        "@type": "Organization",
-        "name": "HygGeo",
-        "url": "{{ request.scheme }}://{{ request.get_host }}",
-        "description": "Sustainable travel platform promoting hygge and responsible tourism",
-        "sameAs": [
-          "{% block organization_social %}{% endblock %}"
-        ]
-      }
-    }
     </script>
 
     {% block extra_js %}{% endblock %}

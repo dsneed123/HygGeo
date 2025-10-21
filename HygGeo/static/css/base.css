@@ -6,43 +6,12 @@
     --hygge-warm-white: #fdfcf8;
     --hygge-gold: #d4a574;
     --hygge-soft-blue: #6b9dc0;
-    /* Accessible color variants for WCAG AA compliance (4.5:1 contrast minimum) */
-    --hygge-text-secondary: #5a5a5a; /* 7.0:1 contrast on white - replaces Bootstrap text-muted */
-    --hygge-text-body: #2b2b2b; /* 13.5:1 contrast on white - better than #333 */
 }
 
 body {
     font-family: 'Poppins', sans-serif;
     background-color: var(--hygge-warm-white);
-    color: var(--hygge-text-body);
-}
-
-/* Accessibility: Override Bootstrap .text-muted with WCAG AA compliant color */
-.text-muted {
-    color: var(--hygge-text-secondary) !important;
-}
-
-/* Touch target accessibility - minimum 44x44px for better mobile UX */
-/* Only apply to primary interactive elements, not all buttons/links */
-.btn {
-    min-height: 44px;
-    padding: 0.5rem 1rem;
-}
-
-.btn-lg {
-    min-height: 48px;
-}
-
-.nav-link {
-    min-height: 44px;
-    padding: 0.5rem 1rem;
-}
-
-/* Keyboard navigation focus - use browser default for better performance */
-/* Only enhance for primary interactive elements */
-a:focus-visible, button:focus-visible, .btn:focus-visible {
-    outline: 2px solid var(--hygge-gold);
-    outline-offset: 2px;
+    color: #333;
 }
 
 .navbar {
@@ -85,6 +54,7 @@ a:focus-visible, button:focus-visible, .btn:focus-visible {
 .navbar-nav .nav-link {
     color: rgba(255,255,255,0.9) !important;
     font-weight: 500;
+    transition: color 0.3s ease;
     padding: 0.5rem 1rem;
     white-space: nowrap;
 }
@@ -104,9 +74,11 @@ a:focus-visible, button:focus-visible, .btn:focus-visible {
     font-weight: 500;
     padding: 10px 25px;
     border-radius: 25px;
+    transition: all 0.3s ease;
 }
 
 .btn-hygge:hover {
+    transform: translateY(-2px);
     box-shadow: 0 5px 15px rgba(45, 90, 61, 0.3);
     color: white;
 }
@@ -118,6 +90,7 @@ a:focus-visible, button:focus-visible, .btn:focus-visible {
     font-weight: 500;
     padding: 8px 20px;
     border-radius: 25px;
+    transition: all 0.3s ease;
 }
 
 .btn-outline-hygge:hover {
@@ -130,10 +103,11 @@ a:focus-visible, button:focus-visible, .btn:focus-visible {
     border: none;
     border-radius: 15px;
     box-shadow: 0 5px 20px rgba(0,0,0,0.08);
+    transition: transform 0.3s ease;
 }
 
 .card-hygge:hover {
-    box-shadow: 0 8px 25px rgba(0,0,0,0.12);
+    transform: translateY(-5px);
 }
 
 .footer {
@@ -160,10 +134,17 @@ a:focus-visible, button:focus-visible, .btn:focus-visible {
         padding: 0;
         list-style: none;
         overflow: hidden;
+        transition: max-height 0.3s ease;
     }
 
     .mobile-submenu.show {
         display: block;
+        animation: slideDown 0.3s ease;
+    }
+
+    @keyframes slideDown {
+        from { max-height: 0; opacity: 0; }
+        to { max-height: 300px; opacity: 1; }
     }
 
     .mobile-submenu li {
@@ -180,11 +161,13 @@ a:focus-visible, button:focus-visible, .btn:focus-visible {
         text-decoration: none;
         padding: 12px 30px;
         font-weight: 400;
+        transition: all 0.2s ease;
     }
 
     .mobile-submenu a:hover {
         background-color: var(--hygge-light-green);
         color: white;
+        padding-left: 35px;
     }
 
     .mobile-dropdown-toggle {
@@ -200,6 +183,7 @@ a:focus-visible, button:focus-visible, .btn:focus-visible {
         right: 15px;
         top: 50%;
         transform: translateY(-50%);
+        transition: transform 0.3s ease;
     }
 
     .mobile-dropdown-toggle.active::after {
@@ -229,6 +213,7 @@ a:focus-visible, button:focus-visible, .btn:focus-visible {
     .navbar-nav .dropdown-menu .dropdown-item {
         color: rgba(255, 255, 255, 0.95);
         padding: 12px 20px;
+        transition: all 0.2s ease;
         white-space: nowrap;
     }
 
@@ -236,6 +221,7 @@ a:focus-visible, button:focus-visible, .btn:focus-visible {
     .navbar-nav .dropdown-menu .dropdown-item:focus {
         background-color: var(--hygge-light-green);
         color: white;
+        padding-left: 25px;
     }
 
     .navbar-nav .dropdown-menu .dropdown-divider {
