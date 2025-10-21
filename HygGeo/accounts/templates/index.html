@@ -9,14 +9,14 @@
 {% if featured_destinations.0.image %}
 <link rel="preload"
       as="image"
-      href="{{ featured_destinations.0.image.url|cf_image:'format=webp,width=800,quality=15,fit=cover' }}"
+      href="{{ featured_destinations.0.image.url|cf_image:'format=webp,width=640,quality=10,fit=cover' }}"
       type="image/webp"
       fetchpriority="high">
 {% endif %}
 
-<!-- Critical CSS - Minimal, optimized for LCP -->
+<!-- Critical CSS - Expanded for faster initial render -->
 <style>
-/* Hero banner - gradient background for instant render */
+/* Hero section - all styles needed for above-the-fold */
 .hero-banner{position:relative;background:linear-gradient(135deg,#1a3a2a 0%,#2d5a3d 50%,#1a3a2a 100%);display:flex;align-items:center;min-height:70vh;overflow:hidden}
 .banner-carousel{position:absolute;top:0;left:0;width:100%;height:100%;z-index:1}
 .banner-slide{position:absolute;top:0;left:0;width:100%;height:100%;opacity:0;visibility:hidden;transition:opacity 0.8s ease-in-out}
@@ -24,9 +24,39 @@
 .img-aspect-container{position:relative;width:100%;height:100%;overflow:hidden}
 .img-aspect-container img{position:absolute;top:0;left:0;width:100%;height:100%;object-fit:cover;object-position:center}
 .banner-overlay{position:absolute;top:0;left:0;width:100%;height:100%;background:linear-gradient(to right,rgba(0,0,0,0.6) 0%,rgba(0,0,0,0.3) 50%,rgba(0,0,0,0.5) 100%);z-index:2}
-.container{position:relative;z-index:10}
+/* Text elements - prevent reflow */
+.display-2{font-size:3.5rem;line-height:1.2;font-weight:700;margin-bottom:1.5rem}
+.h3{font-size:1.75rem;margin-top:1rem}
+.lead{font-size:1.25rem;line-height:1.5;margin-bottom:1.5rem}
+.text-shadow{text-shadow:2px 2px 4px rgba(0,0,0,0.8)}
+.text-white{color:#fff}
+.text-warning{color:#ffc107}
+/* Buttons */
+.btn{display:inline-block;padding:0.5rem 1rem;font-weight:600;text-align:center;text-decoration:none;border-radius:0.25rem;transition:transform 0.2s}
+.btn-light{background:#f8f9fa;color:#000;border:1px solid #f8f9fa}
+.btn-warning{background:#ffc107;color:#000;border:1px solid #ffc107}
+.btn-lg{padding:0.5rem 1.5rem;font-size:1.25rem}
+.btn:hover{transform:translateY(-2px)}
+/* Layout - critical only */
+.container{width:100%;max-width:1140px;margin:0 auto;padding:0 15px;position:relative;z-index:10}
+.row{display:flex;flex-wrap:wrap;margin:0 -15px}
+.col-lg-6{flex:0 0 50%;max-width:50%;padding:0 15px}
+.h-100{height:100%}
+.align-items-center{align-items:center}
+.d-flex{display:flex}
+.flex-wrap{flex-wrap:wrap}
+.gap-3{gap:1rem}
+.mb-4{margin-bottom:1.5rem}
+.mt-3{margin-top:1rem}
+.me-2{margin-right:0.5rem}
+@media(max-width:991px){
+.col-lg-6{flex:0 0 100%;max-width:100%}
+}
 @media(max-width:767px){
 .hero-banner{min-height:60vh}
+.display-2{font-size:2.5rem}
+.lead{font-size:1.1rem}
+.btn-lg{font-size:1rem;padding:0.4rem 1rem}
 }
 </style>
 {% endblock %}
@@ -41,18 +71,18 @@
             {% if destination.image %}
                 <div class="img-aspect-container">
                     {% if forloop.first %}
-                        <!-- First slide: Ultra-tiny image for fast LCP -->
+                        <!-- First slide: Ultra-compressed for fastest LCP (~3-5KB) -->
                         <img
-                            src="{{ destination.image.url|cf_image:'format=webp,width=800,quality=15,fit=cover' }}"
+                            src="{{ destination.image.url|cf_image:'format=webp,width=640,quality=10,fit=cover' }}"
                             alt="{{ destination.name }}"
                             fetchpriority="high"
                             width="1920"
                             height="1080"
                             style="object-fit:cover;width:100%;height:100%">
                     {% else %}
-                        <!-- Other slides: Lazy load with better quality -->
+                        <!-- Other slides: Lazy load -->
                         <img
-                            src="{{ destination.image.url|cf_image:'format=webp,width=1280,quality=30,fit=cover' }}"
+                            src="{{ destination.image.url|cf_image:'format=webp,width=1000,quality=25,fit=cover' }}"
                             alt="{{ destination.name }}"
                             loading="lazy"
                             width="1920"
@@ -187,23 +217,15 @@
                 <div class="experience-card">
                     <div class="experience-image">
                         {% if experience.main_image %}
-                            <!-- Aspect ratio container to prevent CLS -->
-                            <div class="img-aspect-container" style="aspect-ratio: 240/140;">
-                                <picture>
-                                    <!-- Cloudflare WebP with ultra compression -->
-                                    <source
-                                        type="image/webp"
-                                        srcset="{{ experience.main_image.url|cf_image:'format=webp,width=240,quality=20,fit=cover' }} 240w"
-                                        sizes="240px">
-                                    <!-- Fallback -->
-                                    <img
-                                        src="{{ experience.main_image.url|cf_image:'format=webp,width=240,quality=20,fit=cover' }}"
-                                        alt="{{ experience.title }}"
-                                        loading="lazy"
-                                        width="240"
-                                        height="140"
-                                        class="img-cover">
-                                </picture>
+                            <!-- Simplified for faster render -->
+                            <div class="img-aspect-container" style="aspect-ratio:240/140">
+                                <img
+                                    src="{{ experience.main_image.url|cf_image:'format=webp,width=240,quality=15,fit=cover' }}"
+                                    alt="{{ experience.title }}"
+                                    loading="lazy"
+                                    width="240"
+                                    height="140"
+                                    style="object-fit:cover;width:100%;height:100%">
                             </div>
                         {% else %}
                             <div class="experience-placeholder">
@@ -292,23 +314,15 @@
                 <div class="experience-card">
                     <div class="experience-image">
                         {% if accommodation.main_image %}
-                            <!-- Aspect ratio container to prevent CLS -->
-                            <div class="img-aspect-container" style="aspect-ratio: 240/140;">
-                                <picture>
-                                    <!-- Cloudflare WebP with ultra compression -->
-                                    <source
-                                        type="image/webp"
-                                        srcset="{{ accommodation.main_image.url|cf_image:'format=webp,width=240,quality=20,fit=cover' }} 240w"
-                                        sizes="240px">
-                                    <!-- Fallback -->
-                                    <img
-                                        src="{{ accommodation.main_image.url|cf_image:'format=webp,width=240,quality=20,fit=cover' }}"
-                                        alt="{{ accommodation.name }}"
-                                        loading="lazy"
-                                        width="240"
-                                        height="140"
-                                        class="img-cover">
-                                </picture>
+                            <!-- Simplified for faster render -->
+                            <div class="img-aspect-container" style="aspect-ratio:240/140">
+                                <img
+                                    src="{{ accommodation.main_image.url|cf_image:'format=webp,width=240,quality=15,fit=cover' }}"
+                                    alt="{{ accommodation.name }}"
+                                    loading="lazy"
+                                    width="240"
+                                    height="140"
+                                    style="object-fit:cover;width:100%;height:100%">
                             </div>
                         {% else %}
                             <div class="experience-placeholder" style="background: linear-gradient(135deg, #9b59b6, #8e44ad);">
@@ -1227,6 +1241,7 @@
     position: relative;
     max-width: 100%;
     overflow: hidden;
+    min-height: 420px;
 }
 
 .experiences-carousel {
@@ -1335,6 +1350,7 @@
     -webkit-line-clamp: 2;
     -webkit-box-orient: vertical;
     overflow: hidden;
+    min-height: 2.4em;
 }
 
 .experience-location {
@@ -1342,6 +1358,7 @@
     font-size: 0.75rem;
     margin-bottom: 0.75rem;
     font-weight: 500;
+    min-height: 1.2em;
 }
 
 .experience-description {
@@ -1353,6 +1370,7 @@
     gap: 0.5rem;
     margin-bottom: 0.75rem;
     flex-wrap: wrap;
+    min-height: 28px;
 }
 
 .experience-stats .stat {
@@ -1388,6 +1406,7 @@
     width: 100%;
     justify-content: center;
     box-shadow: 0 2px 8px rgba(74, 124, 89, 0.2);
+    min-height: 36px;
 }
 
 .btn-experience:hover {
@@ -1435,6 +1454,10 @@
 
 /* Mobile Optimizations */
 @media (max-width: 768px) {
+    .experiences-carousel-wrapper {
+        min-height: 380px;
+    }
+
     .experience-card {
         flex: 0 0 200px;
     }
@@ -1445,6 +1468,7 @@
 
     .experience-title {
         font-size: 0.9rem;
+        min-height: 2.2em;
     }
 
     .experience-image {
@@ -1453,6 +1477,10 @@
 }
 
 @media (max-width: 576px) {
+    .experiences-carousel-wrapper {
+        min-height: 360px;
+    }
+
     .experiences-carousel {
         gap: 1rem;
         padding: 0.5rem 0;
