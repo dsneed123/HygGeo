@@ -5,16 +5,13 @@
 {% block title %}HygGeo - Sustainable Travel with Danish Hygge{% endblock %}
 
 {% block extra_head %}
-<!-- Preload hero image optimized for mobile-first -->
+<!-- Preload hero image - exact match to LCP image -->
 {% if featured_destinations.0.image %}
 <link rel="preload"
       as="image"
-      href="{{ featured_destinations.0.image.url|cf_image:'format=webp,width=800,quality=25,fit=cover' }}"
+      href="{{ featured_destinations.0.image.url|cf_image:'format=webp,width=1200,quality=30,fit=cover' }}"
       type="image/webp"
-      fetchpriority="high"
-      imagesrcset="{{ featured_destinations.0.image.url|cf_image:'format=webp,width=800,quality=25,fit=cover' }} 800w,
-                   {{ featured_destinations.0.image.url|cf_image:'format=webp,width=1200,quality=30,fit=cover' }} 1200w"
-      imagesizes="100vw">
+      fetchpriority="high">
 {% endif %}
 
 <!-- Critical CSS - Expanded for faster initial render -->
@@ -28,7 +25,7 @@
 .img-aspect-container img{position:absolute;top:0;left:0;width:100%;height:100%;object-fit:cover;object-position:center}
 .banner-overlay{position:absolute;top:0;left:0;width:100%;height:100%;background:linear-gradient(to right,rgba(0,0,0,0.6) 0%,rgba(0,0,0,0.3) 50%,rgba(0,0,0,0.5) 100%);z-index:2}
 /* Text elements - prevent reflow */
-.display-2{font-size:3.5rem;line-height:1.2;font-weight:700;margin-bottom:1.5rem}
+.display-2{font-size:3.5rem;line-height:1.2;font-weight:700!important;margin-bottom:1.5rem!important}
 .h3{font-size:1.75rem;margin-top:1rem}
 .lead{font-size:1.25rem;line-height:1.5;margin-bottom:1.5rem}
 .text-shadow{text-shadow:2px 2px 4px rgba(0,0,0,0.8)}
@@ -40,18 +37,14 @@
 .btn-warning{background:#ffc107;color:#000;border:1px solid #ffc107}
 .btn-lg{padding:0.5rem 1.5rem;font-size:1.25rem}
 .btn:hover{transform:translateY(-2px)}
-/* Layout - critical only */
-.container{width:100%;max-width:1140px;margin:0 auto;padding:0 15px;position:relative;z-index:10}
+/* Layout - use base.html responsive containers */
 .row{display:flex;flex-wrap:wrap;margin:0 -15px}
 .col-lg-6{flex:0 0 50%;max-width:50%;padding:0 15px}
 .h-100{height:100%}
 .align-items-center{align-items:center}
-.d-flex{display:flex}
 .flex-wrap{flex-wrap:wrap}
 .gap-3{gap:1rem}
-.mb-4{margin-bottom:1.5rem}
 .mt-3{margin-top:1rem}
-.me-2{margin-right:0.5rem}
 @media(max-width:991px){
 .col-lg-6{flex:0 0 100%;max-width:100%}
 }
@@ -74,17 +67,13 @@
             {% if destination.image %}
                 <div class="img-aspect-container">
                     {% if forloop.first %}
-                        <!-- First slide: Responsive image for good quality + performance -->
+                        <!-- First slide: Single optimized image for fastest LCP -->
                         <img
-                            srcset="{{ destination.image.url|cf_image:'format=webp,width=800,quality=25,fit=cover' }} 800w,
-                                    {{ destination.image.url|cf_image:'format=webp,width=1200,quality=30,fit=cover' }} 1200w,
-                                    {{ destination.image.url|cf_image:'format=webp,width=1600,quality=35,fit=cover' }} 1600w"
-                            sizes="100vw"
                             src="{{ destination.image.url|cf_image:'format=webp,width=1200,quality=30,fit=cover' }}"
                             alt="{{ destination.name }}"
                             fetchpriority="high"
-                            width="1920"
-                            height="1080"
+                            width="1200"
+                            height="675"
                             style="object-fit:cover;width:100%;height:100%">
                     {% else %}
                         <!-- Other slides: Lazy load with good quality -->
