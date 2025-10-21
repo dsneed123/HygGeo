@@ -5,13 +5,20 @@
 {% block title %}HygGeo - Sustainable Travel with Danish Hygge{% endblock %}
 
 {% block extra_head %}
-<!-- Preload hero image - exact match to LCP image -->
+<!-- Preload hero image - responsive for mobile/desktop -->
 {% if featured_destinations.0.image %}
 <link rel="preload"
       as="image"
-      href="{{ featured_destinations.0.image.url|cf_image:'format=webp,width=1200,quality=30,fit=cover' }}"
+      href="{{ featured_destinations.0.image.url|cf_image:'format=webp,width=800,quality=20,fit=cover' }}"
       type="image/webp"
-      fetchpriority="high">
+      fetchpriority="high"
+      media="(max-width: 767px)">
+<link rel="preload"
+      as="image"
+      href="{{ featured_destinations.0.image.url|cf_image:'format=webp,width=1200,quality=25,fit=cover' }}"
+      type="image/webp"
+      fetchpriority="high"
+      media="(min-width: 768px)">
 {% endif %}
 
 <!-- Critical CSS - Expanded for faster initial render -->
@@ -67,27 +74,31 @@
             {% if destination.image %}
                 <div class="img-aspect-container">
                     {% if forloop.first %}
-                        <!-- First slide: Single optimized image for fastest LCP -->
-                        <img
-                            src="{{ destination.image.url|cf_image:'format=webp,width=1200,quality=30,fit=cover' }}"
-                            alt="{{ destination.name }}"
-                            fetchpriority="high"
-                            width="1200"
-                            height="675"
-                            style="object-fit:cover;width:100%;height:100%">
+                        <!-- First slide: Responsive for mobile/desktop -->
+                        <picture>
+                            <source media="(max-width: 767px)"
+                                    srcset="{{ destination.image.url|cf_image:'format=webp,width=800,quality=20,fit=cover' }}">
+                            <img
+                                src="{{ destination.image.url|cf_image:'format=webp,width=1200,quality=25,fit=cover' }}"
+                                alt="{{ destination.name }}"
+                                fetchpriority="high"
+                                width="1200"
+                                height="675"
+                                style="object-fit:cover;width:100%;height:100%">
+                        </picture>
                     {% else %}
-                        <!-- Other slides: Lazy load with good quality -->
-                        <img
-                            srcset="{{ destination.image.url|cf_image:'format=webp,width=800,quality=25,fit=cover' }} 800w,
-                                    {{ destination.image.url|cf_image:'format=webp,width=1200,quality=30,fit=cover' }} 1200w,
-                                    {{ destination.image.url|cf_image:'format=webp,width=1600,quality=35,fit=cover' }} 1600w"
-                            sizes="100vw"
-                            src="{{ destination.image.url|cf_image:'format=webp,width=1200,quality=30,fit=cover' }}"
-                            alt="{{ destination.name }}"
-                            loading="lazy"
-                            width="1920"
-                            height="1080"
-                            style="object-fit:cover;width:100%;height:100%">
+                        <!-- Other slides: Lazy load optimized -->
+                        <picture>
+                            <source media="(max-width: 767px)"
+                                    srcset="{{ destination.image.url|cf_image:'format=webp,width=800,quality=20,fit=cover' }}">
+                            <img
+                                src="{{ destination.image.url|cf_image:'format=webp,width=1200,quality=25,fit=cover' }}"
+                                alt="{{ destination.name }}"
+                                loading="lazy"
+                                width="1200"
+                                height="675"
+                                style="object-fit:cover;width:100%;height:100%">
+                        </picture>
                     {% endif %}
                 </div>
             {% else %}
@@ -217,10 +228,10 @@
                 <div class="experience-card">
                     <div class="experience-image">
                         {% if experience.main_image %}
-                            <!-- Optimized for sharpness -->
+                            <!-- Sized exactly for display (240x140) -->
                             <div class="img-aspect-container" style="aspect-ratio:240/140">
                                 <img
-                                    src="{{ experience.main_image.url|cf_image:'format=webp,width=320,quality=30,fit=cover' }}"
+                                    src="{{ experience.main_image.url|cf_image:'format=webp,width=240,quality=25,fit=cover' }}"
                                     alt="{{ experience.title }}"
                                     loading="lazy"
                                     width="240"
@@ -314,10 +325,10 @@
                 <div class="experience-card">
                     <div class="experience-image">
                         {% if accommodation.main_image %}
-                            <!-- Optimized for sharpness -->
+                            <!-- Sized exactly for display (240x140) -->
                             <div class="img-aspect-container" style="aspect-ratio:240/140">
                                 <img
-                                    src="{{ accommodation.main_image.url|cf_image:'format=webp,width=320,quality=30,fit=cover' }}"
+                                    src="{{ accommodation.main_image.url|cf_image:'format=webp,width=240,quality=25,fit=cover' }}"
                                     alt="{{ accommodation.name }}"
                                     loading="lazy"
                                     width="240"
