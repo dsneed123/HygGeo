@@ -7,12 +7,14 @@
 {% block extra_head %}
 <!-- Preload hero image - responsive for mobile/desktop -->
 {% if featured_destinations.0.image %}
+<!-- Mobile: smaller size for faster LCP on slow networks -->
 <link rel="preload"
       as="image"
-      href="{{ featured_destinations.0.image.url|cf_image:'format=webp,width=800,quality=20,fit=cover' }}"
+      href="{{ featured_destinations.0.image.url|cf_image:'format=webp,width=640,quality=22,fit=cover' }}"
       type="image/webp"
       fetchpriority="high"
       media="(max-width: 767px)">
+<!-- Desktop: higher quality for larger screens -->
 <link rel="preload"
       as="image"
       href="{{ featured_destinations.0.image.url|cf_image:'format=webp,width=1200,quality=25,fit=cover' }}"
@@ -78,10 +80,10 @@
             {% if destination.image %}
                 <div class="img-aspect-container">
                     {% if forloop.first %}
-                        <!-- First slide: Responsive for mobile/desktop -->
+                        <!-- First slide: Optimized for fast mobile LCP -->
                         <picture>
                             <source media="(max-width: 767px)"
-                                    srcset="{{ destination.image.url|cf_image:'format=webp,width=800,quality=20,fit=cover' }}">
+                                    srcset="{{ destination.image.url|cf_image:'format=webp,width=640,quality=22,fit=cover' }}">
                             <img
                                 src="{{ destination.image.url|cf_image:'format=webp,width=1200,quality=25,fit=cover' }}"
                                 alt="{{ destination.name }}"
@@ -94,7 +96,7 @@
                         <!-- Other slides: Lazy load optimized -->
                         <picture>
                             <source media="(max-width: 767px)"
-                                    srcset="{{ destination.image.url|cf_image:'format=webp,width=800,quality=20,fit=cover' }}">
+                                    srcset="{{ destination.image.url|cf_image:'format=webp,width=640,quality=22,fit=cover' }}">
                             <img
                                 src="{{ destination.image.url|cf_image:'format=webp,width=1200,quality=25,fit=cover' }}"
                                 alt="{{ destination.name }}"
