@@ -1,10 +1,63 @@
+# HygGeo Robots.txt
+# Allow search engines to index public travel content while protecting private areas
+
 User-agent: *
+
+# Allow public content (explicitly stated for clarity)
+Allow: /
+Allow: /experiences/
+Allow: /destinations/
+Allow: /accommodations/
+Allow: /blog/
+Allow: /blogs/
+Allow: /static/
+Allow: /media/
+
+# Block all admin areas
 Disallow: /admin/
+Disallow: /accounts/admin/
+Disallow: /django-admin/
+
+# Block authentication and account management
+Disallow: /accounts/login/
+Disallow: /accounts/signup/
+Disallow: /accounts/logout/
+Disallow: /accounts/password-reset/
 Disallow: /accounts/profile/
+Disallow: /accounts/my-trips/
+Disallow: /accounts/messages/
 Disallow: /accounts/survey/
+Disallow: /accounts/unsubscribe/
+Disallow: /accounts/resubscribe/
+
+# Block user-specific content
+Disallow: /accounts/users/*/trips/
 Disallow: /experiences/bookmarks/
 Disallow: /experiences/recommendations/
+
+# Block content creation/editing (staff only)
 Disallow: /experiences/add/
 Disallow: /experiences/*/edit/
+Disallow: /experiences/*/delete/
+Disallow: /destinations/add/
+Disallow: /destinations/*/edit/
+Disallow: /accommodations/add/
+Disallow: /accommodations/*/edit/
 
+# Block debug and test endpoints
+Disallow: /accounts/debug-*
+Disallow: /accounts/test-*
+
+# Block email management and exports (staff only)
+Disallow: /accounts/admin/email/
+Disallow: /accounts/admin/export/
+Disallow: /accounts/admin/analytics/
+Disallow: /accounts/admin/generate-blog/
+Disallow: /accounts/admin/get-items-for-destination/
+Disallow: /accounts/admin/toggle-featured/
+
+# Sitemap location
 Sitemap: https://hyggeo.com/sitemap.xml
+
+# Crawl delay (be nice to our servers)
+Crawl-delay: 1

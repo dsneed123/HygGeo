@@ -6,12 +6,35 @@
     --hygge-warm-white: #fdfcf8;
     --hygge-gold: #d4a574;
     --hygge-soft-blue: #6b9dc0;
+    /* Accessible color variants for WCAG AA compliance (4.5:1 contrast minimum) */
+    --hygge-text-secondary: #5a5a5a; /* 7.0:1 contrast on white - replaces Bootstrap text-muted */
+    --hygge-text-body: #2b2b2b; /* 13.5:1 contrast on white - better than #333 */
 }
 
 body {
     font-family: 'Poppins', sans-serif;
     background-color: var(--hygge-warm-white);
-    color: #333;
+    color: var(--hygge-text-body);
+}
+
+/* Accessibility: Override Bootstrap .text-muted with WCAG AA compliant color */
+.text-muted {
+    color: var(--hygge-text-secondary) !important;
+}
+
+/* Touch target accessibility - minimum 44x44px for better mobile UX */
+.btn, .nav-link, a.btn {
+    min-height: 44px;
+    min-width: 44px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* Ensure proper focus indicators for keyboard navigation */
+a:focus, button:focus, .btn:focus, .nav-link:focus, input:focus, textarea:focus, select:focus {
+    outline: 3px solid var(--hygge-gold);
+    outline-offset: 2px;
 }
 
 .navbar {
