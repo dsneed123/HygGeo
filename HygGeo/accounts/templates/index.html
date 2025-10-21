@@ -24,13 +24,15 @@
 <!-- Critical CSS - Expanded for faster initial render -->
 <style>
 /* Hero section - exact heights to prevent CLS */
-.hero-banner{position:relative;background:linear-gradient(135deg,#1a3a2a 0%,#2d5a3d 50%,#1a3a2a 100%);display:flex;align-items:center;height:70vh;overflow:hidden}
+.hero-banner{position:relative;background:linear-gradient(135deg,#1a3a2a 0%,#2d5a3d 50%,#1a3a2a 100%);display:flex;align-items:center;height:70vh;min-height:500px;overflow:hidden}
 .banner-carousel{position:absolute;top:0;left:0;width:100%;height:100%;z-index:1}
 .banner-slide{position:absolute;top:0;left:0;width:100%;height:100%;opacity:0;visibility:hidden;transition:opacity 0.8s ease-in-out}
 .banner-slide.active{opacity:1;visibility:visible}
-.img-aspect-container{position:relative;width:100%;height:100%;overflow:hidden}
+.img-aspect-container{position:relative;width:100%;height:100%;overflow:hidden;aspect-ratio:16/9}
 .img-aspect-container img{position:absolute;top:0;left:0;width:100%;height:100%;object-fit:cover;object-position:center}
 .banner-overlay{position:absolute;top:0;left:0;width:100%;height:100%;background:linear-gradient(to right,rgba(0,0,0,0.6) 0%,rgba(0,0,0,0.3) 50%,rgba(0,0,0,0.5) 100%);z-index:2}
+/* Hero content container - explicit height to prevent shifts */
+.hero-content-container{height:70vh;min-height:500px}
 /* Text elements - prevent reflow */
 .display-2{font-size:3.5rem;line-height:1.2;font-weight:700!important;margin-bottom:1.5rem!important}
 .h3{font-size:1.75rem;margin-top:1rem}
@@ -38,12 +40,13 @@
 .text-shadow{text-shadow:2px 2px 4px rgba(0,0,0,0.8)}
 .text-white{color:#fff}
 .text-warning{color:#ffc107}
-/* Buttons */
-.btn{display:inline-block;padding:0.5rem 1rem;font-weight:600;text-align:center;text-decoration:none;border-radius:0.25rem;transition:transform 0.2s}
+/* Buttons - explicit sizing to prevent CLS */
+.btn{display:inline-block;padding:0.5rem 1rem;font-weight:600;text-align:center;text-decoration:none;border-radius:0.25rem;transition:transform 0.2s;line-height:1.5;min-height:38px}
 .btn-light{background:#f8f9fa;color:#000;border:1px solid #f8f9fa}
 .btn-warning{background:#ffc107;color:#000;border:1px solid #ffc107}
-.btn-lg{padding:0.5rem 1.5rem;font-size:1.25rem}
+.btn-lg{padding:0.5rem 1.5rem;font-size:1.25rem;min-height:46px}
 .btn:hover{transform:translateY(-2px)}
+.btn i{min-width:1em;display:inline-block}
 /* Layout - use base.html responsive containers */
 .row{display:flex;flex-wrap:wrap;margin:0 -15px}
 .col-lg-6{flex:0 0 50%;max-width:50%;padding:0 15px}
@@ -56,7 +59,8 @@
 .col-lg-6{flex:0 0 100%;max-width:100%}
 }
 @media(max-width:767px){
-.hero-banner{height:60vh}
+.hero-banner{height:60vh;min-height:400px}
+.hero-content-container{height:60vh;min-height:400px}
 .display-2{font-size:2.5rem}
 .lead{font-size:1.1rem}
 .btn-lg{font-size:1rem;padding:0.4rem 1rem}
@@ -112,8 +116,8 @@
     </div>
 
     <!-- Content Container -->
-    <div class="container h-100 position-relative" style="z-index: 10;">
-        <div class="row h-100 align-items-center">
+    <div class="container hero-content-container position-relative" style="z-index: 10;">
+        <div class="row hero-content-container align-items-center">
             <!-- Left Side - HygGeo Branding -->
             <div class="col-lg-6 col-md-12 text-white">
                 <div class="brand-content">
