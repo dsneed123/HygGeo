@@ -3,6 +3,13 @@
 
 {% block title %}Admin Dashboard - {{ block.super }}{% endblock %}
 
+{% block extra_head %}
+<!-- Google Fonts for Social Media Generator -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@700;900&family=Oswald:wght@700&display=swap" rel="stylesheet">
+{% endblock %}
+
 {% block content %}
 <div class="container py-5">
     <!-- Header Section -->
@@ -851,6 +858,875 @@
         </div>
     </div>
 
+    <!-- ============================================== -->
+    <!-- SOCIAL MEDIA CONTENT GENERATOR -->
+    <!-- ============================================== -->
+
+    <style>
+/* Social Media Generator Styles */
+.bg-gradient-social {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+}
+
+#socialMediaGeneratorSection .form-label {
+    color: #2d3748;
+    font-size: 0.95rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+#socialMediaGeneratorSection .form-control,
+#socialMediaGeneratorSection .form-select {
+    border: 2px solid #e2e8f0;
+    border-radius: 12px;
+    transition: all 0.3s ease;
+}
+
+#socialMediaGeneratorSection .form-control:focus,
+#socialMediaGeneratorSection .form-select:focus {
+    border-color: #667eea;
+    box-shadow: 0 0 0 0.25rem rgba(102, 126, 234, 0.15);
+}
+
+#generateSocialBtn {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    border: none;
+    border-radius: 12px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+}
+
+#generateSocialBtn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(102, 126, 234, 0.6);
+}
+
+#socialMediaCarousel {
+    background: #000;
+    max-width: 600px;
+    margin: 0 auto;
+    border-radius: 16px;
+    overflow: hidden;
+}
+
+#socialMediaCarousel .carousel-inner {
+    border-radius: 16px;
+}
+
+#socialMediaCarousel .carousel-item img {
+    width: 100%;
+    height: auto;
+    object-fit: cover;
+    border-radius: 16px;
+}
+
+#socialMediaCarousel .carousel-indicators button {
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    background-color: rgba(255, 255, 255, 0.5);
+    border: 2px solid #fff;
+    transition: all 0.3s ease;
+}
+
+#socialMediaCarousel .carousel-indicators button.active {
+    background-color: #fff;
+    transform: scale(1.2);
+}
+
+#downloadSocialBtn {
+    background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+    border: none;
+    border-radius: 12px;
+    font-weight: 700;
+    box-shadow: 0 4px 15px rgba(16, 185, 129, 0.4);
+    transition: all 0.3s ease;
+}
+
+#downloadSocialBtn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(16, 185, 129, 0.6);
+}
+
+#socialImageCounter {
+    padding: 0.75rem 1.5rem;
+    border-radius: 50px;
+    font-weight: 600;
+}
+
+@media (max-width: 768px) {
+    #socialMediaCarousel {
+        max-width: 100%;
+    }
+
+    #generateSocialBtn,
+    #downloadSocialBtn {
+        width: 100%;
+        margin-bottom: 1rem;
+    }
+}
+</style>
+
+<!-- Social Media Content Generator Section -->
+<div class="row mb-5" id="socialMediaGeneratorSection">
+    <div class="col-12">
+        <h3 class="fw-bold mb-4" style="color: var(--hygge-green);">
+            <i class="fas fa-images me-2"></i>Social Media Content Generator
+        </h3>
+        <p class="text-muted mb-4">Create a beautiful Instagram carousel featuring all experiences in a destination. Generates one cover image + individual slides for each experience with stunning text overlays.</p>
+    </div>
+</div>
+
+<div class="row mb-5">
+    <div class="col-12">
+        <div class="card card-hygge shadow-lg" style="border: none;">
+            <div class="card-header bg-gradient-social text-white py-4">
+                <h5 class="mb-0 fw-bold">
+                    <i class="fas fa-magic me-2"></i>
+                    Generate Instagram Carousel
+                </h5>
+            </div>
+
+            <div class="card-body p-5">
+                <!-- Generator Form -->
+                <form id="socialMediaForm" class="needs-validation" novalidate>
+                    <div class="row g-4">
+                        <!-- Destination Selection -->
+                        <div class="col-md-6">
+                            <label for="socialDestinationSelect" class="form-label">
+                                <i class="fas fa-map-marker-alt me-2"></i>Destination
+                            </label>
+                            <select id="socialDestinationSelect" class="form-select form-select-lg" required>
+                                <option value="">Choose a destination...</option>
+                                {% for dest in all_destinations %}
+                                <option value="{{ dest.id }}" data-name="{{ dest.name }}" data-image="{% if dest.image %}{{ dest.image.url }}{% endif %}">{{ dest.name }}, {{ dest.country }}</option>
+                                {% endfor %}
+                            </select>
+                            <div class="invalid-feedback">Please select a destination.</div>
+                            <small class="form-text text-muted">Will showcase all experiences in this destination</small>
+                        </div>
+
+                        <!-- Template Selection -->
+                        <div class="col-md-6">
+                            <label for="socialTemplateSelect" class="form-label">
+                                <i class="fas fa-file-alt me-2"></i>Cover Title Style
+                            </label>
+                            <select id="socialTemplateSelect" class="form-select form-select-lg" required>
+                                <option value="">Choose a template...</option>
+                                <option value="top-experiences">Top Experiences in {Location}</option>
+                                <option value="hidden-gems">Hidden Gems in {Location}</option>
+                                <option value="must-visit">Must-Visit Spots in {Location}</option>
+                                <option value="discover">Discover {Location}</option>
+                                <option value="explore">Explore {Location}</option>
+                            </select>
+                            <div class="invalid-feedback">Please select a template.</div>
+                            <small class="form-text text-muted">Title for the cover image</small>
+                        </div>
+
+                        <!-- Text Style Selection -->
+                        <div class="col-md-12">
+                            <label for="socialTextStyleSelect" class="form-label">
+                                <i class="fas fa-palette me-2"></i>Text Overlay Style
+                            </label>
+                            <select id="socialTextStyleSelect" class="form-select form-select-lg" required>
+                                <option value="">Choose a visual style...</option>
+                                <option value="modern-minimal">Modern Minimal - Clean & Professional</option>
+                                <option value="bold-impact">Bold Impact - Eye-Catching Headlines</option>
+                                <option value="elegant-serif">Elegant Serif - Luxury Feel</option>
+                                <option value="vibrant-gradient">Vibrant Gradient - Colorful & Fun</option>
+                                <option value="magazine-style">Magazine Style - Editorial Look</option>
+                            </select>
+                            <div class="invalid-feedback">Select a text style.</div>
+                        </div>
+
+                        <!-- Generate Button -->
+                        <div class="col-12 mt-5">
+                            <button type="submit" id="generateSocialBtn" class="btn btn-primary btn-lg px-5 py-3 w-100">
+                                <i class="fas fa-magic me-2"></i>
+                                Generate Instagram Carousel
+                            </button>
+                            <div id="socialLoadingSpinner" class="spinner-border text-primary ms-3 d-none" role="status">
+                                <span class="visually-hidden">Generating...</span>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+
+                <!-- Error Alert -->
+                <div id="socialErrorAlert" class="alert alert-danger mt-4 d-none" role="alert">
+                    <i class="fas fa-exclamation-triangle me-2"></i>
+                    <span id="socialErrorMessage"></span>
+                </div>
+
+                <!-- Success Alert -->
+                <div id="socialSuccessAlert" class="alert alert-success mt-4 d-none" role="alert">
+                    <i class="fas fa-check-circle me-2"></i>
+                    <span id="socialSuccessMessage"></span>
+                </div>
+
+                <!-- Preview Section -->
+                <div id="socialPreviewSection" class="mt-5 d-none">
+                    <div class="d-flex justify-content-between align-items-center mb-4">
+                        <h5 class="mb-0">
+                            <i class="fas fa-eye me-2"></i>Preview Generated Content
+                        </h5>
+                        <button id="downloadSocialBtn" class="btn btn-success btn-lg">
+                            <i class="fas fa-download me-2"></i>Download ZIP
+                        </button>
+                    </div>
+
+                    <!-- Bootstrap Carousel -->
+                    <div id="socialMediaCarousel" class="carousel slide shadow-lg rounded" data-bs-ride="false" data-bs-interval="false">
+                        <div class="carousel-indicators" id="socialCarouselIndicators">
+                            <!-- Indicators dynamically added -->
+                        </div>
+                        <div class="carousel-inner" id="socialCarouselInner">
+                            <!-- Slides dynamically added -->
+                        </div>
+                        <button class="carousel-control-prev" type="button" data-bs-target="#socialMediaCarousel" data-bs-slide="prev">
+                            <span class="carousel-control-prev-icon"></span>
+                            <span class="visually-hidden">Previous</span>
+                        </button>
+                        <button class="carousel-control-next" type="button" data-bs-target="#socialMediaCarousel" data-bs-slide="next">
+                            <span class="carousel-control-next-icon"></span>
+                            <span class="visually-hidden">Next</span>
+                        </button>
+                    </div>
+
+                    <!-- Image Counter -->
+                    <div class="text-center mt-3">
+                        <span id="socialImageCounter" class="badge bg-secondary fs-6">
+                            Image 1 of 5
+                        </span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Hidden Canvas for Image Generation -->
+<canvas id="socialGeneratorCanvas" width="1080" height="1080" style="display: none;"></canvas>
+
+<script>
+/**
+ * Social Media Content Generator - Integrated with Real Experiences
+ */
+(function() {
+    'use strict';
+
+    // Configuration
+    const CONFIG = {
+        CANVAS_SIZE: 1080,
+        IMAGE_FORMAT: 'image/png',
+        IMAGE_QUALITY: 0.95,
+        NUM_VARIANTS: 5,
+        FONTS_LOADED: false,
+        FALLBACK_IMAGE: 'https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=1080&h=1080&fit=crop' // Nature fallback
+    };
+
+    // Template definitions
+    const TEMPLATES = {
+        'top-experiences': 'Top Experiences in {location}',
+        'hidden-gems': 'Hidden Gems in {location}',
+        'must-visit': 'Must-Visit Spots in {location}',
+        'discover': 'Discover {location}',
+        'explore': 'Explore {location}'
+    };
+
+    // Beautiful Text Overlay Styles
+    const TEXT_STYLES = {
+        'modern-minimal': {
+            applyCoverStyle: (ctx, text, width, height) => {
+                // Clean dark overlay at bottom
+                const gradient = ctx.createLinearGradient(0, height - 350, 0, height);
+                gradient.addColorStop(0, 'rgba(0, 0, 0, 0)');
+                gradient.addColorStop(1, 'rgba(0, 0, 0, 0.85)');
+                ctx.fillStyle = gradient;
+                ctx.fillRect(0, height - 350, width, 350);
+
+                // Main title - large and bold
+                ctx.font = '900 90px Montserrat, sans-serif';
+                ctx.textAlign = 'center';
+                ctx.textBaseline = 'middle';
+                ctx.fillStyle = '#ffffff';
+                ctx.fillText(text.toUpperCase(), width / 2, height - 140);
+
+                // Subtle underline
+                ctx.fillStyle = '#2d5a3d';
+                ctx.fillRect(width / 2 - 100, height - 90, 200, 4);
+            },
+            applyExperienceStyle: (ctx, text, number, width, height) => {
+                // Top gradient overlay
+                const gradient = ctx.createLinearGradient(0, 0, 0, 300);
+                gradient.addColorStop(0, 'rgba(0, 0, 0, 0.7)');
+                gradient.addColorStop(1, 'rgba(0, 0, 0, 0)');
+                ctx.fillStyle = gradient;
+                ctx.fillRect(0, 0, width, 300);
+
+                // Number badge
+                ctx.fillStyle = '#2d5a3d';
+                ctx.fillRect(40, 40, 100, 100);
+                ctx.font = 'bold 60px Montserrat, sans-serif';
+                ctx.fillStyle = '#ffffff';
+                ctx.textAlign = 'center';
+                ctx.fillText(number, 90, 105);
+
+                // Experience title
+                ctx.font = '700 55px Montserrat, sans-serif';
+                ctx.textAlign = 'left';
+                ctx.fillStyle = '#ffffff';
+                ctx.shadowColor = 'rgba(0, 0, 0, 0.8)';
+                ctx.shadowBlur = 15;
+                const maxWidth = width - 200;
+                wrapText(ctx, text, 180, 100, maxWidth, 65);
+            }
+        },
+        'bold-impact': {
+            applyCoverStyle: (ctx, text, width, height) => {
+                // Bold black box
+                ctx.fillStyle = 'rgba(0, 0, 0, 0.75)';
+                ctx.fillRect(0, height / 2 - 180, width, 360);
+
+                // Yellow accent strip
+                ctx.fillStyle = '#FFD700';
+                ctx.fillRect(0, height / 2 - 190, width, 10);
+                ctx.fillRect(0, height / 2 + 170, width, 10);
+
+                // Bold title
+                ctx.font = '900 95px Montserrat, Impact, sans-serif';
+                ctx.textAlign = 'center';
+                ctx.textBaseline = 'middle';
+                ctx.strokeStyle = '#000000';
+                ctx.lineWidth = 18;
+                ctx.strokeText(text.toUpperCase(), width / 2, height / 2);
+                ctx.fillStyle = '#ffffff';
+                ctx.fillText(text.toUpperCase(), width / 2, height / 2);
+            },
+            applyExperienceStyle: (ctx, text, number, width, height) => {
+                // Bottom bold bar
+                ctx.fillStyle = 'rgba(0, 0, 0, 0.85)';
+                ctx.fillRect(0, height - 250, width, 250);
+
+                ctx.fillStyle = '#FFD700';
+                ctx.fillRect(0, height - 260, width, 10);
+
+                // Number circle
+                ctx.fillStyle = '#FFD700';
+                ctx.beginPath();
+                ctx.arc(80, height - 125, 50, 0, Math.PI * 2);
+                ctx.fill();
+
+                ctx.font = 'bold 55px Montserrat, sans-serif';
+                ctx.fillStyle = '#000000';
+                ctx.textAlign = 'center';
+                ctx.fillText(number, 80, height - 110);
+
+                // Title
+                ctx.font = '800 58px Montserrat, sans-serif';
+                ctx.textAlign = 'left';
+                ctx.fillStyle = '#ffffff';
+                const maxWidth = width - 200;
+                wrapText(ctx, text.toUpperCase(), 160, height - 155, maxWidth, 70);
+            }
+        },
+        'elegant-serif': {
+            applyCoverStyle: (ctx, text, width, height) => {
+                // Elegant vignette
+                const gradient = ctx.createRadialGradient(width / 2, height / 2, 200, width / 2, height / 2, 800);
+                gradient.addColorStop(0, 'rgba(0, 0, 0, 0.3)');
+                gradient.addColorStop(1, 'rgba(0, 0, 0, 0.75)');
+                ctx.fillStyle = gradient;
+                ctx.fillRect(0, 0, width, height);
+
+                // Gold frame
+                ctx.strokeStyle = '#D4AF37';
+                ctx.lineWidth = 6;
+                ctx.strokeRect(80, height / 2 - 150, width - 160, 300);
+
+                // Serif title
+                ctx.font = '700 75px Georgia, Playfair Display, serif';
+                ctx.textAlign = 'center';
+                ctx.textBaseline = 'middle';
+                ctx.strokeStyle = '#D4AF37';
+                ctx.lineWidth = 2;
+                ctx.strokeText(text, width / 2, height / 2);
+                ctx.fillStyle = '#FFFBEB';
+                ctx.fillText(text, width / 2, height / 2);
+
+                // Decorative elements
+                ctx.font = '40px Georgia, serif';
+                ctx.fillStyle = '#D4AF37';
+                ctx.fillText('✦', width / 2, height / 2 - 120);
+                ctx.fillText('✦', width / 2, height / 2 + 120);
+            },
+            applyExperienceStyle: (ctx, text, number, width, height) => {
+                // Elegant gradient overlay
+                const gradient = ctx.createLinearGradient(0, height - 320, 0, height);
+                gradient.addColorStop(0, 'rgba(20, 20, 20, 0)');
+                gradient.addColorStop(1, 'rgba(20, 20, 20, 0.9)');
+                ctx.fillStyle = gradient;
+                ctx.fillRect(0, height - 320, width, 320);
+
+                // Gold number
+                ctx.font = '700 80px Georgia, serif';
+                ctx.textAlign = 'left';
+                ctx.strokeStyle = '#D4AF37';
+                ctx.lineWidth = 3;
+                ctx.strokeText(number, 60, height - 200);
+                ctx.fillStyle = '#FFFBEB';
+                ctx.fillText(number, 60, height - 200);
+
+                // Title
+                ctx.font = '600 50px Georgia, serif';
+                ctx.strokeStyle = '#D4AF37';
+                ctx.lineWidth = 1.5;
+                const maxWidth = width - 120;
+                const lines = wrapText(ctx, text, 60, height - 120, maxWidth, 60);
+                lines.forEach((line, i) => {
+                    ctx.strokeText(line, 60, height - 120 + (i * 60));
+                    ctx.fillText(line, 60, height - 120 + (i * 60));
+                });
+            }
+        },
+        'vibrant-gradient': {
+            applyCoverStyle: (ctx, text, width, height) => {
+                // Colorful gradient overlay
+                const gradient = ctx.createLinearGradient(0, 0, width, height);
+                gradient.addColorStop(0, 'rgba(255, 0, 128, 0.5)');
+                gradient.addColorStop(0.5, 'rgba(255, 140, 0, 0.5)');
+                gradient.addColorStop(1, 'rgba(139, 0, 255, 0.5)');
+                ctx.fillStyle = gradient;
+                ctx.fillRect(0, 0, width, height);
+
+                // Title with gradient
+                ctx.font = '900 88px Montserrat, sans-serif';
+                ctx.textAlign = 'center';
+                ctx.textBaseline = 'middle';
+
+                // Create text gradient
+                const textGradient = ctx.createLinearGradient(0, height / 2 - 60, 0, height / 2 + 60);
+                textGradient.addColorStop(0, '#FFFF00');
+                textGradient.addColorStop(0.5, '#FF00FF');
+                textGradient.addColorStop(1, '#00FFFF');
+
+                ctx.strokeStyle = '#000000';
+                ctx.lineWidth = 15;
+                ctx.strokeText(text.toUpperCase(), width / 2, height / 2);
+
+                ctx.fillStyle = textGradient;
+                ctx.shadowColor = 'rgba(255, 0, 255, 0.8)';
+                ctx.shadowBlur = 40;
+                ctx.fillText(text.toUpperCase(), width / 2, height / 2);
+            },
+            applyExperienceStyle: (ctx, text, number, width, height) => {
+                // Gradient bottom bar
+                const gradient = ctx.createLinearGradient(0, height - 280, width, height);
+                gradient.addColorStop(0, 'rgba(255, 0, 128, 0.9)');
+                gradient.addColorStop(0.5, 'rgba(255, 140, 0, 0.9)');
+                gradient.addColorStop(1, 'rgba(139, 0, 255, 0.9)');
+                ctx.fillStyle = gradient;
+                ctx.fillRect(0, height - 280, width, 280);
+
+                // Number with glow
+                ctx.font = 'bold 100px Montserrat, sans-serif';
+                ctx.textAlign = 'center';
+                ctx.strokeStyle = '#000000';
+                ctx.lineWidth = 10;
+                ctx.strokeText(number, 100, height - 150);
+                ctx.fillStyle = '#FFFFFF';
+                ctx.shadowColor = '#FFFF00';
+                ctx.shadowBlur = 30;
+                ctx.fillText(number, 100, height - 150);
+
+                // Title
+                ctx.font = '800 60px Montserrat, sans-serif';
+                ctx.textAlign = 'left';
+                ctx.strokeStyle = '#000000';
+                ctx.lineWidth = 8;
+                ctx.shadowColor = 'transparent';
+                ctx.shadowBlur = 0;
+                const maxWidth = width - 250;
+                const lines = wrapText(ctx, text.toUpperCase(), 200, height - 180, maxWidth, 70);
+                lines.forEach((line, i) => {
+                    ctx.strokeText(line, 200, height - 180 + (i * 70));
+                    ctx.fillText(line, 200, height - 180 + (i * 70));
+                });
+            }
+        },
+        'magazine-style': {
+            applyCoverStyle: (ctx, text, width, height) => {
+                // Magazine editorial style
+                ctx.fillStyle = 'rgba(255, 255, 255, 0.15)';
+                ctx.fillRect(0, 0, width, height);
+
+                // White box
+                ctx.fillStyle = 'rgba(255, 255, 255, 0.95)';
+                ctx.fillRect(100, height / 2 - 200, width - 200, 400);
+
+                // Red accent line
+                ctx.fillStyle = '#DC2626';
+                ctx.fillRect(100, height / 2 - 210, width - 200, 10);
+
+                // Title
+                ctx.font = '900 72px Montserrat, sans-serif';
+                ctx.textAlign = 'center';
+                ctx.textBaseline = 'middle';
+                ctx.fillStyle = '#1a1a1a';
+                ctx.fillText(text.toUpperCase(), width / 2, height / 2 - 50);
+
+                // Subtitle
+                ctx.font = '400 32px Montserrat, sans-serif';
+                ctx.fillStyle = '#666666';
+                ctx.fillText('A CURATED GUIDE', width / 2, height / 2 + 50);
+            },
+            applyExperienceStyle: (ctx, text, number, width, height) => {
+                // Clean white box at bottom
+                ctx.fillStyle = 'rgba(255, 255, 255, 0.95)';
+                ctx.fillRect(0, height - 260, width, 260);
+
+                // Red accent
+                ctx.fillStyle = '#DC2626';
+                ctx.fillRect(0, height - 270, width, 10);
+
+                // Number in red box
+                ctx.fillStyle = '#DC2626';
+                ctx.fillRect(40, height - 220, 90, 90);
+                ctx.font = 'bold 60px Montserrat, sans-serif';
+                ctx.fillStyle = '#ffffff';
+                ctx.textAlign = 'center';
+                ctx.fillText(number, 85, height - 160);
+
+                // Title in black
+                ctx.font = '800 50px Montserrat, sans-serif';
+                ctx.textAlign = 'left';
+                ctx.fillStyle = '#1a1a1a';
+                const maxWidth = width - 200;
+                wrapText(ctx, text.toUpperCase(), 160, height - 200, maxWidth, 60);
+            }
+        }
+    };
+
+    // Helper function to wrap text
+    function wrapText(ctx, text, x, y, maxWidth, lineHeight) {
+        const words = text.split(' ');
+        let line = '';
+        const lines = [];
+
+        for (let n = 0; n < words.length; n++) {
+            const testLine = line + words[n] + ' ';
+            const metrics = ctx.measureText(testLine);
+            const testWidth = metrics.width;
+
+            if (testWidth > maxWidth && n > 0) {
+                lines.push(line);
+                line = words[n] + ' ';
+            } else {
+                line = testLine;
+            }
+        }
+        lines.push(line);
+
+        // Draw the lines
+        lines.forEach((line, i) => {
+            ctx.fillText(line.trim(), x, y + (i * lineHeight));
+        });
+
+        return lines;
+    }
+
+    // State
+    let generatedImages = [];
+    let currentDestination = null;
+    let currentExperiences = [];
+    let currentTemplate = '';
+
+    // DOM Elements
+    const elements = {
+        form: document.getElementById('socialMediaForm'),
+        templateSelect: document.getElementById('socialTemplateSelect'),
+        destinationSelect: document.getElementById('socialDestinationSelect'),
+        textStyleSelect: document.getElementById('socialTextStyleSelect'),
+        generateBtn: document.getElementById('generateSocialBtn'),
+        downloadBtn: document.getElementById('downloadSocialBtn'),
+        loadingSpinner: document.getElementById('socialLoadingSpinner'),
+        errorAlert: document.getElementById('socialErrorAlert'),
+        errorMessage: document.getElementById('socialErrorMessage'),
+        successAlert: document.getElementById('socialSuccessAlert'),
+        successMessage: document.getElementById('socialSuccessMessage'),
+        previewSection: document.getElementById('socialPreviewSection'),
+        carouselInner: document.getElementById('socialCarouselInner'),
+        carouselIndicators: document.getElementById('socialCarouselIndicators'),
+        imageCounter: document.getElementById('socialImageCounter'),
+        canvas: document.getElementById('socialGeneratorCanvas')
+    };
+
+    // Initialize
+    function init() {
+        loadFonts();
+        attachEventListeners();
+        console.log('Social Media Generator initialized');
+    }
+
+    // Load fonts
+    function loadFonts() {
+        if (document.fonts && document.fonts.ready) {
+            document.fonts.ready.then(() => {
+                CONFIG.FONTS_LOADED = true;
+                console.log('Fonts loaded successfully');
+            });
+        } else {
+            setTimeout(() => { CONFIG.FONTS_LOADED = true; }, 1000);
+        }
+    }
+
+    // Event listeners
+    function attachEventListeners() {
+        elements.form.addEventListener('submit', handleGenerate);
+        elements.downloadBtn.addEventListener('click', handleDownload);
+
+        const carousel = document.getElementById('socialMediaCarousel');
+        if (carousel) {
+            carousel.addEventListener('slide.bs.carousel', (e) => {
+                const index = e.to + 1;
+                elements.imageCounter.textContent = `Image ${index} of ${generatedImages.length}`;
+            });
+        }
+    }
+
+    // Handle generate
+    async function handleGenerate(e) {
+        e.preventDefault();
+
+        if (!elements.form.checkValidity()) {
+            e.stopPropagation();
+            elements.form.classList.add('was-validated');
+            return;
+        }
+
+        hideAlerts();
+        showLoading(true);
+
+        try {
+            const templateKey = elements.templateSelect.value;
+            const destinationSelect = elements.destinationSelect;
+            const destinationId = destinationSelect.value;
+            const location = destinationSelect.options[destinationSelect.selectedIndex].dataset.name;
+            const destinationImage = destinationSelect.options[destinationSelect.selectedIndex].dataset.image;
+            const textStyle = elements.textStyleSelect.value;
+
+            // Store destination info
+            currentDestination = {
+                id: destinationId,
+                name: location,
+                image: destinationImage || CONFIG.FALLBACK_IMAGE
+            };
+
+            // Fetch all experiences for this destination
+            const response = await fetch(`/accounts/admin/get-items-for-destination/?destination=${destinationId}&type=experiences`);
+            const data = await response.json();
+
+            if (!data.items || data.items.length === 0) {
+                throw new Error('No experiences found for this destination.');
+            }
+
+            currentExperiences = data.items;
+
+            // Create the template text
+            currentTemplate = TEMPLATES[templateKey].replace('{location}', location);
+
+            // Generate all images (1 cover + 1 per experience)
+            await generateCarousel(currentDestination, currentExperiences, currentTemplate, textStyle);
+            displayPreview();
+
+            showSuccess(`Successfully generated ${generatedImages.length} images (1 cover + ${currentExperiences.length} experiences)!`);
+
+        } catch (error) {
+            console.error('Generation error:', error);
+            showError(error.message || 'Failed to generate images. Please try again.');
+        } finally {
+            showLoading(false);
+        }
+    }
+
+    // Generate carousel images
+    async function generateCarousel(destination, experiences, templateText, styleKey) {
+        generatedImages = [];
+        const ctx = elements.canvas.getContext('2d');
+        const style = TEXT_STYLES[styleKey];
+
+        if (!CONFIG.FONTS_LOADED) {
+            await new Promise(resolve => setTimeout(resolve, 1000));
+        }
+
+        // Image 1: Cover image with destination + title
+        console.log('Generating cover image...');
+        const coverImage = await loadImage(destination.image);
+        ctx.clearRect(0, 0, CONFIG.CANVAS_SIZE, CONFIG.CANVAS_SIZE);
+
+        // Draw destination background
+        drawBackgroundFitCover(ctx, coverImage);
+
+        // Apply cover text style
+        style.applyCoverStyle(ctx, templateText, CONFIG.CANVAS_SIZE, CONFIG.CANVAS_SIZE);
+
+        const coverDataUrl = elements.canvas.toDataURL(CONFIG.IMAGE_FORMAT, CONFIG.IMAGE_QUALITY);
+        generatedImages.push({
+            dataUrl: coverDataUrl,
+            filename: `00_cover_${destination.name.replace(/\s+/g, '_')}.png`
+        });
+
+        // Images 2-N: One for each experience
+        for (let i = 0; i < experiences.length; i++) {
+            const exp = experiences[i];
+            console.log(`Generating image ${i + 2} for: ${exp.name}`);
+
+            const expImage = await loadImage(exp.image || CONFIG.FALLBACK_IMAGE);
+            ctx.clearRect(0, 0, CONFIG.CANVAS_SIZE, CONFIG.CANVAS_SIZE);
+
+            // Draw experience background
+            drawBackgroundFitCover(ctx, expImage);
+
+            // Apply experience text style
+            style.applyExperienceStyle(ctx, exp.name, (i + 1).toString(), CONFIG.CANVAS_SIZE, CONFIG.CANVAS_SIZE);
+
+            const expDataUrl = elements.canvas.toDataURL(CONFIG.IMAGE_FORMAT, CONFIG.IMAGE_QUALITY);
+            generatedImages.push({
+                dataUrl: expDataUrl,
+                filename: `${String(i + 1).padStart(2, '0')}_${exp.name.replace(/\s+/g, '_')}.png`
+            });
+        }
+    }
+
+    // Draw background image with cover fit (fills canvas, maintains aspect ratio)
+    function drawBackgroundFitCover(ctx, image) {
+        const size = CONFIG.CANVAS_SIZE;
+        const scale = Math.max(size / image.width, size / image.height);
+        const scaledWidth = image.width * scale;
+        const scaledHeight = image.height * scale;
+        const x = (size - scaledWidth) / 2;
+        const y = (size - scaledHeight) / 2;
+        ctx.drawImage(image, x, y, scaledWidth, scaledHeight);
+    }
+
+    // Display preview
+    function displayPreview() {
+        elements.carouselInner.innerHTML = '';
+        elements.carouselIndicators.innerHTML = '';
+
+        generatedImages.forEach((img, index) => {
+            const item = document.createElement('div');
+            item.className = `carousel-item ${index === 0 ? 'active' : ''}`;
+            const imgElement = document.createElement('img');
+            imgElement.src = img.dataUrl;
+            imgElement.alt = `Generated image variant ${index + 1}`;
+            imgElement.className = 'd-block w-100';
+            item.appendChild(imgElement);
+            elements.carouselInner.appendChild(item);
+
+            const indicator = document.createElement('button');
+            indicator.type = 'button';
+            indicator.setAttribute('data-bs-target', '#socialMediaCarousel');
+            indicator.setAttribute('data-bs-slide-to', index);
+            if (index === 0) indicator.className = 'active';
+            elements.carouselIndicators.appendChild(indicator);
+        });
+
+        elements.imageCounter.textContent = `Image 1 of ${generatedImages.length}`;
+        elements.previewSection.classList.remove('d-none');
+        elements.previewSection.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+    }
+
+    // Handle download
+    async function handleDownload() {
+        if (generatedImages.length === 0) {
+            showError('No images to download.');
+            return;
+        }
+
+        showLoading(true);
+
+        try {
+            const zip = new JSZip();
+            const folder = zip.folder('social_media_content');
+
+            generatedImages.forEach(img => {
+                const base64 = img.dataUrl.split(',')[1];
+                folder.file(img.filename, base64, { base64: true });
+            });
+
+            const blob = await zip.generateAsync({
+                type: 'blob',
+                compression: 'DEFLATE',
+                compressionOptions: { level: 6 }
+            });
+
+            const url = URL.createObjectURL(blob);
+            const link = document.createElement('a');
+            link.href = url;
+            link.download = `instagram_carousel_${currentDestination.name.replace(/\s+/g, '_')}_${Date.now()}.zip`;
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+            URL.revokeObjectURL(url);
+
+            showSuccess(`ZIP file downloaded successfully! ${generatedImages.length} images ready to post.`);
+
+        } catch (error) {
+            console.error('Download error:', error);
+            showError('Failed to create ZIP file.');
+        } finally {
+            showLoading(false);
+        }
+    }
+
+    // Utility functions
+    function loadImage(url) {
+        return new Promise((resolve, reject) => {
+            const img = new Image();
+            img.crossOrigin = 'Anonymous';
+            img.onload = () => resolve(img);
+            img.onerror = () => reject(new Error(`Failed to load image: ${url}`));
+            img.src = url;
+        });
+    }
+
+    function showLoading(show) {
+        elements.loadingSpinner.classList.toggle('d-none', !show);
+        elements.generateBtn.disabled = show;
+        elements.downloadBtn.disabled = show;
+    }
+
+    function showError(message) {
+        elements.errorMessage.textContent = message;
+        elements.errorAlert.classList.remove('d-none');
+        elements.errorAlert.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+    }
+
+    function showSuccess(message) {
+        elements.successMessage.textContent = message;
+        elements.successAlert.classList.remove('d-none');
+    }
+
+    function hideAlerts() {
+        elements.errorAlert.classList.add('d-none');
+        elements.successAlert.classList.add('d-none');
+    }
+
+    // Initialize
+    if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', init);
+    } else {
+        init();
+    }
+
+})();
+</script>
+
     <!-- Quick Tips -->
     <div class="row mb-5">
         <div class="col-12">
@@ -1533,6 +2409,9 @@ function generateReportWithGSCData() {
 {% endblock %}
 
 {% block extra_js %}
+<!-- JSZip Library for Social Media Generator -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js" integrity="sha512-XMVd28F1oH/O71fzwBnV7HucLxVwtxf26XV8P4wPk26EDxuGZ91N8bsOttmnomcCD3CS5ZMRL50H0GgOHvegtg==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+
 <script>
 // Add any additional JavaScript for the admin dashboard here
 console.log('HygGeo Admin Dashboard loaded successfully');

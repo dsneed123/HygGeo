@@ -2463,6 +2463,13 @@ def get_items_for_destination(request):
                 description = short_desc[:100] + '...' if len(short_desc) > 100 else short_desc
                 # Include experience type in the description if available
                 exp_type = f" ({exp.experience_type.name})" if exp.experience_type else ""
+                # Get image URL (main_image or first gallery image or None)
+                image_url = None
+                if exp.main_image:
+                    image_url = exp.main_image.url
+                elif exp.gallery_images and len(exp.gallery_images) > 0:
+                    image_url = exp.gallery_images[0]
+
                 items.append({
                     'id': str(exp.id),
                     'name': exp.title + exp_type,
@@ -2470,6 +2477,7 @@ def get_items_for_destination(request):
                     'sustainability': exp.sustainability_score or 0,
                     'hygge': exp.hygge_factor or 0,
                     'is_active': exp.is_active,
+                    'image': image_url,
                 })
 
         elif item_type == 'accommodations':
@@ -2483,6 +2491,13 @@ def get_items_for_destination(request):
                 description = short_desc[:100] + '...' if len(short_desc) > 100 else short_desc
                 # Use the model's built-in method
                 acc_type = f" ({acc.get_accommodation_type_display()})" if acc.accommodation_type else ""
+                # Get image URL (main_image or first gallery image or None)
+                image_url = None
+                if acc.main_image:
+                    image_url = acc.main_image.url
+                elif acc.gallery_images and len(acc.gallery_images) > 0:
+                    image_url = acc.gallery_images[0]
+
                 items.append({
                     'id': str(acc.id),
                     'name': acc.name + acc_type,
@@ -2490,6 +2505,7 @@ def get_items_for_destination(request):
                     'sustainability': acc.sustainability_score or 0,
                     'hygge': acc.hygge_factor or 0,
                     'is_active': acc.is_active,
+                    'image': image_url,
                 })
 
         elif item_type == 'mixed':
@@ -2506,6 +2522,13 @@ def get_items_for_destination(request):
                 short_desc = exp.short_description or exp.title
                 description = short_desc[:100] + '...' if len(short_desc) > 100 else short_desc
                 exp_type = f" ({exp.experience_type.name})" if exp.experience_type else ""
+                # Get image URL
+                image_url = None
+                if exp.main_image:
+                    image_url = exp.main_image.url
+                elif exp.gallery_images and len(exp.gallery_images) > 0:
+                    image_url = exp.gallery_images[0]
+
                 items.append({
                     'id': f'exp_{exp.id}',
                     'name': exp.title + exp_type,
@@ -2514,6 +2537,7 @@ def get_items_for_destination(request):
                     'hygge': exp.hygge_factor or 0,
                     'is_active': exp.is_active,
                     'type': 'experience',
+                    'image': image_url,
                 })
 
             for acc in acc_queryset:
@@ -2521,6 +2545,13 @@ def get_items_for_destination(request):
                 description = short_desc[:100] + '...' if len(short_desc) > 100 else short_desc
                 # Use the model's built-in method (matching line 1707)
                 acc_type = f" ({acc.get_accommodation_type_display()})" if acc.accommodation_type else ""
+                # Get image URL
+                image_url = None
+                if acc.main_image:
+                    image_url = acc.main_image.url
+                elif acc.gallery_images and len(acc.gallery_images) > 0:
+                    image_url = acc.gallery_images[0]
+
                 items.append({
                     'id': f'acc_{acc.id}',
                     'name': acc.name + acc_type,
@@ -2529,6 +2560,7 @@ def get_items_for_destination(request):
                     'hygge': acc.hygge_factor or 0,
                     'is_active': acc.is_active,
                     'type': 'accommodation',
+                    'image': image_url,
                 })
 
         return JsonResponse({'items': items})
