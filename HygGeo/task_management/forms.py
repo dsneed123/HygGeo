@@ -20,6 +20,12 @@ class ProjectForm(forms.ModelForm):
             'end_date': forms.DateInput(attrs={'class': 'form-control', 'type': 'date'}),
         }
 
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        # Only show admin users (staff) for team members
+        self.fields['team_members'].queryset = User.objects.filter(is_staff=True)
+        self.fields['team_members'].help_text = 'Select admin users to add to this project team'
+
     def save(self, commit=True):
         instance = super().save(commit=False)
 
@@ -69,17 +75,10 @@ class TaskForm(forms.ModelForm):
         self.user = kwargs.pop('user', None)
         super().__init__(*args, **kwargs)
 
-        # Filter projects based on user permissions
-        if self.user:
-            if self.user.is_staff:
-                self.fields['project'].queryset = Project.objects.all()
-            else:
-                self.fields['project'].queryset = Project.objects.filter(
-                    django_models.Q(owner=self.user) | django_models.Q(team_members=self.user)
-                ).distinct()
-
-            # Filter assignable users to staff and project team members
-            self.fields['assigned_to'].queryset = User.objects.filter(is_staff=True)
+        # Admin-only system: Show all projects and only admin users for assignment
+        self.fields['project'].queryset = Project.objects.all()
+        self.fields['assigned_to'].queryset = User.objects.filter(is_staff=True)
+        self.fields['assigned_to'].help_text = 'Assign to admin users only'
 
 
 class TaskCommentForm(forms.ModelForm):
