@@ -3093,3 +3093,34 @@ def track_click_event(request):
 
     except Exception as e:
         return JsonResponse({'error': str(e)}, status=500)
+
+from django.http import HttpResponse
+import requests
+from django.views.decorators.csrf import csrf_exempt
+
+@csrf_exempt
+def proxy_image(request):
+    """
+    Proxy images to avoid CORS issues when generating social media content.
+    This fetches the image from the original URL and serves it with proper CORS headers.
+    """
+    image_url = request.GET.get('url')
+
+    if not image_url:
+        return HttpResponse('No URL provided', status=400)
+
+    try:
+        # Fetch the image from the original URL
+        response = requests.get(image_url, timeout=10)
+        response.raise_for_status()
+
+        # Return the image with CORS headers
+        http_response = HttpResponse(response.content, content_type=response.headers.get('content-type', 'image/jpeg'))
+        http_response['Access-Control-Allow-Origin'] = '*'
+        http_response['Access-Control-Allow-Methods'] = 'GET, OPTIONS'
+        http_response['Access-Control-Allow-Headers'] = 'Content-Type'
+
+        return http_response
+
+    except requests.RequestException as e:
+        return HttpResponse(f'Failed to fetch image: {str(e)}', status=500)

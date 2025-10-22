@@ -15334,3 +15334,86 @@ INFO 2025-10-21 17:55:19,619 basehttp 39000 32672 "GET /accounts/admin/get-items
 INFO 2025-10-21 17:55:24,663 basehttp 39000 32672 "POST /accounts/track/click/ HTTP/1.1" 200 61
 INFO 2025-10-21 17:55:27,287 basehttp 39000 32672 "POST /accounts/track/click/ HTTP/1.1" 200 61
 INFO 2025-10-21 17:55:29,303 basehttp 39000 32672 "POST /accounts/track/click/ HTTP/1.1" 200 61
+INFO 2025-10-21 17:56:20,950 basehttp 35900 27904 "GET /accounts/admin/get-items-for-destination/?destination=1&type=experiences HTTP/1.1" 200 202
+INFO 2025-10-21 17:56:23,536 basehttp 35900 27904 "POST /accounts/track/click/ HTTP/1.1" 200 61
+INFO 2025-10-21 17:56:25,681 basehttp 35900 27904 "POST /accounts/track/click/ HTTP/1.1" 200 61
+INFO 2025-10-21 17:56:32,842 basehttp 35900 27904 "GET /accounts/admin/get-items-for-destination/?destination=1&type=experiences HTTP/1.1" 200 202
+INFO 2025-10-21 17:56:36,434 basehttp 35900 27904 "POST /accounts/track/click/ HTTP/1.1" 200 61
+INFO 2025-10-21 17:56:41,529 basehttp 35900 27904 "GET /accounts/admin/get-items-for-destination/?destination=1&type=experiences HTTP/1.1" 200 202
+INFO 2025-10-21 17:56:44,535 basehttp 35900 27904 "POST /accounts/track/click/ HTTP/1.1" 200 61
+INFO 2025-10-21 17:56:50,299 basehttp 35900 27904 "GET /accounts/admin/get-items-for-destination/?destination=1&type=experiences HTTP/1.1" 200 202
+INFO 2025-10-21 17:56:53,981 basehttp 35900 27904 "POST /accounts/track/click/ HTTP/1.1" 200 62
+INFO 2025-10-21 17:56:58,340 basehttp 35900 27904 "GET /accounts/admin/get-items-for-destination/?destination=1&type=experiences HTTP/1.1" 200 202
+INFO 2025-10-21 17:57:01,164 basehttp 35900 27904 "POST /accounts/track/click/ HTTP/1.1" 200 62
+INFO 2025-10-21 18:03:58,165 autoreload 33288 520 Watching for file changes with StatReloader
+INFO 2025-10-21 18:04:01,118 basehttp 35900 35312 "GET / HTTP/1.1" 200 109993
+INFO 2025-10-21 18:04:01,547 basehttp 35900 35312 "POST /accounts/track/page-view/ HTTP/1.1" 200 68
+INFO 2025-10-21 18:04:03,682 basehttp 35900 35312 "GET /admin/dashboard/ HTTP/1.1" 200 148054
+INFO 2025-10-21 18:04:03,888 basehttp 35900 35312 "POST /accounts/track/page-view/ HTTP/1.1" 200 68
+INFO 2025-10-21 18:04:17,030 basehttp 35900 35312 "GET /accounts/admin/get-items-for-destination/?destination=1&type=experiences HTTP/1.1" 200 202
+INFO 2025-10-21 18:04:21,515 basehttp 35900 35312 "POST /accounts/track/click/ HTTP/1.1" 200 62
+INFO 2025-10-21 18:04:28,471 basehttp 35900 35312 "GET /accounts/admin/get-items-for-destination/?destination=1&type=experiences HTTP/1.1" 200 202
+INFO 2025-10-21 18:04:31,283 basehttp 35900 35312 "POST /accounts/track/click/ HTTP/1.1" 200 62
+INFO 2025-10-21 18:04:38,670 basehttp 35900 35312 "GET /accounts/admin/get-items-for-destination/?destination=1&type=experiences HTTP/1.1" 200 202
+INFO 2025-10-21 18:04:41,158 basehttp 35900 35312 "POST /accounts/track/click/ HTTP/1.1" 200 62
+INFO 2025-10-21 18:04:49,506 basehttp 35900 35312 "GET /accounts/admin/get-items-for-destination/?destination=1&type=experiences HTTP/1.1" 200 202
+INFO 2025-10-21 18:04:51,310 basehttp 35900 35312 "POST /accounts/track/click/ HTTP/1.1" 200 62
+INFO 2025-10-21 18:05:02,432 basehttp 35900 35312 "POST /accounts/track/click/ HTTP/1.1" 200 62
+INFO 2025-10-21 18:05:04,617 basehttp 35900 35312 "POST /accounts/track/click/ HTTP/1.1" 200 62
+INFO 2025-10-21 18:05:08,574 basehttp 35900 35312 "POST /accounts/track/click/ HTTP/1.1" 200 62
+INFO 2025-10-21 18:05:09,528 basehttp 35900 35312 "POST /accounts/track/click/ HTTP/1.1" 200 62
+INFO 2025-10-21 18:05:10,401 basehttp 35900 35312 "POST /accounts/track/click/ HTTP/1.1" 200 62
+INFO 2025-10-21 18:05:14,844 basehttp 35900 35312 "POST /accounts/track/click/ HTTP/1.1" 200 62
+INFO 2025-10-21 18:05:15,440 basehttp 35900 35312 "POST /accounts/track/click/ HTTP/1.1" 200 62
+INFO 2025-10-21 18:05:26,528 basehttp 35900 35312 "POST /accounts/track/click/ HTTP/1.1" 200 62
+INFO 2025-10-21 18:05:27,451 basehttp 35900 35312 "POST /accounts/track/click/ HTTP/1.1" 200 62
+INFO 2025-10-21 18:05:28,432 basehttp 35900 35312 "POST /accounts/track/click/ HTTP/1.1" 200 62
+INFO 2025-10-21 18:05:50,430 basehttp 35900 35312 "POST /accounts/track/click/ HTTP/1.1" 200 62
+INFO 2025-10-21 18:06:03,099 basehttp 35900 35312 "POST /accounts/track/click/ HTTP/1.1" 200 62
+INFO 2025-10-21 18:06:05,642 basehttp 35900 35312 "POST /accounts/track/click/ HTTP/1.1" 200 62
+INFO 2025-10-21 18:08:32,544 basehttp 35900 35312 "GET /admin/dashboard/ HTTP/1.1" 200 151787
+INFO 2025-10-21 18:08:32,972 basehttp 35900 35312 "POST /accounts/track/page-view/ HTTP/1.1" 200 68
+INFO 2025-10-21 18:08:47,015 basehttp 35900 35312 "GET /accounts/admin/get-items-for-destination/?destination=1&type=experiences HTTP/1.1" 200 202
+INFO 2025-10-21 18:08:56,194 basehttp 35900 35312 "GET /accounts/admin/get-items-for-destination/?destination=1&type=experiences HTTP/1.1" 200 202
+INFO 2025-10-21 18:09:30,152 basehttp 35900 35312 "GET /accounts/admin/get-items-for-destination/?destination=2&type=experiences HTTP/1.1" 200 13
+INFO 2025-10-21 18:09:30,992 basehttp 35900 35312 "GET /accounts/admin/get-items-for-destination/?destination=2&type=experiences HTTP/1.1" 200 13
+INFO 2025-10-21 18:09:36,142 basehttp 35900 35312 "GET /accounts/admin/get-items-for-destination/?destination=1&type=experiences HTTP/1.1" 200 202
+INFO 2025-10-21 18:10:27,080 autoreload 35900 45316 C:\Users\DLSne\OneDrive\Desktop\Code\webdev\HygGeo\HygGeo\accounts\views.py changed, reloading.
+INFO 2025-10-21 18:10:27,104 autoreload 37616 38776 C:\Users\DLSne\OneDrive\Desktop\Code\webdev\HygGeo\HygGeo\accounts\views.py changed, reloading.
+INFO 2025-10-21 18:10:27,552 autoreload 33288 520 C:\Users\DLSne\OneDrive\Desktop\Code\webdev\HygGeo\HygGeo\accounts\views.py changed, reloading.
+INFO 2025-10-21 18:10:28,486 autoreload 33740 31184 Watching for file changes with StatReloader
+INFO 2025-10-21 18:10:28,927 autoreload 36156 42708 Watching for file changes with StatReloader
+INFO 2025-10-21 18:10:46,657 autoreload 33740 31184 C:\Users\DLSne\OneDrive\Desktop\Code\webdev\HygGeo\HygGeo\accounts\urls.py changed, reloading.
+INFO 2025-10-21 18:10:46,743 autoreload 36156 42708 C:\Users\DLSne\OneDrive\Desktop\Code\webdev\HygGeo\HygGeo\accounts\urls.py changed, reloading.
+INFO 2025-10-21 18:10:48,084 autoreload 10024 33708 Watching for file changes with StatReloader
+INFO 2025-10-21 18:10:48,229 autoreload 5124 24116 Watching for file changes with StatReloader
+INFO 2025-10-21 18:12:00,023 basehttp 10024 31096 "GET /accounts/admin/get-items-for-destination/?destination=1&type=experiences HTTP/1.1" 200 202
+INFO 2025-10-21 18:12:01,508 basehttp 10024 31096 "GET /accounts/admin/get-items-for-destination/?destination=1&type=experiences HTTP/1.1" 200 202
+INFO 2025-10-21 18:12:04,101 basehttp 10024 31096 "GET /admin/dashboard/ HTTP/1.1" 200 152156
+INFO 2025-10-21 18:12:04,632 basehttp 10024 7176 "GET /static/js/navbar.js HTTP/1.1" 200 2732
+INFO 2025-10-21 18:12:04,639 basehttp 10024 31096 "GET /static/css/base.css HTTP/1.1" 200 5351
+INFO 2025-10-21 18:12:04,897 basehttp 10024 31096 "GET /static/favicon.ico HTTP/1.1" 200 15406
+INFO 2025-10-21 18:12:04,981 basehttp 10024 31096 "POST /accounts/track/page-view/ HTTP/1.1" 200 68
+INFO 2025-10-21 18:12:19,762 basehttp 10024 31096 "GET /accounts/admin/get-items-for-destination/?destination=1&type=experiences HTTP/1.1" 200 202
+INFO 2025-10-21 18:12:19,907 basehttp 10024 31096 "GET /accounts/proxy-image/?url=https%3A%2F%2Fimages.unsplash.com%2Fphoto-1506905925346-21bda4d32df4%3Fw%3D1080%26h%3D1080%26fit%3Dcrop HTTP/1.1" 200 167839
+INFO 2025-10-21 18:12:23,475 basehttp 10024 31096 "POST /accounts/track/click/ HTTP/1.1" 200 62
+INFO 2025-10-21 18:12:27,557 basehttp 10024 31096 "GET /accounts/admin/get-items-for-destination/?destination=1&type=experiences HTTP/1.1" 200 202
+INFO 2025-10-21 18:12:30,119 basehttp 10024 31096 "POST /accounts/track/click/ HTTP/1.1" 200 62
+INFO 2025-10-21 18:12:34,229 basehttp 10024 31096 "GET /accounts/admin/get-items-for-destination/?destination=1&type=experiences HTTP/1.1" 200 202
+INFO 2025-10-21 18:12:36,730 basehttp 10024 31096 "POST /accounts/track/click/ HTTP/1.1" 200 62
+INFO 2025-10-21 18:14:15,105 basehttp 10024 31096 "GET /admin/dashboard/ HTTP/1.1" 200 153160
+INFO 2025-10-21 18:14:15,276 basehttp 10024 7176 "GET /static/js/navbar.js HTTP/1.1" 200 2732
+INFO 2025-10-21 18:14:15,277 basehttp 10024 31096 "GET /static/css/base.css HTTP/1.1" 200 5351
+INFO 2025-10-21 18:14:15,952 basehttp 10024 31096 "GET /static/favicon.ico HTTP/1.1" 200 15406
+INFO 2025-10-21 18:14:16,001 basehttp 10024 31096 "POST /accounts/track/page-view/ HTTP/1.1" 200 68
+INFO 2025-10-21 18:14:24,380 basehttp 10024 31096 "GET /accounts/admin/get-items-for-destination/?destination=1&type=experiences HTTP/1.1" 200 202
+INFO 2025-10-21 18:14:24,501 basehttp 10024 31096 "GET /accounts/proxy-image/?url=https%3A%2F%2Fimages.unsplash.com%2Fphoto-1506905925346-21bda4d32df4%3Fw%3D1080%26h%3D1080%26fit%3Dcrop HTTP/1.1" 200 167839
+INFO 2025-10-21 18:14:26,699 basehttp 10024 31096 "POST /accounts/track/click/ HTTP/1.1" 200 62
+INFO 2025-10-21 18:14:29,831 basehttp 10024 31096 "GET /accounts/admin/get-items-for-destination/?destination=1&type=experiences HTTP/1.1" 200 202
+INFO 2025-10-21 18:14:31,858 basehttp 10024 31096 "POST /accounts/track/click/ HTTP/1.1" 200 62
+INFO 2025-10-21 18:14:37,959 basehttp 10024 31096 "GET /accounts/admin/get-items-for-destination/?destination=1&type=experiences HTTP/1.1" 200 202
+INFO 2025-10-21 18:14:38,086 basehttp 10024 31096 "GET /accounts/proxy-image/?url=https%3A%2F%2Fimages.unsplash.com%2Fphoto-1506905925346-21bda4d32df4%3Fw%3D1080%26h%3D1080%26fit%3Dcrop HTTP/1.1" 200 167839
+INFO 2025-10-21 18:14:39,748 basehttp 10024 31096 "POST /accounts/track/click/ HTTP/1.1" 200 62
+INFO 2025-10-21 18:14:46,532 basehttp 10024 31096 "GET /accounts/admin/get-items-for-destination/?destination=1&type=experiences HTTP/1.1" 200 202
+INFO 2025-10-21 18:14:46,665 basehttp 10024 31096 "GET /accounts/proxy-image/?url=https%3A%2F%2Fimages.unsplash.com%2Fphoto-1506905925346-21bda4d32df4%3Fw%3D1080%26h%3D1080%26fit%3Dcrop HTTP/1.1" 200 167839
+INFO 2025-10-21 18:14:49,140 basehttp 10024 31096 "POST /accounts/track/click/ HTTP/1.1" 200 62

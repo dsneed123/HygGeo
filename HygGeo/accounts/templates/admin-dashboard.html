@@ -1011,20 +1011,31 @@
                         </div>
 
                         <!-- Template Selection -->
-                        <div class="col-md-6">
+                        <div class="col-md-4">
                             <label for="socialTemplateSelect" class="form-label">
                                 <i class="fas fa-file-alt me-2"></i>Cover Title Style
                             </label>
                             <select id="socialTemplateSelect" class="form-select form-select-lg" required>
                                 <option value="">Choose a template...</option>
-                                <option value="top-experiences">Top Experiences in {Location}</option>
-                                <option value="hidden-gems">Hidden Gems in {Location}</option>
-                                <option value="must-visit">Must-Visit Spots in {Location}</option>
+                                <option value="top-experiences">Top {X} Experiences in {Location}</option>
+                                <option value="hidden-gems">{X} Hidden Gems in {Location}</option>
+                                <option value="must-visit">Must-Visit {Location}</option>
                                 <option value="discover">Discover {Location}</option>
                                 <option value="explore">Explore {Location}</option>
                             </select>
                             <div class="invalid-feedback">Please select a template.</div>
                             <small class="form-text text-muted">Title for the cover image</small>
+                        </div>
+
+                        <!-- Number of Experiences -->
+                        <div class="col-md-2">
+                            <label for="socialNumberExperiences" class="form-label">
+                                <i class="fas fa-hashtag me-2"></i>How Many?
+                            </label>
+                            <input type="number" id="socialNumberExperiences" class="form-control form-control-lg"
+                                   min="3" max="15" value="5" required>
+                            <div class="invalid-feedback">3-15</div>
+                            <small class="form-text text-muted">Top X</small>
                         </div>
 
                         <!-- Text Style Selection -->
@@ -1131,9 +1142,9 @@
 
     // Template definitions
     const TEMPLATES = {
-        'top-experiences': 'Top Experiences in {location}',
-        'hidden-gems': 'Hidden Gems in {location}',
-        'must-visit': 'Must-Visit Spots in {location}',
+        'top-experiences': 'Top {X} Experiences in {location}',
+        'hidden-gems': '{X} Hidden Gems in {location}',
+        'must-visit': 'Must-Visit {location}',
         'discover': 'Discover {location}',
         'explore': 'Explore {location}'
     };
@@ -1149,16 +1160,20 @@
                 ctx.fillStyle = gradient;
                 ctx.fillRect(0, height - 350, width, 350);
 
-                // Main title - large and bold
-                ctx.font = '900 90px Montserrat, sans-serif';
+                // Main title - dynamic sizing
+                const fontSize = getOptimalFontSize(ctx, text.toUpperCase(), width - 100, 90, 'Montserrat, sans-serif');
+                ctx.font = `900 ${fontSize}px Montserrat, sans-serif`;
                 ctx.textAlign = 'center';
                 ctx.textBaseline = 'middle';
                 ctx.fillStyle = '#ffffff';
-                ctx.fillText(text.toUpperCase(), width / 2, height - 140);
+
+                // Wrap text if needed
+                const maxWidth = width - 100;
+                wrapText(ctx, text.toUpperCase(), width / 2, height - 140, maxWidth, fontSize + 10, 2);
 
                 // Subtle underline
                 ctx.fillStyle = '#2d5a3d';
-                ctx.fillRect(width / 2 - 100, height - 90, 200, 4);
+                ctx.fillRect(width / 2 - 100, height - 70, 200, 4);
             },
             applyExperienceStyle: (ctx, text, number, width, height) => {
                 // Top gradient overlay
@@ -1176,62 +1191,84 @@
                 ctx.textAlign = 'center';
                 ctx.fillText(number, 90, 105);
 
-                // Experience title
-                ctx.font = '700 55px Montserrat, sans-serif';
+                // Experience title with smart sizing
+                const maxWidth = width - 200;
+                const fontSize = getOptimalFontSize(ctx, text, maxWidth, 55, 'Montserrat, sans-serif');
+                ctx.font = `700 ${fontSize}px Montserrat, sans-serif`;
                 ctx.textAlign = 'left';
                 ctx.fillStyle = '#ffffff';
                 ctx.shadowColor = 'rgba(0, 0, 0, 0.8)';
                 ctx.shadowBlur = 15;
-                const maxWidth = width - 200;
-                wrapText(ctx, text, 180, 100, maxWidth, 65);
+                wrapText(ctx, text, 180, 100, maxWidth, fontSize + 10, 3);
             }
         },
         'bold-impact': {
             applyCoverStyle: (ctx, text, width, height) => {
                 // Bold black box
-                ctx.fillStyle = 'rgba(0, 0, 0, 0.75)';
-                ctx.fillRect(0, height / 2 - 180, width, 360);
+                ctx.fillStyle = 'rgba(0, 0, 0, 0.8)';
+                ctx.fillRect(0, height / 2 - 200, width, 400);
 
-                // Yellow accent strip
+                // Yellow accent strips
                 ctx.fillStyle = '#FFD700';
-                ctx.fillRect(0, height / 2 - 190, width, 10);
-                ctx.fillRect(0, height / 2 + 170, width, 10);
+                ctx.fillRect(0, height / 2 - 212, width, 12);
+                ctx.fillRect(0, height / 2 + 188, width, 12);
 
-                // Bold title
-                ctx.font = '900 95px Montserrat, Impact, sans-serif';
+                // Bold title with smart sizing
+                const fontSize = getOptimalFontSize(ctx, text.toUpperCase(), width - 140, 85, 'Montserrat, Impact, sans-serif');
+                ctx.font = `900 ${fontSize}px Montserrat, Impact, sans-serif`;
                 ctx.textAlign = 'center';
                 ctx.textBaseline = 'middle';
-                ctx.strokeStyle = '#000000';
-                ctx.lineWidth = 18;
-                ctx.strokeText(text.toUpperCase(), width / 2, height / 2);
-                ctx.fillStyle = '#ffffff';
-                ctx.fillText(text.toUpperCase(), width / 2, height / 2);
+                const maxWidth = width - 140;
+
+                // Draw text with stroke effect
+                ctx.strokeStyle = '#FFD700';
+                ctx.lineWidth = 12;
+                ctx.shadowColor = 'transparent';
+                ctx.shadowBlur = 0;
+
+                const lines = wrapText(ctx, text.toUpperCase(), width / 2, height / 2, maxWidth, fontSize + 20, 2);
+
+                // Re-draw with stroke
+                ctx.textAlign = 'center';
+                const startY = height / 2 - ((lines.length - 1) * (fontSize + 20) / 2);
+                lines.forEach((line, i) => {
+                    const y = startY + (i * (fontSize + 20));
+                    ctx.strokeText(line.trim(), width / 2, y);
+                    ctx.fillStyle = '#FFFFFF';
+                    ctx.fillText(line.trim(), width / 2, y);
+                });
             },
             applyExperienceStyle: (ctx, text, number, width, height) => {
                 // Bottom bold bar
-                ctx.fillStyle = 'rgba(0, 0, 0, 0.85)';
-                ctx.fillRect(0, height - 250, width, 250);
+                ctx.fillStyle = 'rgba(0, 0, 0, 0.9)';
+                ctx.fillRect(0, height - 270, width, 270);
 
+                // Yellow accent line
                 ctx.fillStyle = '#FFD700';
-                ctx.fillRect(0, height - 260, width, 10);
+                ctx.fillRect(0, height - 282, width, 12);
 
-                // Number circle
+                // Number in yellow circle
                 ctx.fillStyle = '#FFD700';
                 ctx.beginPath();
-                ctx.arc(80, height - 125, 50, 0, Math.PI * 2);
+                ctx.arc(95, height - 135, 65, 0, Math.PI * 2);
                 ctx.fill();
 
-                ctx.font = 'bold 55px Montserrat, sans-serif';
+                ctx.font = 'bold 70px Montserrat, sans-serif';
                 ctx.fillStyle = '#000000';
                 ctx.textAlign = 'center';
-                ctx.fillText(number, 80, height - 110);
+                ctx.shadowColor = 'transparent';
+                ctx.shadowBlur = 0;
+                ctx.fillText(number, 95, height - 115);
 
-                // Title
-                ctx.font = '800 58px Montserrat, sans-serif';
+                // Title with smart sizing
+                const maxWidth = width - 240;
+                const fontSize = getOptimalFontSize(ctx, text.toUpperCase(), maxWidth, 52, 'Montserrat, sans-serif');
+                ctx.font = `900 ${fontSize}px Montserrat, sans-serif`;
                 ctx.textAlign = 'left';
-                ctx.fillStyle = '#ffffff';
-                const maxWidth = width - 200;
-                wrapText(ctx, text.toUpperCase(), 160, height - 155, maxWidth, 70);
+                ctx.fillStyle = '#FFFFFF';
+                ctx.shadowColor = 'rgba(255, 215, 0, 0.3)';
+                ctx.shadowBlur = 8;
+                wrapText(ctx, text.toUpperCase(), 210, height - 165, maxWidth, fontSize + 12, 2);
             }
         },
         'elegant-serif': {
@@ -1248,15 +1285,21 @@
                 ctx.lineWidth = 6;
                 ctx.strokeRect(80, height / 2 - 150, width - 160, 300);
 
-                // Serif title
-                ctx.font = '700 75px Georgia, Playfair Display, serif';
+                // Serif title with smart sizing
+                const fontSize = getOptimalFontSize(ctx, text, width - 200, 75, 'Georgia, Playfair Display, serif');
+                ctx.font = `700 ${fontSize}px Georgia, Playfair Display, serif`;
                 ctx.textAlign = 'center';
                 ctx.textBaseline = 'middle';
                 ctx.strokeStyle = '#D4AF37';
                 ctx.lineWidth = 2;
-                ctx.strokeText(text, width / 2, height / 2);
-                ctx.fillStyle = '#FFFBEB';
-                ctx.fillText(text, width / 2, height / 2);
+                const maxWidth = width - 200;
+                const lines = wrapText(ctx, text, width / 2, height / 2, maxWidth, fontSize + 15, 2);
+
+                // Re-stroke the text
+                lines.forEach((line, i) => {
+                    const y = height / 2 + (i * (fontSize + 15)) - ((lines.length - 1) * (fontSize + 15) / 2);
+                    ctx.strokeText(line.trim(), width / 2, y);
+                });
 
                 // Decorative elements
                 ctx.font = '40px Georgia, serif';
@@ -1281,138 +1324,148 @@
                 ctx.fillStyle = '#FFFBEB';
                 ctx.fillText(number, 60, height - 200);
 
-                // Title
-                ctx.font = '600 50px Georgia, serif';
+                // Title with smart sizing
+                const maxWidth = width - 120;
+                const fontSize = getOptimalFontSize(ctx, text, maxWidth, 50, 'Georgia, serif');
+                ctx.font = `600 ${fontSize}px Georgia, serif`;
                 ctx.strokeStyle = '#D4AF37';
                 ctx.lineWidth = 1.5;
-                const maxWidth = width - 120;
-                const lines = wrapText(ctx, text, 60, height - 120, maxWidth, 60);
+                const lines = wrapText(ctx, text, 60, height - 120, maxWidth, fontSize + 10, 3);
                 lines.forEach((line, i) => {
-                    ctx.strokeText(line, 60, height - 120 + (i * 60));
-                    ctx.fillText(line, 60, height - 120 + (i * 60));
+                    ctx.strokeText(line, 60, height - 120 + (i * (fontSize + 10)));
+                    ctx.fillText(line, 60, height - 120 + (i * (fontSize + 10)));
                 });
             }
         },
         'vibrant-gradient': {
             applyCoverStyle: (ctx, text, width, height) => {
-                // Colorful gradient overlay
-                const gradient = ctx.createLinearGradient(0, 0, width, height);
-                gradient.addColorStop(0, 'rgba(255, 0, 128, 0.5)');
-                gradient.addColorStop(0.5, 'rgba(255, 140, 0, 0.5)');
-                gradient.addColorStop(1, 'rgba(139, 0, 255, 0.5)');
-                ctx.fillStyle = gradient;
+                // Dark background for contrast
+                ctx.fillStyle = 'rgba(0, 0, 0, 0.4)';
                 ctx.fillRect(0, 0, width, height);
 
-                // Title with gradient
-                ctx.font = '900 88px Montserrat, sans-serif';
+                // Title with vibrant gradient background box
+                const boxHeight = 200;
+                const gradient = ctx.createLinearGradient(0, height / 2 - boxHeight / 2, width, height / 2 + boxHeight / 2);
+                gradient.addColorStop(0, '#FF6B6B');
+                gradient.addColorStop(0.5, '#4ECDC4');
+                gradient.addColorStop(1, '#45B7D1');
+                ctx.fillStyle = gradient;
+                ctx.fillRect(0, height / 2 - boxHeight / 2, width, boxHeight);
+
+                // Text with smart sizing
+                const fontSize = getOptimalFontSize(ctx, text.toUpperCase(), width - 120, 80, 'Montserrat, sans-serif');
+                ctx.font = `900 ${fontSize}px Montserrat, sans-serif`;
                 ctx.textAlign = 'center';
                 ctx.textBaseline = 'middle';
 
-                // Create text gradient
-                const textGradient = ctx.createLinearGradient(0, height / 2 - 60, 0, height / 2 + 60);
-                textGradient.addColorStop(0, '#FFFF00');
-                textGradient.addColorStop(0.5, '#FF00FF');
-                textGradient.addColorStop(1, '#00FFFF');
+                // White text with shadow
+                ctx.fillStyle = '#FFFFFF';
+                ctx.shadowColor = 'rgba(0, 0, 0, 0.5)';
+                ctx.shadowBlur = 20;
+                ctx.shadowOffsetY = 4;
 
-                ctx.strokeStyle = '#000000';
-                ctx.lineWidth = 15;
-                ctx.strokeText(text.toUpperCase(), width / 2, height / 2);
-
-                ctx.fillStyle = textGradient;
-                ctx.shadowColor = 'rgba(255, 0, 255, 0.8)';
-                ctx.shadowBlur = 40;
-                ctx.fillText(text.toUpperCase(), width / 2, height / 2);
+                const maxWidth = width - 120;
+                wrapText(ctx, text.toUpperCase(), width / 2, height / 2, maxWidth, fontSize + 15, 2);
             },
             applyExperienceStyle: (ctx, text, number, width, height) => {
                 // Gradient bottom bar
                 const gradient = ctx.createLinearGradient(0, height - 280, width, height);
-                gradient.addColorStop(0, 'rgba(255, 0, 128, 0.9)');
-                gradient.addColorStop(0.5, 'rgba(255, 140, 0, 0.9)');
-                gradient.addColorStop(1, 'rgba(139, 0, 255, 0.9)');
+                gradient.addColorStop(0, '#FF6B6B');
+                gradient.addColorStop(0.5, '#4ECDC4');
+                gradient.addColorStop(1, '#45B7D1');
                 ctx.fillStyle = gradient;
                 ctx.fillRect(0, height - 280, width, 280);
 
-                // Number with glow
-                ctx.font = 'bold 100px Montserrat, sans-serif';
-                ctx.textAlign = 'center';
-                ctx.strokeStyle = '#000000';
-                ctx.lineWidth = 10;
-                ctx.strokeText(number, 100, height - 150);
+                // White circle for number
                 ctx.fillStyle = '#FFFFFF';
-                ctx.shadowColor = '#FFFF00';
-                ctx.shadowBlur = 30;
-                ctx.fillText(number, 100, height - 150);
+                ctx.beginPath();
+                ctx.arc(90, height - 140, 60, 0, Math.PI * 2);
+                ctx.fill();
 
-                // Title
-                ctx.font = '800 60px Montserrat, sans-serif';
-                ctx.textAlign = 'left';
-                ctx.strokeStyle = '#000000';
-                ctx.lineWidth = 8;
+                // Number in gradient color
+                ctx.font = 'bold 70px Montserrat, sans-serif';
+                ctx.textAlign = 'center';
+                ctx.fillStyle = '#FF6B6B';
                 ctx.shadowColor = 'transparent';
                 ctx.shadowBlur = 0;
-                const maxWidth = width - 250;
-                const lines = wrapText(ctx, text.toUpperCase(), 200, height - 180, maxWidth, 70);
-                lines.forEach((line, i) => {
-                    ctx.strokeText(line, 200, height - 180 + (i * 70));
-                    ctx.fillText(line, 200, height - 180 + (i * 70));
-                });
+                ctx.fillText(number, 90, height - 120);
+
+                // Title with smart sizing
+                const maxWidth = width - 220;
+                const fontSize = getOptimalFontSize(ctx, text.toUpperCase(), maxWidth, 55, 'Montserrat, sans-serif');
+                ctx.font = `800 ${fontSize}px Montserrat, sans-serif`;
+                ctx.textAlign = 'left';
+                ctx.fillStyle = '#FFFFFF';
+                ctx.shadowColor = 'rgba(0, 0, 0, 0.4)';
+                ctx.shadowBlur = 10;
+                wrapText(ctx, text.toUpperCase(), 200, height - 170, maxWidth, fontSize + 10, 2);
             }
         },
         'magazine-style': {
             applyCoverStyle: (ctx, text, width, height) => {
-                // Magazine editorial style
-                ctx.fillStyle = 'rgba(255, 255, 255, 0.15)';
+                // Subtle overlay
+                ctx.fillStyle = 'rgba(0, 0, 0, 0.3)';
                 ctx.fillRect(0, 0, width, height);
 
-                // White box
-                ctx.fillStyle = 'rgba(255, 255, 255, 0.95)';
-                ctx.fillRect(100, height / 2 - 200, width - 200, 400);
+                // Clean white box
+                const boxPadding = 80;
+                ctx.fillStyle = 'rgba(255, 255, 255, 0.97)';
+                ctx.fillRect(boxPadding, height / 2 - 220, width - (boxPadding * 2), 440);
 
-                // Red accent line
-                ctx.fillStyle = '#DC2626';
-                ctx.fillRect(100, height / 2 - 210, width - 200, 10);
+                // Green accent line (hygge brand color)
+                ctx.fillStyle = '#2d5a3d';
+                ctx.fillRect(boxPadding, height / 2 - 230, width - (boxPadding * 2), 8);
 
-                // Title
-                ctx.font = '900 72px Montserrat, sans-serif';
+                // Title with smart sizing
+                const fontSize = getOptimalFontSize(ctx, text.toUpperCase(), width - 240, 70, 'Montserrat, sans-serif');
+                ctx.font = `900 ${fontSize}px Montserrat, sans-serif`;
                 ctx.textAlign = 'center';
                 ctx.textBaseline = 'middle';
                 ctx.fillStyle = '#1a1a1a';
-                ctx.fillText(text.toUpperCase(), width / 2, height / 2 - 50);
+
+                const maxWidth = width - 240;
+                wrapText(ctx, text.toUpperCase(), width / 2, height / 2 - 60, maxWidth, fontSize + 12, 2);
 
                 // Subtitle
-                ctx.font = '400 32px Montserrat, sans-serif';
+                ctx.font = '400 28px Montserrat, sans-serif';
                 ctx.fillStyle = '#666666';
-                ctx.fillText('A CURATED GUIDE', width / 2, height / 2 + 50);
+                ctx.textAlign = 'center';
+                ctx.fillText('A SUSTAINABLE TRAVEL GUIDE', width / 2, height / 2 + 80);
+
+                // Decorative line
+                ctx.fillStyle = '#2d5a3d';
+                ctx.fillRect(width / 2 - 60, height / 2 + 20, 120, 2);
             },
             applyExperienceStyle: (ctx, text, number, width, height) => {
                 // Clean white box at bottom
-                ctx.fillStyle = 'rgba(255, 255, 255, 0.95)';
-                ctx.fillRect(0, height - 260, width, 260);
+                ctx.fillStyle = 'rgba(255, 255, 255, 0.97)';
+                ctx.fillRect(0, height - 280, width, 280);
 
-                // Red accent
-                ctx.fillStyle = '#DC2626';
-                ctx.fillRect(0, height - 270, width, 10);
+                // Green accent top line
+                ctx.fillStyle = '#2d5a3d';
+                ctx.fillRect(0, height - 290, width, 8);
 
-                // Number in red box
-                ctx.fillStyle = '#DC2626';
-                ctx.fillRect(40, height - 220, 90, 90);
-                ctx.font = 'bold 60px Montserrat, sans-serif';
+                // Number in green box
+                ctx.fillStyle = '#2d5a3d';
+                ctx.fillRect(50, height - 230, 100, 100);
+                ctx.font = 'bold 65px Montserrat, sans-serif';
                 ctx.fillStyle = '#ffffff';
                 ctx.textAlign = 'center';
-                ctx.fillText(number, 85, height - 160);
+                ctx.fillText(number, 100, height - 165);
 
-                // Title in black
-                ctx.font = '800 50px Montserrat, sans-serif';
+                // Title in black with smart sizing
+                const maxWidth = width - 220;
+                const fontSize = getOptimalFontSize(ctx, text.toUpperCase(), maxWidth, 48, 'Montserrat, sans-serif');
+                ctx.font = `800 ${fontSize}px Montserrat, sans-serif`;
                 ctx.textAlign = 'left';
                 ctx.fillStyle = '#1a1a1a';
-                const maxWidth = width - 200;
-                wrapText(ctx, text.toUpperCase(), 160, height - 200, maxWidth, 60);
+                wrapText(ctx, text.toUpperCase(), 190, height - 215, maxWidth, fontSize + 10, 3);
             }
         }
     };
 
-    // Helper function to wrap text
-    function wrapText(ctx, text, x, y, maxWidth, lineHeight) {
+    // Helper function to wrap text with smart sizing
+    function wrapText(ctx, text, x, y, maxWidth, lineHeight, maxLines = 3) {
         const words = text.split(' ');
         let line = '';
         const lines = [];
@@ -1431,12 +1484,31 @@
         }
         lines.push(line);
 
+        // If too many lines, truncate and add ellipsis
+        if (lines.length > maxLines) {
+            lines.splice(maxLines);
+            lines[maxLines - 1] = lines[maxLines - 1].trim() + '...';
+        }
+
         // Draw the lines
         lines.forEach((line, i) => {
             ctx.fillText(line.trim(), x, y + (i * lineHeight));
         });
 
         return lines;
+    }
+
+    // Smart text sizing - reduces font size if text is too long
+    function getOptimalFontSize(ctx, text, maxWidth, baseFontSize, fontFamily) {
+        let fontSize = baseFontSize;
+        ctx.font = `bold ${fontSize}px ${fontFamily}`;
+
+        while (ctx.measureText(text).width > maxWidth && fontSize > 30) {
+            fontSize -= 2;
+            ctx.font = `bold ${fontSize}px ${fontFamily}`;
+        }
+
+        return fontSize;
     }
 
     // State
@@ -1450,6 +1522,7 @@
         form: document.getElementById('socialMediaForm'),
         templateSelect: document.getElementById('socialTemplateSelect'),
         destinationSelect: document.getElementById('socialDestinationSelect'),
+        numberExperiences: document.getElementById('socialNumberExperiences'),
         textStyleSelect: document.getElementById('socialTextStyleSelect'),
         generateBtn: document.getElementById('generateSocialBtn'),
         downloadBtn: document.getElementById('downloadSocialBtn'),
@@ -1518,6 +1591,7 @@
             const location = destinationSelect.options[destinationSelect.selectedIndex].dataset.name;
             const destinationImage = destinationSelect.options[destinationSelect.selectedIndex].dataset.image;
             const textStyle = elements.textStyleSelect.value;
+            const numExperiences = parseInt(elements.numberExperiences.value);
 
             // Store destination info
             currentDestination = {
@@ -1534,10 +1608,17 @@
                 throw new Error('No experiences found for this destination.');
             }
 
-            currentExperiences = data.items;
+            // Limit to the requested number
+            currentExperiences = data.items.slice(0, numExperiences);
 
-            // Create the template text
-            currentTemplate = TEMPLATES[templateKey].replace('{location}', location);
+            if (currentExperiences.length < numExperiences) {
+                console.warn(`Only ${currentExperiences.length} experiences available, requested ${numExperiences}`);
+            }
+
+            // Create the template text with {X} replacement
+            currentTemplate = TEMPLATES[templateKey]
+                .replace('{X}', currentExperiences.length)
+                .replace('{location}', location);
 
             // Generate all images (1 cover + 1 per experience)
             await generateCarousel(currentDestination, currentExperiences, currentTemplate, textStyle);
@@ -1687,11 +1768,49 @@
     // Utility functions
     function loadImage(url) {
         return new Promise((resolve, reject) => {
+            // If no URL, use fallback
+            if (!url || url === '') {
+                console.warn('No image URL provided, using fallback');
+                url = CONFIG.FALLBACK_IMAGE;
+            }
+
             const img = new Image();
-            img.crossOrigin = 'Anonymous';
-            img.onload = () => resolve(img);
-            img.onerror = () => reject(new Error(`Failed to load image: ${url}`));
-            img.src = url;
+
+            // Use proxy for external images to avoid CORS issues
+            let imageUrl = url;
+            if (url.startsWith('http://') || url.startsWith('https://')) {
+                // Use our proxy endpoint
+                imageUrl = `/accounts/proxy-image/?url=${encodeURIComponent(url)}`;
+                console.log(`Using proxy for: ${url}`);
+            }
+
+            img.onload = () => {
+                console.log(`Successfully loaded image: ${url}`);
+                resolve(img);
+            };
+
+            img.onerror = () => {
+                console.warn(`Failed to load image: ${url}, using fallback`);
+
+                // Use fallback image through proxy
+                const fallbackImg = new Image();
+                const fallbackUrl = `/accounts/proxy-image/?url=${encodeURIComponent(CONFIG.FALLBACK_IMAGE)}`;
+
+                fallbackImg.onload = () => {
+                    console.log('Loaded fallback image');
+                    resolve(fallbackImg);
+                };
+
+                fallbackImg.onerror = () => {
+                    console.error('Failed to load fallback image');
+                    reject(new Error(`Failed to load fallback image`));
+                };
+
+                fallbackImg.src = fallbackUrl;
+            };
+
+            // Set src (no need for crossOrigin since we're using proxy from same domain)
+            img.src = imageUrl;
         });
     }
 

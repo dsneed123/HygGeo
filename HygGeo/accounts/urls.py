@@ -100,4 +100,7 @@ urlpatterns = [
     # Analytics tracking endpoints
     path('track/page-view/', views.track_page_view, name='track_page_view'),
     path('track/click/', views.track_click_event, name='track_click_event'),
+
+    # Image proxy for social media generator (CORS fix)
+    path('proxy-image/', views.proxy_image, name='proxy_image'),
 ]
