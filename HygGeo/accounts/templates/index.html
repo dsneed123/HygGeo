@@ -5,6 +5,10 @@
 {% block title %}HygGeo - Sustainable Travel with Danish Hygge{% endblock %}
 
 {% block extra_head %}
+<!-- Preload LCP image with highest priority -->
+<link rel="preload" as="image" href="{% static 'banner-mobile.webp' %}" media="(max-width: 767px)">
+<link rel="preload" as="image" href="{% static 'banner.webp' %}" media="(min-width: 768px)">
+
 <!-- Critical CSS - Minified for speed, prevents CLS -->
 <style>
 /* Hero banner - static Copenhagen image with contained search */
