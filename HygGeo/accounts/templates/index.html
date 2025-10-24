@@ -5,18 +5,15 @@
 {% block title %}HygGeo - Sustainable Travel with Danish Hygge{% endblock %}
 
 {% block extra_head %}
-<!-- Preload LCP image with highest priority -->
-<link rel="preload" as="image" href="{% static 'banner-mobile.webp' %}" media="(max-width: 767px)">
-<link rel="preload" as="image" href="{% static 'banner.webp' %}" media="(min-width: 768px)">
+<!-- Preload LCP image - mobile first (most users, smallest file) -->
+<link rel="preload" as="image" href="{% static 'banner-mobile.webp' %}" fetchpriority="high">
 
 <!-- Critical CSS - Minified for speed, prevents CLS -->
 <style>
 /* Hero banner - static Copenhagen image with contained search */
 .hero-banner{position:relative;background:#2d5a3d;min-height:50vh;overflow:hidden;display:flex;align-items:flex-start;padding-bottom:200px}
 /* LCP Optimization: Explicit dimensions and aspect-ratio to prevent CLS */
-.banner-image{position:absolute;top:0;left:0;width:100%;height:100%;object-fit:cover;object-position:center;z-index:1;aspect-ratio:1920/1280}
-/* Reserve space for banner image to prevent CLS */
-.hero-banner picture{display:block;width:100%;height:100%;position:absolute;top:0;left:0;aspect-ratio:1920/1280}
+.banner-image{position:absolute;top:0;left:0;width:100%;height:100%;object-fit:cover;object-position:center;z-index:1;aspect-ratio:800/533}
 .banner-overlay{position:absolute;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.3);z-index:2}
 .banner-content-wrapper{position:relative;z-index:10;width:100%;padding:1.5rem 1rem 0}
 .banner-content{text-align:center;color:white;background:rgba(0,0,0,0.4);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);padding:1.5rem;border-radius:15px;max-width:700px;margin:0 auto 3rem}
@@ -79,9 +76,6 @@
 }
 @media(max-width:767px){
 .hero-banner{min-height:70vh;padding-bottom:160px}
-/* Mobile aspect-ratio (800x533 = same 1.5 ratio) */
-.banner-image{aspect-ratio:800/533}
-.hero-banner picture{aspect-ratio:800/533}
 .banner-content{padding:0.9rem;margin-bottom:6rem;max-width:95%}
 .banner-content-wrapper{padding:0.8rem 0.5rem 0}
 .hero-title{font-size:1.4rem;margin-bottom:0.3rem}
@@ -130,24 +124,16 @@
 {% block content %}
 <!-- Hero Banner Section with Integrated Search -->
 <section class="hero-banner">
-    <!-- Static Copenhagen Banner Image - Responsive WebP with explicit dimensions -->
-    <picture>
-        <!-- Mobile first - evaluated in order -->
-        <source media="(max-width: 767px)"
-                srcset="{% static 'banner-mobile.webp' %}"
-                type="image/webp">
-        <!-- Desktop -->
-        <source srcset="{% static 'banner.webp' %}"
-                type="image/webp">
-        <!-- Fallback img with explicit dimensions for LCP optimization -->
-        <img src="{% static 'banner.webp' %}"
-             alt="Copenhagen - Sustainable Travel Destination"
-             class="banner-image"
-             fetchpriority="high"
-             width="1920"
-             height="1280"
-             loading="eager">
-    </picture>
+    <!-- Static Copenhagen Banner Image - Simple responsive srcset -->
+    <img src="{% static 'banner-mobile.webp' %}"
+         srcset="{% static 'banner-mobile.webp' %} 800w, {% static 'banner.webp' %} 1920w"
+         sizes="100vw"
+         alt="Copenhagen - Sustainable Travel Destination"
+         class="banner-image"
+         fetchpriority="high"
+         width="800"
+         height="533"
+         loading="eager">
     <div class="banner-overlay"></div>
 
     <!-- Centered Content with Blur -->
