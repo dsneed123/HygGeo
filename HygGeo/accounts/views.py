@@ -137,12 +137,47 @@ def index(request):
             has_survey = TravelSurvey.objects.filter(user=request.user).exists()
             cache.set(cache_key, has_survey, 60 * 5)
 
+    # Get recent users for community tab (cache for 15 minutes)
+    recent_users = cache.get('index_recent_users_v1')
+    if recent_users is None:
+        recent_users = User.objects.filter(
+            is_active=True
+        ).select_related(
+            'userprofile'
+        ).order_by('-date_joined')[:12]
+
+        # Convert to list to cache
+        recent_users = list(recent_users)
+
+        # Cache for 15 minutes
+        cache.set('index_recent_users_v1', recent_users, 60 * 15)
+
+    # Get featured trips for trips tab (cache for 15 minutes)
+    featured_trips = cache.get('index_featured_trips_v1')
+    if featured_trips is None:
+        featured_trips = Trip.objects.filter(
+            visibility='public'
+        ).select_related(
+            'creator',
+            'destination'
+        ).prefetch_related(
+            'experiences'
+        ).order_by('-created_at')[:9]
+
+        # Convert to list to cache
+        featured_trips = list(featured_trips)
+
+        # Cache for 15 minutes
+        cache.set('index_featured_trips_v1', featured_trips, 60 * 15)
+
     context = {
         'sustainability_facts': featured_facts,
         'has_survey': has_survey,
         'featured_destinations': featured_destinations,
         'featured_experiences': featured_experiences,
         'featured_accommodations': featured_accommodations,
+        'recent_users': recent_users,
+        'featured_trips': featured_trips,
     }
 
     return render(request, 'index.html', context)

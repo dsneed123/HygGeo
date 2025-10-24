@@ -54,6 +54,8 @@
     <link rel="dns-prefetch" href="https://www.hyggeo.com">
     <link rel="preconnect" href="https://cdn.jsdelivr.net">
     <link rel="dns-prefetch" href="https://cdn.jsdelivr.net">
+    <link rel="preconnect" href="https://cdnjs.cloudflare.com">
+    <link rel="dns-prefetch" href="https://cdnjs.cloudflare.com">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link rel="dns-prefetch" href="https://fonts.googleapis.com">
@@ -172,6 +174,23 @@
             line-gap-override: 0%;
         }
 
+        /* FontAwesome icon space reservation to prevent CLS */
+        .fa,.fas,.far,.fal,.fab{
+            display:inline-block;
+            min-width:1em;
+            min-height:1em;
+            font-style:normal;
+            font-variant:normal;
+            text-rendering:auto;
+            -webkit-font-smoothing:antialiased;
+        }
+        /* Reserve space for icons before FA loads */
+        .fa:before,.fas:before,.far:before,.fal:before,.fab:before{
+            display:inline-block;
+            min-width:1em;
+            min-height:1em;
+        }
+
         /* Critical CSS - Minimal Bootstrap + Layout */
         *,::after,::before{box-sizing:border-box}
         body{margin:0;font-family:'Poppins','Poppins-fallback',-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,'Helvetica Neue',Arial,sans-serif;font-size:1rem;font-weight:400;line-height:1.5;color:#212529;background-color:#fff}
@@ -181,13 +200,16 @@
         a:hover{color:#0a58ca}
         img{vertical-align:middle}
 
-        /* Navbar - prevent flash */
-        .navbar{position:relative;display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;padding:0.5rem 0;background:linear-gradient(135deg, #2d5a3d, #4a7c59);box-shadow:0 2px 10px rgba(0,0,0,0.1);z-index:1030}
-        .navbar-brand{padding:0.25rem 0;margin-right:1rem;font-size:1.8rem;font-weight:700;color:#fff !important;text-decoration:none;white-space:nowrap;display:flex;align-items:center}
+        /* Navbar - CLS prevention with explicit dimensions */
+        .navbar{position:relative;display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;padding:0.5rem 0;min-height:70px;background:linear-gradient(135deg, #2d5a3d, #4a7c59);box-shadow:0 2px 10px rgba(0,0,0,0.1);z-index:1030}
+        .navbar-brand{padding:0.25rem 0;margin-right:1rem;font-size:1.8rem;font-weight:700;color:#fff !important;text-decoration:none;white-space:nowrap;display:flex;align-items:center;min-height:50px;line-height:1.2}
+        .navbar-brand svg{width:1.5rem;height:1.5rem;min-width:1.5rem;min-height:1.5rem;vertical-align:middle;margin-right:0.5rem}
         .navbar-nav{display:flex;flex-direction:column;padding-left:0;margin-bottom:0;list-style:none}
-        .navbar-nav .nav-link{color:rgba(255,255,255,0.9) !important;font-weight:500;padding:0.5rem 1rem;white-space:nowrap;text-decoration:none}
-        .navbar-toggler{padding:0.25rem 0.75rem;font-size:1.25rem;line-height:1;background-color:transparent;border:1px solid rgba(255,255,255,0.5);border-radius:0.25rem}
-        .navbar-toggler-icon{display:inline-block;width:1.5em;height:1.5em;vertical-align:middle;background-image:url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 30 30'%3e%3cpath stroke='rgba(255, 255, 255, 0.9)' stroke-linecap='round' stroke-miterlimit='10' stroke-width='2' d='M4 7h22M4 15h22M4 23h22'/%3e%3c/svg%3e");background-repeat:no-repeat;background-position:center;background-size:100%}
+        .navbar-nav .nav-link{color:rgba(255,255,255,0.9) !important;font-weight:500;padding:0.5rem 1rem;white-space:nowrap;text-decoration:none;min-height:44px;display:flex;align-items:center}
+        .navbar-nav .nav-link i{min-width:1em;min-height:1em;display:inline-block;margin-right:0.25rem}
+        .navbar-toggler{padding:0.25rem 0.75rem;font-size:1.25rem;line-height:1;background-color:transparent;border:1px solid rgba(255,255,255,0.5);border-radius:0.25rem;min-width:44px;min-height:44px;display:flex;align-items:center;justify-content:center}
+        .navbar-toggler-icon{display:inline-block;width:1.5em;height:1.5em;min-width:1.5em;min-height:1.5em;vertical-align:middle;background-image:url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 30 30'%3e%3cpath stroke='rgba(255, 255, 255, 0.9)' stroke-linecap='round' stroke-miterlimit='10' stroke-width='2' d='M4 7h22M4 15h22M4 23h22'/%3e%3c/svg%3e");background-repeat:no-repeat;background-position:center;background-size:100%}
+        @media (min-width:992px){.navbar-nav{flex-direction:row}.navbar-nav .nav-link{padding:0.5rem 1rem}}
 
         /* Layout */
         .container{width:100%;padding-right:var(--bs-gutter-x);padding-left:var(--bs-gutter-x);margin-right:auto;margin-left:auto}

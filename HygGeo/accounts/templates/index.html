@@ -5,201 +5,194 @@
 {% block title %}HygGeo - Sustainable Travel with Danish Hygge{% endblock %}
 
 {% block extra_head %}
-<!-- Preload hero image for LCP optimization - aggressive mobile compression -->
-{% if featured_destinations.0.image %}
+<!-- Preload hero image for LCP optimization -->
 <link rel="preload"
       as="image"
-      href="{{ featured_destinations.0.image.url|cf_image:'format=webp,width=480,quality=20,fit=cover' }}"
-      type="image/webp"
-      fetchpriority="high"
-      imagesrcset="{{ featured_destinations.0.image.url|cf_image:'format=webp,width=480,quality=20,fit=cover' }} 480w,
-                   {{ featured_destinations.0.image.url|cf_image:'format=webp,width=640,quality=20,fit=cover' }} 640w,
-                   {{ featured_destinations.0.image.url|cf_image:'format=webp,width=1280,quality=30,fit=cover' }} 1280w"
-      imagesizes="(max-width: 767px) 100vw, (max-width: 1199px) 100vw, 1280px">
-{% endif %}
+      href="{% static 'banner.jpeg' %}"
+      type="image/jpeg"
+      fetchpriority="high">
 
 <!-- Critical CSS - Minified for speed, prevents CLS -->
 <style>
-/* Hero banner - fixed height prevents CLS */
-.hero-banner{position:relative;background:#2d5a3d;display:flex;align-items:center;min-height:70vh;height:70vh;overflow:hidden}
-.banner-carousel{position:absolute;top:0;left:0;width:100%;height:100%;z-index:1}
-.banner-slide{position:absolute;top:0;left:0;width:100%;height:100%;opacity:0;visibility:hidden;transition:opacity 0.8s ease-in-out}
-.banner-slide.active{opacity:1;visibility:visible}
-/* Image container with aspect ratio prevents CLS */
-.img-aspect-container{position:relative;width:100%;height:100%;overflow:hidden;background:#2d5a3d}
-.img-aspect-container img{position:absolute;top:0;left:0;width:100%;height:100%;object-fit:cover;object-position:center}
-.img-cover{object-fit:cover;object-position:center}
-.banner-overlay{position:absolute;top:0;left:0;width:100%;height:100%;background:linear-gradient(to right,rgba(0,0,0,0.6) 0%,rgba(0,0,0,0.3) 50%,rgba(0,0,0,0.5) 100%);z-index:2}
-.container{position:relative;z-index:10}
-/* Prevent text reflow - explicit dimensions */
-.display-2{font-size:3.5rem;line-height:1.2;min-height:84px;font-weight:700;margin-bottom:1rem}
-.lead{font-size:1.25rem;line-height:1.5;min-height:37px;margin-bottom:2rem}
-.btn-lg{min-height:58px;padding:0.5rem 1rem;font-size:1.25rem;display:inline-flex;align-items:center;justify-content:center}
-.destination-badge{display:inline-flex;align-items:center;min-height:38px;padding:0.5rem 1rem;border-radius:25px;margin-bottom:1.5rem}
-.destination-name{font-size:2.2rem;font-weight:800;line-height:1.1;min-height:48px;margin-bottom:0.4rem}
-.position-absolute{position:absolute}
-.top-0{top:0}
-.end-0,.start-0{right:0}
-.bottom-0{bottom:0}
-.p-4{padding:1.5rem}
-.fas,.fa{display:inline-block;width:1em;text-align:center}
+/* Hero banner - static Copenhagen image with contained search */
+.hero-banner{position:relative;background:#2d5a3d;min-height:50vh;overflow:hidden;display:flex;align-items:flex-start;padding-bottom:200px}
+.banner-image{position:absolute;top:0;left:0;width:100%;height:100%;object-fit:cover;object-position:center;z-index:1}
+.banner-overlay{position:absolute;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.3);z-index:2}
+.banner-content-wrapper{position:relative;z-index:10;width:100%;padding:1.5rem 1rem 0}
+.banner-content{text-align:center;color:white;background:rgba(0,0,0,0.4);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);padding:1.5rem;border-radius:15px;max-width:700px;margin:0 auto 3rem}
+.hero-title{font-size:2.8rem;font-weight:800;margin-bottom:0.5rem;text-shadow:2px 2px 4px rgba(0,0,0,0.5)}
+.hero-subtitle{font-size:1.2rem;color:#ffc107;margin-bottom:0.5rem;text-shadow:1px 1px 3px rgba(0,0,0,0.5)}
+.hero-description{font-size:1rem;margin:0 auto;text-shadow:1px 1px 2px rgba(0,0,0,0.5);line-height:1.5}
+/* Tab interface - inside banner - blends with page background */
+.search-tabs{background:#faf8f5;border-radius:15px 15px 0 0;padding:0.7rem 0.8rem;position:absolute;bottom:0;left:0;right:0;z-index:100;box-shadow:0 -2px 10px rgba(0,0,0,0.05);max-width:850px;margin:0 auto;border-top:1px solid #e8e4df}
+.tab-buttons{display:flex;justify-content:center;gap:0.6rem;margin-bottom:0;flex-wrap:nowrap}
+.tab-btn{background:#fff;border:1px solid #ddd;border-radius:8px;padding:0.9rem 0.6rem;min-width:0;cursor:pointer;transition:all 0.3s;text-align:center;flex:1 1 0;max-width:none}
+.tab-btn:hover,.tab-btn.active{border-color:#1e5a3d;background:#f0f7f4}
+.tab-btn i{font-size:1.5rem;color:#1e5a3d;display:block;margin-bottom:0.3rem}
+.tab-btn span{display:block;font-weight:600;color:#555;font-size:0.75rem;line-height:1.2}
+.tab-content{display:none}
+.tab-content.active{display:block}
+.tab-section{display:none}
+.tab-section.active{display:block}
+.search-container{max-width:700px;margin:0 auto}
+.search-bar-container{margin-top:0.8rem}
+.search-form{width:100%}
+.search-input-wrapper{position:relative;display:flex;align-items:center;background:#fff;border:2px solid #ddd;border-radius:8px;transition:border-color 0.3s}
+.search-input-wrapper:focus-within{border-color:#1e5a3d}
+.search-icon{position:absolute;left:1rem;color:#888;font-size:1rem}
+.search-input{flex:1;border:none;outline:none;padding:0.9rem 1rem 0.9rem 3rem;font-size:0.9rem;background:transparent}
+.search-input::placeholder{color:#aaa}
+.search-submit-btn{background:#1e5a3d;color:#fff;border:none;padding:0.9rem 1.5rem;border-radius:0 6px 6px 0;cursor:pointer;transition:background 0.3s;display:flex;align-items:center;justify-content:center}
+.search-submit-btn:hover{background:#164a2f}
+.search-submit-btn i{font-size:1rem}
+.tab-preview{display:flex;flex-direction:column;gap:0.6rem}
+.preview-item{display:flex;align-items:center;gap:0.8rem;padding:0.7rem 0.9rem;background:#fff;border:1px solid #e0e0e0;border-radius:8px;text-decoration:none;transition:all 0.3s;color:inherit}
+.preview-item:hover{border-color:#1e5a3d;background:#f9fdf9;transform:translateX(3px)}
+.preview-icon{width:40px;height:40px;display:flex;align-items:center;justify-content:center;background:#f0f7f4;border-radius:6px;color:#1e5a3d;font-size:1.2rem;flex-shrink:0}
+.preview-info{flex:1;min-width:0}
+.preview-title{font-size:0.85rem;font-weight:600;color:#333;margin:0 0 0.2rem;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.preview-location{font-size:0.72rem;color:#666;margin:0;display:flex;align-items:center;gap:0.3rem}
+.preview-location i{font-size:0.7rem}
+.view-all-link{display:inline-block;text-align:center;color:#1e5a3d;font-weight:600;font-size:0.8rem;padding:0.6rem;text-decoration:none;border-radius:6px;background:#f0f7f4;transition:background 0.3s;margin-top:0.3rem}
+.view-all-link:hover{background:#e0ebe0;color:#1e5a3d}
+@media(max-width:991px){
+.hero-banner{padding-bottom:165px;min-height:65vh}
+.banner-content{max-width:90%;margin-bottom:5rem;padding:1.2rem}
+.banner-content-wrapper{padding:1rem 1rem 0}
+.hero-title{font-size:1.8rem;margin-bottom:0.4rem}
+.hero-subtitle{font-size:0.95rem;margin-bottom:0.4rem}
+.hero-description{font-size:0.88rem;line-height:1.3}
+.search-tabs{padding:0.65rem 0.75rem;border-radius:15px 15px 0 0}
+.tab-preview{gap:0.5rem}
+.preview-item{padding:0.6rem 0.75rem}
+.preview-icon{width:35px;height:35px;font-size:1.1rem}
+.preview-title{font-size:0.78rem}
+.preview-location{font-size:0.68rem}
+.view-all-link{font-size:0.75rem;padding:0.55rem}
+.tab-buttons{gap:0.4rem;margin-bottom:0;flex-wrap:nowrap}
+.tab-btn{flex:1 1 0;max-width:none;min-width:0;padding:0.5rem 0.35rem;border-radius:6px}
+.tab-btn i{font-size:1.1rem;margin-bottom:0.15rem}
+.tab-btn span{font-size:0.65rem;font-weight:600;line-height:1.1}
+.search-input{padding:0.75rem 1rem 0.75rem 2.8rem;font-size:0.85rem}
+.search-icon{left:0.85rem;font-size:0.95rem}
+.search-submit-btn{padding:0.75rem 1.2rem}
+}
 @media(max-width:767px){
-.hero-banner{height:60vh;min-height:60vh}
-.display-2{font-size:2.5rem;min-height:60px}
-.lead{font-size:1.1rem;min-height:33px}
-.btn-lg{min-height:48px;font-size:1.1rem}
-.destination-badge{font-size:0.85rem;padding:0.45rem 0.9rem;min-height:34px}
+.hero-banner{min-height:70vh;padding-bottom:160px}
+.banner-content{padding:0.9rem;margin-bottom:6rem;max-width:95%}
+.banner-content-wrapper{padding:0.8rem 0.5rem 0}
+.hero-title{font-size:1.4rem;margin-bottom:0.3rem}
+.hero-subtitle{font-size:0.85rem;margin-bottom:0.3rem}
+.hero-description{font-size:0.75rem;line-height:1.2}
+.search-tabs{padding:0.55rem 0.6rem;border-radius:12px 12px 0 0}
+.tab-buttons{gap:0.3rem;margin-bottom:0;flex-wrap:nowrap}
+.tab-btn{flex:1 1 0;padding:0.45rem 0.25rem;min-width:0;border-radius:6px}
+.tab-btn i{font-size:1rem;margin-bottom:0.12rem}
+.tab-btn span{font-size:0.6rem;line-height:1.05;font-weight:600}
+.search-input{padding:0.7rem 0.85rem 0.7rem 2.6rem;font-size:0.8rem}
+.search-icon{left:0.75rem;font-size:0.9rem}
+.search-submit-btn{padding:0.7rem 1rem}
+.tab-preview{gap:0.45rem}
+.preview-item{padding:0.55rem 0.65rem;gap:0.7rem}
+.preview-icon{width:32px;height:32px;font-size:1rem}
+.preview-title{font-size:0.75rem}
+.preview-location{font-size:0.65rem}
+.view-all-link{font-size:0.72rem;padding:0.5rem}
+}
+@media(max-width:480px){
+.hero-banner{min-height:75vh;padding-bottom:155px}
+.banner-content{padding:0.75rem;margin-bottom:7rem}
+.banner-content-wrapper{padding:0.6rem 0.4rem 0}
+.hero-title{font-size:1.2rem;margin-bottom:0.25rem}
+.hero-subtitle{font-size:0.75rem;margin-bottom:0.25rem}
+.hero-description{font-size:0.68rem;line-height:1.15}
+.search-tabs{padding:0.5rem 0.5rem;border-radius:10px 10px 0 0}
+.tab-buttons{gap:0.25rem;margin-bottom:0;flex-wrap:nowrap}
+.tab-btn{padding:0.4rem 0.2rem;min-width:0;border-radius:5px;flex:1 1 0}
+.tab-btn i{font-size:0.9rem;margin-bottom:0.1rem}
+.tab-btn span{font-size:0.55rem;font-weight:600;line-height:1}
+.search-input{padding:0.65rem 0.75rem 0.65rem 2.4rem;font-size:0.75rem}
+.search-icon{left:0.65rem;font-size:0.85rem}
+.search-submit-btn{padding:0.65rem 0.9rem}
+.tab-preview{gap:0.4rem}
+.preview-item{padding:0.5rem 0.6rem;gap:0.65rem}
+.preview-icon{width:30px;height:30px;font-size:0.95rem}
+.preview-title{font-size:0.7rem}
+.preview-location{font-size:0.62rem}
+.view-all-link{font-size:0.68rem;padding:0.45rem}
 }
 </style>
 {% endblock %}
 
 {% block content %}
-<!-- Hero Banner Section -->
-<section class="hero-banner position-relative overflow-hidden">
-    <!-- Background Carousel -->
-    <div class="banner-carousel" id="bannerCarousel">
-        {% for destination in featured_destinations %}
-        <div class="banner-slide{% if forloop.first %} active{% endif %}">
-            {% if destination.image %}
-                <!-- Aspect ratio container to prevent CLS -->
-                <div class="img-aspect-container" style="aspect-ratio: 16/9;">
-                    <picture>
-                        <!-- Mobile: Ultra compressed WebP -->
-                        <source
-                            media="(max-width: 767px)"
-                            type="image/webp"
-                            srcset="{{ destination.image.url|cf_image:'format=webp,width=480,quality=20,fit=cover' }} 480w,
-                                    {{ destination.image.url|cf_image:'format=webp,width=640,quality=20,fit=cover' }} 640w"
-                            sizes="100vw">
-                        <!-- Tablet: Medium WebP -->
-                        <source
-                            media="(max-width: 1199px)"
-                            type="image/webp"
-                            srcset="{{ destination.image.url|cf_image:'format=webp,width=800,quality=25,fit=cover' }} 800w,
-                                    {{ destination.image.url|cf_image:'format=webp,width=1024,quality=25,fit=cover' }} 1024w"
-                            sizes="100vw">
-                        <!-- Desktop: Large WebP -->
-                        <source
-                            type="image/webp"
-                            srcset="{{ destination.image.url|cf_image:'format=webp,width=1280,quality=30,fit=cover' }} 1280w,
-                                    {{ destination.image.url|cf_image:'format=webp,width=1920,quality=30,fit=cover' }} 1920w"
-                            sizes="100vw">
-                        <!-- Fallback -->
-                        <img
-                            src="{{ destination.image.url|cf_image:'format=webp,width=480,quality=20,fit=cover' }}"
-                            alt="{{ destination.name }}"
-                            {% if forloop.first %}fetchpriority="high"{% else %}loading="lazy"{% endif %}
-                            width="1920"
-                            height="1080"
-                            class="img-cover">
-                    </picture>
-                </div>
-            {% else %}
-                <div class="placeholder-image {% cycle 'nordic' 'forest' 'coastal' %}">
-                    <i class="fas fa-{% cycle 'mountain' 'tree' 'water' %}"></i>
-                </div>
-            {% endif %}
-            <div class="banner-overlay"></div>
-        </div>
-        {% endfor %}
-    </div>
+<!-- Hero Banner Section with Integrated Search -->
+<section class="hero-banner">
+    <!-- Static Copenhagen Banner Image -->
+    <img src="{% static 'banner.jpeg' %}"
+         alt="Copenhagen - Sustainable Travel Destination"
+         class="banner-image"
+         fetchpriority="high"
+         width="1920"
+         height="1080">
+    <div class="banner-overlay"></div>
 
-    <!-- Content Container -->
-    <div class="container h-100 position-relative" style="z-index: 10;">
-        <div class="row h-100 align-items-center">
-            <!-- Left Side - HygGeo Branding -->
-            <div class="col-lg-6 col-md-12 text-white">
-                <div class="brand-content">
-                    <h1 class="display-2 fw-bold mb-4 text-shadow">
-                        HygGeo
-                        <span class="d-block h3 text-warning mt-3">Where Hygge Meets Sustainable Travel</span>
-                    </h1>
-                    <p class="lead mb-4 text-shadow">
-                        Discover the Danish art of <em>hygge</em> - finding joy in simple, mindful moments -
-                        combined with responsible travel that protects our planet for future generations.
-                    </p>
-                    <div class="d-flex flex-wrap gap-3">
-                        {% if not user.is_authenticated %}
-                        <a href="{% url 'signup' %}" class="btn btn-light btn-lg px-4 py-2" id="join-btn">
-                            <i class="fas fa-user-plus me-2"></i>Join HygGeo
-                        </a>
-                        {% endif %}
-                        {% if user.is_authenticated and not has_survey %}
-                        <a href="{% url 'survey' %}" class="btn btn-warning btn-lg px-4 py-2">
-                            <i class="fas fa-clipboard-list me-2"></i>Take Travel Survey
-                        </a>
-                        {% elif user.is_authenticated %}
-                        <a href="{% url 'profile' %}" class="btn btn-warning btn-lg px-4 py-2">
-                            <i class="fas fa-user me-2"></i>View Profile
-                        </a>
-                        {% endif %}
-                        <a href="#hygge-section" class="btn btn-outline-light btn-lg px-4 py-2" id="learn-more-btn">
-                            <i class="fas fa-arrow-down me-2"></i>Learn More
-                        </a>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Right Side - Destination Info Overlay -->
-            <div class="col-lg-6 col-md-12">
-                <div class="destination-info-overlay">
-                    <!-- Destination info positioned over the background -->
-                    <div class="destination-overlay-content" id="destinationInfo">
-                        <div class="destination-badge" id="destinationBadge">
-                            <i class="fas fa-leaf"></i>
-                            <span id="badgeText">Eco-Friendly</span>
-                        </div>
-                        <h2 class="destination-name" id="destinationName">Loading...</h2>
-                        <p class="destination-country" id="destinationCountry">Beautiful Destination</p>
-                        <p class="destination-description" id="destinationDescription">Discover amazing sustainable travel experiences.</p>
-                        <div class="destination-stats">
-                            <div class="stat">
-                                <i class="fas fa-heart"></i>
-                                <span id="hyggeRating">9/10 Hygge</span>
-                            </div>
-                            <div class="stat">
-                                <i class="fas fa-map-marked-alt"></i>
-                                <span id="experienceCount">0 Experiences</span>
-                            </div>
-                        </div>
-                        <a href="#" class="btn btn-explore" id="exploreBtn">
-                            <i class="fas fa-compass me-2"></i>
-                            Explore Destination
-                        </a>
-                    </div>
-
-                    <!-- Carousel Indicators -->
-                    <div class="carousel-indicators">
-                        {% for destination in featured_destinations %}
-                        <button class="indicator{% if forloop.first %} active{% endif %}" onclick="goToSlide({{ forloop.counter0 }})" aria-label="Go to destination {{ forloop.counter }}"></button>
-                        {% endfor %}
-                    </div>
-                </div>
+    <!-- Centered Content with Blur -->
+    <div class="banner-content-wrapper">
+        <div class="container">
+            <div class="banner-content">
+                <h1 class="hero-title">HygGeo</h1>
+                <p class="hero-subtitle">Where Hygge Meets Sustainable Travel</p>
+                <p class="hero-description">
+                    Discover the Danish art of <em>hygge</em> - finding joy in simple, mindful moments -
+                    combined with responsible travel that protects our planet for future generations.
+                </p>
             </div>
         </div>
     </div>
 
-    <!-- Decorative elements -->
-    <div class="position-absolute top-0 end-0 p-4">
-        <i class="fas fa-leaf text-white opacity-25" style="font-size: 3rem; transform: rotate(15deg);"></i>
-    </div>
-    <div class="position-absolute bottom-0 start-0 p-4">
-        <i class="fas fa-seedling text-white opacity-25" style="font-size: 2rem; transform: rotate(-15deg);"></i>
-    </div>
+    <!-- Tab Navigation - Inside Banner at Bottom -->
+    <div class="search-tabs">
+        <div class="tab-buttons">
+            <button class="tab-btn active" onclick="switchTab('experiences')" id="experiences-tab">
+                <i class="fas fa-hiking"></i>
+                <span>Experiences</span>
+            </button>
+            <button class="tab-btn" onclick="switchTab('accommodations')" id="accommodations-tab">
+                <i class="fas fa-home"></i>
+                <span>Accommodations</span>
+            </button>
+            <button class="tab-btn" onclick="switchTab('trips')" id="trips-tab">
+                <i class="fas fa-route"></i>
+                <span>Trips</span>
+            </button>
+            <button class="tab-btn" onclick="switchTab('buddies')" id="buddies-tab">
+                <i class="fas fa-users"></i>
+                <span>Find Travel Buddy</span>
+            </button>
+        </div>
 
-    <!-- Mobile scroll indicator -->
-    <div class="mobile-scroll-indicator d-md-none">
-        <div class="scroll-text">Discover More</div>
-        <div class="scroll-arrow">
-            <i class="fas fa-chevron-down"></i>
+        <!-- Search Bar -->
+        <div class="search-bar-container">
+            <form method="get" action="#" class="search-form">
+                <div class="search-input-wrapper">
+                    <i class="fas fa-search search-icon"></i>
+                    <input type="text"
+                           name="q"
+                           class="search-input"
+                           placeholder="Search experiences, accommodations, destinations..."
+                           aria-label="Search">
+                    <button type="submit" class="search-submit-btn">
+                        <i class="fas fa-arrow-right"></i>
+                    </button>
+                </div>
+            </form>
         </div>
     </div>
 </section>
 
-<!-- Featured Experiences Section -->
-{% if featured_experiences %}
-<section class="py-4" style="background-color: var(--hygge-warm-white);">
-    <div class="container">
+<!-- Featured Experiences Section (Tab Content) -->
+<section class="tab-section active" id="experiences-section" style="background-color: var(--hygge-warm-white);">
+    <div class="container py-4">
         <div class="row">
             <div class="col-12 mb-4">
                 <div class="d-flex justify-content-between align-items-center">
@@ -207,29 +200,27 @@
                         <h2 class="h3 fw-bold mb-2" style="color: var(--hygge-green);">Featured Experiences</h2>
                         <p class="text-muted mb-0">Sustainable adventures await</p>
                     </div>
-                       <a href="{% url 'experiences:experience_list' %}" class="btn btn-outline-primary btn-sm" style="color: #1e5a3d; border-color: #1e5a3d;">
+                    <a href="{% url 'experiences:experience_list' %}" class="btn btn-outline-primary btn-sm" style="color: #1e5a3d; border-color: #1e5a3d;">
                         View All <i class="fas fa-arrow-right ms-1"></i>
                     </a>
                 </div>
             </div>
         </div>
 
-        <!-- Mobile-Friendly Experiences Carousel -->
+        {% if featured_experiences %}
+        <!-- Experiences Carousel -->
         <div class="experiences-carousel-wrapper">
             <div class="experiences-carousel" id="experiencesCarousel">
                 {% for experience in featured_experiences %}
                 <div class="experience-card">
                     <div class="experience-image">
                         {% if experience.main_image %}
-                            <!-- Aspect ratio container to prevent CLS -->
                             <div class="img-aspect-container" style="aspect-ratio: 240/140;">
                                 <picture>
-                                    <!-- Cloudflare WebP with ultra compression -->
                                     <source
                                         type="image/webp"
                                         srcset="{{ experience.main_image.url|cf_image:'format=webp,width=240,quality=20,fit=cover' }} 240w"
                                         sizes="240px">
-                                    <!-- Fallback -->
                                     <img
                                         src="{{ experience.main_image.url|cf_image:'format=webp,width=240,quality=20,fit=cover' }}"
                                         alt="{{ experience.title }}"
@@ -279,7 +270,7 @@
                             </div>
                             {% endif %}
                         </div>
-                        <a href="{{ experience.get_absolute_url }}" class="btn btn-experience" aria-label="{{ experience.title }} - {% if experience.description %}{{ experience.description|truncatewords:10|striptags }}{% else %}Sustainable travel experience{% endif %}">
+                        <a href="{{ experience.get_absolute_url }}" class="btn btn-experience">
                             <i class="fas fa-arrow-right me-2"></i>
                             View Details
                         </a>
@@ -288,23 +279,24 @@
                 {% endfor %}
             </div>
 
-            <!-- Carousel Navigation -->
             <div class="experiences-nav">
                 <button class="nav-btn prev-btn" onclick="scrollExperiences('prev')" aria-label="Previous experiences">
-                    <i class="fas fa-chevron-left" aria-hidden="true"></i>
+                    <i class="fas fa-chevron-left"></i>
                 </button>
                 <button class="nav-btn next-btn" onclick="scrollExperiences('next')" aria-label="Next experiences">
-                    <i class="fas fa-chevron-right" aria-hidden="true"></i>
+                    <i class="fas fa-chevron-right"></i>
                 </button>
             </div>
         </div>
+        {% else %}
+        <p class="text-center text-muted">No experiences available yet.</p>
+        {% endif %}
     </div>
 </section>
-{% endif %}
 
-<!-- Featured Accommodations Section -->
-<section class="py-4" style="background-color: var(--hygge-cream);">
-    <div class="container">
+<!-- Featured Accommodations Section (Tab Content) -->
+<section class="tab-section" id="accommodations-section" style="background-color: var(--hygge-cream);">
+    <div class="container py-4">
         <div class="row">
             <div class="col-12 mb-4">
                 <div class="d-flex justify-content-between align-items-center">
@@ -319,6 +311,7 @@
             </div>
         </div>
 
+        {% if featured_accommodations %}
         <!-- Accommodations Carousel -->
         <div class="experiences-carousel-wrapper">
             <div class="experiences-carousel" id="accommodationsCarousel">
@@ -326,15 +319,12 @@
                 <div class="experience-card">
                     <div class="experience-image">
                         {% if accommodation.main_image %}
-                            <!-- Aspect ratio container to prevent CLS -->
                             <div class="img-aspect-container" style="aspect-ratio: 240/140;">
                                 <picture>
-                                    <!-- Cloudflare WebP with ultra compression -->
                                     <source
                                         type="image/webp"
                                         srcset="{{ accommodation.main_image.url|cf_image:'format=webp,width=240,quality=20,fit=cover' }} 240w"
                                         sizes="240px">
-                                    <!-- Fallback -->
                                     <img
                                         src="{{ accommodation.main_image.url|cf_image:'format=webp,width=240,quality=20,fit=cover' }}"
                                         alt="{{ accommodation.name }}"
@@ -371,7 +361,7 @@
                             {% elif accommodation.description %}
                                 {{ accommodation.description|truncatewords:15 }}
                             {% else %}
-                                A sustainable accommodation with modern amenities and eco-friendly practices.
+                                A sustainable accommodation with modern amenities.
                             {% endif %}
                         </p>
                         <div class="experience-stats">
@@ -386,43 +376,7 @@
                             </div>
                             {% endif %}
                         </div>
-                        <a href="{% url 'experiences:accommodation_detail' accommodation.slug %}" class="btn btn-experience" style="background: #9b59b6;" aria-label="{{ accommodation.name }} - {% if accommodation.short_description %}{{ accommodation.short_description|truncatewords:10|striptags }}{% elif accommodation.description %}{{ accommodation.description|truncatewords:10|striptags }}{% else %}Sustainable accommodation{% endif %}">
-                            <i class="fas fa-arrow-right me-2"></i>
-                            View Details
-                        </a>
-                    </div>
-                </div>
-                {% empty %}
-                <!-- Sample accommodation if none exist -->
-                <div class="experience-card">
-                    <div class="experience-image">
-                        <div class="experience-placeholder" style="background: linear-gradient(135deg, #9b59b6, #8e44ad);">
-                            <i class="fas fa-bed"></i>
-                        </div>
-                        <div class="experience-overlay">
-                            <div class="experience-type-badge" style="background: rgba(155, 89, 182, 0.9);">Eco-Lodge</div>
-                        </div>
-                    </div>
-                    <div class="experience-content">
-                        <h4 class="experience-title">Sustainable Forest Retreat</h4>
-                        <p class="experience-location">
-                            <i class="fas fa-map-marker-alt me-2"></i>
-                            Swedish Wilderness
-                        </p>
-                        <p class="experience-description">
-                            Experience comfort and sustainability in harmony with nature at this eco-certified forest lodge.
-                        </p>
-                        <div class="experience-stats">
-                            <div class="stat">
-                                <i class="fas fa-leaf"></i>
-                                <span>Eco-Certified</span>
-                            </div>
-                            <div class="stat">
-                                <i class="fas fa-tag"></i>
-                                <span>$149/night</span>
-                            </div>
-                        </div>
-                        <a href="#" class="btn btn-experience" style="background: #9b59b6;">
+                        <a href="{% url 'experiences:accommodation_detail' accommodation.slug %}" class="btn btn-experience" style="background: #9b59b6;">
                             <i class="fas fa-arrow-right me-2"></i>
                             View Details
                         </a>
@@ -431,18 +385,247 @@
                 {% endfor %}
             </div>
 
-            <!-- Carousel Navigation -->
             <div class="experiences-nav">
                 <button class="nav-btn prev-btn" onclick="scrollAccommodations('prev')" aria-label="Previous accommodations">
-                    <i class="fas fa-chevron-left" aria-hidden="true"></i>
+                    <i class="fas fa-chevron-left"></i>
                 </button>
                 <button class="nav-btn next-btn" onclick="scrollAccommodations('next')" aria-label="Next accommodations">
-                    <i class="fas fa-chevron-right" aria-hidden="true"></i>
+                    <i class="fas fa-chevron-right"></i>
                 </button>
             </div>
         </div>
+        {% else %}
+        <p class="text-center text-muted">No accommodations available yet.</p>
+        {% endif %}
     </div>
 </section>
+
+<!-- Trips Section (Tab Content) -->
+<section class="tab-section" id="trips-section" style="background-color: var(--hygge-warm-white);">
+    <div class="container py-4">
+        <div class="row">
+            <div class="col-12 mb-4">
+                <div class="d-flex justify-content-between align-items-center">
+                    <div>
+                        <h2 class="h3 fw-bold mb-2" style="color: var(--hygge-green);">Most Recent Public Trips</h2>
+                        <p class="text-muted mb-0">Discover travel itineraries from the community</p>
+                    </div>
+                    <a href="{% url 'trip_list' %}" class="btn btn-outline-primary btn-sm" style="color: #1e5a3d; border-color: #1e5a3d;">
+                        View All <i class="fas fa-arrow-right ms-1"></i>
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        {% if featured_trips %}
+        <div class="row g-3">
+            {% for trip in featured_trips|slice:":9" %}
+            <div class="col-md-6 col-lg-4">
+                <a href="{% url 'trip_detail' trip.pk %}" class="trip-card-link" style="text-decoration: none; color: inherit;">
+                    <div class="card h-100 border-0 shadow-sm" style="transition: transform 0.3s, box-shadow 0.3s;">
+                        <div class="card-body p-3">
+                            <div class="d-flex align-items-start mb-2">
+                                <div class="flex-shrink-0 me-3">
+                                    <div class="rounded-circle bg-success d-flex align-items-center justify-content-center"
+                                         style="width: 50px; height: 50px;">
+                                        <i class="fas fa-route text-white" style="font-size: 1.3rem;"></i>
+                                    </div>
+                                </div>
+                                <div class="flex-grow-1">
+                                    <h5 class="card-title mb-1" style="font-size: 1rem; font-weight: 600;">
+                                        {{ trip.trip_name|truncatewords:8 }}
+                                    </h5>
+                                    <p class="card-text text-muted mb-1" style="font-size: 0.8rem;">
+                                        <i class="fas fa-user me-1"></i>by {{ trip.creator.get_full_name|default:trip.creator.username }}
+                                    </p>
+                                </div>
+                            </div>
+                            <div class="trip-info mt-3">
+                                {% if trip.start_date %}
+                                <p class="mb-1" style="font-size: 0.85rem;">
+                                    <i class="fas fa-calendar text-success me-2"></i>
+                                    <strong>Start:</strong> {{ trip.start_date|date:"M d, Y" }}
+                                </p>
+                                {% endif %}
+                                {% if trip.end_date %}
+                                <p class="mb-1" style="font-size: 0.85rem;">
+                                    <i class="fas fa-calendar-check text-success me-2"></i>
+                                    <strong>End:</strong> {{ trip.end_date|date:"M d, Y" }}
+                                </p>
+                                {% endif %}
+                                {% if trip.destination %}
+                                <p class="mb-0" style="font-size: 0.85rem;">
+                                    <i class="fas fa-map-marked-alt text-success me-2"></i>
+                                    <strong>{{ trip.destination.name }}</strong>
+                                </p>
+                                {% endif %}
+                            </div>
+                            <div class="mt-3">
+                                <span class="badge bg-success" style="font-size: 0.75rem;">
+                                    <i class="fas fa-clock me-1"></i>Created {{ trip.created_at|timesince }} ago
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                </a>
+            </div>
+            {% endfor %}
+        </div>
+        <div class="text-center mt-4">
+            <a href="{% url 'trip_list' %}" class="btn btn-primary">
+                <i class="fas fa-map-marked me-2"></i>Explore All Trips
+            </a>
+            <a href="{% url 'create_trip' %}" class="btn btn-success ms-2">
+                <i class="fas fa-plus me-2"></i>Create Your Trip
+            </a>
+        </div>
+        {% else %}
+        <div class="text-center py-5">
+            <i class="fas fa-route fa-4x text-muted mb-3"></i>
+            <p class="text-muted mb-3">No trips available yet. Be the first to create one!</p>
+            <a href="{% url 'create_trip' %}" class="btn btn-success">
+                <i class="fas fa-plus me-2"></i>Create Your First Trip
+            </a>
+        </div>
+        {% endif %}
+    </div>
+</section>
+
+<style>
+.trip-card-link .card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 0.5rem 1rem rgba(0,0,0,0.15) !important;
+}
+</style>
+
+<!-- Travel Buddies Section (Tab Content) -->
+<section class="tab-section" id="buddies-section" style="background-color: var(--hygge-cream);">
+    <div class="container py-4">
+        <div class="row">
+            <div class="col-12 mb-4">
+                <div class="d-flex justify-content-between align-items-center">
+                    <div>
+                        <h2 class="h3 fw-bold mb-2" style="color: var(--hygge-green);">Newest Community Members</h2>
+                        <p class="text-muted mb-0">Connect with fellow sustainable travelers</p>
+                    </div>
+                    <a href="{% url 'user_list' %}" class="btn btn-outline-primary btn-sm" style="color: #1e5a3d; border-color: #1e5a3d;">
+                        View All <i class="fas fa-arrow-right ms-1"></i>
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        {% if recent_users %}
+        <div class="row g-3">
+            {% for buddy in recent_users|slice:":12" %}
+            <div class="col-6 col-md-4 col-lg-3 col-xl-2">
+                <a href="{% url 'public_profile' buddy.username %}" class="community-member-card" style="text-decoration: none; color: inherit;">
+                    <div class="card h-100 border-0 shadow-sm" style="transition: transform 0.3s, box-shadow 0.3s;">
+                        <div class="card-body text-center p-3">
+                            {% if buddy.userprofile.avatar %}
+                                <img src="{{ buddy.userprofile.avatar.url }}"
+                                     alt="{{ buddy.get_full_name|default:buddy.username }}"
+                                     class="rounded-circle mb-2"
+                                     style="width: 60px; height: 60px; object-fit: cover;">
+                            {% else %}
+                                <div class="rounded-circle bg-primary d-flex align-items-center justify-content-center mx-auto mb-2"
+                                     style="width: 60px; height: 60px;">
+                                    <i class="fas fa-user text-white" style="font-size: 1.5rem;"></i>
+                                </div>
+                            {% endif %}
+                            <h6 class="card-title mb-1" style="font-size: 0.85rem; font-weight: 600;">
+                                {{ buddy.get_full_name|default:buddy.username|truncatewords:2 }}
+                            </h6>
+                            <p class="card-text text-muted mb-0" style="font-size: 0.7rem;">
+                                <i class="fas fa-clock me-1"></i>Joined {{ buddy.date_joined|timesince }} ago
+                            </p>
+                        </div>
+                    </div>
+                </a>
+            </div>
+            {% endfor %}
+        </div>
+        <div class="text-center mt-4">
+            <a href="{% url 'user_list' %}" class="btn btn-primary">
+                <i class="fas fa-users me-2"></i>Discover More Travelers
+            </a>
+        </div>
+        {% else %}
+        <p class="text-center text-muted">No travelers yet. <a href="{% url 'signup' %}">Join the community!</a></p>
+        {% endif %}
+    </div>
+</section>
+
+<style>
+.community-member-card .card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 0.5rem 1rem rgba(0,0,0,0.15) !important;
+}
+</style>
+
+<script>
+function switchTab(tabName) {
+    // Remove active class from all tab buttons
+    document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+
+    // Remove active class from all sections
+    document.querySelectorAll('.tab-section').forEach(section => section.classList.remove('active'));
+
+    // Add active class to selected button
+    document.getElementById(tabName + '-tab').classList.add('active');
+
+    // Add active class to selected section
+    document.getElementById(tabName + '-section').classList.add('active');
+}
+
+// Experiences Carousel Functionality
+function scrollExperiences(direction) {
+    const carousel = document.getElementById('experiencesCarousel');
+    if (!carousel) return;
+
+    // Responsive scroll amount based on screen size
+    let cardWidth = 260; // Base card width + gap
+    if (window.innerWidth <= 576) {
+        cardWidth = 200; // Mobile size
+    } else if (window.innerWidth <= 768) {
+        cardWidth = 220; // Tablet size
+    }
+
+    const scrollAmount = direction === 'next' ? cardWidth : -cardWidth;
+
+    carousel.scrollBy({
+        left: scrollAmount,
+        behavior: 'smooth'
+    });
+}
+
+// Accommodations Carousel Functionality
+function scrollAccommodations(direction) {
+    const carousel = document.getElementById('accommodationsCarousel');
+    if (!carousel) return;
+
+    // Calculate exact card width including gap
+    const firstCard = carousel.querySelector('.experience-card');
+    if (!firstCard) return;
+
+    const cardWidth = firstCard.offsetWidth;
+    const gap = parseFloat(window.getComputedStyle(carousel).gap) || 32;
+
+    // On desktop, scroll multiple cards for better UX
+    const isDesktop = window.innerWidth > 1024;
+    const cardsToScroll = isDesktop ? 3 : (window.innerWidth > 768 ? 2 : 1);
+
+    const scrollAmount = (cardWidth + gap) * cardsToScroll;
+    const targetScroll = direction === 'next'
+        ? carousel.scrollLeft + scrollAmount
+        : carousel.scrollLeft - scrollAmount;
+
+    carousel.scrollTo({
+        left: targetScroll,
+        behavior: 'smooth'
+    });
+}
+</script>
 
 <!-- Hygge Philosophy Section -->
 <section id="hygge-section" class="py-4" style="background-color: var(--hygge-warm-white);">
@@ -2515,193 +2698,6 @@
 </style>
 
 <script>
-// Banner Carousel Functionality
-let currentSlide = 0;
-let slideInterval;
-
-// Destination data from Django template
-const destinationData = [
-    {% for destination in featured_destinations %}
-    {
-        name: "{{ destination.name|escapejs }}",
-        country: "{% if destination.country and destination.country != 'TBD' %}{{ destination.country|escapejs }}{% else %}Beautiful Destination{% endif %}",
-        description: "{% if destination.description %}{{ destination.description|truncatewords:25|escapejs }}{% else %}Discover the beauty and charm of this amazing destination with sustainable travel experiences.{% endif %}",
-        sustainabilityScore: {% if destination.sustainability_score %}{{ destination.sustainability_score }}{% else %}null{% endif %},
-        hyggeRating: {% if destination.hygge_factor %}{{ destination.hygge_factor }}{% else %}9{% endif %},
-        experienceCount: {{ destination.experiences.count }},
-        url: "{{ destination.get_absolute_url|escapejs }}"
-    }{% if not forloop.last %},{% endif %}
-    {% endfor %}
-];
-
-document.addEventListener('DOMContentLoaded', function() {
-    // CLS Prevention: Handle image loading to remove spinner
-    const imageContainers = document.querySelectorAll('.img-aspect-container');
-    imageContainers.forEach(container => {
-        const img = container.querySelector('img');
-        if (img) {
-            // If image is already loaded (cached)
-            if (img.complete) {
-                container.classList.add('loaded');
-            } else {
-                // Wait for image to load
-                img.addEventListener('load', function() {
-                    container.classList.add('loaded');
-                });
-                img.addEventListener('error', function() {
-                    container.classList.add('loaded'); // Hide spinner even on error
-                });
-            }
-        }
-    });
-
-    const bannerSlides = document.querySelectorAll('.banner-slide');
-    const indicators = document.querySelectorAll('.indicator');
-
-    console.log('Banner Debug: Found', bannerSlides.length, 'banner slides');
-    console.log('Destination Data:', destinationData);
-
-    if (bannerSlides.length === 0) {
-        console.log('No banner slides found - carousel will not work');
-        return;
-    }
-
-    // Initialize first slide
-    updateSlide(0);
-
-    // Start auto-rotation
-    startSlideShow();
-
-    // Pause on hover for destination panel
-    const destinationPanel = document.querySelector('.destination-info-overlay');
-    if (destinationPanel) {
-        destinationPanel.addEventListener('mouseenter', stopSlideShow);
-        destinationPanel.addEventListener('mouseleave', startSlideShow);
-    }
-});
-
-function changeSlide(direction) {
-    const bannerSlides = document.querySelectorAll('.banner-slide');
-    if (bannerSlides.length === 0) return;
-
-    currentSlide += direction;
-
-    if (currentSlide >= bannerSlides.length) {
-        currentSlide = 0;
-    } else if (currentSlide < 0) {
-        currentSlide = bannerSlides.length - 1;
-    }
-
-    updateSlide(currentSlide);
-    resetSlideShow();
-}
-
-function goToSlide(index) {
-    const bannerSlides = document.querySelectorAll('.banner-slide');
-    if (bannerSlides.length === 0 || index < 0 || index >= bannerSlides.length) return;
-
-    currentSlide = index;
-    updateSlide(currentSlide);
-    resetSlideShow();
-}
-
-function updateSlide(index) {
-    const bannerSlides = document.querySelectorAll('.banner-slide');
-    const indicators = document.querySelectorAll('.indicator');
-
-    console.log(`Updating slide to index: ${index}, total slides: ${bannerSlides.length}`);
-
-    if (bannerSlides.length === 0 || !destinationData[index]) return;
-
-    // Update banner slides
-    bannerSlides.forEach(slide => slide.classList.remove('active'));
-    indicators.forEach(indicator => indicator.classList.remove('active'));
-
-    if (bannerSlides[index]) {
-        bannerSlides[index].classList.add('active');
-        console.log(`Activated banner slide ${index}`);
-    }
-    if (indicators[index]) {
-        indicators[index].classList.add('active');
-    }
-
-    // Update destination info content
-    updateDestinationInfo(destinationData[index]);
-}
-
-function updateDestinationInfo(destination) {
-    console.log('Updating destination info:', destination);
-
-    const infoContent = document.getElementById('destinationInfo');
-    if (!infoContent) return;
-
-    // Add updating class for smooth transition
-    infoContent.classList.add('updating');
-
-    setTimeout(() => {
-        // Update all content
-        const badgeText = document.getElementById('badgeText');
-        const destinationName = document.getElementById('destinationName');
-        const destinationCountry = document.getElementById('destinationCountry');
-        const destinationDescription = document.getElementById('destinationDescription');
-        const hyggeRating = document.getElementById('hyggeRating');
-        const experienceCount = document.getElementById('experienceCount');
-        const exploreBtn = document.getElementById('exploreBtn');
-
-        if (badgeText) {
-            badgeText.textContent = destination.sustainabilityScore ?
-                `${destination.sustainabilityScore}/10` : 'Eco-Friendly';
-        }
-        if (destinationName) {
-            destinationName.textContent = destination.name;
-        }
-        if (destinationCountry) {
-            destinationCountry.textContent = destination.country;
-        }
-        if (destinationDescription) {
-            destinationDescription.textContent = destination.description;
-        }
-        if (hyggeRating) {
-            hyggeRating.textContent = `${destination.hyggeRating}/10 Hygge`;
-        }
-        if (experienceCount) {
-            experienceCount.textContent = `${destination.experienceCount} Experience${destination.experienceCount !== 1 ? 's' : ''}`;
-        }
-        if (exploreBtn) {
-            exploreBtn.href = destination.url;
-        }
-
-        // Remove updating class
-        infoContent.classList.remove('updating');
-    }, 250); // Half the transition duration
-}
-
-function startSlideShow() {
-    const bannerSlides = document.querySelectorAll('.banner-slide');
-    console.log(`Starting slideshow with ${bannerSlides.length} slides`);
-
-    if (bannerSlides.length <= 1) {
-        console.log('Not enough slides for slideshow');
-        return;
-    }
-
-    slideInterval = setInterval(() => {
-        console.log('Auto-changing slide...');
-        changeSlide(1);
-    }, 5000); // Change slide every 5 seconds
-}
-
-function stopSlideShow() {
-    if (slideInterval) {
-        clearInterval(slideInterval);
-    }
-}
-
-function resetSlideShow() {
-    stopSlideShow();
-    startSlideShow();
-}
-
 // Smooth scrolling for anchor links
 document.querySelectorAll('a[href^="#"]').forEach(anchor => {
     anchor.addEventListener('click', function (e) {
@@ -2810,156 +2806,6 @@ function handleSwipe() {
         }
     }
 }
-
-// Experiences Carousel Functionality
-function scrollExperiences(direction) {
-    const carousel = document.getElementById('experiencesCarousel');
-    if (!carousel) return;
-
-    // Responsive scroll amount based on screen size
-    let cardWidth = 260; // Base card width + gap
-    if (window.innerWidth <= 576) {
-        cardWidth = 200; // Mobile size
-    } else if (window.innerWidth <= 768) {
-        cardWidth = 220; // Tablet size
-    }
-
-    const scrollAmount = direction === 'next' ? cardWidth : -cardWidth;
-
-    carousel.scrollBy({
-        left: scrollAmount,
-        behavior: 'smooth'
-    });
-}
-
-// Accommodations Carousel Functionality - Enhanced for desktop
-function scrollAccommodations(direction) {
-    const carousel = document.getElementById('accommodationsCarousel');
-    if (!carousel) return;
-
-    // Calculate exact card width including gap
-    const firstCard = carousel.querySelector('.experience-card');
-    if (!firstCard) return;
-
-    const cardStyle = window.getComputedStyle(firstCard);
-    const cardWidth = firstCard.offsetWidth;
-    const gap = parseFloat(window.getComputedStyle(carousel).gap) || 32; // 2rem = 32px default
-
-    // On desktop, scroll multiple cards for better UX
-    const isDesktop = window.innerWidth > 1024;
-    const cardsToScroll = isDesktop ? 3 : (window.innerWidth > 768 ? 2 : 1);
-
-    const scrollAmount = (cardWidth + gap) * cardsToScroll;
-    const targetScroll = direction === 'next'
-        ? carousel.scrollLeft + scrollAmount
-        : carousel.scrollLeft - scrollAmount;
-
-    // Smooth scroll with easing
-    carousel.scrollTo({
-        left: targetScroll,
-        behavior: 'smooth'
-    });
-}
-
-// Add mouse wheel support for accommodations carousel on desktop
-document.addEventListener('DOMContentLoaded', function() {
-    const accommodationsCarousel = document.getElementById('accommodationsCarousel');
-
-    if (accommodationsCarousel && window.innerWidth > 768) {
-        // Enable horizontal scroll with mouse wheel on desktop
-        accommodationsCarousel.addEventListener('wheel', function(e) {
-            if (Math.abs(e.deltaY) > 0) {
-                e.preventDefault();
-                // Convert vertical scroll to horizontal
-                this.scrollLeft += e.deltaY;
-            }
-        }, { passive: false });
-
-        // Add mouse drag scrolling for desktop
-        let isDown = false;
-        let startX;
-        let scrollLeft;
-
-        accommodationsCarousel.addEventListener('mousedown', function(e) {
-            isDown = true;
-            accommodationsCarousel.style.cursor = 'grabbing';
-            accommodationsCarousel.style.userSelect = 'none';
-            startX = e.pageX - accommodationsCarousel.offsetLeft;
-            scrollLeft = accommodationsCarousel.scrollLeft;
-        });
-
-        accommodationsCarousel.addEventListener('mouseleave', function() {
-            isDown = false;
-            accommodationsCarousel.style.cursor = 'grab';
-        });
-
-        accommodationsCarousel.addEventListener('mouseup', function() {
-            isDown = false;
-            accommodationsCarousel.style.cursor = 'grab';
-        });
-
-        accommodationsCarousel.addEventListener('mousemove', function(e) {
-            if (!isDown) return;
-            e.preventDefault();
-            const x = e.pageX - accommodationsCarousel.offsetLeft;
-            const walk = (x - startX) * 2; // Scroll speed multiplier
-            accommodationsCarousel.scrollLeft = scrollLeft - walk;
-        });
-
-        // Set initial cursor
-        accommodationsCarousel.style.cursor = 'grab';
-    }
-});
-
-// Touch/swipe support for experiences carousel
-let experiencesTouchStart = 0;
-let experiencesTouchEnd = 0;
-
-document.addEventListener('DOMContentLoaded', function() {
-    const experiencesCarousel = document.getElementById('experiencesCarousel');
-
-    if (experiencesCarousel) {
-        experiencesCarousel.addEventListener('touchstart', function(e) {
-            experiencesTouchStart = e.changedTouches[0].screenX;
-        });
-
-        experiencesCarousel.addEventListener('touchend', function(e) {
-            experiencesTouchEnd = e.changedTouches[0].screenX;
-            handleExperiencesSwipe();
-        });
-    }
-});
-
-function handleExperiencesSwipe() {
-    const swipeThreshold = 50;
-    const swipeDistance = experiencesTouchEnd - experiencesTouchStart;
-
-    if (Math.abs(swipeDistance) > swipeThreshold) {
-        if (swipeDistance > 0) {
-            // Swipe right - go to previous
-            scrollExperiences('prev');
-        } else {
-            // Swipe left - go to next
-            scrollExperiences('next');
-        }
-    }
-}
-
-// Auto-hide navigation on mobile if not needed
-document.addEventListener('DOMContentLoaded', function() {
-    const carousel = document.getElementById('experiencesCarousel');
-    const navButtons = document.querySelector('.experiences-nav');
-
-    if (carousel && navButtons) {
-        function checkScrollability() {
-            const isScrollable = carousel.scrollWidth > carousel.clientWidth;
-            navButtons.style.display = isScrollable ? 'flex' : 'none';
-        }
-
-        checkScrollability();
-        window.addEventListener('resize', checkScrollability);
-    }
-});
 </script>
 
 {% endblock %}

@@ -1283,23 +1283,25 @@
                 // Gold frame
                 ctx.strokeStyle = '#D4AF37';
                 ctx.lineWidth = 6;
+               
                 ctx.strokeRect(80, height / 2 - 150, width - 160, 300);
-
+                
                 // Serif title with smart sizing
                 const fontSize = getOptimalFontSize(ctx, text, width - 200, 75, 'Georgia, Playfair Display, serif');
                 ctx.font = `700 ${fontSize}px Georgia, Playfair Display, serif`;
                 ctx.textAlign = 'center';
                 ctx.textBaseline = 'middle';
                 ctx.strokeStyle = '#D4AF37';
+                ctx.fill = "ffffff";
                 ctx.lineWidth = 2;
                 const maxWidth = width - 200;
                 const lines = wrapText(ctx, text, width / 2, height / 2, maxWidth, fontSize + 15, 2);
 
                 // Re-stroke the text
-                lines.forEach((line, i) => {
-                    const y = height / 2 + (i * (fontSize + 15)) - ((lines.length - 1) * (fontSize + 15) / 2);
-                    ctx.strokeText(line.trim(), width / 2, y);
-                });
+                // lines.forEach((line, i) => {
+                //     const y = height / 2 + (i * (fontSize + 15)) - ((lines.length - 1) * (fontSize + 15) / 2);
+                //     ctx.strokeText(line.trim(), width / 2, y);
+                // });
 
                 // Decorative elements
                 ctx.font = '40px Georgia, serif';
