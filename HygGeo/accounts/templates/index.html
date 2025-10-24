@@ -1465,6 +1465,8 @@ function scrollAccommodations(direction) {
     position: relative;
     max-width: 100%;
     overflow: hidden;
+    /* Reserve space for carousel to prevent CLS - card height + padding */
+    min-height: 412px;
 }
 
 .experiences-carousel {
@@ -1694,6 +1696,11 @@ function scrollAccommodations(direction) {
     .experiences-carousel {
         gap: 1rem;
         padding: 0.5rem 0;
+    }
+
+    /* Adjust wrapper height for mobile - card + smaller padding */
+    .experiences-carousel-wrapper {
+        min-height: 396px;
     }
 
     .experience-card {
