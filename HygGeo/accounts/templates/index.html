@@ -8,15 +8,24 @@
 <!-- Preload hero image for LCP optimization -->
 <link rel="preload"
       as="image"
-      href="{% static 'banner.jpeg' %}"
-      type="image/jpeg"
-      fetchpriority="high">
+      href="{% static 'banner.webp' %}"
+      type="image/webp"
+      fetchpriority="high"
+      media="(min-width: 768px)">
+<link rel="preload"
+      as="image"
+      href="{% static 'banner-mobile.webp' %}"
+      type="image/webp"
+      fetchpriority="high"
+      media="(max-width: 767px)">
 
 <!-- Critical CSS - Minified for speed, prevents CLS -->
 <style>
 /* Hero banner - static Copenhagen image with contained search */
 .hero-banner{position:relative;background:#2d5a3d;min-height:50vh;overflow:hidden;display:flex;align-items:flex-start;padding-bottom:200px}
 .banner-image{position:absolute;top:0;left:0;width:100%;height:100%;object-fit:cover;object-position:center;z-index:1}
+/* Reserve space for banner image to prevent CLS */
+.hero-banner picture{display:block;width:100%;height:100%;position:absolute;top:0;left:0}
 .banner-overlay{position:absolute;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.3);z-index:2}
 .banner-content-wrapper{position:relative;z-index:10;width:100%;padding:1.5rem 1rem 0}
 .banner-content{text-align:center;color:white;background:rgba(0,0,0,0.4);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);padding:1.5rem;border-radius:15px;max-width:700px;margin:0 auto 3rem}
@@ -127,13 +136,25 @@
 {% block content %}
 <!-- Hero Banner Section with Integrated Search -->
 <section class="hero-banner">
-    <!-- Static Copenhagen Banner Image -->
-    <img src="{% static 'banner.jpeg' %}"
-         alt="Copenhagen - Sustainable Travel Destination"
-         class="banner-image"
-         fetchpriority="high"
-         width="1920"
-         height="1080">
+    <!-- Static Copenhagen Banner Image - Responsive WebP -->
+    <picture>
+        <source media="(min-width: 768px)"
+                srcset="{% static 'banner.webp' %}"
+                type="image/webp"
+                width="1920"
+                height="1280">
+        <source media="(max-width: 767px)"
+                srcset="{% static 'banner-mobile.webp' %}"
+                type="image/webp"
+                width="800"
+                height="533">
+        <img src="{% static 'banner.jpeg' %}"
+             alt="Copenhagen - Sustainable Travel Destination"
+             class="banner-image"
+             fetchpriority="high"
+             width="1920"
+             height="1280">
+    </picture>
     <div class="banner-overlay"></div>
 
     <!-- Centered Content with Blur -->

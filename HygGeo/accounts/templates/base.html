@@ -60,8 +60,9 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link rel="dns-prefetch" href="https://fonts.googleapis.com">
 
-    <!-- Preload critical font to prevent CLS -->
+    <!-- Preload critical fonts to prevent CLS - Regular 400 and Bold 700 -->
     <link rel="preload" href="https://fonts.gstatic.com/s/poppins/v20/pxiEyp8kv8JHgFVrJJfecg.woff2" as="font" type="font/woff2" crossorigin>
+    <link rel="preload" href="https://fonts.gstatic.com/s/poppins/v20/pxiByp8kv8JHgFVrLCz7Z1xlFd2JQEk.woff2" as="font" type="font/woff2" crossorigin>
 
     <!-- Site Structure and Organization Schema -->
     <script type="application/ld+json">
@@ -164,10 +165,47 @@
             --bs-gutter-x: .75rem;
         }
 
-        /* Font fallback with size-adjust to prevent CLS */
+        /* Font fallback with size-adjust to prevent CLS - all weights */
         @font-face {
             font-family: 'Poppins-fallback';
             src: local('Arial');
+            font-weight: 300;
+            size-adjust: 107%;
+            ascent-override: 92%;
+            descent-override: 24%;
+            line-gap-override: 0%;
+        }
+        @font-face {
+            font-family: 'Poppins-fallback';
+            src: local('Arial');
+            font-weight: 400;
+            size-adjust: 107%;
+            ascent-override: 92%;
+            descent-override: 24%;
+            line-gap-override: 0%;
+        }
+        @font-face {
+            font-family: 'Poppins-fallback';
+            src: local('Arial');
+            font-weight: 500;
+            size-adjust: 107%;
+            ascent-override: 92%;
+            descent-override: 24%;
+            line-gap-override: 0%;
+        }
+        @font-face {
+            font-family: 'Poppins-fallback';
+            src: local('Arial');
+            font-weight: 600;
+            size-adjust: 107%;
+            ascent-override: 92%;
+            descent-override: 24%;
+            line-gap-override: 0%;
+        }
+        @font-face {
+            font-family: 'Poppins-fallback';
+            src: local('Arial');
+            font-weight: 700;
             size-adjust: 107%;
             ascent-override: 92%;
             descent-override: 24%;
@@ -200,15 +238,26 @@
         a:hover{color:#0a58ca}
         img{vertical-align:middle}
 
-        /* Navbar - CLS prevention with explicit dimensions */
-        .navbar{position:relative;display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;padding:0.5rem 0;min-height:70px;background:linear-gradient(135deg, #2d5a3d, #4a7c59);box-shadow:0 2px 10px rgba(0,0,0,0.1);z-index:1030}
+        /* Navbar - Fixed height to prevent CLS */
+        .navbar{position:relative;display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;padding:0.5rem 0;min-height:70px;height:70px;background:linear-gradient(135deg, #2d5a3d, #4a7c59);box-shadow:0 2px 10px rgba(0,0,0,0.1);z-index:1030}
         .navbar-brand{padding:0.25rem 0;margin-right:1rem;font-size:1.8rem;font-weight:700;color:#fff !important;text-decoration:none;white-space:nowrap;display:flex;align-items:center;min-height:50px;line-height:1.2}
         .navbar-brand svg{width:1.5rem;height:1.5rem;min-width:1.5rem;min-height:1.5rem;vertical-align:middle;margin-right:0.5rem}
         .navbar-nav{display:flex;flex-direction:column;padding-left:0;margin-bottom:0;list-style:none}
         .navbar-nav .nav-link{color:rgba(255,255,255,0.9) !important;font-weight:500;padding:0.5rem 1rem;white-space:nowrap;text-decoration:none;min-height:44px;display:flex;align-items:center}
-        .navbar-nav .nav-link i{min-width:1em;min-height:1em;display:inline-block;margin-right:0.25rem}
+        /* Reserve exact space for navbar icons before FontAwesome loads */
+        .navbar-nav .nav-link i{min-width:1.25em;width:1.25em;min-height:1em;display:inline-block;margin-right:0.25rem;text-align:center}
+        /* Dropdown menu icon spacing */
+        .dropdown-menu .dropdown-item i,.mobile-submenu a i{min-width:1.5em;width:1.5em;min-height:1em;display:inline-block;text-align:center}
+        /* Ensure dropdowns and their items have consistent dimensions */
+        .dropdown-menu{min-width:200px}
+        .dropdown-item{min-height:40px;display:flex;align-items:center;padding:0.5rem 1rem}
+        /* Mobile submenu styling to prevent shifts */
+        .mobile-submenu{list-style:none;padding-left:1rem}
+        .mobile-submenu a{display:flex;align-items:center;min-height:40px;padding:0.5rem 1rem}
         .navbar-toggler{padding:0.25rem 0.75rem;font-size:1.25rem;line-height:1;background-color:transparent;border:1px solid rgba(255,255,255,0.5);border-radius:0.25rem;min-width:44px;min-height:44px;display:flex;align-items:center;justify-content:center}
         .navbar-toggler-icon{display:inline-block;width:1.5em;height:1.5em;min-width:1.5em;min-height:1.5em;vertical-align:middle;background-image:url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 30 30'%3e%3cpath stroke='rgba(255, 255, 255, 0.9)' stroke-linecap='round' stroke-miterlimit='10' stroke-width='2' d='M4 7h22M4 15h22M4 23h22'/%3e%3c/svg%3e");background-repeat:no-repeat;background-position:center;background-size:100%}
+        /* Navbar collapse area */
+        .navbar-collapse{flex-basis:100%;flex-grow:1;align-items:center}
         @media (min-width:992px){.navbar-nav{flex-direction:row}.navbar-nav .nav-link{padding:0.5rem 1rem}}
 
         /* Layout */
