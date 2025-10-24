@@ -5,19 +5,14 @@
 {% block title %}HygGeo - Sustainable Travel with Danish Hygge{% endblock %}
 
 {% block extra_head %}
-<!-- Preload hero image for LCP optimization -->
+<!-- Preload hero image for LCP optimization - responsive -->
 <link rel="preload"
       as="image"
       href="{% static 'banner.webp' %}"
+      imagesrcset="{% static 'banner-mobile.webp' %} 800w, {% static 'banner.webp' %} 1920w"
+      imagesizes="100vw"
       type="image/webp"
-      fetchpriority="high"
-      media="(min-width: 768px)">
-<link rel="preload"
-      as="image"
-      href="{% static 'banner-mobile.webp' %}"
-      type="image/webp"
-      fetchpriority="high"
-      media="(max-width: 767px)">
+      fetchpriority="high">
 
 <!-- Critical CSS - Minified for speed, prevents CLS -->
 <style>
@@ -138,17 +133,19 @@
 <section class="hero-banner">
     <!-- Static Copenhagen Banner Image - Responsive WebP -->
     <picture>
-        <source media="(min-width: 768px)"
-                srcset="{% static 'banner.webp' %}"
-                type="image/webp"
-                width="1920"
-                height="1280">
+        <!-- Mobile first - evaluated in order -->
         <source media="(max-width: 767px)"
                 srcset="{% static 'banner-mobile.webp' %}"
                 type="image/webp"
                 width="800"
                 height="533">
-        <img src="{% static 'banner.jpeg' %}"
+        <!-- Desktop -->
+        <source srcset="{% static 'banner.webp' %}"
+                type="image/webp"
+                width="1920"
+                height="1280">
+        <!-- Fallback to optimized desktop WebP, not 3MB JPEG -->
+        <img src="{% static 'banner.webp' %}"
              alt="Copenhagen - Sustainable Travel Destination"
              class="banner-image"
              fetchpriority="high"
