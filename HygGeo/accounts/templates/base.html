@@ -52,6 +52,12 @@
     <!-- CRITICAL: Page-specific preloads (LCP images, etc) loaded FIRST -->
     {% block extra_head %}{% endblock %}
 
+    <!-- CRITICAL: Preload most-used font to eliminate LCP delay -->
+    <link rel="preload" href="{% static 'fonts/poppins-400-latin.woff2' %}" as="font" type="font/woff2" crossorigin>
+
+    <!-- Self-hosted fonts - NO external DNS lookup, faster LCP -->
+    <link href="{% static 'css/fonts.css' %}" rel="stylesheet">
+
     <!-- Preconnect to external domains for faster loading -->
     <link rel="preconnect" href="https://www.hyggeo.com">
     <link rel="dns-prefetch" href="https://www.hyggeo.com">
@@ -59,13 +65,6 @@
     <link rel="dns-prefetch" href="https://cdn.jsdelivr.net">
     <link rel="preconnect" href="https://cdnjs.cloudflare.com">
     <link rel="dns-prefetch" href="https://cdnjs.cloudflare.com">
-    <!-- Preconnect for fonts to speed up loading (higher priority than dns-prefetch) -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-
-    <!-- Load critical Poppins font EARLY with display=swap - DO NOT DEFER -->
-    <!-- Load only essential weights to reduce font CSS size -->
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
 
     <!-- Site Structure and Organization Schema - moved here to not block critical resources -->
     <script type="application/ld+json">

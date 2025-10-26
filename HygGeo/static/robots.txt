@@ -3,16 +3,6 @@
 
 User-agent: *
 
-# Allow public content (explicitly stated for clarity)
-Allow: /
-Allow: /experiences/
-Allow: /destinations/
-Allow: /accommodations/
-Allow: /blog/
-Allow: /blogs/
-Allow: /static/
-Allow: /media/
-
 # Block all admin areas
 Disallow: /admin/
 Disallow: /accounts/admin/
@@ -31,22 +21,22 @@ Disallow: /accounts/unsubscribe/
 Disallow: /accounts/resubscribe/
 
 # Block user-specific content
-Disallow: /accounts/users/*/trips/
+Disallow: /accounts/users/
 Disallow: /experiences/bookmarks/
 Disallow: /experiences/recommendations/
 
 # Block content creation/editing (staff only)
 Disallow: /experiences/add/
-Disallow: /experiences/*/edit/
-Disallow: /experiences/*/delete/
+Disallow: /experiences/edit/
+Disallow: /experiences/delete/
 Disallow: /destinations/add/
-Disallow: /destinations/*/edit/
+Disallow: /destinations/edit/
 Disallow: /accommodations/add/
-Disallow: /accommodations/*/edit/
+Disallow: /accommodations/edit/
 
 # Block debug and test endpoints
-Disallow: /accounts/debug-*
-Disallow: /accounts/test-*
+Disallow: /accounts/debug
+Disallow: /accounts/test
 
 # Block email management and exports (staff only)
 Disallow: /accounts/admin/email/
