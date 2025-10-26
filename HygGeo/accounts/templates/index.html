@@ -5,13 +5,16 @@
 {% block title %}HygGeo - Sustainable Travel with Danish Hygge{% endblock %}
 
 {% block extra_head %}
-<!-- Preload LCP image - responsive preloading with 3 sizes -->
+<!-- Preload LCP image with responsive srcset - high priority -->
 <link rel="preload"
       as="image"
       href="{% static 'banner-mobile.webp' %}"
       imagesrcset="{% static 'banner-mobile.webp' %} 800w, {% static 'banner-tablet.webp' %} 1200w, {% static 'banner.webp' %} 1920w"
       imagesizes="100vw"
       fetchpriority="high">
+
+<!-- DNS prefetch for external resources to reduce latency -->
+<link rel="dns-prefetch" href="https://www.hyggeo.com">
 
 <!-- Critical CSS - Minified for speed, prevents CLS -->
 <style>
