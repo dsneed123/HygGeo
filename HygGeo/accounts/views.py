@@ -3196,12 +3196,12 @@ def global_search_view(request):
 
         # Search trips (public trips only)
         trips = Trip.objects.filter(
-            Q(title__icontains=query) |
+            Q(trip_name__icontains=query) |
             Q(description__icontains=query) |
-            Q(destinations__name__icontains=query) |
-            Q(destinations__country__icontains=query),
-            is_public=True
-        ).prefetch_related('destinations', 'creator').distinct()[:20]
+            Q(destination__name__icontains=query) |
+            Q(destination__country__icontains=query),
+            visibility='public'
+        ).select_related('destination', 'creator').distinct()[:20]
 
     # Count results
     total_results = experiences.count() + accommodations.count() + trips.count()

@@ -4,65 +4,80 @@
 {% block title %}Search Results{% if query %} for "{{ query }}"{% endif %} | HygGeo{% endblock %}
 
 {% block content %}
-<div class="container py-5">
-    <!-- Search Header -->
-    <div class="mb-4">
-        <h1 class="h2 fw-bold mb-2" style="color: var(--hygge-green);">
-            Search Results{% if query %} for "{{ query }}"{% endif %}
-        </h1>
-        {% if total_results > 0 %}
-        <p class="text-muted">Found {{ total_results }} result{{ total_results|pluralize }}</p>
-        {% else %}
-        <p class="text-muted">No results found</p>
-        {% endif %}
-    </div>
+<!-- Modern Hero Search Section -->
+<div class="search-hero">
+    <div class="container">
+        <div class="search-hero-content">
+            <div class="search-header">
+                {% if query %}
+                <h1 class="search-title">
+                    Results for <span class="highlight">"{{ query }}"</span>
+                </h1>
+                {% else %}
+                <h1 class="search-title">Search HygGeo</h1>
+                {% endif %}
+                {% if total_results > 0 %}
+                <p class="search-subtitle">
+                    <i class="fas fa-check-circle me-2"></i>{{ total_results }} result{{ total_results|pluralize }} found
+                </p>
+                {% else %}
+                <p class="search-subtitle">
+                    <i class="fas fa-info-circle me-2"></i>Try a different search term
+                </p>
+                {% endif %}
+            </div>
 
-    <!-- Search Form -->
-    <div class="card card-hygge mb-4">
-        <div class="card-body">
-            <form method="get" action="{% url 'global_search' %}">
-                <div class="input-group">
-                    <input type="text" class="form-control" name="q" value="{{ query }}"
-                           placeholder="Search experiences, accommodations, destinations..."
+            <!-- Modern Search Form -->
+            <form method="get" action="{% url 'global_search' %}" class="modern-search-form">
+                <div class="search-input-group">
+                    <i class="fas fa-search search-icon"></i>
+                    <input type="text" class="search-input" name="q" value="{{ query }}"
+                           placeholder="Search experiences, accommodations, trips, destinations..."
                            aria-label="Search">
-                    <button class="btn btn-primary" type="submit" style="background-color: var(--hygge-green); border-color: var(--hygge-green);">
-                        <i class="fas fa-search me-1"></i>Search
+                    <button class="search-btn" type="submit">
+                        <span>Search</span>
+                        <i class="fas fa-arrow-right ms-2"></i>
                     </button>
                 </div>
             </form>
         </div>
     </div>
+</div>
+
+<div class="container py-5">
 
     {% if total_results > 0 %}
-        <!-- Results Tabs -->
-        <ul class="nav nav-tabs mb-4" role="tablist">
-            <li class="nav-item" role="presentation">
-                <button class="nav-link active" data-bs-toggle="tab" data-bs-target="#all-results" type="button" role="tab">
-                    All ({{ total_results }})
+        <!-- Modern Results Tabs -->
+        <div class="modern-tabs-container">
+            <div class="modern-tabs" role="tablist">
+                <button class="modern-tab active" data-bs-toggle="tab" data-bs-target="#all-results" type="button" role="tab">
+                    <i class="fas fa-th-large me-2"></i>
+                    <span>All</span>
+                    <span class="tab-count">{{ total_results }}</span>
                 </button>
-            </li>
-            {% if experiences_count > 0 %}
-            <li class="nav-item" role="presentation">
-                <button class="nav-link" data-bs-toggle="tab" data-bs-target="#experiences-results" type="button" role="tab">
-                    Experiences ({{ experiences_count }})
+                {% if experiences_count > 0 %}
+                <button class="modern-tab" data-bs-toggle="tab" data-bs-target="#experiences-results" type="button" role="tab">
+                    <i class="fas fa-hiking me-2"></i>
+                    <span>Experiences</span>
+                    <span class="tab-count">{{ experiences_count }}</span>
                 </button>
-            </li>
-            {% endif %}
-            {% if accommodations_count > 0 %}
-            <li class="nav-item" role="presentation">
-                <button class="nav-link" data-bs-toggle="tab" data-bs-target="#accommodations-results" type="button" role="tab">
-                    Accommodations ({{ accommodations_count }})
+                {% endif %}
+                {% if accommodations_count > 0 %}
+                <button class="modern-tab" data-bs-toggle="tab" data-bs-target="#accommodations-results" type="button" role="tab">
+                    <i class="fas fa-home me-2"></i>
+                    <span>Accommodations</span>
+                    <span class="tab-count">{{ accommodations_count }}</span>
                 </button>
-            </li>
-            {% endif %}
-            {% if trips_count > 0 %}
-            <li class="nav-item" role="presentation">
-                <button class="nav-link" data-bs-toggle="tab" data-bs-target="#trips-results" type="button" role="tab">
-                    Trips ({{ trips_count }})
+                {% endif %}
+                {% if trips_count > 0 %}
+                <button class="modern-tab" data-bs-toggle="tab" data-bs-target="#trips-results" type="button" role="tab">
+                    <i class="fas fa-route me-2"></i>
+                    <span>Trips</span>
+                    <span class="tab-count">{{ trips_count }}</span>
                 </button>
-            </li>
-            {% endif %}
-        </ul>
+                {% endif %}
+            </div>
+        </div>
 
         <!-- Tab Content -->
         <div class="tab-content">
@@ -76,30 +91,40 @@
                 {% endif %}
 
                 {% if accommodations %}
-                    <h3 class="h4 fw-bold mb-3" style="color: var(--hygge-green);">Accommodations</h3>
-                    <div class="row mb-4">
+                    <div class="section-header">
+                        <div class="section-icon">
+                            <i class="fas fa-home"></i>
+                        </div>
+                        <h3 class="section-title">Accommodations</h3>
+                    </div>
+                    <div class="row g-4 mb-5">
                         {% for accommodation in accommodations %}
-                        <div class="col-md-6 col-lg-4 mb-4">
-                            <div class="card h-100">
-                                {% if accommodation.main_image %}
-                                <img src="{{ accommodation.main_image.url|cf_image:'format=webp,width=400,quality=30,fit=cover' }}"
-                                     class="card-img-top" alt="{{ accommodation.name }}"
-                                     style="height: 200px; object-fit: cover;" loading="lazy">
-                                {% else %}
-                                <div class="card-img-top bg-light d-flex align-items-center justify-content-center" style="height: 200px;">
-                                    <i class="fas fa-home fa-3x text-muted"></i>
+                        <div class="col-md-6 col-lg-4">
+                            <div class="modern-card">
+                                <div class="modern-card-image">
+                                    {% if accommodation.main_image %}
+                                    <img src="{{ accommodation.main_image.url|cf_image:'format=webp,width=400,quality=30,fit=cover' }}"
+                                         alt="{{ accommodation.name }}" loading="lazy">
+                                    {% else %}
+                                    <div class="image-placeholder">
+                                        <i class="fas fa-home"></i>
+                                    </div>
+                                    {% endif %}
+                                    <div class="card-type-badge">
+                                        <i class="fas fa-home me-1"></i>Accommodation
+                                    </div>
                                 </div>
-                                {% endif %}
-                                <div class="card-body">
-                                    <h5 class="card-title fw-bold">
-                                        <a href="{% url 'experiences:accommodation_detail' accommodation.slug %}" class="text-decoration-none" style="color: var(--hygge-green);">
+                                <div class="modern-card-body">
+                                    <h5 class="modern-card-title">
+                                        <a href="{% url 'experiences:accommodation_detail' accommodation.slug %}">
                                             {{ accommodation.name }}
                                         </a>
                                     </h5>
-                                    <p class="text-muted small mb-2">
-                                        <i class="fas fa-map-marker-alt me-1"></i>{{ accommodation.destination.name }}, {{ accommodation.destination.country }}
-                                    </p>
-                                    <p class="card-text small">{{ accommodation.description|truncatewords:20 }}</p>
+                                    <div class="card-location">
+                                        <i class="fas fa-map-marker-alt"></i>
+                                        <span>{{ accommodation.destination.name }}, {{ accommodation.destination.country }}</span>
+                                    </div>
+                                    <p class="card-description">{{ accommodation.description|truncatewords:15 }}</p>
                                 </div>
                             </div>
                         </div>
@@ -108,28 +133,38 @@
                 {% endif %}
 
                 {% if trips %}
-                    <h3 class="h4 fw-bold mb-3" style="color: var(--hygge-green);">Trips</h3>
-                    <div class="row">
+                    <div class="section-header">
+                        <div class="section-icon">
+                            <i class="fas fa-route"></i>
+                        </div>
+                        <h3 class="section-title">Trips</h3>
+                    </div>
+                    <div class="row g-4">
                         {% for trip in trips %}
-                        <div class="col-md-6 col-lg-4 mb-4">
-                            <div class="card h-100">
-                                <div class="card-body">
-                                    <h5 class="card-title fw-bold">
-                                        <a href="{% url 'trip_detail' trip.pk %}" class="text-decoration-none" style="color: var(--hygge-green);">
-                                            {{ trip.title }}
+                        <div class="col-md-6 col-lg-4">
+                            <div class="modern-card trip-card">
+                                <div class="modern-card-header">
+                                    <div class="trip-avatar">
+                                        <i class="fas fa-user-circle"></i>
+                                    </div>
+                                    <div class="trip-meta">
+                                        <span class="trip-creator">{{ trip.creator.username }}</span>
+                                        <span class="trip-date">{{ trip.created_at|date:"M d, Y" }}</span>
+                                    </div>
+                                </div>
+                                <div class="modern-card-body">
+                                    <h5 class="modern-card-title">
+                                        <a href="{% url 'trip_detail' trip.pk %}">
+                                            {{ trip.trip_name }}
                                         </a>
                                     </h5>
-                                    <p class="text-muted small mb-2">
-                                        <i class="fas fa-user me-1"></i>By {{ trip.creator.username }}
-                                    </p>
-                                    <p class="card-text small">{{ trip.description|truncatewords:20 }}</p>
-                                    <div class="mt-2">
-                                        {% for destination in trip.destinations.all|slice:":3" %}
-                                        <span class="badge bg-secondary me-1">{{ destination.name }}</span>
-                                        {% endfor %}
-                                        {% if trip.destinations.count > 3 %}
-                                        <span class="badge bg-secondary">+{{ trip.destinations.count|add:"-3" }} more</span>
-                                        {% endif %}
+                                    <div class="card-location">
+                                        <i class="fas fa-map-marker-alt"></i>
+                                        <span>{{ trip.destination.name }}</span>
+                                    </div>
+                                    <p class="card-description">{{ trip.description|truncatewords:15 }}</p>
+                                    <div class="trip-badge">
+                                        <i class="fas fa-route me-1"></i>Community Trip
                                     </div>
                                 </div>
                             </div>
@@ -151,29 +186,34 @@
             <!-- Accommodations Tab -->
             {% if accommodations_count > 0 %}
             <div class="tab-pane fade" id="accommodations-results" role="tabpanel">
-                <div class="row">
+                <div class="row g-4">
                     {% for accommodation in accommodations %}
-                    <div class="col-md-6 col-lg-4 mb-4">
-                        <div class="card h-100">
-                            {% if accommodation.main_image %}
-                            <img src="{{ accommodation.main_image.url|cf_image:'format=webp,width=400,quality=30,fit=cover' }}"
-                                 class="card-img-top" alt="{{ accommodation.name }}"
-                                 style="height: 200px; object-fit: cover;" loading="lazy">
-                            {% else %}
-                            <div class="card-img-top bg-light d-flex align-items-center justify-content-center" style="height: 200px;">
-                                <i class="fas fa-home fa-3x text-muted"></i>
+                    <div class="col-md-6 col-lg-4">
+                        <div class="modern-card">
+                            <div class="modern-card-image">
+                                {% if accommodation.main_image %}
+                                <img src="{{ accommodation.main_image.url|cf_image:'format=webp,width=400,quality=30,fit=cover' }}"
+                                     alt="{{ accommodation.name }}" loading="lazy">
+                                {% else %}
+                                <div class="image-placeholder">
+                                    <i class="fas fa-home"></i>
+                                </div>
+                                {% endif %}
+                                <div class="card-type-badge">
+                                    <i class="fas fa-home me-1"></i>Accommodation
+                                </div>
                             </div>
-                            {% endif %}
-                            <div class="card-body">
-                                <h5 class="card-title fw-bold">
-                                    <a href="{% url 'experiences:accommodation_detail' accommodation.slug %}" class="text-decoration-none" style="color: var(--hygge-green);">
+                            <div class="modern-card-body">
+                                <h5 class="modern-card-title">
+                                    <a href="{% url 'experiences:accommodation_detail' accommodation.slug %}">
                                         {{ accommodation.name }}
                                     </a>
                                 </h5>
-                                <p class="text-muted small mb-2">
-                                    <i class="fas fa-map-marker-alt me-1"></i>{{ accommodation.destination.name }}, {{ accommodation.destination.country }}
-                                </p>
-                                <p class="card-text small">{{ accommodation.description|truncatewords:20 }}</p>
+                                <div class="card-location">
+                                    <i class="fas fa-map-marker-alt"></i>
+                                    <span>{{ accommodation.destination.name }}, {{ accommodation.destination.country }}</span>
+                                </div>
+                                <p class="card-description">{{ accommodation.description|truncatewords:15 }}</p>
                             </div>
                         </div>
                     </div>
@@ -185,27 +225,32 @@
             <!-- Trips Tab -->
             {% if trips_count > 0 %}
             <div class="tab-pane fade" id="trips-results" role="tabpanel">
-                <div class="row">
+                <div class="row g-4">
                     {% for trip in trips %}
-                    <div class="col-md-6 col-lg-4 mb-4">
-                        <div class="card h-100">
-                            <div class="card-body">
-                                <h5 class="card-title fw-bold">
-                                    <a href="{% url 'trip_detail' trip.pk %}" class="text-decoration-none" style="color: var(--hygge-green);">
-                                        {{ trip.title }}
+                    <div class="col-md-6 col-lg-4">
+                        <div class="modern-card trip-card">
+                            <div class="modern-card-header">
+                                <div class="trip-avatar">
+                                    <i class="fas fa-user-circle"></i>
+                                </div>
+                                <div class="trip-meta">
+                                    <span class="trip-creator">{{ trip.creator.username }}</span>
+                                    <span class="trip-date">{{ trip.created_at|date:"M d, Y" }}</span>
+                                </div>
+                            </div>
+                            <div class="modern-card-body">
+                                <h5 class="modern-card-title">
+                                    <a href="{% url 'trip_detail' trip.pk %}">
+                                        {{ trip.trip_name }}
                                     </a>
                                 </h5>
-                                <p class="text-muted small mb-2">
-                                    <i class="fas fa-user me-1"></i>By {{ trip.creator.username }}
-                                </p>
-                                <p class="card-text small">{{ trip.description|truncatewords:20 }}</p>
-                                <div class="mt-2">
-                                    {% for destination in trip.destinations.all|slice:":3" %}
-                                    <span class="badge bg-secondary me-1">{{ destination.name }}</span>
-                                    {% endfor %}
-                                    {% if trip.destinations.count > 3 %}
-                                    <span class="badge bg-secondary">+{{ trip.destinations.count|add:"-3" }} more</span>
-                                    {% endif %}
+                                <div class="card-location">
+                                    <i class="fas fa-map-marker-alt"></i>
+                                    <span>{{ trip.destination.name }}</span>
+                                </div>
+                                <p class="card-description">{{ trip.description|truncatewords:15 }}</p>
+                                <div class="trip-badge">
+                                    <i class="fas fa-route me-1"></i>Community Trip
                                 </div>
                             </div>
                         </div>
@@ -217,16 +262,536 @@
         </div>
     {% else %}
         <!-- No Results -->
-        <div class="text-center py-5">
-            <i class="fas fa-search text-muted" style="font-size: 4rem;"></i>
-            <h3 class="mt-3">No results found</h3>
-            <p class="text-muted">Try searching with different keywords or browse our categories:</p>
-            <div class="mt-4">
-                <a href="{% url 'experiences:experience_list' %}" class="btn btn-outline-primary me-2">Browse Experiences</a>
-                <a href="{% url 'experiences:accommodation_list' %}" class="btn btn-outline-primary me-2">Browse Accommodations</a>
-                <a href="{% url 'trip_list' %}" class="btn btn-outline-primary">Browse Trips</a>
+        <div class="no-results-container">
+            <div class="no-results-icon">
+                <i class="fas fa-search"></i>
+            </div>
+            <h3 class="no-results-title">No results found</h3>
+            <p class="no-results-text">Try searching with different keywords or browse our categories</p>
+            <div class="browse-links">
+                <a href="{% url 'experiences:experience_list' %}" class="browse-link">
+                    <i class="fas fa-hiking"></i>
+                    <span>Browse Experiences</span>
+                </a>
+                <a href="{% url 'experiences:accommodation_list' %}" class="browse-link">
+                    <i class="fas fa-home"></i>
+                    <span>Browse Accommodations</span>
+                </a>
+                <a href="{% url 'trip_list' %}" class="browse-link">
+                    <i class="fas fa-route"></i>
+                    <span>Browse Trips</span>
+                </a>
             </div>
         </div>
     {% endif %}
 </div>
+
+<style>
+/* Modern Search Hero */
+.search-hero {
+    background: linear-gradient(135deg, #2d5a3d 0%, #4a7c59 100%);
+    padding: 4rem 0 3rem;
+    margin-bottom: 3rem;
+    position: relative;
+    overflow: hidden;
+}
+
+.search-hero::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 320"><path fill="rgba(255,255,255,0.05)" d="M0,96L48,112C96,128,192,160,288,160C384,160,480,128,576,122.7C672,117,768,139,864,138.7C960,139,1056,117,1152,106.7C1248,96,1344,96,1392,96L1440,96L1440,320L1392,320C1344,320,1248,320,1152,320C1056,320,960,320,864,320C768,320,672,320,576,320C480,320,384,320,288,320C192,320,96,320,48,320L0,320Z"></path></svg>') no-repeat bottom;
+    background-size: cover;
+    opacity: 0.5;
+}
+
+.search-hero-content {
+    position: relative;
+    z-index: 1;
+}
+
+.search-header {
+    text-align: center;
+    margin-bottom: 2rem;
+}
+
+.search-title {
+    font-size: 2.5rem;
+    font-weight: 700;
+    color: white;
+    margin-bottom: 0.5rem;
+}
+
+.search-title .highlight {
+    color: #ffc107;
+}
+
+.search-subtitle {
+    font-size: 1.1rem;
+    color: rgba(255, 255, 255, 0.9);
+    margin: 0;
+}
+
+.modern-search-form {
+    max-width: 800px;
+    margin: 0 auto;
+}
+
+.search-input-group {
+    position: relative;
+    display: flex;
+    align-items: center;
+    background: white;
+    border-radius: 50px;
+    padding: 8px;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+    transition: all 0.3s ease;
+}
+
+.search-input-group:focus-within {
+    box-shadow: 0 15px 50px rgba(0, 0, 0, 0.3);
+    transform: translateY(-2px);
+}
+
+.search-input-group .search-icon {
+    position: absolute;
+    left: 28px;
+    color: #4a7c59;
+    font-size: 1.2rem;
+}
+
+.search-input {
+    flex: 1;
+    border: none;
+    outline: none;
+    padding: 1rem 1.5rem 1rem 3.5rem;
+    font-size: 1rem;
+    background: transparent;
+}
+
+.search-input::placeholder {
+    color: #999;
+}
+
+.search-btn {
+    background: linear-gradient(135deg, #2d5a3d 0%, #4a7c59 100%);
+    color: white;
+    border: none;
+    padding: 1rem 2rem;
+    border-radius: 50px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    white-space: nowrap;
+}
+
+.search-btn:hover {
+    transform: translateX(5px);
+    box-shadow: 0 5px 20px rgba(45, 90, 61, 0.4);
+}
+
+/* Modern Tabs */
+.modern-tabs-container {
+    margin-bottom: 2rem;
+}
+
+.modern-tabs {
+    display: flex;
+    gap: 0.75rem;
+    flex-wrap: wrap;
+    padding: 0;
+    border: none;
+}
+
+.modern-tab {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.75rem 1.5rem;
+    background: white;
+    border: 2px solid #e0e0e0;
+    border-radius: 12px;
+    font-weight: 600;
+    color: #555;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    position: relative;
+}
+
+.modern-tab:hover {
+    border-color: #2d5a3d;
+    color: #2d5a3d;
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+}
+
+.modern-tab.active {
+    background: linear-gradient(135deg, #2d5a3d 0%, #4a7c59 100%);
+    border-color: #2d5a3d;
+    color: white;
+    box-shadow: 0 5px 20px rgba(45, 90, 61, 0.3);
+}
+
+.modern-tab i {
+    font-size: 1.1rem;
+}
+
+.tab-count {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 24px;
+    height: 24px;
+    padding: 0 8px;
+    background: rgba(0, 0, 0, 0.1);
+    border-radius: 12px;
+    font-size: 0.85rem;
+    font-weight: 700;
+}
+
+.modern-tab.active .tab-count {
+    background: rgba(255, 255, 255, 0.25);
+}
+
+/* Section Headers */
+.section-header {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin-bottom: 1.5rem;
+}
+
+.section-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 50px;
+    height: 50px;
+    background: linear-gradient(135deg, #2d5a3d 0%, #4a7c59 100%);
+    border-radius: 12px;
+    color: white;
+    font-size: 1.5rem;
+}
+
+.section-title {
+    font-size: 1.75rem;
+    font-weight: 700;
+    color: #2d5a3d;
+    margin: 0;
+}
+
+/* Modern Cards */
+.modern-card {
+    background: white;
+    border-radius: 16px;
+    overflow: hidden;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+    transition: all 0.3s ease;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+}
+
+.modern-card:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 12px 30px rgba(0, 0, 0, 0.15);
+}
+
+.modern-card-image {
+    position: relative;
+    height: 220px;
+    overflow: hidden;
+    background: linear-gradient(135deg, #f5f5f5 0%, #e0e0e0 100%);
+}
+
+.modern-card-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.5s ease;
+}
+
+.modern-card:hover .modern-card-image img {
+    transform: scale(1.1);
+}
+
+.image-placeholder {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 4rem;
+    color: rgba(0, 0, 0, 0.1);
+}
+
+.card-type-badge {
+    position: absolute;
+    top: 12px;
+    left: 12px;
+    background: rgba(45, 90, 61, 0.95);
+    color: white;
+    padding: 6px 14px;
+    border-radius: 20px;
+    font-size: 0.85rem;
+    font-weight: 600;
+    backdrop-filter: blur(10px);
+}
+
+.modern-card-body {
+    padding: 1.5rem;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+}
+
+.modern-card-title {
+    font-size: 1.25rem;
+    font-weight: 700;
+    margin-bottom: 0.75rem;
+}
+
+.modern-card-title a {
+    color: #2d5a3d;
+    text-decoration: none;
+    transition: color 0.3s ease;
+}
+
+.modern-card-title a:hover {
+    color: #4a7c59;
+}
+
+.card-location {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    color: #666;
+    font-size: 0.95rem;
+    margin-bottom: 1rem;
+}
+
+.card-location i {
+    color: #d4a574;
+}
+
+.card-description {
+    color: #666;
+    line-height: 1.6;
+    margin-bottom: 0;
+    flex: 1;
+}
+
+/* Trip Cards */
+.trip-card {
+    border: 2px solid #f0f0f0;
+}
+
+.modern-card-header {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 1.25rem 1.5rem;
+    background: #fafafa;
+    border-bottom: 1px solid #e0e0e0;
+}
+
+.trip-avatar {
+    width: 42px;
+    height: 42px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #2d5a3d 0%, #4a7c59 100%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-size: 1.5rem;
+}
+
+.trip-meta {
+    display: flex;
+    flex-direction: column;
+}
+
+.trip-creator {
+    font-weight: 600;
+    color: #333;
+    font-size: 0.95rem;
+}
+
+.trip-date {
+    font-size: 0.85rem;
+    color: #999;
+}
+
+.trip-badge {
+    display: inline-flex;
+    align-items: center;
+    padding: 6px 14px;
+    background: #f0f7f4;
+    color: #2d5a3d;
+    border-radius: 20px;
+    font-size: 0.85rem;
+    font-weight: 600;
+    margin-top: auto;
+}
+
+/* No Results */
+.no-results-container {
+    text-align: center;
+    padding: 5rem 2rem;
+}
+
+.no-results-icon {
+    width: 100px;
+    height: 100px;
+    margin: 0 auto 2rem;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #f5f5f5 0%, #e0e0e0 100%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 3rem;
+    color: #999;
+}
+
+.no-results-title {
+    font-size: 1.75rem;
+    font-weight: 700;
+    color: #333;
+    margin-bottom: 0.75rem;
+}
+
+.no-results-text {
+    font-size: 1.1rem;
+    color: #666;
+    margin-bottom: 2.5rem;
+}
+
+.browse-links {
+    display: flex;
+    gap: 1rem;
+    justify-content: center;
+    flex-wrap: wrap;
+}
+
+.browse-link {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 1.5rem 2rem;
+    background: white;
+    border: 2px solid #e0e0e0;
+    border-radius: 16px;
+    text-decoration: none;
+    color: #555;
+    font-weight: 600;
+    transition: all 0.3s ease;
+    min-width: 180px;
+}
+
+.browse-link i {
+    font-size: 2rem;
+    color: #2d5a3d;
+}
+
+.browse-link:hover {
+    border-color: #2d5a3d;
+    color: #2d5a3d;
+    transform: translateY(-5px);
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .search-title {
+        font-size: 1.75rem;
+    }
+
+    .search-btn span {
+        display: none;
+    }
+
+    .modern-tab {
+        padding: 0.6rem 1rem;
+        font-size: 0.9rem;
+    }
+
+    .modern-tab i {
+        font-size: 1rem;
+    }
+
+    .section-title {
+        font-size: 1.4rem;
+    }
+
+    .browse-links {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .browse-link {
+        min-width: auto;
+    }
+}
+
+@media (max-width: 576px) {
+    .search-hero {
+        padding: 2.5rem 0 2rem;
+    }
+
+    .search-title {
+        font-size: 1.5rem;
+    }
+
+    .modern-tabs {
+        gap: 0.5rem;
+    }
+
+    .modern-tab {
+        font-size: 0.85rem;
+        padding: 0.5rem 0.75rem;
+    }
+
+    .tab-count {
+        min-width: 20px;
+        height: 20px;
+        font-size: 0.75rem;
+    }
+}
+</style>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Handle tab switching
+    const tabs = document.querySelectorAll('.modern-tab');
+    const tabPanes = document.querySelectorAll('.tab-pane');
+
+    tabs.forEach(tab => {
+        tab.addEventListener('click', function() {
+            const targetId = this.getAttribute('data-bs-target');
+
+            // Remove active class from all tabs
+            tabs.forEach(t => t.classList.remove('active'));
+
+            // Add active class to clicked tab
+            this.classList.add('active');
+
+            // Hide all tab panes
+            tabPanes.forEach(pane => {
+                pane.classList.remove('show', 'active');
+            });
+
+            // Show target tab pane
+            const targetPane = document.querySelector(targetId);
+            if (targetPane) {
+                targetPane.classList.add('show', 'active');
+            }
+        });
+    });
+});
+</script>
 {% endblock %}
