@@ -5,7 +5,7 @@ from django.conf import settings
 from django.conf.urls.static import static
 from django.http import HttpResponse
 from django.views.generic import RedirectView
-from accounts.views import index, admin_dashboard, analytics_dashboard, global_search_view
+from accounts.views import index, admin_dashboard, analytics_dashboard, global_search_view, search_autocomplete
 from experiences.views import sitemap_view
 
 urlpatterns = [
@@ -21,6 +21,7 @@ urlpatterns = [
 
     # Global search
     path('search/', global_search_view, name='global_search'),
+    path('search/autocomplete/', search_autocomplete, name='search_autocomplete'),
     
     # Include app URLs (let each app handle its own URLs)
     path('accounts/', include('accounts.urls')),

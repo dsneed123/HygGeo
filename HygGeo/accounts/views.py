@@ -4,7 +4,7 @@ from django.contrib.auth.decorators import login_required, user_passes_test
 from django.contrib.auth.models import User
 from django.contrib import messages
 from django.contrib.auth import logout
-from django.http import HttpResponse
+from django.http import HttpResponse, JsonResponse
 
 from django.core.paginator import Paginator
 from django.db.models import Q, Count
@@ -3171,35 +3171,59 @@ def global_search_view(request):
     trips = Trip.objects.none()
 
     if query:
+        # Split query into words for better multi-word matching
+        query_words = query.split()
+
+        # Build Q objects for each word
+        exp_q = Q()
+        for word in query_words:
+            exp_q &= (
+                Q(title__icontains=word) |
+                Q(description__icontains=word) |
+                Q(short_description__icontains=word) |
+                Q(destination__name__icontains=word) |
+                Q(destination__country__icontains=word) |
+                Q(provider__name__icontains=word) |
+                Q(categories__name__icontains=word)
+            )
+
         # Search experiences
         experiences = Experience.objects.filter(
-            Q(title__icontains=query) |
-            Q(description__icontains=query) |
-            Q(short_description__icontains=query) |
-            Q(destination__name__icontains=query) |
-            Q(destination__country__icontains=query) |
-            Q(provider__name__icontains=query) |
-            Q(categories__name__icontains=query),
+            exp_q,
             is_active=True
         ).select_related(
             'destination', 'provider', 'experience_type'
         ).prefetch_related('categories').distinct()[:20]
 
+        # Build Q objects for accommodations
+        acc_q = Q()
+        for word in query_words:
+            acc_q &= (
+                Q(name__icontains=word) |
+                Q(description__icontains=word) |
+                Q(destination__name__icontains=word) |
+                Q(destination__country__icontains=word)
+            )
+
         # Search accommodations
         accommodations = Accommodation.objects.filter(
-            Q(name__icontains=query) |
-            Q(description__icontains=query) |
-            Q(destination__name__icontains=query) |
-            Q(destination__country__icontains=query),
+            acc_q,
             is_active=True
         ).select_related('destination').distinct()[:20]
 
+        # Build Q objects for trips
+        trip_q = Q()
+        for word in query_words:
+            trip_q &= (
+                Q(trip_name__icontains=word) |
+                Q(description__icontains=word) |
+                Q(destination__name__icontains=word) |
+                Q(destination__country__icontains=word)
+            )
+
         # Search trips (public trips only)
         trips = Trip.objects.filter(
-            Q(trip_name__icontains=query) |
-            Q(description__icontains=query) |
-            Q(destination__name__icontains=query) |
-            Q(destination__country__icontains=query),
+            trip_q,
             visibility='public'
         ).select_related('destination', 'creator').distinct()[:20]
 
@@ -3218,3 +3242,67 @@ def global_search_view(request):
     }
 
     return render(request, 'accounts/search_results.html', context)
+
+
+def search_autocomplete(request):
+    """AJAX endpoint for search autocomplete"""
+    query = request.GET.get('q', '').strip()
+    results = []
+
+    if query and len(query) >= 2:
+        # Split query into words for better matching
+        query_words = query.split()
+
+        # Build Q objects for each word
+        exp_q = Q()
+        for word in query_words:
+            exp_q &= (
+                Q(title__icontains=word) |
+                Q(destination__name__icontains=word) |
+                Q(destination__country__icontains=word) |
+                Q(provider__name__icontains=word)
+            )
+
+        # Get top 8 experiences
+        experiences = Experience.objects.filter(
+            exp_q,
+            is_active=True
+        ).select_related('destination', 'provider').distinct()[:8]
+
+        for exp in experiences:
+            destination_name = exp.destination.name if exp.destination else ''
+            results.append({
+                'title': exp.title,
+                'subtitle': f"{destination_name} - Experience",
+                'url': exp.get_absolute_url(),
+                'type': 'experience',
+                'icon': 'fa-hiking'
+            })
+
+        # Build Q for accommodations
+        acc_q = Q()
+        for word in query_words:
+            acc_q &= (
+                Q(name__icontains=word) |
+                Q(destination__name__icontains=word) |
+                Q(destination__country__icontains=word)
+            )
+
+        # Get top 4 accommodations if we have room
+        if len(results) < 8:
+            accommodations = Accommodation.objects.filter(
+                acc_q,
+                is_active=True
+            ).select_related('destination').distinct()[:4]
+
+            for acc in accommodations:
+                destination_name = acc.destination.name if acc.destination else ''
+                results.append({
+                    'title': acc.name,
+                    'subtitle': f"{destination_name} - Accommodation",
+                    'url': acc.get_absolute_url(),
+                    'type': 'accommodation',
+                    'icon': 'fa-home'
+                })
+
+    return JsonResponse({'results': results})
