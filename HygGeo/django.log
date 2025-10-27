@@ -16443,3 +16443,354 @@ INFO 2025-10-26 23:49:44,192 basehttp 226604 139691242280640 "POST /accounts/tra
 INFO 2025-10-26 23:49:45,040 basehttp 226604 139691242280640 "POST /accounts/track/click/ HTTP/1.1" 200 62
 INFO 2025-10-26 23:49:45,067 basehttp 226604 139691233887936 "GET /experiences/ HTTP/1.1" 200 60181
 INFO 2025-10-26 23:49:46,152 basehttp 226604 139691233887936 "POST /accounts/track/page-view/ HTTP/1.1" 200 68
+INFO 2025-10-26 23:54:52,769 basehttp 226604 139691242280640 "GET /experiences/ HTTP/1.1" 200 64014
+INFO 2025-10-26 23:54:52,796 basehttp 226604 139691242280640 "GET /static/fonts/poppins-400-latin.woff2 HTTP/1.1" 200 7884
+INFO 2025-10-26 23:54:52,807 basehttp 226604 139691261163200 "GET /static/js/navbar.js HTTP/1.1" 200 2664
+INFO 2025-10-26 23:54:52,807 basehttp 226604 139691337709248 "GET /static/fonts/poppins-700-latin.woff2 HTTP/1.1" 200 7816
+INFO 2025-10-26 23:54:52,807 basehttp 226604 139691233887936 "GET /static/fonts/poppins-600-latin.woff2 HTTP/1.1" 200 8000
+INFO 2025-10-26 23:54:52,807 basehttp 226604 139691250673344 "GET /static/css/base.css HTTP/1.1" 200 5114
+INFO 2025-10-26 23:54:52,925 basehttp 226604 139691242280640 "GET /static/favicon.ico HTTP/1.1" 200 15406
+INFO 2025-10-26 23:54:53,945 basehttp 226604 139691242280640 "POST /accounts/track/page-view/ HTTP/1.1" 200 68
+INFO 2025-10-26 23:54:55,350 basehttp 226604 139691242280640 "GET /experiences/?search=&destination=seattle&category=&type=&budget=&duration=&group_size=&sustainability_min=&hygge_min= HTTP/1.1" 200 65261
+INFO 2025-10-26 23:54:56,415 basehttp 226604 139691242280640 "POST /accounts/track/page-view/ HTTP/1.1" 200 68
+INFO 2025-10-26 23:54:56,878 basehttp 226604 139691242280640 "GET /experiences/?search=&destination=&category=&type=&budget=&duration=&group_size=&sustainability_min=&hygge_min= HTTP/1.1" 200 65156
+INFO 2025-10-26 23:54:57,944 basehttp 226604 139691242280640 "POST /accounts/track/page-view/ HTTP/1.1" 200 68
+INFO 2025-10-26 23:54:58,027 basehttp 226604 139691242280640 "GET /experiences/?search=&destination=&category=TEST&type=&budget=&duration=&group_size=&sustainability_min=&hygge_min= HTTP/1.1" 200 65258
+INFO 2025-10-26 23:54:59,099 basehttp 226604 139691242280640 "POST /accounts/track/page-view/ HTTP/1.1" 200 68
+INFO 2025-10-26 23:55:00,232 basehttp 226604 139691242280640 "GET /experiences/?search=&destination=&category=&type=&budget=&duration=&group_size=&sustainability_min=&hygge_min= HTTP/1.1" 200 65156
+INFO 2025-10-26 23:55:00,777 basehttp 226604 139691242280640 "POST /accounts/track/click/ HTTP/1.1" 200 62
+INFO 2025-10-26 23:55:01,295 basehttp 226604 139691242280640 "POST /accounts/track/page-view/ HTTP/1.1" 200 68
+INFO 2025-10-26 23:55:02,618 basehttp 226604 139691242280640 "POST /accounts/track/click/ HTTP/1.1" 200 62
+INFO 2025-10-26 23:55:03,463 basehttp 226604 139691242280640 "POST /accounts/track/click/ HTTP/1.1" 200 62
+INFO 2025-10-26 23:55:03,973 basehttp 226604 139691242280640 "POST /accounts/track/click/ HTTP/1.1" 200 62
+INFO 2025-10-26 23:55:04,934 basehttp 226604 139691242280640 "POST /accounts/track/click/ HTTP/1.1" 200 62
+INFO 2025-10-26 23:55:07,586 basehttp 226604 139691242280640 "POST /accounts/track/click/ HTTP/1.1" 200 62
+INFO 2025-10-26 23:55:08,397 basehttp 226604 139691242280640 "POST /accounts/track/click/ HTTP/1.1" 200 62
+INFO 2025-10-26 23:55:09,051 basehttp 226604 139691242280640 "POST /accounts/track/click/ HTTP/1.1" 200 62
+INFO 2025-10-26 23:56:43,997 basehttp 226604 139691242280640 "POST /accounts/track/click/ HTTP/1.1" 200 62
+INFO 2025-10-26 23:56:44,021 basehttp 226604 139691242280640 "GET / HTTP/1.1" 200 120946
+INFO 2025-10-26 23:56:47,351 basehttp 226604 139691242280640 "POST /accounts/track/page-view/ HTTP/1.1" 200 68
+ERROR 2025-10-26 23:58:13,470 log 226604 139691242280640 Internal Server Error: /
+Traceback (most recent call last):
+  File "/home/dsneedy/.local/lib/python3.12/site-packages/django/core/handlers/exception.py", line 55, in inner
+    response = get_response(request)
+               ^^^^^^^^^^^^^^^^^^^^^
+  File "/home/dsneedy/.local/lib/python3.12/site-packages/django/core/handlers/base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/dsneedy/Desktop/HygGeo/HygGeo/accounts/views.py", line 183, in index
+    return render(request, 'index.html', context)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/dsneedy/.local/lib/python3.12/site-packages/django/shortcuts.py", line 25, in render
+    content = loader.render_to_string(template_name, context, request, using=using)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/dsneedy/.local/lib/python3.12/site-packages/django/template/loader.py", line 62, in render_to_string
+    return template.render(context, request)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/dsneedy/.local/lib/python3.12/site-packages/django/template/backends/django.py", line 107, in render
+    return self.template.render(context)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/dsneedy/.local/lib/python3.12/site-packages/django/template/base.py", line 171, in render
+    return self._render(context)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "/home/dsneedy/.local/lib/python3.12/site-packages/django/template/base.py", line 163, in _render
+    return self.nodelist.render(context)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/dsneedy/.local/lib/python3.12/site-packages/django/template/base.py", line 1016, in render
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+                               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/dsneedy/.local/lib/python3.12/site-packages/django/template/base.py", line 977, in render_annotated
+    return self.render(context)
+           ^^^^^^^^^^^^^^^^^^^^
+  File "/home/dsneedy/.local/lib/python3.12/site-packages/django/template/loader_tags.py", line 159, in render
+    return compiled_parent._render(context)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/dsneedy/.local/lib/python3.12/site-packages/django/template/base.py", line 163, in _render
+    return self.nodelist.render(context)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/dsneedy/.local/lib/python3.12/site-packages/django/template/base.py", line 1016, in render
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+                               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/dsneedy/.local/lib/python3.12/site-packages/django/template/base.py", line 977, in render_annotated
+    return self.render(context)
+           ^^^^^^^^^^^^^^^^^^^^
+  File "/home/dsneedy/.local/lib/python3.12/site-packages/django/template/loader_tags.py", line 65, in render
+    result = block.nodelist.render(context)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/dsneedy/.local/lib/python3.12/site-packages/django/template/base.py", line 1016, in render
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+                               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/dsneedy/.local/lib/python3.12/site-packages/django/template/base.py", line 977, in render_annotated
+    return self.render(context)
+           ^^^^^^^^^^^^^^^^^^^^
+  File "/home/dsneedy/.local/lib/python3.12/site-packages/django/template/defaulttags.py", line 480, in render
+    url = reverse(view_name, args=args, kwargs=kwargs, current_app=current_app)
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/dsneedy/.local/lib/python3.12/site-packages/django/urls/base.py", line 98, in reverse
+    resolved_url = resolver._reverse_with_prefix(view, prefix, *args, **kwargs)
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/dsneedy/.local/lib/python3.12/site-packages/django/urls/resolvers.py", line 831, in _reverse_with_prefix
+    raise NoReverseMatch(msg)
+django.urls.exceptions.NoReverseMatch: Reverse for 'destination_list' not found. 'destination_list' is not a valid view function or pattern name.
+ERROR 2025-10-26 23:58:13,475 basehttp 226604 139691242280640 "GET / HTTP/1.1" 500 195533
+ERROR 2025-10-26 23:58:27,091 log 226604 139691242280640 Internal Server Error: /
+Traceback (most recent call last):
+  File "/home/dsneedy/.local/lib/python3.12/site-packages/django/core/handlers/exception.py", line 55, in inner
+    response = get_response(request)
+               ^^^^^^^^^^^^^^^^^^^^^
+  File "/home/dsneedy/.local/lib/python3.12/site-packages/django/core/handlers/base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/dsneedy/Desktop/HygGeo/HygGeo/accounts/views.py", line 183, in index
+    return render(request, 'index.html', context)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/dsneedy/.local/lib/python3.12/site-packages/django/shortcuts.py", line 25, in render
+    content = loader.render_to_string(template_name, context, request, using=using)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/dsneedy/.local/lib/python3.12/site-packages/django/template/loader.py", line 62, in render_to_string
+    return template.render(context, request)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/dsneedy/.local/lib/python3.12/site-packages/django/template/backends/django.py", line 107, in render
+    return self.template.render(context)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/dsneedy/.local/lib/python3.12/site-packages/django/template/base.py", line 171, in render
+    return self._render(context)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "/home/dsneedy/.local/lib/python3.12/site-packages/django/template/base.py", line 163, in _render
+    return self.nodelist.render(context)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/dsneedy/.local/lib/python3.12/site-packages/django/template/base.py", line 1016, in render
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+                               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/dsneedy/.local/lib/python3.12/site-packages/django/template/base.py", line 977, in render_annotated
+    return self.render(context)
+           ^^^^^^^^^^^^^^^^^^^^
+  File "/home/dsneedy/.local/lib/python3.12/site-packages/django/template/loader_tags.py", line 159, in render
+    return compiled_parent._render(context)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/dsneedy/.local/lib/python3.12/site-packages/django/template/base.py", line 163, in _render
+    return self.nodelist.render(context)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/dsneedy/.local/lib/python3.12/site-packages/django/template/base.py", line 1016, in render
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+                               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/dsneedy/.local/lib/python3.12/site-packages/django/template/base.py", line 977, in render_annotated
+    return self.render(context)
+           ^^^^^^^^^^^^^^^^^^^^
+  File "/home/dsneedy/.local/lib/python3.12/site-packages/django/template/loader_tags.py", line 65, in render
+    result = block.nodelist.render(context)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/dsneedy/.local/lib/python3.12/site-packages/django/template/base.py", line 1016, in render
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+                               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/dsneedy/.local/lib/python3.12/site-packages/django/template/base.py", line 977, in render_annotated
+    return self.render(context)
+           ^^^^^^^^^^^^^^^^^^^^
+  File "/home/dsneedy/.local/lib/python3.12/site-packages/django/template/defaulttags.py", line 480, in render
+    url = reverse(view_name, args=args, kwargs=kwargs, current_app=current_app)
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/dsneedy/.local/lib/python3.12/site-packages/django/urls/base.py", line 98, in reverse
+    resolved_url = resolver._reverse_with_prefix(view, prefix, *args, **kwargs)
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/dsneedy/.local/lib/python3.12/site-packages/django/urls/resolvers.py", line 831, in _reverse_with_prefix
+    raise NoReverseMatch(msg)
+django.urls.exceptions.NoReverseMatch: Reverse for 'destination_list' not found. 'destination_list' is not a valid view function or pattern name.
+ERROR 2025-10-26 23:58:27,093 basehttp 226604 139691242280640 "GET / HTTP/1.1" 500 195287
+ERROR 2025-10-26 23:58:27,576 log 226604 139691242280640 Internal Server Error: /
+Traceback (most recent call last):
+  File "/home/dsneedy/.local/lib/python3.12/site-packages/django/core/handlers/exception.py", line 55, in inner
+    response = get_response(request)
+               ^^^^^^^^^^^^^^^^^^^^^
+  File "/home/dsneedy/.local/lib/python3.12/site-packages/django/core/handlers/base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/dsneedy/Desktop/HygGeo/HygGeo/accounts/views.py", line 183, in index
+    return render(request, 'index.html', context)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/dsneedy/.local/lib/python3.12/site-packages/django/shortcuts.py", line 25, in render
+    content = loader.render_to_string(template_name, context, request, using=using)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/dsneedy/.local/lib/python3.12/site-packages/django/template/loader.py", line 62, in render_to_string
+    return template.render(context, request)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/dsneedy/.local/lib/python3.12/site-packages/django/template/backends/django.py", line 107, in render
+    return self.template.render(context)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/dsneedy/.local/lib/python3.12/site-packages/django/template/base.py", line 171, in render
+    return self._render(context)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "/home/dsneedy/.local/lib/python3.12/site-packages/django/template/base.py", line 163, in _render
+    return self.nodelist.render(context)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/dsneedy/.local/lib/python3.12/site-packages/django/template/base.py", line 1016, in render
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+                               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/dsneedy/.local/lib/python3.12/site-packages/django/template/base.py", line 977, in render_annotated
+    return self.render(context)
+           ^^^^^^^^^^^^^^^^^^^^
+  File "/home/dsneedy/.local/lib/python3.12/site-packages/django/template/loader_tags.py", line 159, in render
+    return compiled_parent._render(context)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/dsneedy/.local/lib/python3.12/site-packages/django/template/base.py", line 163, in _render
+    return self.nodelist.render(context)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/dsneedy/.local/lib/python3.12/site-packages/django/template/base.py", line 1016, in render
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+                               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/dsneedy/.local/lib/python3.12/site-packages/django/template/base.py", line 977, in render_annotated
+    return self.render(context)
+           ^^^^^^^^^^^^^^^^^^^^
+  File "/home/dsneedy/.local/lib/python3.12/site-packages/django/template/loader_tags.py", line 65, in render
+    result = block.nodelist.render(context)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/dsneedy/.local/lib/python3.12/site-packages/django/template/base.py", line 1016, in render
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+                               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/dsneedy/.local/lib/python3.12/site-packages/django/template/base.py", line 977, in render_annotated
+    return self.render(context)
+           ^^^^^^^^^^^^^^^^^^^^
+  File "/home/dsneedy/.local/lib/python3.12/site-packages/django/template/defaulttags.py", line 480, in render
+    url = reverse(view_name, args=args, kwargs=kwargs, current_app=current_app)
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/dsneedy/.local/lib/python3.12/site-packages/django/urls/base.py", line 98, in reverse
+    resolved_url = resolver._reverse_with_prefix(view, prefix, *args, **kwargs)
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/dsneedy/.local/lib/python3.12/site-packages/django/urls/resolvers.py", line 831, in _reverse_with_prefix
+    raise NoReverseMatch(msg)
+django.urls.exceptions.NoReverseMatch: Reverse for 'destination_list' not found. 'destination_list' is not a valid view function or pattern name.
+ERROR 2025-10-26 23:58:27,579 basehttp 226604 139691242280640 "GET / HTTP/1.1" 500 196085
+ERROR 2025-10-26 23:58:30,963 log 226604 139691242280640 Internal Server Error: /
+Traceback (most recent call last):
+  File "/home/dsneedy/.local/lib/python3.12/site-packages/django/core/handlers/exception.py", line 55, in inner
+    response = get_response(request)
+               ^^^^^^^^^^^^^^^^^^^^^
+  File "/home/dsneedy/.local/lib/python3.12/site-packages/django/core/handlers/base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/dsneedy/Desktop/HygGeo/HygGeo/accounts/views.py", line 183, in index
+    return render(request, 'index.html', context)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/dsneedy/.local/lib/python3.12/site-packages/django/shortcuts.py", line 25, in render
+    content = loader.render_to_string(template_name, context, request, using=using)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/dsneedy/.local/lib/python3.12/site-packages/django/template/loader.py", line 62, in render_to_string
+    return template.render(context, request)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/dsneedy/.local/lib/python3.12/site-packages/django/template/backends/django.py", line 107, in render
+    return self.template.render(context)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/dsneedy/.local/lib/python3.12/site-packages/django/template/base.py", line 171, in render
+    return self._render(context)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "/home/dsneedy/.local/lib/python3.12/site-packages/django/template/base.py", line 163, in _render
+    return self.nodelist.render(context)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/dsneedy/.local/lib/python3.12/site-packages/django/template/base.py", line 1016, in render
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+                               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/dsneedy/.local/lib/python3.12/site-packages/django/template/base.py", line 977, in render_annotated
+    return self.render(context)
+           ^^^^^^^^^^^^^^^^^^^^
+  File "/home/dsneedy/.local/lib/python3.12/site-packages/django/template/loader_tags.py", line 159, in render
+    return compiled_parent._render(context)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/dsneedy/.local/lib/python3.12/site-packages/django/template/base.py", line 163, in _render
+    return self.nodelist.render(context)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/dsneedy/.local/lib/python3.12/site-packages/django/template/base.py", line 1016, in render
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+                               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/dsneedy/.local/lib/python3.12/site-packages/django/template/base.py", line 977, in render_annotated
+    return self.render(context)
+           ^^^^^^^^^^^^^^^^^^^^
+  File "/home/dsneedy/.local/lib/python3.12/site-packages/django/template/loader_tags.py", line 65, in render
+    result = block.nodelist.render(context)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/dsneedy/.local/lib/python3.12/site-packages/django/template/base.py", line 1016, in render
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+                               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/dsneedy/.local/lib/python3.12/site-packages/django/template/base.py", line 977, in render_annotated
+    return self.render(context)
+           ^^^^^^^^^^^^^^^^^^^^
+  File "/home/dsneedy/.local/lib/python3.12/site-packages/django/template/defaulttags.py", line 480, in render
+    url = reverse(view_name, args=args, kwargs=kwargs, current_app=current_app)
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/dsneedy/.local/lib/python3.12/site-packages/django/urls/base.py", line 98, in reverse
+    resolved_url = resolver._reverse_with_prefix(view, prefix, *args, **kwargs)
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/dsneedy/.local/lib/python3.12/site-packages/django/urls/resolvers.py", line 831, in _reverse_with_prefix
+    raise NoReverseMatch(msg)
+django.urls.exceptions.NoReverseMatch: Reverse for 'destination_list' not found. 'destination_list' is not a valid view function or pattern name.
+ERROR 2025-10-26 23:58:30,965 basehttp 226604 139691242280640 "GET / HTTP/1.1" 500 194723
+ERROR 2025-10-26 23:58:42,725 log 226604 139691242280640 Internal Server Error: /
+Traceback (most recent call last):
+  File "/home/dsneedy/.local/lib/python3.12/site-packages/django/core/handlers/exception.py", line 55, in inner
+    response = get_response(request)
+               ^^^^^^^^^^^^^^^^^^^^^
+  File "/home/dsneedy/.local/lib/python3.12/site-packages/django/core/handlers/base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/dsneedy/Desktop/HygGeo/HygGeo/accounts/views.py", line 183, in index
+    return render(request, 'index.html', context)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/dsneedy/.local/lib/python3.12/site-packages/django/shortcuts.py", line 25, in render
+    content = loader.render_to_string(template_name, context, request, using=using)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/dsneedy/.local/lib/python3.12/site-packages/django/template/loader.py", line 62, in render_to_string
+    return template.render(context, request)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/dsneedy/.local/lib/python3.12/site-packages/django/template/backends/django.py", line 107, in render
+    return self.template.render(context)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/dsneedy/.local/lib/python3.12/site-packages/django/template/base.py", line 171, in render
+    return self._render(context)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "/home/dsneedy/.local/lib/python3.12/site-packages/django/template/base.py", line 163, in _render
+    return self.nodelist.render(context)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/dsneedy/.local/lib/python3.12/site-packages/django/template/base.py", line 1016, in render
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+                               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/dsneedy/.local/lib/python3.12/site-packages/django/template/base.py", line 977, in render_annotated
+    return self.render(context)
+           ^^^^^^^^^^^^^^^^^^^^
+  File "/home/dsneedy/.local/lib/python3.12/site-packages/django/template/loader_tags.py", line 159, in render
+    return compiled_parent._render(context)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/dsneedy/.local/lib/python3.12/site-packages/django/template/base.py", line 163, in _render
+    return self.nodelist.render(context)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/dsneedy/.local/lib/python3.12/site-packages/django/template/base.py", line 1016, in render
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+                               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/dsneedy/.local/lib/python3.12/site-packages/django/template/base.py", line 977, in render_annotated
+    return self.render(context)
+           ^^^^^^^^^^^^^^^^^^^^
+  File "/home/dsneedy/.local/lib/python3.12/site-packages/django/template/loader_tags.py", line 65, in render
+    result = block.nodelist.render(context)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/dsneedy/.local/lib/python3.12/site-packages/django/template/base.py", line 1016, in render
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+                               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/dsneedy/.local/lib/python3.12/site-packages/django/template/base.py", line 977, in render_annotated
+    return self.render(context)
+           ^^^^^^^^^^^^^^^^^^^^
+  File "/home/dsneedy/.local/lib/python3.12/site-packages/django/template/defaulttags.py", line 480, in render
+    url = reverse(view_name, args=args, kwargs=kwargs, current_app=current_app)
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/dsneedy/.local/lib/python3.12/site-packages/django/urls/base.py", line 98, in reverse
+    resolved_url = resolver._reverse_with_prefix(view, prefix, *args, **kwargs)
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/dsneedy/.local/lib/python3.12/site-packages/django/urls/resolvers.py", line 831, in _reverse_with_prefix
+    raise NoReverseMatch(msg)
+django.urls.exceptions.NoReverseMatch: Reverse for 'destination_list' not found. 'destination_list' is not a valid view function or pattern name.
+ERROR 2025-10-26 23:58:42,728 basehttp 226604 139691242280640 "GET / HTTP/1.1" 500 196257
+INFO 2025-10-26 23:59:53,644 basehttp 226604 139691242280640 "GET / HTTP/1.1" 200 120695
+INFO 2025-10-26 23:59:53,671 basehttp 226604 139691337709248 "GET /static/fonts/poppins-600-latin.woff2 HTTP/1.1" 200 8000
+INFO 2025-10-26 23:59:53,672 basehttp 226604 139691261163200 "GET /static/fonts/poppins-400-latin.woff2 HTTP/1.1" 200 7884
+INFO 2025-10-26 23:59:53,673 basehttp 226604 139691250673344 "GET /static/fonts/poppins-700-latin.woff2 HTTP/1.1" 200 7816
+INFO 2025-10-26 23:59:53,675 basehttp 226604 139691216053952 "GET /static/css/base.css HTTP/1.1" 200 5114
+INFO 2025-10-26 23:59:53,675 basehttp 226604 139691224446656 "GET /static/js/navbar.js HTTP/1.1" 200 2664
+INFO 2025-10-26 23:59:53,676 basehttp 226604 139691242280640 "GET /static/banner.webp HTTP/1.1" 200 198510
+INFO 2025-10-26 23:59:54,085 basehttp 226604 139691242280640 "GET /static/favicon.ico HTTP/1.1" 200 15406
+INFO 2025-10-26 23:59:55,094 basehttp 226604 139691242280640 "POST /accounts/track/page-view/ HTTP/1.1" 200 68
