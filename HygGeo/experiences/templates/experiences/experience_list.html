@@ -67,6 +67,9 @@
                     <i class="fas fa-search"></i>
                     <input type="text" name="search" value="{{ current_filters.search|default:'' }}"
                            placeholder="Search experiences, destinations, activities..." class="search-input">
+                    <button type="submit" class="search-submit-button">
+                        <i class="fas fa-arrow-right"></i>
+                    </button>
                 </div>
                 <div class="primary-filters">
                     <select class="modern-select" name="destination" id="destination">
@@ -175,7 +178,7 @@
                             <i class="fas fa-times me-2"></i>Clear All
                         </a>
                         <button type="submit" class="apply-btn">
-                            <i class="fas fa-check me-2"></i>Apply Filters
+                            <i class="fas fa-search me-2"></i>Search
                         </button>
                     </div>
                 </div>
@@ -371,28 +374,59 @@
     position: relative;
     display: flex;
     align-items: center;
+    background: white;
+    border: 2px solid #e0e0e0;
+    border-radius: 12px;
+    transition: all 0.3s ease;
 }
 
-.search-input-wrapper i {
+.search-input-wrapper:focus-within {
+    border-color: #2d5a3d;
+    box-shadow: 0 0 0 3px rgba(45, 90, 61, 0.1);
+}
+
+.search-input-wrapper > i {
     position: absolute;
     left: 1.25rem;
     color: #999;
     font-size: 1.1rem;
+    z-index: 1;
 }
 
 .search-input {
-    width: 100%;
+    flex: 1;
     padding: 0.875rem 1.25rem 0.875rem 3.25rem;
-    border: 2px solid #e0e0e0;
-    border-radius: 12px;
+    border: none;
+    background: transparent;
     font-size: 1rem;
-    transition: all 0.3s ease;
+    outline: none;
+    box-sizing: border-box;
+    width: 100%;
 }
 
-.search-input:focus {
-    outline: none;
-    border-color: #2d5a3d;
-    box-shadow: 0 0 0 3px rgba(45, 90, 61, 0.1);
+.search-submit-button {
+    background: linear-gradient(135deg, #2d5a3d 0%, #4a7c59 100%);
+    color: white;
+    border: none;
+    padding: 0.875rem 1.5rem;
+    border-radius: 0 10px 10px 0;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 60px;
+    box-sizing: border-box;
+    flex-shrink: 0;
+}
+
+.search-submit-button:hover {
+    transform: translateX(2px);
+    background: linear-gradient(135deg, #1e4a2f 0%, #3a6b49 100%);
+}
+
+.search-submit-button i {
+    font-size: 1.1rem;
 }
 
 .primary-filters {
@@ -630,66 +664,566 @@
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
 }
 
+/* Touch-friendly improvements for all mobile */
 @media (max-width: 992px) {
+    /* Ensure minimum tap target size of 44x44px for touch devices */
+    button,
+    .btn,
+    .page-link,
+    select,
+    input[type="checkbox"],
+    input[type="radio"],
+    a.quick-action-btn {
+        min-height: 44px;
+        min-width: 44px;
+    }
+
+    /* Increase spacing for easier touch interaction */
+    .primary-filters {
+        gap: 0.875rem;
+    }
+
+    .filters-grid {
+        gap: 1.25rem;
+    }
+
+    /* Make checkboxes and radio buttons larger */
+    input[type="checkbox"],
+    input[type="radio"] {
+        width: 24px;
+        height: 24px;
+    }
+}
+
+/* Tablet styles */
+@media (max-width: 768px) {
+    .experiences-hero {
+        padding: 2.5rem 0;
+    }
+
+    .hero-title {
+        font-size: 2.25rem;
+    }
+
+    .hero-subtitle {
+        font-size: 1.15rem;
+    }
+
+    .search-filter-section {
+        padding: 1.25rem;
+    }
+
+    .results-bar {
+        gap: 1rem;
+    }
+
+    .action-buttons {
+        flex-direction: column;
+        gap: 0.75rem;
+    }
+
+    .clear-btn,
+    .apply-btn {
+        width: 100%;
+        justify-content: center;
+    }
+
+    /* Tablet card improvements */
+    .experience-card-item {
+        padding-left: 0.75rem !important;
+        padding-right: 0.75rem !important;
+    }
+
+    .card-hygge {
+        border-radius: 14px;
+    }
+
+    .card-img-top {
+        height: 200px !important;
+    }
+
+    .card-body h6 {
+        font-size: 1.05rem;
+    }
+
+    .btn-hygge,
+    .btn-outline-hygge {
+        font-size: 0.925rem;
+        padding: 0.7rem 1.1rem;
+    }
+}
+
+@media (max-width: 992px) {
+    .experiences-hero {
+        padding: 2.5rem 0;
+    }
+
     .hero-title {
         font-size: 2rem;
     }
 
+    .hero-subtitle {
+        font-size: 1.1rem;
+    }
+
     .main-search-bar {
         flex-direction: column;
+        width: 100%;
+    }
+
+    .search-input-wrapper {
+        min-width: 100%;
+        width: 100%;
+        max-width: 100%;
+        border-radius: 12px;
+        box-sizing: border-box;
+    }
+
+    .search-input {
+        padding: 1rem 0.5rem 1rem 3rem;
+        font-size: 1rem;
+    }
+
+    .search-submit-button {
+        padding: 1rem 1rem;
+        min-width: 50px;
+        border-radius: 0 10px 10px 0;
     }
 
     .primary-filters {
         width: 100%;
+        flex-direction: column;
     }
 
-    .modern-select {
-        flex: 1;
-        min-width: 0;
+    .modern-select,
+    .more-filters-btn {
+        width: 100%;
+        flex: none;
+        min-width: 100%;
+        padding: 1rem 1.25rem;
+        font-size: 1rem;
     }
 
     .filters-grid {
         grid-template-columns: 1fr;
+        gap: 1rem;
     }
 
     .results-bar {
         flex-direction: column;
         align-items: flex-start;
+        gap: 1rem;
+    }
+
+    .results-info {
+        width: 100%;
+    }
+
+    .results-actions {
+        width: 100%;
+        flex-direction: column;
+        gap: 0.75rem;
+    }
+
+    .sort-form {
+        width: 100%;
+    }
+
+    .sort-select-wrapper {
+        width: 100%;
+        padding: 0.875rem 1rem;
+        justify-content: space-between;
     }
 
     .quick-actions {
         width: 100%;
+        gap: 0.5rem;
     }
 
     .quick-action-btn {
         flex: 1;
         justify-content: center;
+        padding: 0.875rem 0.75rem;
+        font-size: 0.95rem;
     }
 }
 
 @media (max-width: 576px) {
-    .hero-title {
-        font-size: 1.75rem;
+    .container {
+        padding-left: 1rem;
+        padding-right: 1rem;
+        max-width: 100%;
+        overflow-x: hidden;
     }
 
-    .hero-subtitle {
-        font-size: 1rem;
+    .experiences-hero {
+        padding: 2rem 0;
+    }
+
+    .hero-content {
+        padding: 0 1rem;
     }
 
     .search-filter-section {
         padding: 1rem;
+        border-radius: 12px;
+        margin-bottom: 1.5rem;
+        box-sizing: border-box;
+        max-width: 100%;
+    }
+
+    .hero-title {
+        font-size: 1.75rem;
+        line-height: 1.3;
+    }
+
+    .hero-title i {
+        font-size: 1.5rem;
+        margin-right: 0.5rem !important;
+    }
+
+    .hero-subtitle {
+        font-size: 0.95rem;
+        line-height: 1.4;
+        padding: 0 0.5rem;
+    }
+
+    .search-input-wrapper {
+        width: 100%;
+        max-width: 100%;
+        border-radius: 10px;
+        box-sizing: border-box;
+    }
+
+    .search-input {
+        padding: 0.875rem 0.5rem 0.875rem 2.75rem;
+        font-size: 0.95rem;
+    }
+
+    .search-input-wrapper > i {
+        left: 0.875rem;
+        font-size: 1rem;
+    }
+
+    .search-submit-button {
+        padding: 0.875rem 0.875rem;
+        min-width: 48px;
+        border-radius: 0 8px 8px 0;
+    }
+
+    .search-submit-button i {
+        font-size: 1rem;
     }
 
     .primary-filters {
         flex-direction: column;
+        gap: 0.75rem;
     }
 
-    .modern-select {
+    .modern-select,
+    .more-filters-btn {
         width: 100%;
+        padding: 0.875rem 1rem;
+        font-size: 0.95rem;
+        border-radius: 10px;
+    }
+
+    .more-filters-btn {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .advanced-filters {
+        padding: 1rem;
+        border-radius: 10px;
+    }
+
+    .filter-group label {
+        font-size: 0.9rem;
+    }
+
+    .range-value {
+        font-size: 0.85rem;
+    }
+
+    .action-buttons {
+        flex-direction: column;
+        gap: 0.75rem;
+    }
+
+    .clear-btn,
+    .apply-btn {
+        width: 100%;
+        justify-content: center;
+        padding: 1rem 1.5rem;
+        font-size: 1rem;
+        font-weight: 600;
+    }
+
+    .clear-btn i,
+    .apply-btn i {
+        font-size: 1rem;
+    }
+
+    .results-count {
+        font-size: 1rem;
+    }
+
+    .sort-select-wrapper {
+        padding: 0.75rem 1rem;
+    }
+
+    .sort-select {
+        font-size: 0.9rem;
+    }
+
+    .quick-action-btn {
+        padding: 0.75rem 0.5rem;
+        font-size: 0.875rem;
     }
 
     .quick-action-btn span {
         display: none;
+    }
+
+    .quick-action-btn i {
+        margin: 0;
+        font-size: 1.1rem;
+    }
+
+    /* Card improvements for mobile */
+    .row.g-4 {
+        gap: 1rem !important;
+    }
+
+    .experience-card-item {
+        padding-left: 0.5rem !important;
+        padding-right: 0.5rem !important;
+    }
+
+    .card-hygge {
+        margin-bottom: 1rem;
+        border-radius: 12px;
+        overflow: hidden;
+    }
+
+    .card-img-top {
+        height: 180px !important;
+    }
+
+    .card-body {
+        padding: 1rem !important;
+    }
+
+    /* Card header - title and badges */
+    .card-body h6 {
+        font-size: 1rem;
+        line-height: 1.3;
+        margin-bottom: 0.5rem !important;
+    }
+
+    .card-body .badge {
+        font-size: 0.7rem !important;
+        padding: 0.25rem 0.5rem;
+        white-space: nowrap;
+    }
+
+    /* Location and type badges */
+    .card-body .text-muted.small {
+        font-size: 0.875rem !important;
+    }
+
+    .card-body .badge.bg-secondary,
+    .card-body .badge.bg-info {
+        font-size: 0.7rem !important;
+        padding: 0.25rem 0.5rem;
+    }
+
+    /* Description text */
+    .card-body p.small {
+        font-size: 0.875rem !important;
+        line-height: 1.5;
+        margin-bottom: 0.75rem !important;
+    }
+
+    /* Features - sustainability, hygge scores */
+    .card-body .d-flex.small {
+        font-size: 0.85rem !important;
+        flex-wrap: wrap;
+        gap: 0.5rem;
+    }
+
+    .card-body .d-flex.small > div {
+        display: flex;
+        align-items: center;
+        white-space: nowrap;
+    }
+
+    /* Price and duration */
+    .card-body .fw-bold.text-primary {
+        font-size: 1.1rem !important;
+    }
+
+    .card-body small.text-muted {
+        font-size: 0.8rem !important;
+    }
+
+    /* Action buttons */
+    .btn-hygge,
+    .btn-outline-hygge,
+    .btn-outline-hygge-edit {
+        font-size: 0.9rem !important;
+        padding: 0.65rem 1rem !important;
+        min-height: 44px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .btn-sm {
+        min-height: 44px !important;
+    }
+
+    .btn-hygge i,
+    .btn-outline-hygge i {
+        font-size: 0.9rem;
+    }
+
+    .bookmark-btn {
+        min-width: 44px !important;
+        padding: 0.65rem 0.75rem !important;
+    }
+
+    /* Card action buttons container */
+    .card-body .d-flex.gap-2 {
+        gap: 0.5rem !important;
+    }
+
+    /* Pagination on mobile */
+    .pagination {
+        font-size: 0.875rem;
+    }
+
+    .page-link {
+        padding: 0.5rem 0.75rem;
+    }
+}
+
+/* Extra small phones */
+@media (max-width: 380px) {
+    .hero-title {
+        font-size: 1.5rem;
+    }
+
+    .hero-title i {
+        display: block;
+        margin-bottom: 0.5rem;
+        margin-right: 0 !important;
+    }
+
+    .hero-subtitle {
+        font-size: 0.9rem;
+    }
+
+    .search-filter-section {
+        padding: 0.875rem;
+        box-sizing: border-box;
+        max-width: 100%;
+    }
+
+    .search-input-wrapper {
+        width: 100%;
+        max-width: 100%;
+        border-radius: 10px;
+        box-sizing: border-box;
+    }
+
+    .search-input {
+        font-size: 0.9rem;
+        padding: 0.75rem 0.5rem 0.75rem 2.5rem;
+    }
+
+    .search-input-wrapper > i {
+        left: 0.75rem;
+        font-size: 0.9rem;
+    }
+
+    .search-submit-button {
+        padding: 0.75rem 0.75rem;
+        min-width: 44px;
+        border-radius: 0 8px 8px 0;
+    }
+
+    .search-submit-button i {
+        font-size: 0.9rem;
+    }
+
+    .modern-select,
+    .more-filters-btn {
+        padding: 0.75rem 0.875rem;
+        font-size: 0.9rem;
+    }
+
+    .clear-btn,
+    .apply-btn {
+        padding: 0.875rem 1.25rem;
+        font-size: 0.95rem;
+    }
+
+    .advanced-filters {
+        padding: 0.875rem;
+    }
+
+    /* Extra small card improvements */
+    .card-img-top {
+        height: 160px !important;
+    }
+
+    .card-body {
+        padding: 0.875rem !important;
+    }
+
+    .card-body h6 {
+        font-size: 0.95rem !important;
+        line-height: 1.25;
+    }
+
+    .card-body .badge {
+        font-size: 0.65rem !important;
+        padding: 0.2rem 0.4rem;
+    }
+
+    .card-body .text-muted.small {
+        font-size: 0.8rem !important;
+    }
+
+    .card-body p.small {
+        font-size: 0.8rem !important;
+        margin-bottom: 0.65rem !important;
+    }
+
+    .card-body .d-flex.small {
+        font-size: 0.8rem !important;
+    }
+
+    .card-body .fw-bold.text-primary {
+        font-size: 1rem !important;
+    }
+
+    .btn-hygge,
+    .btn-outline-hygge {
+        font-size: 0.85rem !important;
+        padding: 0.6rem 0.875rem !important;
+    }
+
+    .btn-hygge i {
+        font-size: 0.85rem;
+    }
+
+    .bookmark-btn {
+        min-width: 42px !important;
+        padding: 0.6rem 0.65rem !important;
     }
 }
 </style>
@@ -747,7 +1281,7 @@ document.addEventListener('DOMContentLoaded', function() {
     function resetFilterLoading() {
         const submitBtn = form.querySelector('button[type="submit"]');
         if (submitBtn) {
-            submitBtn.innerHTML = '<i class="fas fa-filter me-2"></i>Apply Filters';
+            submitBtn.innerHTML = '<i class="fas fa-search me-2"></i>Search';
             submitBtn.disabled = false;
         }
         form.style.opacity = '1';
