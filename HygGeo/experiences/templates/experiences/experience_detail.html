@@ -3,6 +3,13 @@
 
 {% block title %}{{ experience.title }} - {{ experience.destination.name }} | HygGeo{% endblock %}
 
+{% block extra_head %}
+<!-- Preload LCP image for faster rendering -->
+{% if experience.main_image %}
+<link rel="preload" as="image" href="{{ experience.main_image.url|cf_image:'format=webp,width=1280,quality=40,fit=cover' }}" fetchpriority="high">
+{% endif %}
+{% endblock %}
+
 {% block description %}{{ experience.short_description|default:experience.description|truncatewords:25 }} Experience sustainable travel in {{ experience.destination.name }}.{% endblock %}
 
 {% block keywords %}{{ experience.title }}, {{ experience.destination.name }}, {{ experience.destination.country }}, sustainable travel, hygge, {{ experience.experience_type.name|default:"travel experience" }}{% if experience.categories.all %}, {% for category in experience.categories.all %}{{ category.name }}{% if not forloop.last %}, {% endif %}{% endfor %}{% endif %}{% endblock %}
@@ -76,7 +83,7 @@
             <!-- Hero Image -->
             <div class="card card-hygge mb-4">
                 {% if experience.main_image %}
-                <img src="{{ experience.main_image.url|cf_image:'format=webp,width=1280,quality=40,fit=cover' }}" class="card-img-top" alt="{{ experience.title }}" style="height: 400px; object-fit: cover;">
+                <img src="{{ experience.main_image.url|cf_image:'format=webp,width=1280,quality=40,fit=cover' }}" class="card-img-top" alt="{{ experience.title }}" width="1280" height="400" style="height: 400px; object-fit: cover;" fetchpriority="high">
                 {% else %}
                 <div class="card-img-top bg-light d-flex align-items-center justify-content-center" style="height: 400px;">
                     <i class="fas fa-image text-muted" style="font-size: 5rem;"></i>
@@ -238,8 +245,8 @@
                         <div class="col-md-6 mb-4">
                             <div class="card h-100">
                                 {% if blog.featured_image %}
-                                <img src="{{ blog.featured_image.url|cf_image:'format=webp,width=400,quality=30,fit=cover' }}" class="card-img-top" alt="{{ blog.title }}"
-                                     style="height: 150px; object-fit: cover;">
+                                <img src="{{ blog.featured_image.url|cf_image:'format=webp,width=400,quality=30,fit=cover' }}" class="card-img-top" alt="{{ blog.title }}" width="400" height="150"
+                                     style="height: 150px; object-fit: cover;" loading="lazy">
                                 {% else %}
                                 <div style="height: 150px; background: var(--hygge-cream); display: flex; align-items: center; justify-content: center;">
                                     <i class="fas fa-book-open fa-2x text-muted"></i>
@@ -341,7 +348,7 @@
                         <h6 class="fw-bold mb-2">Provided by</h6>
                         <div class="d-flex align-items-center">
                             {% if experience.provider.logo %}
-                            <img src="{{ experience.provider.logo.url|cf_image:'format=webp,width=150,quality=25,fit=cover' }}" alt="{{ experience.provider.name }}" class="rounded me-2" style="width: 40px; height: 40px; object-fit: cover;">
+                            <img src="{{ experience.provider.logo.url|cf_image:'format=webp,width=150,quality=25,fit=cover' }}" alt="{{ experience.provider.name }}" class="rounded me-2" width="40" height="40" style="width: 40px; height: 40px; object-fit: cover;" loading="lazy">
                             {% endif %}
                             <div>
                                 <div class="fw-bold">{{ experience.provider.name }}</div>
@@ -373,7 +380,7 @@
                     {% for similar in similar_experiences %}
                     <div class="d-flex mb-3 {% if forloop.last %}mb-0{% endif %}">
                         {% if similar.main_image %}
-                        <img src="{{ similar.main_image.url|cf_image:'format=webp,width=150,quality=25,fit=cover' }}" alt="{{ similar.title }}" class="rounded me-3" style="width: 60px; height: 60px; object-fit: cover;">
+                        <img src="{{ similar.main_image.url|cf_image:'format=webp,width=150,quality=25,fit=cover' }}" alt="{{ similar.title }}" class="rounded me-3" width="60" height="60" style="width: 60px; height: 60px; object-fit: cover;" loading="lazy">
                         {% else %}
                         <div class="bg-light rounded me-3 d-flex align-items-center justify-content-center" style="width: 60px; height: 60px;">
                             <i class="fas fa-image text-muted"></i>
@@ -433,7 +440,8 @@
 </style>
 
 <script>
-document.addEventListener('DOMContentLoaded', function() {
+// Defer all interactive JavaScript to run after page is interactive (reduce TBT)
+function initExperiencePageInteractivity() {
     // Book Now functionality with affiliate tracking
     const bookNowBtn = document.querySelector('.book-now-btn');
     if (bookNowBtn) {
@@ -456,7 +464,7 @@ document.addEventListener('DOMContentLoaded', function() {
             // Let the link proceed normally
         });
     }
-    
+
     // Bookmark functionality
     const bookmarkBtn = document.querySelector('.bookmark-btn');
     if (bookmarkBtn) {
@@ -531,7 +539,7 @@ document.addEventListener('DOMContentLoaded', function() {
             messageDiv.remove();
         }, 3000);
     }
-    
+
     // Smooth scroll for internal links
     document.querySelectorAll('a[href^="#"]').forEach(anchor => {
         anchor.addEventListener('click', function (e) {
@@ -545,7 +553,21 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         });
     });
-});
+}
+
+// Run after page is interactive using requestIdleCallback to reduce TBT
+if ('requestIdleCallback' in window) {
+    requestIdleCallback(initExperiencePageInteractivity, { timeout: 1000 });
+} else {
+    // Fallback for browsers without requestIdleCallback
+    if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', function() {
+            setTimeout(initExperiencePageInteractivity, 100);
+        });
+    } else {
+        setTimeout(initExperiencePageInteractivity, 100);
+    }
+}
 </script>
 
 {% csrf_token %}
