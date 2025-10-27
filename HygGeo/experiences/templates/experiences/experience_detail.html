@@ -6,7 +6,7 @@
 {% block extra_head %}
 <!-- Preload LCP image for faster rendering - mobile size for faster load -->
 {% if experience.main_image %}
-<link rel="preload" as="image" href="{{ experience.main_image.url|cf_image:'format=webp,width=800,quality=40,fit=cover' }}" imagesrcset="{{ experience.main_image.url|cf_image:'format=webp,width=800,quality=40,fit=cover' }} 800w, {{ experience.main_image.url|cf_image:'format=webp,width=1280,quality=40,fit=cover' }} 1280w" imagesizes="(max-width: 991px) 100vw, 66vw" fetchpriority="high">
+<link rel="preload" as="image" href="{{ experience.main_image.url|cf_image:'format=webp,width=800,quality=40,fit=cover' }}" imagesrcset="{{ experience.main_image.url|cf_image:'format=webp,width=800,quality=40,fit=cover' }} 800w, {{ experience.main_image.url|cf_image:'format=webp,width=1280,quality=40,fit=cover' }} 1280w" imagesizes="(max-width: 991px) 100vw, 66vw" fetchpriority="high" loading="eager">
 {% endif %}
 {% endblock %}
 
