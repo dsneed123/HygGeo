@@ -969,6 +969,31 @@
         margin-bottom: 1rem;
     }
 }
+
+/* Experience Selection Styles */
+#experienceCheckboxList .form-check {
+    padding: 0.75rem;
+    background: white;
+    border-radius: 8px;
+    transition: all 0.2s ease;
+}
+
+#experienceCheckboxList .form-check:hover {
+    background: #f8f9fa;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+}
+
+#experienceCheckboxList .form-check-input {
+    width: 1.2em;
+    height: 1.2em;
+    margin-top: 0.15em;
+}
+
+#experienceCheckboxList .form-check-label {
+    cursor: pointer;
+    padding-left: 0.5rem;
+    user-select: none;
+}
 </style>
 
 <!-- Social Media Content Generator Section -->
@@ -977,7 +1002,7 @@
         <h3 class="fw-bold mb-4" style="color: var(--hygge-green);">
             <i class="fas fa-images me-2"></i>Social Media Content Generator
         </h3>
-        <p class="text-muted mb-4">Create a beautiful Instagram carousel featuring all experiences in a destination. Generates one cover image + individual slides for each experience with stunning text overlays.</p>
+        <p class="text-muted mb-4">Create a beautiful Instagram carousel with custom titles and hand-picked experiences. Choose a destination, select specific experiences, customize your cover title, and generate professional carousel images with a HygGeo.com promotional card.</p>
     </div>
 </div>
 
@@ -1007,35 +1032,35 @@
                                 {% endfor %}
                             </select>
                             <div class="invalid-feedback">Please select a destination.</div>
-                            <small class="form-text text-muted">Will showcase all experiences in this destination</small>
+                            <small class="form-text text-muted">This will load all available experiences for you to choose from</small>
                         </div>
 
                         <!-- Template Selection -->
-                        <div class="col-md-4">
+                        <div class="col-md-6">
                             <label for="socialTemplateSelect" class="form-label">
                                 <i class="fas fa-file-alt me-2"></i>Cover Title Style
                             </label>
                             <select id="socialTemplateSelect" class="form-select form-select-lg" required>
                                 <option value="">Choose a template...</option>
-                                <option value="top-experiences">Top {X} Experiences in {Location}</option>
-                                <option value="hidden-gems">{X} Hidden Gems in {Location}</option>
-                                <option value="must-visit">Must-Visit {Location}</option>
-                                <option value="discover">Discover {Location}</option>
-                                <option value="explore">Explore {Location}</option>
+                                <option value="top-experiences">Top X in [Location] (e.g., "Top 5 in Paris")</option>
+                                <option value="hidden-gems">[Location]: Hidden Gems (e.g., "Paris: Hidden Gems")</option>
+                                <option value="must-visit">[Location] Must-Visits (e.g., "Paris Must-Visits")</option>
+                                <option value="discover">Discover [Location] (e.g., "Discover Paris")</option>
+                                <option value="explore">Explore [Location] (e.g., "Explore Paris")</option>
+                                <option value="custom">Custom Template</option>
                             </select>
                             <div class="invalid-feedback">Please select a template.</div>
-                            <small class="form-text text-muted">Title for the cover image</small>
+                            <small class="form-text text-muted">Choose a preset template or create your own custom title</small>
                         </div>
 
-                        <!-- Number of Experiences -->
-                        <div class="col-md-2">
-                            <label for="socialNumberExperiences" class="form-label">
-                                <i class="fas fa-hashtag me-2"></i>How Many?
+                        <!-- Custom Template Input -->
+                        <div class="col-md-12" id="customTemplateContainer" style="display: none;">
+                            <label for="customTemplateInput" class="form-label">
+                                <i class="fas fa-edit me-2"></i>Custom Template Text
                             </label>
-                            <input type="number" id="socialNumberExperiences" class="form-control form-control-lg"
-                                   min="3" max="15" value="5" required>
-                            <div class="invalid-feedback">3-15</div>
-                            <small class="form-text text-muted">Top X</small>
+                            <input type="text" id="customTemplateInput" class="form-control form-control-lg"
+                                   placeholder="Enter your custom title (e.g., 'Best of Paris', 'Paris Adventure Guide')">
+                            <small class="form-text text-muted">Your custom text will appear on the cover image</small>
                         </div>
 
                         <!-- Text Style Selection -->
@@ -1052,6 +1077,36 @@
                                 <option value="magazine-style">Magazine Style - Editorial Look</option>
                             </select>
                             <div class="invalid-feedback">Select a text style.</div>
+                        </div>
+
+                        <!-- Experience Selection -->
+                        <div class="col-md-12" id="experienceSelectionContainer" style="display: none;">
+                            <div class="border rounded p-4" style="background: #f8f9fa;">
+                                <div class="d-flex justify-content-between align-items-center mb-3">
+                                    <label class="form-label mb-0">
+                                        <i class="fas fa-list-check me-2"></i>Select Experiences
+                                    </label>
+                                    <div>
+                                        <button type="button" id="selectAllExperiences" class="btn btn-sm btn-outline-primary me-2">
+                                            Select All
+                                        </button>
+                                        <button type="button" id="clearAllExperiences" class="btn btn-sm btn-outline-secondary">
+                                            Clear All
+                                        </button>
+                                    </div>
+                                </div>
+                                <small class="form-text text-muted d-block mb-3">
+                                    <span id="selectedCount">0</span> experience(s) selected. Choose which experiences to include in your carousel.
+                                </small>
+                                <div id="experienceCheckboxList" class="row g-2">
+                                    <!-- Checkboxes will be dynamically loaded here -->
+                                </div>
+                                <div id="experienceLoadingSpinner" class="text-center py-4 d-none">
+                                    <div class="spinner-border text-primary" role="status">
+                                        <span class="visually-hidden">Loading experiences...</span>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
 
                         <!-- Generate Button -->
@@ -1142,9 +1197,9 @@
 
     // Template definitions
     const TEMPLATES = {
-        'top-experiences': 'Top {X} Experiences in {location}',
-        'hidden-gems': '{X} Hidden Gems in {location}',
-        'must-visit': 'Must-Visit {location}',
+        'top-experiences': 'Top {X} in {location}',
+        'hidden-gems': '{location}: Hidden Gems',
+        'must-visit': '{location} Must-Visits',
         'discover': 'Discover {location}',
         'explore': 'Explore {location}'
     };
@@ -1292,7 +1347,7 @@
                 ctx.textAlign = 'center';
                 ctx.textBaseline = 'middle';
                 ctx.strokeStyle = '#D4AF37';
-                ctx.fill = "ffffff";
+                ctx.fillStyle = '#ffffff';
                 ctx.lineWidth = 2;
                 const maxWidth = width - 200;
                 const lines = wrapText(ctx, text, width / 2, height / 2, maxWidth, fontSize + 15, 2);
@@ -1513,11 +1568,106 @@
         return fontSize;
     }
 
+    // Promotional card style for HygGeo.com - Modern Design
+    function applyPromoCardStyle(ctx, width, height) {
+        // Modern gradient background overlay
+        const gradient = ctx.createLinearGradient(0, 0, width, height);
+        gradient.addColorStop(0, 'rgba(45, 90, 61, 0.95)');
+        gradient.addColorStop(1, 'rgba(35, 70, 48, 0.95)');
+        ctx.fillStyle = gradient;
+        ctx.fillRect(0, 0, width, height);
+
+        // Top accent line - subtle
+        ctx.fillStyle = 'rgba(255, 255, 255, 0.15)';
+        ctx.fillRect(0, 0, width, 3);
+
+        // Central content area
+        ctx.textAlign = 'center';
+        ctx.textBaseline = 'middle';
+
+        // Small eyebrow text
+        ctx.fillStyle = 'rgba(255, 255, 255, 0.7)';
+        ctx.font = '400 32px Montserrat, sans-serif';
+        ctx.letterSpacing = '0.15em';
+        ctx.fillText('READY TO EXPLORE?', width / 2, height / 2 - 200);
+
+        // Main headline - big and bold
+        ctx.fillStyle = '#ffffff';
+        ctx.font = '900 100px Montserrat, sans-serif';
+        ctx.fillText('Find Your Next', width / 2, height / 2 - 50);
+        ctx.fillText('Adventure', width / 2, height / 2 + 70);
+
+        // Website URL in a clean button-like style
+        const buttonWidth = 550;
+        const buttonHeight = 110;
+        const buttonX = (width - buttonWidth) / 2;
+        const buttonY = height / 2 + 170;
+
+        // Button background - white
+        ctx.fillStyle = '#ffffff';
+        ctx.shadowColor = 'rgba(0, 0, 0, 0.3)';
+        ctx.shadowBlur = 25;
+        ctx.shadowOffsetY = 8;
+        roundRect(ctx, buttonX, buttonY, buttonWidth, buttonHeight, 55);
+        ctx.fill();
+        ctx.shadowBlur = 0;
+        ctx.shadowOffsetY = 0;
+
+        // Website text in button
+        ctx.fillStyle = '#2d5a3d';
+        ctx.font = 'bold 65px Montserrat, sans-serif';
+        ctx.fillText('HygGeo.com', width / 2, buttonY + buttonHeight / 2);
+
+        // Bottom tagline
+        ctx.fillStyle = 'rgba(255, 255, 255, 0.85)';
+        ctx.font = '400 30px Montserrat, sans-serif';
+        ctx.fillText('Curated Travel Experiences & Destinations', width / 2, height - 120);
+
+        // Minimal decorative element - small icon
+        ctx.fillStyle = 'rgba(255, 255, 255, 0.3)';
+        ctx.font = '45px sans-serif';
+        ctx.fillText('✦', width / 2, height / 2 - 270);
+    }
+
+    // Helper function to draw rounded rectangles
+    function roundRect(ctx, x, y, width, height, radius, topOnly = false, bottomOnly = false) {
+        ctx.beginPath();
+        if (topOnly) {
+            ctx.moveTo(x + radius, y);
+            ctx.lineTo(x + width - radius, y);
+            ctx.quadraticCurveTo(x + width, y, x + width, y + radius);
+            ctx.lineTo(x + width, y + height);
+            ctx.lineTo(x, y + height);
+            ctx.lineTo(x, y + radius);
+            ctx.quadraticCurveTo(x, y, x + radius, y);
+        } else if (bottomOnly) {
+            ctx.moveTo(x, y);
+            ctx.lineTo(x + width, y);
+            ctx.lineTo(x + width, y + height - radius);
+            ctx.quadraticCurveTo(x + width, y + height, x + width - radius, y + height);
+            ctx.lineTo(x + radius, y + height);
+            ctx.quadraticCurveTo(x, y + height, x, y + height - radius);
+            ctx.lineTo(x, y);
+        } else {
+            ctx.moveTo(x + radius, y);
+            ctx.lineTo(x + width - radius, y);
+            ctx.quadraticCurveTo(x + width, y, x + width, y + radius);
+            ctx.lineTo(x + width, y + height - radius);
+            ctx.quadraticCurveTo(x + width, y + height, x + width - radius, y + height);
+            ctx.lineTo(x + radius, y + height);
+            ctx.quadraticCurveTo(x, y + height, x, y + height - radius);
+            ctx.lineTo(x, y + radius);
+            ctx.quadraticCurveTo(x, y, x + radius, y);
+        }
+        ctx.closePath();
+    }
+
     // State
     let generatedImages = [];
     let currentDestination = null;
     let currentExperiences = [];
     let currentTemplate = '';
+    let availableExperiences = [];
 
     // DOM Elements
     const elements = {
@@ -1526,6 +1676,14 @@
         destinationSelect: document.getElementById('socialDestinationSelect'),
         numberExperiences: document.getElementById('socialNumberExperiences'),
         textStyleSelect: document.getElementById('socialTextStyleSelect'),
+        customTemplateContainer: document.getElementById('customTemplateContainer'),
+        customTemplateInput: document.getElementById('customTemplateInput'),
+        experienceSelectionContainer: document.getElementById('experienceSelectionContainer'),
+        experienceCheckboxList: document.getElementById('experienceCheckboxList'),
+        experienceLoadingSpinner: document.getElementById('experienceLoadingSpinner'),
+        selectAllBtn: document.getElementById('selectAllExperiences'),
+        clearAllBtn: document.getElementById('clearAllExperiences'),
+        selectedCount: document.getElementById('selectedCount'),
         generateBtn: document.getElementById('generateSocialBtn'),
         downloadBtn: document.getElementById('downloadSocialBtn'),
         loadingSpinner: document.getElementById('socialLoadingSpinner'),
@@ -1563,6 +1721,10 @@
     function attachEventListeners() {
         elements.form.addEventListener('submit', handleGenerate);
         elements.downloadBtn.addEventListener('click', handleDownload);
+        elements.templateSelect.addEventListener('change', handleTemplateChange);
+        elements.destinationSelect.addEventListener('change', handleDestinationChange);
+        elements.selectAllBtn.addEventListener('click', selectAllExperiences);
+        elements.clearAllBtn.addEventListener('click', clearAllExperiences);
 
         const carousel = document.getElementById('socialMediaCarousel');
         if (carousel) {
@@ -1571,6 +1733,100 @@
                 elements.imageCounter.textContent = `Image ${index} of ${generatedImages.length}`;
             });
         }
+    }
+
+    // Handle template selection change
+    function handleTemplateChange() {
+        const isCustom = elements.templateSelect.value === 'custom';
+        elements.customTemplateContainer.style.display = isCustom ? 'block' : 'none';
+        if (isCustom) {
+            elements.customTemplateInput.focus();
+        }
+    }
+
+    // Handle destination change - load experiences
+    async function handleDestinationChange() {
+        const destinationId = elements.destinationSelect.value;
+
+        if (!destinationId) {
+            elements.experienceSelectionContainer.style.display = 'none';
+            availableExperiences = [];
+            return;
+        }
+
+        try {
+            elements.experienceLoadingSpinner.classList.remove('d-none');
+            elements.experienceCheckboxList.innerHTML = '';
+
+            const response = await fetch(`/accounts/admin/get-items-for-destination/?destination=${destinationId}&type=experiences`);
+            const data = await response.json();
+
+            availableExperiences = data.items || [];
+
+            if (availableExperiences.length === 0) {
+                elements.experienceCheckboxList.innerHTML = '<div class="col-12 text-muted text-center">No experiences found for this destination.</div>';
+            } else {
+                renderExperienceCheckboxes();
+                elements.experienceSelectionContainer.style.display = 'block';
+            }
+
+        } catch (error) {
+            console.error('Error loading experiences:', error);
+            elements.experienceCheckboxList.innerHTML = '<div class="col-12 text-danger text-center">Error loading experiences.</div>';
+        } finally {
+            elements.experienceLoadingSpinner.classList.add('d-none');
+        }
+    }
+
+    // Render experience checkboxes
+    function renderExperienceCheckboxes() {
+        elements.experienceCheckboxList.innerHTML = '';
+
+        availableExperiences.forEach((exp, index) => {
+            const col = document.createElement('div');
+            col.className = 'col-md-6';
+
+            const checkbox = document.createElement('div');
+            checkbox.className = 'form-check';
+            checkbox.innerHTML = `
+                <input class="form-check-input experience-checkbox" type="checkbox" value="${exp.id}" id="exp_${exp.id}" data-index="${index}">
+                <label class="form-check-label" for="exp_${exp.id}">
+                    ${exp.name}
+                </label>
+            `;
+
+            col.appendChild(checkbox);
+            elements.experienceCheckboxList.appendChild(col);
+        });
+
+        // Add change event to all checkboxes
+        document.querySelectorAll('.experience-checkbox').forEach(cb => {
+            cb.addEventListener('change', updateSelectedCount);
+        });
+
+        updateSelectedCount();
+    }
+
+    // Select all experiences
+    function selectAllExperiences() {
+        document.querySelectorAll('.experience-checkbox').forEach(cb => {
+            cb.checked = true;
+        });
+        updateSelectedCount();
+    }
+
+    // Clear all experiences
+    function clearAllExperiences() {
+        document.querySelectorAll('.experience-checkbox').forEach(cb => {
+            cb.checked = false;
+        });
+        updateSelectedCount();
+    }
+
+    // Update selected count
+    function updateSelectedCount() {
+        const count = document.querySelectorAll('.experience-checkbox:checked').length;
+        elements.selectedCount.textContent = count;
     }
 
     // Handle generate
@@ -1584,6 +1840,16 @@
         }
 
         hideAlerts();
+
+        // Get selected experiences
+        const selectedCheckboxes = document.querySelectorAll('.experience-checkbox:checked');
+
+        // Validate that at least one experience is selected
+        if (selectedCheckboxes.length === 0) {
+            showError('Please select at least one experience to include in the carousel.');
+            return;
+        }
+
         showLoading(true);
 
         try {
@@ -1593,7 +1859,6 @@
             const location = destinationSelect.options[destinationSelect.selectedIndex].dataset.name;
             const destinationImage = destinationSelect.options[destinationSelect.selectedIndex].dataset.image;
             const textStyle = elements.textStyleSelect.value;
-            const numExperiences = parseInt(elements.numberExperiences.value);
 
             // Store destination info
             currentDestination = {
@@ -1602,31 +1867,38 @@
                 image: destinationImage || CONFIG.FALLBACK_IMAGE
             };
 
-            // Fetch all experiences for this destination
-            const response = await fetch(`/accounts/admin/get-items-for-destination/?destination=${destinationId}&type=experiences`);
-            const data = await response.json();
+            // Get selected experiences from checkboxes
+            currentExperiences = [];
+            selectedCheckboxes.forEach(cb => {
+                const index = parseInt(cb.dataset.index);
+                if (availableExperiences[index]) {
+                    currentExperiences.push(availableExperiences[index]);
+                }
+            });
 
-            if (!data.items || data.items.length === 0) {
-                throw new Error('No experiences found for this destination.');
+            if (currentExperiences.length === 0) {
+                throw new Error('No experiences selected.');
             }
 
-            // Limit to the requested number
-            currentExperiences = data.items.slice(0, numExperiences);
-
-            if (currentExperiences.length < numExperiences) {
-                console.warn(`Only ${currentExperiences.length} experiences available, requested ${numExperiences}`);
+            // Create the template text
+            if (templateKey === 'custom') {
+                // Use custom template
+                currentTemplate = elements.customTemplateInput.value.trim();
+                if (!currentTemplate) {
+                    throw new Error('Please enter a custom template text.');
+                }
+            } else {
+                // Use predefined template with replacements
+                currentTemplate = TEMPLATES[templateKey]
+                    .replace('{X}', currentExperiences.length)
+                    .replace('{location}', location);
             }
 
-            // Create the template text with {X} replacement
-            currentTemplate = TEMPLATES[templateKey]
-                .replace('{X}', currentExperiences.length)
-                .replace('{location}', location);
-
-            // Generate all images (1 cover + 1 per experience)
+            // Generate all images (1 cover + 1 per experience + 1 promo card)
             await generateCarousel(currentDestination, currentExperiences, currentTemplate, textStyle);
             displayPreview();
 
-            showSuccess(`Successfully generated ${generatedImages.length} images (1 cover + ${currentExperiences.length} experiences)!`);
+            showSuccess(`Successfully generated ${generatedImages.length} images (1 cover + ${currentExperiences.length} experiences + 1 HygGeo promo card)!`);
 
         } catch (error) {
             console.error('Generation error:', error);
@@ -1683,6 +1955,25 @@
                 filename: `${String(i + 1).padStart(2, '0')}_${exp.name.replace(/\s+/g, '_')}.png`
             });
         }
+
+        // Final card: HygGeo.com promotional card
+        console.log('Generating HygGeo.com promotional card...');
+        const promoImage = await loadImage(destination.image);
+        ctx.clearRect(0, 0, CONFIG.CANVAS_SIZE, CONFIG.CANVAS_SIZE);
+
+        // Draw destination background with darker overlay
+        drawBackgroundFitCover(ctx, promoImage);
+        ctx.fillStyle = 'rgba(0, 0, 0, 0.6)';
+        ctx.fillRect(0, 0, CONFIG.CANVAS_SIZE, CONFIG.CANVAS_SIZE);
+
+        // Apply promotional card style
+        applyPromoCardStyle(ctx, CONFIG.CANVAS_SIZE, CONFIG.CANVAS_SIZE);
+
+        const promoDataUrl = elements.canvas.toDataURL(CONFIG.IMAGE_FORMAT, CONFIG.IMAGE_QUALITY);
+        generatedImages.push({
+            dataUrl: promoDataUrl,
+            filename: `${String(experiences.length + 1).padStart(2, '0')}_visit_hyggeo.png`
+        });
     }
 
     // Draw background image with cover fit (fills canvas, maintains aspect ratio)
