@@ -1,0 +1,232 @@
+{% extends 'base.html' %}
+{% load cloudflare_images %}
+
+{% block title %}Search Results{% if query %} for "{{ query }}"{% endif %} | HygGeo{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <!-- Search Header -->
+    <div class="mb-4">
+        <h1 class="h2 fw-bold mb-2" style="color: var(--hygge-green);">
+            Search Results{% if query %} for "{{ query }}"{% endif %}
+        </h1>
+        {% if total_results > 0 %}
+        <p class="text-muted">Found {{ total_results }} result{{ total_results|pluralize }}</p>
+        {% else %}
+        <p class="text-muted">No results found</p>
+        {% endif %}
+    </div>
+
+    <!-- Search Form -->
+    <div class="card card-hygge mb-4">
+        <div class="card-body">
+            <form method="get" action="{% url 'global_search' %}">
+                <div class="input-group">
+                    <input type="text" class="form-control" name="q" value="{{ query }}"
+                           placeholder="Search experiences, accommodations, destinations..."
+                           aria-label="Search">
+                    <button class="btn btn-primary" type="submit" style="background-color: var(--hygge-green); border-color: var(--hygge-green);">
+                        <i class="fas fa-search me-1"></i>Search
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    {% if total_results > 0 %}
+        <!-- Results Tabs -->
+        <ul class="nav nav-tabs mb-4" role="tablist">
+            <li class="nav-item" role="presentation">
+                <button class="nav-link active" data-bs-toggle="tab" data-bs-target="#all-results" type="button" role="tab">
+                    All ({{ total_results }})
+                </button>
+            </li>
+            {% if experiences_count > 0 %}
+            <li class="nav-item" role="presentation">
+                <button class="nav-link" data-bs-toggle="tab" data-bs-target="#experiences-results" type="button" role="tab">
+                    Experiences ({{ experiences_count }})
+                </button>
+            </li>
+            {% endif %}
+            {% if accommodations_count > 0 %}
+            <li class="nav-item" role="presentation">
+                <button class="nav-link" data-bs-toggle="tab" data-bs-target="#accommodations-results" type="button" role="tab">
+                    Accommodations ({{ accommodations_count }})
+                </button>
+            </li>
+            {% endif %}
+            {% if trips_count > 0 %}
+            <li class="nav-item" role="presentation">
+                <button class="nav-link" data-bs-toggle="tab" data-bs-target="#trips-results" type="button" role="tab">
+                    Trips ({{ trips_count }})
+                </button>
+            </li>
+            {% endif %}
+        </ul>
+
+        <!-- Tab Content -->
+        <div class="tab-content">
+            <!-- All Results Tab -->
+            <div class="tab-pane fade show active" id="all-results" role="tabpanel">
+                {% if experiences %}
+                    <h3 class="h4 fw-bold mb-3" style="color: var(--hygge-green);">Experiences</h3>
+                    <div class="row g-4 mb-4">
+                        {% include 'experiences/experience_cards.html' with experiences=experiences %}
+                    </div>
+                {% endif %}
+
+                {% if accommodations %}
+                    <h3 class="h4 fw-bold mb-3" style="color: var(--hygge-green);">Accommodations</h3>
+                    <div class="row mb-4">
+                        {% for accommodation in accommodations %}
+                        <div class="col-md-6 col-lg-4 mb-4">
+                            <div class="card h-100">
+                                {% if accommodation.main_image %}
+                                <img src="{{ accommodation.main_image.url|cf_image:'format=webp,width=400,quality=30,fit=cover' }}"
+                                     class="card-img-top" alt="{{ accommodation.name }}"
+                                     style="height: 200px; object-fit: cover;" loading="lazy">
+                                {% else %}
+                                <div class="card-img-top bg-light d-flex align-items-center justify-content-center" style="height: 200px;">
+                                    <i class="fas fa-home fa-3x text-muted"></i>
+                                </div>
+                                {% endif %}
+                                <div class="card-body">
+                                    <h5 class="card-title fw-bold">
+                                        <a href="{% url 'experiences:accommodation_detail' accommodation.slug %}" class="text-decoration-none" style="color: var(--hygge-green);">
+                                            {{ accommodation.name }}
+                                        </a>
+                                    </h5>
+                                    <p class="text-muted small mb-2">
+                                        <i class="fas fa-map-marker-alt me-1"></i>{{ accommodation.destination.name }}, {{ accommodation.destination.country }}
+                                    </p>
+                                    <p class="card-text small">{{ accommodation.description|truncatewords:20 }}</p>
+                                </div>
+                            </div>
+                        </div>
+                        {% endfor %}
+                    </div>
+                {% endif %}
+
+                {% if trips %}
+                    <h3 class="h4 fw-bold mb-3" style="color: var(--hygge-green);">Trips</h3>
+                    <div class="row">
+                        {% for trip in trips %}
+                        <div class="col-md-6 col-lg-4 mb-4">
+                            <div class="card h-100">
+                                <div class="card-body">
+                                    <h5 class="card-title fw-bold">
+                                        <a href="{% url 'trip_detail' trip.pk %}" class="text-decoration-none" style="color: var(--hygge-green);">
+                                            {{ trip.title }}
+                                        </a>
+                                    </h5>
+                                    <p class="text-muted small mb-2">
+                                        <i class="fas fa-user me-1"></i>By {{ trip.creator.username }}
+                                    </p>
+                                    <p class="card-text small">{{ trip.description|truncatewords:20 }}</p>
+                                    <div class="mt-2">
+                                        {% for destination in trip.destinations.all|slice:":3" %}
+                                        <span class="badge bg-secondary me-1">{{ destination.name }}</span>
+                                        {% endfor %}
+                                        {% if trip.destinations.count > 3 %}
+                                        <span class="badge bg-secondary">+{{ trip.destinations.count|add:"-3" }} more</span>
+                                        {% endif %}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        {% endfor %}
+                    </div>
+                {% endif %}
+            </div>
+
+            <!-- Experiences Tab -->
+            {% if experiences_count > 0 %}
+            <div class="tab-pane fade" id="experiences-results" role="tabpanel">
+                <div class="row g-4">
+                    {% include 'experiences/experience_cards.html' with experiences=experiences %}
+                </div>
+            </div>
+            {% endif %}
+
+            <!-- Accommodations Tab -->
+            {% if accommodations_count > 0 %}
+            <div class="tab-pane fade" id="accommodations-results" role="tabpanel">
+                <div class="row">
+                    {% for accommodation in accommodations %}
+                    <div class="col-md-6 col-lg-4 mb-4">
+                        <div class="card h-100">
+                            {% if accommodation.main_image %}
+                            <img src="{{ accommodation.main_image.url|cf_image:'format=webp,width=400,quality=30,fit=cover' }}"
+                                 class="card-img-top" alt="{{ accommodation.name }}"
+                                 style="height: 200px; object-fit: cover;" loading="lazy">
+                            {% else %}
+                            <div class="card-img-top bg-light d-flex align-items-center justify-content-center" style="height: 200px;">
+                                <i class="fas fa-home fa-3x text-muted"></i>
+                            </div>
+                            {% endif %}
+                            <div class="card-body">
+                                <h5 class="card-title fw-bold">
+                                    <a href="{% url 'experiences:accommodation_detail' accommodation.slug %}" class="text-decoration-none" style="color: var(--hygge-green);">
+                                        {{ accommodation.name }}
+                                    </a>
+                                </h5>
+                                <p class="text-muted small mb-2">
+                                    <i class="fas fa-map-marker-alt me-1"></i>{{ accommodation.destination.name }}, {{ accommodation.destination.country }}
+                                </p>
+                                <p class="card-text small">{{ accommodation.description|truncatewords:20 }}</p>
+                            </div>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+            {% endif %}
+
+            <!-- Trips Tab -->
+            {% if trips_count > 0 %}
+            <div class="tab-pane fade" id="trips-results" role="tabpanel">
+                <div class="row">
+                    {% for trip in trips %}
+                    <div class="col-md-6 col-lg-4 mb-4">
+                        <div class="card h-100">
+                            <div class="card-body">
+                                <h5 class="card-title fw-bold">
+                                    <a href="{% url 'trip_detail' trip.pk %}" class="text-decoration-none" style="color: var(--hygge-green);">
+                                        {{ trip.title }}
+                                    </a>
+                                </h5>
+                                <p class="text-muted small mb-2">
+                                    <i class="fas fa-user me-1"></i>By {{ trip.creator.username }}
+                                </p>
+                                <p class="card-text small">{{ trip.description|truncatewords:20 }}</p>
+                                <div class="mt-2">
+                                    {% for destination in trip.destinations.all|slice:":3" %}
+                                    <span class="badge bg-secondary me-1">{{ destination.name }}</span>
+                                    {% endfor %}
+                                    {% if trip.destinations.count > 3 %}
+                                    <span class="badge bg-secondary">+{{ trip.destinations.count|add:"-3" }} more</span>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+            {% endif %}
+        </div>
+    {% else %}
+        <!-- No Results -->
+        <div class="text-center py-5">
+            <i class="fas fa-search text-muted" style="font-size: 4rem;"></i>
+            <h3 class="mt-3">No results found</h3>
+            <p class="text-muted">Try searching with different keywords or browse our categories:</p>
+            <div class="mt-4">
+                <a href="{% url 'experiences:experience_list' %}" class="btn btn-outline-primary me-2">Browse Experiences</a>
+                <a href="{% url 'experiences:accommodation_list' %}" class="btn btn-outline-primary me-2">Browse Accommodations</a>
+                <a href="{% url 'trip_list' %}" class="btn btn-outline-primary">Browse Trips</a>
+            </div>
+        </div>
+    {% endif %}
+</div>
+{% endblock %}

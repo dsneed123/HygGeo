@@ -16343,3 +16343,7 @@ INFO 2025-10-25 22:16:44,866 basehttp 48296 139280876824256 "POST /accounts/trac
 INFO 2025-10-25 22:19:20,614 autoreload 50464 126863964536960 Watching for file changes with StatReloader
 INFO 2025-10-25 22:23:32,175 autoreload 50464 126863964536960 /usr/lib/python3.12/weakref.py changed, reloading.
 INFO 2025-10-25 22:23:33,186 autoreload 57518 129889711538304 Watching for file changes with StatReloader
+INFO 2025-10-26 23:23:51,944 autoreload 57518 129889711538304 /home/dsneedy/Desktop/HygGeo/HygGeo/accounts/views.py changed, reloading.
+INFO 2025-10-26 23:23:52,994 autoreload 216354 140377346023552 Watching for file changes with StatReloader
+INFO 2025-10-26 23:24:20,854 autoreload 216354 140377346023552 /home/dsneedy/Desktop/HygGeo/HygGeo/HygGeo/urls.py changed, reloading.
+INFO 2025-10-26 23:24:21,842 autoreload 216615 129297667989632 Watching for file changes with StatReloader

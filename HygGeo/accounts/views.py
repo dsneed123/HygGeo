@@ -3159,3 +3159,62 @@ def proxy_image(request):
 
     except requests.RequestException as e:
         return HttpResponse(f'Failed to fetch image: {str(e)}', status=500)
+
+
+def global_search_view(request):
+    """Global search across experiences, accommodations, and trips"""
+    query = request.GET.get('q', '').strip()
+
+    # Initialize empty querysets
+    experiences = Experience.objects.none()
+    accommodations = Accommodation.objects.none()
+    trips = Trip.objects.none()
+
+    if query:
+        # Search experiences
+        experiences = Experience.objects.filter(
+            Q(title__icontains=query) |
+            Q(description__icontains=query) |
+            Q(short_description__icontains=query) |
+            Q(destination__name__icontains=query) |
+            Q(destination__country__icontains=query) |
+            Q(provider__name__icontains=query) |
+            Q(categories__name__icontains=query),
+            is_active=True
+        ).select_related(
+            'destination', 'provider', 'experience_type'
+        ).prefetch_related('categories').distinct()[:20]
+
+        # Search accommodations
+        accommodations = Accommodation.objects.filter(
+            Q(name__icontains=query) |
+            Q(description__icontains=query) |
+            Q(destination__name__icontains=query) |
+            Q(destination__country__icontains=query),
+            is_active=True
+        ).select_related('destination').distinct()[:20]
+
+        # Search trips (public trips only)
+        trips = Trip.objects.filter(
+            Q(title__icontains=query) |
+            Q(description__icontains=query) |
+            Q(destinations__name__icontains=query) |
+            Q(destinations__country__icontains=query),
+            is_public=True
+        ).prefetch_related('destinations', 'creator').distinct()[:20]
+
+    # Count results
+    total_results = experiences.count() + accommodations.count() + trips.count()
+
+    context = {
+        'query': query,
+        'experiences': experiences,
+        'accommodations': accommodations,
+        'trips': trips,
+        'total_results': total_results,
+        'experiences_count': experiences.count(),
+        'accommodations_count': accommodations.count(),
+        'trips_count': trips.count(),
+    }
+
+    return render(request, 'accounts/search_results.html', context)
