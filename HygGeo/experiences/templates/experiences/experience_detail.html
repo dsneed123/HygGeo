@@ -4,9 +4,9 @@
 {% block title %}{{ experience.title }} - {{ experience.destination.name }} | HygGeo{% endblock %}
 
 {% block extra_head %}
-<!-- Preload LCP image for faster rendering -->
+<!-- Preload LCP image for faster rendering - mobile size for faster load -->
 {% if experience.main_image %}
-<link rel="preload" as="image" href="{{ experience.main_image.url|cf_image:'format=webp,width=1280,quality=40,fit=cover' }}" fetchpriority="high">
+<link rel="preload" as="image" href="{{ experience.main_image.url|cf_image:'format=webp,width=800,quality=40,fit=cover' }}" imagesrcset="{{ experience.main_image.url|cf_image:'format=webp,width=800,quality=40,fit=cover' }} 800w, {{ experience.main_image.url|cf_image:'format=webp,width=1280,quality=40,fit=cover' }} 1280w" imagesizes="(max-width: 991px) 100vw, 66vw" fetchpriority="high">
 {% endif %}
 {% endblock %}
 
@@ -83,7 +83,11 @@
             <!-- Hero Image -->
             <div class="card card-hygge mb-4">
                 {% if experience.main_image %}
-                <img src="{{ experience.main_image.url|cf_image:'format=webp,width=1280,quality=40,fit=cover' }}" class="card-img-top" alt="{{ experience.title }}" width="1280" height="400" style="height: 400px; object-fit: cover;" fetchpriority="high">
+                <img src="{{ experience.main_image.url|cf_image:'format=webp,width=800,quality=40,fit=cover' }}"
+                     srcset="{{ experience.main_image.url|cf_image:'format=webp,width=800,quality=40,fit=cover' }} 800w,
+                             {{ experience.main_image.url|cf_image:'format=webp,width=1280,quality=40,fit=cover' }} 1280w"
+                     sizes="(max-width: 991px) 100vw, 66vw"
+                     class="card-img-top" alt="{{ experience.title }}" width="1280" height="400" style="height: 400px; object-fit: cover;" fetchpriority="high">
                 {% else %}
                 <div class="card-img-top bg-light d-flex align-items-center justify-content-center" style="height: 400px;">
                     <i class="fas fa-image text-muted" style="font-size: 5rem;"></i>
@@ -245,7 +249,7 @@
                         <div class="col-md-6 mb-4">
                             <div class="card h-100">
                                 {% if blog.featured_image %}
-                                <img src="{{ blog.featured_image.url|cf_image:'format=webp,width=400,quality=30,fit=cover' }}" class="card-img-top" alt="{{ blog.title }}" width="400" height="150"
+                                <img src="{{ blog.featured_image.url|cf_image:'format=webp,width=400,quality=25,fit=cover' }}" class="card-img-top" alt="{{ blog.title }}" width="400" height="150"
                                      style="height: 150px; object-fit: cover;" loading="lazy">
                                 {% else %}
                                 <div style="height: 150px; background: var(--hygge-cream); display: flex; align-items: center; justify-content: center;">
@@ -348,7 +352,7 @@
                         <h6 class="fw-bold mb-2">Provided by</h6>
                         <div class="d-flex align-items-center">
                             {% if experience.provider.logo %}
-                            <img src="{{ experience.provider.logo.url|cf_image:'format=webp,width=150,quality=25,fit=cover' }}" alt="{{ experience.provider.name }}" class="rounded me-2" width="40" height="40" style="width: 40px; height: 40px; object-fit: cover;" loading="lazy">
+                            <img src="{{ experience.provider.logo.url|cf_image:'format=webp,width=80,quality=20,fit=cover' }}" alt="{{ experience.provider.name }}" class="rounded me-2" width="40" height="40" style="width: 40px; height: 40px; object-fit: cover;" loading="lazy">
                             {% endif %}
                             <div>
                                 <div class="fw-bold">{{ experience.provider.name }}</div>
@@ -380,7 +384,7 @@
                     {% for similar in similar_experiences %}
                     <div class="d-flex mb-3 {% if forloop.last %}mb-0{% endif %}">
                         {% if similar.main_image %}
-                        <img src="{{ similar.main_image.url|cf_image:'format=webp,width=150,quality=25,fit=cover' }}" alt="{{ similar.title }}" class="rounded me-3" width="60" height="60" style="width: 60px; height: 60px; object-fit: cover;" loading="lazy">
+                        <img src="{{ similar.main_image.url|cf_image:'format=webp,width=120,quality=20,fit=cover' }}" alt="{{ similar.title }}" class="rounded me-3" width="60" height="60" style="width: 60px; height: 60px; object-fit: cover;" loading="lazy">
                         {% else %}
                         <div class="bg-light rounded me-3 d-flex align-items-center justify-content-center" style="width: 60px; height: 60px;">
                             <i class="fas fa-image text-muted"></i>
@@ -555,17 +559,16 @@ function initExperiencePageInteractivity() {
     });
 }
 
-// Run after page is interactive using requestIdleCallback to reduce TBT
+// Run after page is interactive - balance mobile/desktop performance
 if ('requestIdleCallback' in window) {
-    requestIdleCallback(initExperiencePageInteractivity, { timeout: 1000 });
+    // Use idle callback for best performance
+    requestIdleCallback(initExperiencePageInteractivity, { timeout: 500 });
 } else {
-    // Fallback for browsers without requestIdleCallback
+    // Fallback: run on DOMContentLoaded for immediate interactivity
     if (document.readyState === 'loading') {
-        document.addEventListener('DOMContentLoaded', function() {
-            setTimeout(initExperiencePageInteractivity, 100);
-        });
+        document.addEventListener('DOMContentLoaded', initExperiencePageInteractivity);
     } else {
-        setTimeout(initExperiencePageInteractivity, 100);
+        initExperiencePageInteractivity();
     }
 }
 </script>

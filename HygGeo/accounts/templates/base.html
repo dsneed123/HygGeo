@@ -61,25 +61,14 @@
     @font-face{font-family:'Poppins';font-style:normal;font-weight:400;font-display:optional;src:url('{% static "fonts/poppins-400-latin.woff2" %}') format('woff2');unicode-range:U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+0304,U+0308,U+0329,U+2000-206F,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD}
     </style>
 
-    <!-- Defer Poppins 600/700 - load via JS after LCP to prevent blocking -->
-    <script>
-    // Load heavier font weights after LCP completes
-    if ('requestIdleCallback' in window) {
-        requestIdleCallback(function() {
-            var style = document.createElement('style');
-            style.textContent = '@font-face{font-family:"Poppins";font-style:normal;font-weight:600;font-display:swap;src:url("{% static "fonts/poppins-600-latin.woff2" %}") format("woff2");unicode-range:U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+0304,U+0308,U+0329,U+2000-206F,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD}@font-face{font-family:"Poppins";font-style:normal;font-weight:700;font-display:swap;src:url("{% static "fonts/poppins-700-latin.woff2" %}") format("woff2");unicode-range:U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+0304,U+0308,U+0329,U+2000-206F,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD}';
-            document.head.appendChild(style);
-        }, { timeout: 1000 });
-    } else {
-        window.addEventListener('load', function() {
-            setTimeout(function() {
-                var style = document.createElement('style');
-                style.textContent = '@font-face{font-family:"Poppins";font-style:normal;font-weight:600;font-display:swap;src:url("{% static "fonts/poppins-600-latin.woff2" %}") format("woff2");unicode-range:U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+0304,U+0308,U+0329,U+2000-206F,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD}@font-face{font-family:"Poppins";font-style:normal;font-weight:700;font-display:swap;src:url("{% static "fonts/poppins-700-latin.woff2" %}") format("woff2");unicode-range:U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+0304,U+0308,U+0329,U+2000-206F,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD}';
-                document.head.appendChild(style);
-            }, 500);
-        });
-    }
-    </script>
+    <!-- Defer Poppins 600/700 - load after critical content with swap -->
+    <link rel="preload" href="{% static 'fonts/poppins-600-latin.woff2' %}" as="font" type="font/woff2" crossorigin>
+    <link rel="preload" href="{% static 'fonts/poppins-700-latin.woff2' %}" as="font" type="font/woff2" crossorigin>
+    <style>
+    /* Poppins 600/700 with swap for better performance */
+    @font-face{font-family:'Poppins';font-style:normal;font-weight:600;font-display:swap;src:url('{% static "fonts/poppins-600-latin.woff2" %}') format('woff2');unicode-range:U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+0304,U+0308,U+0329,U+2000-206F,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD}
+    @font-face{font-family:'Poppins';font-style:normal;font-weight:700;font-display:swap;src:url('{% static "fonts/poppins-700-latin.woff2" %}') format('woff2');unicode-range:U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+0304,U+0308,U+0329,U+2000-206F,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD}
+    </style>
 
     <!-- Preconnect to external domains for faster loading -->
     <link rel="preconnect" href="https://www.hyggeo.com">
@@ -763,23 +752,23 @@
             }, true); // Use capture phase to track before navigation
         }
 
-        // Initialize tracking after page is fully loaded and idle
-        // This prevents blocking page interactivity and LCP
+        // Initialize tracking after page is loaded
+        // Balance: don't block LCP but don't delay too much
         function initTracking() {
-            // Delay page view tracking significantly to not block LCP (after 3s)
-            setTimeout(trackPageView, 3000);
+            // Delay page view tracking to not block LCP (1s = good balance mobile/desktop)
+            setTimeout(trackPageView, 1000);
             // Attach click tracking immediately (no network request)
             attachClickTracking();
         }
 
-        // Use requestIdleCallback with longer timeout to ensure LCP completes first
+        // Use requestIdleCallback if available for better performance
         if ('requestIdleCallback' in window) {
             window.addEventListener('load', function() {
-                requestIdleCallback(initTracking, { timeout: 3000 });
+                requestIdleCallback(initTracking, { timeout: 1500 });
             });
         } else {
             window.addEventListener('load', function() {
-                setTimeout(initTracking, 2000);
+                setTimeout(initTracking, 500);
             });
         }
     })();
