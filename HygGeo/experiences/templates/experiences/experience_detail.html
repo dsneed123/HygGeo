@@ -291,8 +291,8 @@
         <!-- Sidebar -->
         <div class="col-lg-4">
             <!-- Booking Card -->
-            <div class="card card-hygge mb-4 sticky-top" style="top: 20px;">
-                <div class="card-body p-4">
+            <div class="card card-hygge mb-4 sticky-top" style="top: 20px; min-height: 450px;">
+                <div class="card-body p-4" style="min-height: 400px;">
                     <div class="text-center mb-4">
                         <h4 class="fw-bold text-primary mb-2">{{ experience.get_price_display }}</h4>
                         <p class="text-muted mb-0">{{ experience.get_duration_display }}</p>
@@ -374,13 +374,13 @@
             
             <!-- Similar Experiences -->
             {% if similar_experiences %}
-            <div class="card card-hygge">
-                <div class="card-header" style="background-color: var(--hygge-cream); border-bottom: none;">
+            <div class="card card-hygge" style="min-height: 250px;">
+                <div class="card-header" style="background-color: var(--hygge-cream); border-bottom: none; min-height: 50px;">
                     <h6 class="mb-0 fw-bold" style="color: var(--hygge-green);">
                         <i class="fas fa-compass me-2"></i>Similar Experiences
                     </h6>
                 </div>
-                <div class="card-body p-3">
+                <div class="card-body p-3" style="min-height: 200px;">
                     {% for similar in similar_experiences %}
                     <div class="d-flex mb-3 {% if forloop.last %}mb-0{% endif %}">
                         {% if similar.main_image %}
@@ -409,8 +409,34 @@
 </div>
 
 <style>
+/* Prevent layout shifts with explicit sizing and aspect ratios */
+.card-img-top {
+    aspect-ratio: 1280 / 400;
+    object-fit: cover;
+}
+
+.card.h-100 .card-img-top {
+    aspect-ratio: 400 / 150;
+}
+
+/* Reserve space for sidebar images */
+.rounded.me-3 {
+    aspect-ratio: 1 / 1;
+}
+
+.rounded.me-2 {
+    aspect-ratio: 1 / 1;
+}
+
+/* Prevent shifts in main content area */
+.card.card-hygge {
+    contain: layout;
+}
+
 .sticky-top {
     z-index: 1020;
+    /* Reserve minimum height to prevent shifts */
+    min-height: 400px;
 }
 
 .bookmark-btn.bookmarked {
