@@ -16992,3 +16992,8 @@ INFO 2025-10-27 12:48:55,883 basehttp 239818 126732799567552 "POST /accounts/tra
 INFO 2025-10-27 12:50:53,429 basehttp 239818 126732782782144 "GET /experiences/?search=&destination=&category=&type=&budget=&duration=&group_size=&sustainability_min=&hygge_min= HTTP/1.1" 200 75533
 INFO 2025-10-27 12:50:55,155 basehttp 239818 126732782782144 "GET /experiences/?search=&destination=&category=&type=&budget=&duration=&group_size=&sustainability_min=&hygge_min= HTTP/1.1" 200 75533
 INFO 2025-10-27 12:50:56,233 basehttp 239818 126732782782144 "POST /accounts/track/page-view/ HTTP/1.1" 200 68
+INFO 2025-10-27 12:51:32,897 basehttp 239818 126732782782144 "POST /accounts/track/click/ HTTP/1.1" 200 62
+INFO 2025-10-27 12:51:33,799 basehttp 239818 126732782782144 "POST /accounts/track/click/ HTTP/1.1" 200 62
+INFO 2025-10-27 12:51:33,836 basehttp 239818 126732782782144 "GET / HTTP/1.1" 200 125609
+INFO 2025-10-27 12:51:33,919 basehttp 239818 126732782782144 "GET /static/banner-mobile.webp HTTP/1.1" 200 31252
+INFO 2025-10-27 12:51:35,137 basehttp 239818 126732782782144 "POST /accounts/track/page-view/ HTTP/1.1" 200 68
