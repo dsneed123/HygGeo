@@ -1443,12 +1443,20 @@ def blog_feed(request):
     destination_slug = request.GET.get('destination')
     author_username = request.GET.get('author')
 
-    if tag:
-        blogs = blogs.filter(tags__contains=[tag])
     if destination_slug:
         blogs = blogs.filter(destination__slug=destination_slug)
     if author_username:
         blogs = blogs.filter(author__username=author_username)
+
+    # Tag filtering - handle SQLite compatibility
+    if tag:
+        # Filter in Python to support SQLite (which doesn't support JSONField contains)
+        tag_lower = tag.lower()
+        filtered_blogs = []
+        for blog in blogs:
+            if blog.tags and any(tag_lower == t.lower() for t in blog.tags):
+                filtered_blogs.append(blog.id)
+        blogs = blogs.filter(id__in=filtered_blogs)
 
     # Pagination
     paginator = Paginator(blogs, 12)

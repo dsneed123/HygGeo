@@ -1,387 +1,531 @@
 {% extends 'base.html' %}
 {% load cloudflare_images %}
 
-{% block title %}Travel Blogs - HygGeo{% endblock %}
+{% block title %}Travel Blogs - Inspiring Travel Stories | HygGeo{% endblock %}
+
+{% block extra_head %}
+<!-- SEO Meta Tags -->
+<meta name="description" content="Discover inspiring travel stories, destination guides, and travel tips from the HygGeo community. Read authentic experiences from fellow travelers around the world.">
+<meta name="keywords" content="travel blogs, travel stories, destination guides, travel tips, sustainable travel, hygge travel">
+<meta name="robots" content="index, follow">
+<meta name="author" content="HygGeo">
+
+<!-- Open Graph / Facebook -->
+<meta property="og:type" content="website">
+<meta property="og:url" content="{{ request.build_absolute_uri }}">
+<meta property="og:title" content="Travel Blogs - Inspiring Travel Stories | HygGeo">
+<meta property="og:description" content="Discover inspiring travel stories and destination guides from the HygGeo community.">
+<meta property="og:site_name" content="HygGeo">
+
+<!-- Twitter -->
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:url" content="{{ request.build_absolute_uri }}">
+<meta name="twitter:title" content="Travel Blogs - Inspiring Travel Stories | HygGeo">
+<meta name="twitter:description" content="Discover inspiring travel stories and destination guides from the HygGeo community.">
+
+<!-- Preload first blog image if available -->
+{% if blogs.0.featured_image %}
+<link rel="preload" as="image" href="{{ blogs.0.featured_image.url|cf_image:'format=webp,width=600,quality=75,fit=cover' }}" fetchpriority="high">
+{% endif %}
+
+<!-- Canonical URL -->
+<link rel="canonical" href="{{ request.build_absolute_uri }}">
+
+<!-- Structured Data - Blog List -->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Blog",
+  "name": "HygGeo Travel Blogs",
+  "description": "Inspiring travel stories and destination guides from the HygGeo community",
+  "url": "{{ request.build_absolute_uri }}",
+  "publisher": {
+    "@type": "Organization",
+    "name": "HygGeo",
+    "url": "{{ request.scheme }}://{{ request.get_host }}"
+  }
+}
+</script>
+{% endblock %}
 
 {% block content %}
-<div class="container py-5">
-    <!-- Header -->
-    <div class="row mb-4">
-        <div class="col-12">
-            <h1 class="h2 fw-bold" style="color: var(--hygge-green);">
-                <i class="fas fa-book-open me-2"></i>Travel Blogs
-            </h1>
-            <p class="lead text-muted">Discover inspiring travel stories from our community</p>
-        </div>
-    </div>
-
-    <!-- Action Buttons -->
-    {% if user.is_authenticated %}
-    <div class="row mb-4">
-        <div class="col-12">
-            <a href="{% url 'experiences:create_blog' %}" class="btn btn-hygge me-2">
-                <i class="fas fa-pen-fancy me-2"></i>Write a Blog Post
-            </a>
-            <a href="{% url 'experiences:my_blogs' %}" class="btn btn-outline-hygge">
-                <i class="fas fa-folder me-2"></i>My Blogs
-            </a>
-        </div>
-    </div>
-    {% endif %}
-
-    <!-- Filters -->
-    <div class="row mb-4">
-        <div class="col-12">
-            <div class="card card-hygge">
-                <div class="card-body p-4">
-                    <form method="get">
-                        <div class="row g-3">
-                            <div class="col-md-4">
-                                <label class="form-label fw-bold">Destination</label>
-                                <select class="form-control" name="destination">
-                                    <option value="">All Destinations</option>
-                                    {% for dest in destinations %}
-                                    <option value="{{ dest.slug }}" {% if request.GET.destination == dest.slug %}selected{% endif %}>
-                                        {{ dest.name }}
-                                    </option>
-                                    {% endfor %}
-                                </select>
-                            </div>
-                            <div class="col-md-4">
-                                <label class="form-label fw-bold">Author</label>
-                                <input type="text" class="form-control" name="author"
-                                       value="{{ request.GET.author }}" placeholder="Username">
-                            </div>
-                            <div class="col-md-4">
-                                <label class="form-label fw-bold">Tag</label>
-                                <input type="text" class="form-control" name="tag"
-                                       value="{{ request.GET.tag }}" placeholder="e.g., adventure">
-                            </div>
-                            <div class="col-12">
-                                <button type="submit" class="btn btn-hygge">
-                                    <i class="fas fa-filter me-2"></i>Filter
-                                </button>
-                                <a href="{% url 'experiences:blog_feed' %}" class="btn btn-outline-secondary">
-                                    <i class="fas fa-redo me-2"></i>Reset
-                                </a>
-                            </div>
-                        </div>
-                    </form>
-                </div>
+<div class="blog-feed-page">
+    <!-- Hero Header -->
+    <header class="blog-hero">
+        <div class="container">
+            <h1 class="mb-3">Travel Stories & Guides</h1>
+            <p class="lead mb-4">Authentic experiences from travelers around the world</p>
+            {% if user.is_authenticated %}
+            <div class="hero-actions d-flex gap-3 flex-wrap">
+                <a href="{% url 'experiences:create_blog' %}" class="btn btn-write">
+                    <i class="fas fa-pen-fancy me-2"></i> Write Your Story
+                </a>
+                <a href="{% url 'experiences:my_blogs' %}" class="btn btn-my-blogs">
+                    <i class="fas fa-folder me-2"></i> My Blogs
+                </a>
             </div>
+            {% endif %}
         </div>
-    </div>
+    </header>
 
-    <!-- Blog Posts Grid -->
-    <div class="row">
-        {% if blogs %}
-            {% for blog in blogs %}
-            <div class="col-md-6 col-lg-4 mb-4">
-                <div class="card h-100 blog-card border-0 shadow-sm">
-                    {% if blog.featured_image %}
-                    <div class="blog-image-wrapper">
-                        <img src="{{ blog.featured_image.url|cf_image:'format=webp,width=400,quality=30,fit=cover' }}" class="card-img-top" alt="{{ blog.title }}">
-                        <div class="blog-overlay">
-                            <span class="reading-time">
-                                <i class="fas fa-clock me-1"></i>{{ blog.get_reading_time }} min
-                            </span>
-                        </div>
-                    </div>
-                    {% else %}
-                    <div class="blog-image-placeholder">
-                        <i class="fas fa-book-open fa-3x"></i>
-                        <span class="reading-time">
-                            <i class="fas fa-clock me-1"></i>{{ blog.get_reading_time }} min
-                        </span>
-                    </div>
-                    {% endif %}
-                    <div class="card-body d-flex flex-column">
-                        <!-- Tags -->
-                        {% if blog.tags %}
-                        <div class="mb-2">
-                            {% for tag in blog.tags|slice:":2" %}
-                            <span class="badge badge-tag">{{ tag }}</span>
+    <div class="container py-5">
+
+        <!-- Filters -->
+        <div class="blog-filters mb-4">
+            <form method="get" class="filter-form">
+                <div class="row g-3">
+                    <div class="col-md-3">
+                        <label class="form-label fw-semibold">Destination</label>
+                        <select name="destination" class="form-select">
+                            <option value="">All Destinations</option>
+                            {% for dest in destinations %}
+                            <option value="{{ dest.slug }}" {% if request.GET.destination == dest.slug %}selected{% endif %}>
+                                {{ dest.name }}
+                            </option>
                             {% endfor %}
-                        </div>
-                        {% endif %}
-
-                        <h5 class="card-title fw-bold mb-2 blog-title">{{ blog.title }}</h5>
-
-                        <div class="blog-meta mb-2">
-                            <span class="author-name">
-                                <i class="fas fa-user-circle me-1"></i>{{ blog.author.username }}
-                            </span>
-                            {% if blog.destination %}
-                            <span class="destination-name">
-                                <i class="fas fa-map-marker-alt me-1"></i>{{ blog.destination.name }}
-                            </span>
-                            {% endif %}
-                        </div>
-
-                        <p class="card-text text-muted flex-grow-1">{{ blog.excerpt|truncatewords:15|striptags }}</p>
-
-                        <!-- Stats -->
-                        <div class="blog-stats mb-3">
-                            <span><i class="fas fa-eye"></i> {{ blog.views_count }}</span>
-                            <span><i class="fas fa-heart"></i> {{ blog.likes_count }}</span>
-                            <span><i class="fas fa-comment"></i> {{ blog.comments.count }}</span>
-                        </div>
+                        </select>
                     </div>
-                    <div class="card-footer bg-transparent border-0 p-3 pt-0">
-                        <a href="{% url 'experiences:blog_detail' blog.slug %}" class="btn btn-hygge w-100 btn-read-more">
-                            Read Full Story <i class="fas fa-arrow-right ms-2"></i>
+                    <div class="col-md-3">
+                        <label class="form-label fw-semibold">Author</label>
+                        <input type="text" name="author" class="form-control" value="{{ request.GET.author }}" placeholder="Filter by author">
+                    </div>
+                    <div class="col-md-3">
+                        <label class="form-label fw-semibold">Tag</label>
+                        <input type="text" name="tag" class="form-control" value="{{ request.GET.tag }}" placeholder="e.g., adventure">
+                    </div>
+                    <div class="col-md-3 d-flex align-items-end gap-2">
+                        <button type="submit" class="btn btn-search flex-grow-1">
+                            <i class="fas fa-search me-1"></i> Search
+                        </button>
+                        <a href="{% url 'experiences:blog_feed' %}" class="btn btn-reset">
+                            <i class="fas fa-times"></i>
                         </a>
                     </div>
                 </div>
-            </div>
-            {% endfor %}
-        {% else %}
-            <div class="col-12">
-                <div class="alert alert-info">
-                    <i class="fas fa-info-circle me-2"></i>No blog posts found.
-                    {% if user.is_authenticated %}
-                    <a href="{% url 'experiences:create_blog' %}">Be the first to write one!</a>
-                    {% endif %}
+            </form>
+        </div>
+
+        <!-- Blog Posts Grid -->
+        <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
+            {% if blogs %}
+                {% for blog in blogs %}
+                <div class="col">
+                    <article class="blog-card h-100">
+                        <a href="{% url 'experiences:blog_detail' blog.slug %}" class="text-decoration-none">
+                            <div class="blog-image-wrapper">
+                                {% if blog.featured_image %}
+                                <img src="{{ blog.featured_image.url|cf_image:'format=webp,width=600,quality=75,fit=cover' }}"
+                                     alt="{{ blog.title }}"
+                                     loading="{% if forloop.first %}eager{% else %}lazy{% endif %}"
+                                     {% if forloop.first %}fetchpriority="high"{% endif %}
+                                     class="blog-image">
+                                {% else %}
+                                <div class="blog-placeholder">
+                                    <i class="fas fa-image"></i>
+                                </div>
+                                {% endif %}
+                                {% if blog.tags %}
+                                <div class="blog-tags">
+                                    {% for tag in blog.tags|slice:":2" %}
+                                    <span class="badge">{{ tag }}</span>
+                                    {% endfor %}
+                                </div>
+                                {% endif %}
+                            </div>
+                            <div class="blog-card-body">
+                                <div class="d-flex justify-content-between align-items-center mb-2">
+                                    <span class="blog-author">
+                                        <i class="fas fa-user-circle me-1"></i> {{ blog.author.username }}
+                                    </span>
+                                    <span class="blog-time">
+                                        <i class="fas fa-clock me-1"></i> {{ blog.get_reading_time }} min
+                                    </span>
+                                </div>
+                                <h3 class="blog-title">{{ blog.title }}</h3>
+                                <p class="blog-excerpt">{{ blog.excerpt|truncatewords:20|striptags }}</p>
+                                <div class="d-flex justify-content-between align-items-center mt-3 pt-3 border-top">
+                                    {% if blog.destination %}
+                                    <span class="blog-location">
+                                        <i class="fas fa-map-marker-alt me-1"></i> {{ blog.destination.name }}
+                                    </span>
+                                    {% else %}
+                                    <span></span>
+                                    {% endif %}
+                                    <div class="blog-stats">
+                                        <span class="me-2"><i class="fas fa-eye me-1"></i> {{ blog.views_count }}</span>
+                                        <span><i class="fas fa-heart me-1"></i> {{ blog.likes_count }}</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </a>
+                    </article>
                 </div>
-            </div>
+                {% endfor %}
+            {% else %}
+                <div class="col-12">
+                    <div class="empty-state text-center py-5">
+                        <i class="fas fa-search fa-4x mb-3 text-muted"></i>
+                        <h3>No stories found</h3>
+                        <p class="text-muted">Try adjusting your filters or {% if user.is_authenticated %}<a href="{% url 'experiences:create_blog' %}">write the first story</a>{% else %}check back later{% endif %}</p>
+                    </div>
+                </div>
+            {% endif %}
+        </div>
+
+        <!-- Pagination -->
+        {% if blogs.has_other_pages %}
+        <nav class="mt-5" aria-label="Blog pagination">
+            <ul class="pagination justify-content-center">
+                {% if blogs.has_previous %}
+                <li class="page-item">
+                    <a href="?page={{ blogs.previous_page_number }}" class="page-link">
+                        <i class="fas fa-chevron-left me-1"></i> Previous
+                    </a>
+                </li>
+                {% endif %}
+
+                {% for num in blogs.paginator.page_range %}
+                <li class="page-item {% if blogs.number == num %}active{% endif %}">
+                    <a href="?page={{ num }}" class="page-link">{{ num }}</a>
+                </li>
+                {% endfor %}
+
+                {% if blogs.has_next %}
+                <li class="page-item">
+                    <a href="?page={{ blogs.next_page_number }}" class="page-link">
+                        Next <i class="fas fa-chevron-right ms-1"></i>
+                    </a>
+                </li>
+                {% endif %}
+            </ul>
+        </nav>
         {% endif %}
     </div>
-
-    <!-- Pagination -->
-    {% if blogs.has_other_pages %}
-    <div class="row mt-4">
-        <div class="col-12">
-            <nav>
-                <ul class="pagination justify-content-center">
-                    {% if blogs.has_previous %}
-                    <li class="page-item">
-                        <a class="page-link" href="?page={{ blogs.previous_page_number }}{% for key, value in request.GET.items %}{% if key != 'page' %}&{{ key }}={{ value }}{% endif %}{% endfor %}">Previous</a>
-                    </li>
-                    {% endif %}
-
-                    {% for num in blogs.paginator.page_range %}
-                    <li class="page-item {% if blogs.number == num %}active{% endif %}">
-                        <a class="page-link" href="?page={{ num }}{% for key, value in request.GET.items %}{% if key != 'page' %}&{{ key }}={{ value }}{% endif %}{% endfor %}">{{ num }}</a>
-                    </li>
-                    {% endfor %}
-
-                    {% if blogs.has_next %}
-                    <li class="page-item">
-                        <a class="page-link" href="?page={{ blogs.next_page_number }}{% for key, value in request.GET.items %}{% if key != 'page' %}&{{ key }}={{ value }}{% endif %}{% endfor %}">Next</a>
-                    </li>
-                    {% endif %}
-                </ul>
-            </nav>
-        </div>
-    </div>
-    {% endif %}
 </div>
 
 <style>
-/* Blog Card Styling */
+/* ===== HYGGEO BLOG FEED DESIGN ===== */
+
+/* Page Container */
+.blog-feed-page {
+    background: #faf8f5;
+    min-height: 100vh;
+}
+
+/* Hero Section */
+.blog-hero {
+    background: linear-gradient(135deg, #2d5a3d 0%, #4a7c59 100%);
+    color: white;
+    padding: 4rem 0 3rem;
+    margin-bottom: 0;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+}
+
+.blog-hero h1 {
+    font-size: 2.5rem;
+    font-weight: 600;
+    font-family: 'Poppins', sans-serif;
+}
+
+.blog-hero .lead {
+    font-size: 1.125rem;
+    opacity: 0.95;
+    font-weight: 400;
+}
+
+/* Hero Action Buttons */
+.btn-write,
+.btn-my-blogs {
+    padding: 0.75rem 1.5rem;
+    border-radius: 8px;
+    font-weight: 600;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    transition: all 0.3s ease;
+    font-family: 'Poppins', sans-serif;
+}
+
+.btn-write {
+    background: white;
+    color: #2d5a3d;
+    border: none;
+}
+
+.btn-write:hover {
+    background: #f0f7f4;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+    color: #2d5a3d;
+}
+
+.btn-my-blogs {
+    background: rgba(255,255,255,0.15);
+    color: white;
+    border: 2px solid rgba(255,255,255,0.4);
+}
+
+.btn-my-blogs:hover {
+    background: rgba(255,255,255,0.25);
+    border-color: rgba(255,255,255,0.6);
+    color: white;
+}
+
+/* Filters */
+.blog-filters {
+    background: white;
+    border-radius: 12px;
+    padding: 1.5rem;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+}
+
+.blog-filters .form-label {
+    color: #2d5a3d;
+    font-size: 0.875rem;
+    margin-bottom: 0.5rem;
+}
+
+.blog-filters .form-select,
+.blog-filters .form-control {
+    border: 1.5px solid #e0e0e0;
+    border-radius: 8px;
+    padding: 0.625rem 0.875rem;
+    font-family: 'Poppins', sans-serif;
+}
+
+.blog-filters .form-select:focus,
+.blog-filters .form-control:focus {
+    border-color: #2d5a3d;
+    box-shadow: 0 0 0 3px rgba(45, 90, 61, 0.1);
+}
+
+.btn-search {
+    background: #2d5a3d;
+    color: white;
+    border: none;
+    padding: 0.625rem 1.25rem;
+    border-radius: 8px;
+    font-weight: 600;
+    transition: all 0.2s ease;
+    font-family: 'Poppins', sans-serif;
+}
+
+.btn-search:hover {
+    background: #1e4029;
+    transform: translateY(-1px);
+    color: white;
+}
+
+.btn-reset {
+    background: #f3f4f6;
+    color: #6b7280;
+    border: none;
+    padding: 0.625rem 1rem;
+    border-radius: 8px;
+    font-weight: 600;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s ease;
+}
+
+.btn-reset:hover {
+    background: #e5e7eb;
+    color: #374151;
+}
+
+/* Blog Cards */
 .blog-card {
-    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    background: white;
+    border-radius: 12px;
     overflow: hidden;
+    transition: all 0.3s ease;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+    display: flex;
+    flex-direction: column;
 }
 
 .blog-card:hover {
-    transform: translateY(-8px);
-    box-shadow: 0 15px 40px rgba(0,0,0,0.15) !important;
+    transform: translateY(-4px);
+    box-shadow: 0 12px 24px rgba(0,0,0,0.12);
 }
 
-/* Blog Image Wrapper */
+.blog-card a {
+    color: inherit;
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+}
+
 .blog-image-wrapper {
     position: relative;
-    height: 220px;
+    aspect-ratio: 16/10;
     overflow: hidden;
+    background: #f3f4f6;
 }
 
-.blog-image-wrapper img {
+.blog-image {
     width: 100%;
     height: 100%;
     object-fit: cover;
-    transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+    transition: transform 0.3s ease;
 }
 
-.blog-card:hover .blog-image-wrapper img {
-    transform: scale(1.08);
+.blog-card:hover .blog-image {
+    transform: scale(1.05);
 }
 
-.blog-overlay {
-    position: absolute;
-    top: 0;
-    right: 0;
-    left: 0;
-    bottom: 0;
-    background: linear-gradient(to bottom, rgba(0,0,0,0) 0%, rgba(0,0,0,0.7) 100%);
+.blog-placeholder {
+    width: 100%;
+    height: 100%;
     display: flex;
-    align-items: flex-end;
-    padding: 1rem;
-    opacity: 0;
-    transition: opacity 0.3s ease;
-}
-
-.blog-card:hover .blog-overlay {
-    opacity: 1;
-}
-
-.reading-time {
-    background: var(--hygge-green);
-    color: white;
-    padding: 0.4rem 1rem;
-    border-radius: 20px;
-    font-size: 0.85rem;
-    font-weight: 600;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.2);
-}
-
-.blog-image-placeholder {
-    height: 220px;
-    background: linear-gradient(135deg, var(--hygge-cream) 0%, #e8f5e9 100%);
-    display: flex;
-    flex-direction: column;
     align-items: center;
     justify-content: center;
-    color: var(--hygge-green);
-    position: relative;
+    background: linear-gradient(135deg, #f0f7f4 0%, #e0ebe0 100%);
+    color: #9ca3af;
+    font-size: 3rem;
 }
 
-.blog-image-placeholder .reading-time {
+.blog-tags {
     position: absolute;
-    bottom: 1rem;
+    top: 1rem;
     left: 1rem;
+    display: flex;
+    gap: 0.5rem;
+    flex-wrap: wrap;
 }
 
-/* Blog Title */
+.blog-tags .badge {
+    background: rgba(255,255,255,0.95);
+    backdrop-filter: blur(8px);
+    color: #2d5a3d;
+    padding: 0.375rem 0.75rem;
+    border-radius: 6px;
+    font-size: 0.75rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.3px;
+}
+
+.blog-card-body {
+    padding: 1.5rem;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+}
+
+.blog-author,
+.blog-time {
+    font-size: 0.8125rem;
+    color: #6b7280;
+    font-weight: 600;
+}
+
+.blog-author {
+    color: #2d5a3d;
+}
+
 .blog-title {
-    color: #1a202c;
     font-size: 1.25rem;
+    font-weight: 600;
+    color: #1a1a1a;
+    margin: 0.75rem 0;
     line-height: 1.4;
-    min-height: 3.5rem;
     display: -webkit-box;
     -webkit-line-clamp: 2;
     -webkit-box-orient: vertical;
     overflow: hidden;
-    transition: color 0.2s ease;
+    font-family: 'Poppins', sans-serif;
 }
 
 .blog-card:hover .blog-title {
-    color: var(--hygge-green);
+    color: #2d5a3d;
 }
 
-/* Blog Meta */
-.blog-meta {
-    font-size: 0.875rem;
-    color: #718096;
-    display: flex;
-    flex-wrap: wrap;
-    gap: 0.75rem;
-}
-
-.author-name,
-.destination-name {
-    display: inline-flex;
-    align-items: center;
-}
-
-.author-name {
-    color: var(--hygge-green);
-    font-weight: 600;
-}
-
-.destination-name {
-    color: var(--hygge-soft-blue);
-    font-weight: 500;
-}
-
-/* Badge Tag */
-.badge-tag {
-    background: linear-gradient(135deg, var(--hygge-green) 0%, #357a52 100%);
-    color: white;
-    padding: 0.4rem 0.9rem;
-    border-radius: 20px;
-    font-size: 0.75rem;
-    font-weight: 600;
-    margin-right: 0.25rem;
-    transition: all 0.2s ease;
-}
-
-.badge-tag:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 3px 10px rgba(45, 90, 61, 0.3);
-}
-
-/* Blog Stats */
-.blog-stats {
-    display: flex;
-    gap: 1rem;
-    font-size: 0.875rem;
-    color: #718096;
-    padding-top: 0.75rem;
-    border-top: 1px solid #e2e8f0;
-}
-
-.blog-stats span {
-    display: inline-flex;
-    align-items: center;
-    gap: 0.25rem;
-}
-
-.blog-stats i {
-    color: var(--hygge-green);
-}
-
-/* Read More Button */
-.btn-read-more {
-    font-weight: 600;
-    transition: all 0.3s ease;
-    position: relative;
+.blog-excerpt {
+    font-size: 0.9375rem;
+    line-height: 1.6;
+    color: #6b7280;
+    margin-bottom: auto;
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
     overflow: hidden;
 }
 
-.btn-read-more::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: -100%;
-    width: 100%;
-    height: 100%;
-    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
-    transition: left 0.5s;
+.blog-location {
+    color: #6b7280;
+    font-size: 0.8125rem;
+    font-weight: 600;
 }
 
-.btn-read-more:hover::before {
-    left: 100%;
+.blog-stats {
+    font-size: 0.8125rem;
+    color: #9ca3af;
+    font-weight: 500;
 }
 
-.btn-read-more i {
-    transition: transform 0.3s ease;
+.blog-stats i {
+    color: #2d5a3d;
 }
 
-.btn-read-more:hover i {
-    transform: translateX(5px);
+/* Pagination */
+.pagination {
+    --bs-pagination-color: #2d5a3d;
+    --bs-pagination-hover-color: #1e4029;
+    --bs-pagination-focus-color: #1e4029;
+    --bs-pagination-active-bg: #2d5a3d;
+    --bs-pagination-active-border-color: #2d5a3d;
+    font-family: 'Poppins', sans-serif;
+    font-weight: 600;
 }
 
-/* Filter Card */
-.card-hygge {
-    border: none;
-    box-shadow: 0 2px 12px rgba(0,0,0,0.08);
+.page-link {
+    border-radius: 8px !important;
+    margin: 0 0.25rem;
+    padding: 0.625rem 0.875rem;
+}
+
+/* Empty State */
+.empty-state {
+    background: white;
+    border-radius: 12px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+}
+
+.empty-state h3 {
+    color: #374151;
+    font-weight: 600;
+    margin-bottom: 0.75rem;
+}
+
+.empty-state a {
+    color: #2d5a3d;
+    font-weight: 600;
+    text-decoration: none;
+}
+
+.empty-state a:hover {
+    text-decoration: underline;
 }
 
 /* Responsive */
 @media (max-width: 768px) {
-    .blog-image-wrapper,
-    .blog-image-placeholder {
-        height: 180px;
+    .blog-hero h1 {
+        font-size: 2rem;
+    }
+
+    .blog-hero .lead {
+        font-size: 1rem;
+    }
+
+    .blog-filters {
+        padding: 1rem;
     }
 
     .blog-title {
-        font-size: 1.1rem;
-        min-height: auto;
-    }
-
-    .blog-meta {
-        font-size: 0.8rem;
+        font-size: 1.125rem;
     }
 }
 </style>
