@@ -563,3 +563,47 @@ class ClickEvent(models.Model):
     def __str__(self):
         user_str = self.user.username if self.user else 'Anonymous'
         return f"{user_str} clicked {self.element_text[:50]} on {self.source_path}"
+
+
+class Notification(models.Model):
+    """User notifications for messages, system alerts, and admin announcements"""
+    NOTIFICATION_TYPES = [
+        ('message', 'New Message'),
+        ('system', 'System Notification'),
+        ('admin', 'Admin Announcement'),
+        ('trip', 'Trip Update'),
+        ('blog', 'Blog Notification'),
+    ]
+
+    recipient = models.ForeignKey(User, on_delete=models.CASCADE, related_name='notifications')
+    notification_type = models.CharField(max_length=20, choices=NOTIFICATION_TYPES, default='system')
+    title = models.CharField(max_length=200)
+    message = models.TextField()
+    link = models.CharField(max_length=500, blank=True, null=True, help_text="Optional link to related content")
+
+    # Metadata
+    is_read = models.BooleanField(default=False)
+    created_at = models.DateTimeField(auto_now_add=True, db_index=True)
+    read_at = models.DateTimeField(null=True, blank=True)
+
+    # Optional: Link to related objects
+    related_message = models.ForeignKey(Message, on_delete=models.CASCADE, null=True, blank=True, related_name='notifications')
+    related_trip = models.ForeignKey(Trip, on_delete=models.CASCADE, null=True, blank=True, related_name='notifications')
+
+    class Meta:
+        ordering = ['-created_at']
+        indexes = [
+            models.Index(fields=['recipient', 'is_read', '-created_at']),
+            models.Index(fields=['created_at']),
+        ]
+
+    def __str__(self):
+        return f"Notification to {self.recipient.username}: {self.title}"
+
+    def mark_as_read(self):
+        """Mark notification as read"""
+        if not self.is_read:
+            self.is_read = True
+            from django.utils import timezone
+            self.read_at = timezone.now()
+            self.save()

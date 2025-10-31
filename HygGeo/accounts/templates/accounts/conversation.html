@@ -200,11 +200,12 @@
 
 <style>
 .conversation-thread {
-    border-radius: 0 0 12px 12px;
+    border-radius: 0 0 16px 16px;
 }
 
 .message-item {
     border-bottom: 1px solid #f0f0f0;
+    transition: background-color 0.2s ease;
 }
 
 .message-item:last-child {
@@ -212,25 +213,53 @@
 }
 
 .message-sent {
-    background-color: rgba(74, 124, 89, 0.05);
+    background: linear-gradient(to right, rgba(74, 124, 89, 0.03), rgba(74, 124, 89, 0.08));
 }
 
 .message-received {
-    background-color: #fafafa;
+    background: linear-gradient(to left, rgba(240, 240, 240, 0.5), rgba(250, 250, 250, 0.8));
+}
+
+.message-item:hover {
+    background-color: rgba(74, 124, 89, 0.02);
 }
 
 .message-bubble {
-    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.08);
     word-wrap: break-word;
+    transition: all 0.3s ease;
+}
+
+.message-bubble:hover {
+    box-shadow: 0 6px 16px rgba(0,0,0,0.12);
 }
 
 .card-hygge {
-    border-radius: 12px;
+    border-radius: 16px;
+    border: 1px solid #e0e0e0;
+    transition: all 0.3s ease;
+}
+
+.card-hygge:hover {
+    box-shadow: 0 8px 20px rgba(74, 124, 89, 0.1);
 }
 
 .form-control:focus {
     border-color: var(--hygge-light-green);
     box-shadow: 0 0 0 0.2rem rgba(74, 124, 89, 0.25);
+}
+
+.btn-hygge {
+    background: linear-gradient(135deg, var(--hygge-green), var(--hygge-light-green));
+    border: none;
+    color: white;
+    transition: all 0.3s ease;
+}
+
+.btn-hygge:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(74, 124, 89, 0.3);
+    color: white;
 }
 
 /* Auto-scroll to bottom of conversation */

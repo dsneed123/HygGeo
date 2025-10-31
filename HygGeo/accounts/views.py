@@ -485,6 +485,63 @@ def admin_dashboard(request):
     # Updated template path to match your file location
     return render(request, 'admin-dashboard.html', context)
 
+
+@user_passes_test(lambda u: u.is_staff, login_url='/accounts/login/')
+def send_admin_notification(request):
+    """Send notifications to users from admin dashboard"""
+    from .models import Notification
+
+    if request.method == 'POST':
+        # Get form data
+        recipient_type = request.POST.get('recipient_type')
+        title = request.POST.get('title')
+        message_text = request.POST.get('message')
+        link = request.POST.get('link', '')
+
+        # Validate inputs
+        if not title or not message_text:
+            messages.error(request, 'Title and message are required.')
+            return redirect('admin_dashboard')
+
+        # Determine recipients based on type
+        recipients = []
+        if recipient_type == 'all':
+            recipients = User.objects.filter(is_active=True)
+        elif recipient_type == 'active':
+            # Active users (logged in within last 30 days)
+            cutoff = timezone.now() - timezone.timedelta(days=30)
+            recipients = User.objects.filter(is_active=True, last_login__gte=cutoff)
+        elif recipient_type == 'staff':
+            recipients = User.objects.filter(is_staff=True, is_active=True)
+        elif recipient_type == 'members':
+            # All authenticated users
+            recipients = User.objects.filter(is_active=True)
+        else:
+            messages.error(request, 'Invalid recipient type.')
+            return redirect('admin_dashboard')
+
+        # Create notifications for all recipients
+        notification_count = 0
+        for user in recipients:
+            Notification.objects.create(
+                recipient=user,
+                notification_type='admin',
+                title=title,
+                message=message_text,
+                link=link if link else None
+            )
+            notification_count += 1
+
+        messages.success(
+            request,
+            f'Successfully sent notification to {notification_count} user(s)!'
+        )
+        return redirect('admin_dashboard')
+
+    # If GET request, just redirect to admin dashboard
+    return redirect('admin_dashboard')
+
+
 @user_passes_test(lambda u: u.is_staff, login_url='/accounts/login/')
 def export_all_emails_csv(request):
     """Export all user emails (with email consent) as CSV file with mail merge fields"""
@@ -1910,17 +1967,33 @@ def delete_trip_view(request, pk):
 
 @login_required
 def send_message_view(request, username=None, trip_id=None):
-    """Send a message to another user, optionally about a specific trip"""
+    """Send a message to another user, optionally about a specific trip - Members only"""
+    from .models import Notification
+
+    # Check if sender is authenticated (member)
+    if not request.user.is_authenticated:
+        messages.error(request, 'Only members can send messages. Please sign up or log in.')
+        return redirect('login')
+
     recipient = None
     trip = None
-    
+
     if username:
         recipient = get_object_or_404(User, username=username)
+        # Check if recipient is a member
+        if not recipient.is_active:
+            messages.error(request, 'This user is not an active member.')
+            return redirect('user_list')
     if trip_id:
         trip = get_object_or_404(Trip, pk=trip_id)
         if not recipient:
             recipient = trip.creator
-    
+
+    # Prevent sending messages to self
+    if recipient and recipient == request.user:
+        messages.error(request, 'You cannot send messages to yourself.')
+        return redirect('message_list')
+
     if request.method == 'POST':
         form = MessageForm(request.POST)
         if form.is_valid():
@@ -1929,7 +2002,22 @@ def send_message_view(request, username=None, trip_id=None):
             message.recipient = recipient
             message.trip = trip
             message.save()
-            
+
+            # Create notification for recipient
+            notification_title = f"New message from {request.user.first_name or request.user.username}"
+            notification_message = f"{message.subject[:100]}"
+            notification_link = f"/accounts/messages/conversation/{message.conversation_id}/"
+
+            Notification.objects.create(
+                recipient=recipient,
+                notification_type='message',
+                title=notification_title,
+                message=notification_message,
+                link=notification_link,
+                related_message=message,
+                related_trip=trip
+            )
+
             messages.success(request, f'Message sent to {recipient.first_name or recipient.username}!')
             return redirect('message_list')
         else:
@@ -1939,13 +2027,13 @@ def send_message_view(request, username=None, trip_id=None):
         if trip:
             initial_data['subject'] = f'Interest in your trip: {trip.trip_name}'
         form = MessageForm(initial=initial_data)
-    
+
     context = {
         'form': form,
         'recipient': recipient,
         'trip': trip,
     }
-    
+
     return render(request, 'accounts/send_message.html', context)
 
 @login_required
@@ -2026,6 +2114,8 @@ def conversation_view(request, conversation_id):
     if request.method == 'POST':
         form = ReplyForm(request.POST)
         if form.is_valid():
+            from .models import Notification
+
             reply = form.save(commit=False)
             reply.sender = request.user
             reply.recipient = other_user
@@ -2033,7 +2123,22 @@ def conversation_view(request, conversation_id):
             reply.trip = root_message.trip
             reply.parent_message = root_message
             reply.save()
-            
+
+            # Create notification for recipient
+            notification_title = f"New reply from {request.user.first_name or request.user.username}"
+            notification_message = reply.body[:100]
+            notification_link = f"/accounts/messages/conversation/{conversation_id}/"
+
+            Notification.objects.create(
+                recipient=other_user,
+                notification_type='message',
+                title=notification_title,
+                message=notification_message,
+                link=notification_link,
+                related_message=reply,
+                related_trip=root_message.trip
+            )
+
             messages.success(request, 'Reply sent!')
             return redirect('conversation', conversation_id=conversation_id)
     else:
@@ -2053,14 +2158,90 @@ def conversation_view(request, conversation_id):
 def delete_message_view(request, message_id):
     """Delete a message"""
     message = get_object_or_404(Message, pk=message_id, sender=request.user)
-    
+
     if request.method == 'POST':
         conversation_id = message.conversation_id
         message.delete()
         messages.success(request, 'Message deleted successfully!')
         return redirect('conversation', conversation_id=conversation_id)
-    
+
     return redirect('message_list')
+
+
+# Notification Views
+@login_required
+def notifications_view(request):
+    """Display all notifications for the current user"""
+    notifications = request.user.notifications.all().select_related(
+        'related_message', 'related_trip'
+    )
+
+    # Paginate notifications
+    paginator = Paginator(notifications, 20)
+    page_number = request.GET.get('page')
+    page_obj = paginator.get_page(page_number)
+
+    context = {
+        'notifications': page_obj,
+        'unread_count': request.user.notifications.filter(is_read=False).count(),
+    }
+
+    return render(request, 'accounts/notifications.html', context)
+
+
+@login_required
+def notification_count(request):
+    """API endpoint to get unread notification count"""
+    from .models import Notification
+    unread_count = Notification.objects.filter(
+        recipient=request.user,
+        is_read=False
+    ).count()
+    return JsonResponse({'unread_count': unread_count})
+
+
+@login_required
+def mark_notification_read(request, notification_id):
+    """Mark a single notification as read"""
+    from .models import Notification
+    notification = get_object_or_404(Notification, pk=notification_id, recipient=request.user)
+    notification.mark_as_read()
+
+    if request.headers.get('X-Requested-With') == 'XMLHttpRequest':
+        return JsonResponse({'success': True})
+
+    # Redirect to the notification's link if available
+    if notification.link:
+        return redirect(notification.link)
+    return redirect('notifications')
+
+
+@login_required
+def mark_all_notifications_read(request):
+    """Mark all notifications as read for the current user"""
+    from .models import Notification
+    if request.method == 'POST':
+        Notification.objects.filter(
+            recipient=request.user,
+            is_read=False
+        ).update(is_read=True, read_at=timezone.now())
+        messages.success(request, 'All notifications marked as read!')
+
+    return redirect('notifications')
+
+
+@login_required
+def delete_notification(request, notification_id):
+    """Delete a notification"""
+    from .models import Notification
+    notification = get_object_or_404(Notification, pk=notification_id, recipient=request.user)
+
+    if request.method == 'POST':
+        notification.delete()
+        messages.success(request, 'Notification deleted successfully!')
+
+    return redirect('notifications')
+
 
 @login_required
 def logout_view(request):

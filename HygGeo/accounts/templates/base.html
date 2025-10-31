@@ -292,6 +292,9 @@
         .btn{display:inline-block;font-weight:400;line-height:1.5;color:#212529;text-align:center;text-decoration:none;vertical-align:middle;cursor:pointer;user-select:none;background-color:transparent;border:1px solid transparent;padding:0.375rem 0.75rem;font-size:1rem;border-radius:0.25rem}
         .btn-light{color:#000;background-color:#f8f9fa;border-color:#f8f9fa}
         .btn-lg{padding:0.5rem 1rem;font-size:1.25rem;border-radius:0.3rem}
+
+        /* Notification badge */
+        .notification-badge{position:absolute;top:0.25rem;right:0.25rem;background-color:#dc3545;color:#fff;border-radius:50%;min-width:1.2rem;height:1.2rem;display:inline-flex;align-items:center;justify-content:center;font-size:0.7rem;font-weight:700;padding:0.15rem 0.3rem;line-height:1}
     </style>
 
     <!-- Load non-critical CSS async to not block LCP image -->
@@ -502,7 +505,12 @@
                     <li class="nav-item">
                         <a class="nav-link" href="{% url 'message_list' %}">
                             <i class="fas fa-envelope me-1"></i>Messages
-                            <!-- Optional: Add unread count badge -->
+                        </a>
+                    </li>
+                    <li class="nav-item position-relative">
+                        <a class="nav-link" href="{% url 'notifications' %}" id="notificationBell">
+                            <i class="fas fa-bell me-1"></i>Notifications
+                            <span class="notification-badge" id="notificationCount" style="display: none;">0</span>
                         </a>
                     </li>
                     {% endif %}
@@ -797,6 +805,40 @@
         }
     })();
     </script>
+
+    <!-- Notification Badge Update Script -->
+    {% if user.is_authenticated %}
+    <script>
+    (function() {
+        'use strict';
+
+        function updateNotificationCount() {
+            fetch('{% url "notification_count" %}')
+                .then(response => response.json())
+                .then(data => {
+                    const badge = document.getElementById('notificationCount');
+                    if (badge && data.unread_count > 0) {
+                        badge.textContent = data.unread_count;
+                        badge.style.display = 'inline-flex';
+                    } else if (badge) {
+                        badge.style.display = 'none';
+                    }
+                })
+                .catch(error => console.debug('Notification count error:', error));
+        }
+
+        // Update on page load
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', updateNotificationCount);
+        } else {
+            updateNotificationCount();
+        }
+
+        // Update every 30 seconds
+        setInterval(updateNotificationCount, 30000);
+    })();
+    </script>
+    {% endif %}
 
     {% block extra_js %}{% endblock %}
 </body>

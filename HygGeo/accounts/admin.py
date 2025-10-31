@@ -14,7 +14,7 @@ from django.template import Template, Context
 from django.core.mail import EmailMultiAlternatives
 from django.conf import settings
 import re
-from .models import UserProfile, TravelSurvey, EmailTemplate, EmailCampaign, EmailLog
+from .models import UserProfile, TravelSurvey, EmailTemplate, EmailCampaign, EmailLog, Notification, Message, Trip
 from .email_utils import get_merge_fields
 
 def export_emails_csv(modeladmin, request, queryset):
@@ -542,3 +542,97 @@ class EmailLogAdmin(admin.ModelAdmin):
 
     def has_delete_permission(self, request, obj=None):
         return request.user.is_superuser  # Only superusers can delete logs
+
+
+@admin.register(Notification)
+class NotificationAdmin(admin.ModelAdmin):
+    list_display = ('recipient', 'notification_type', 'title', 'is_read', 'created_at')
+    list_filter = ('notification_type', 'is_read', 'created_at')
+    search_fields = ('recipient__username', 'recipient__email', 'title', 'message')
+    readonly_fields = ('created_at', 'read_at')
+
+    fieldsets = (
+        ('Notification Information', {
+            'fields': ('recipient', 'notification_type', 'title', 'message', 'link')
+        }),
+        ('Status', {
+            'fields': ('is_read', 'read_at')
+        }),
+        ('Related Objects', {
+            'fields': ('related_message', 'related_trip'),
+            'classes': ('collapse',)
+        }),
+        ('Metadata', {
+            'fields': ('created_at',),
+            'classes': ('collapse',)
+        }),
+    )
+
+    def get_queryset(self, request):
+        return super().get_queryset(request).select_related('recipient', 'related_message', 'related_trip')
+
+
+@admin.register(Message)
+class MessageAdmin(admin.ModelAdmin):
+    list_display = ('sender', 'recipient', 'subject', 'is_read', 'created_at')
+    list_filter = ('is_read', 'created_at')
+    search_fields = ('sender__username', 'recipient__username', 'subject', 'body')
+    readonly_fields = ('created_at',)
+
+    fieldsets = (
+        ('Message Information', {
+            'fields': ('sender', 'recipient', 'subject', 'body')
+        }),
+        ('Status', {
+            'fields': ('is_read',)
+        }),
+        ('Related', {
+            'fields': ('trip', 'parent_message'),
+            'classes': ('collapse',)
+        }),
+        ('Metadata', {
+            'fields': ('created_at',),
+            'classes': ('collapse',)
+        }),
+    )
+
+    def get_queryset(self, request):
+        return super().get_queryset(request).select_related('sender', 'recipient', 'trip', 'parent_message')
+
+
+@admin.register(Trip)
+class TripAdmin(admin.ModelAdmin):
+    list_display = ('trip_name', 'creator', 'destination', 'trip_status', 'start_date', 'end_date', 'visibility', 'created_at')
+    list_filter = ('trip_status', 'visibility', 'seeking_buddies', 'budget_range', 'created_at')
+    search_fields = ('trip_name', 'creator__username', 'destination__name', 'description')
+    readonly_fields = ('created_at', 'updated_at')
+    filter_horizontal = ('experiences',)
+
+    fieldsets = (
+        ('Basic Information', {
+            'fields': ('creator', 'trip_name', 'destination', 'description', 'trip_status')
+        }),
+        ('Dates', {
+            'fields': ('start_date', 'end_date', 'trip_duration_preference')
+        }),
+        ('Trip Details', {
+            'fields': ('group_size_preference', 'budget_range', 'travel_frequency', 'seeking_buddies', 'travel_styles')
+        }),
+        ('Sustainability', {
+            'fields': ('sustainability_priority', 'sustainability_factors')
+        }),
+        ('Experiences', {
+            'fields': ('experiences',),
+            'classes': ('collapse',)
+        }),
+        ('Privacy & Media', {
+            'fields': ('visibility', 'allow_messages', 'trip_image')
+        }),
+        ('Metadata', {
+            'fields': ('created_at', 'updated_at'),
+            'classes': ('collapse',)
+        }),
+    )
+
+    def get_queryset(self, request):
+        return super().get_queryset(request).select_related('creator', 'destination')

@@ -82,6 +82,13 @@ urlpatterns = [
     path('messages/conversation/<int:conversation_id>/', views.conversation_view, name='conversation'),
     path('messages/<int:message_id>/delete/', views.delete_message_view, name='delete_message'),
     path("messages/send/<str:username>/", views.send_message_view, name="send_message"),
+
+    # Notification URLs
+    path('notifications/', views.notifications_view, name='notifications'),
+    path('notifications/count/', views.notification_count, name='notification_count'),
+    path('notifications/<int:notification_id>/read/', views.mark_notification_read, name='mark_notification_read'),
+    path('notifications/mark-all-read/', views.mark_all_notifications_read, name='mark_all_notifications_read'),
+    path('notifications/<int:notification_id>/delete/', views.delete_notification, name='delete_notification'),
     path('debug-spaces/', views.debug_spaces, name='debug_spaces'),
     path('test-upload/', views.test_upload, name='test_upload'),
     path('debug-storage/', views.debug_storage, name='debug_storage'),
@@ -92,6 +99,9 @@ urlpatterns = [
 
     # Admin featured content management
     path('admin/toggle-featured/', views.toggle_featured_status, name='toggle_featured_status'),
+
+    # Admin notification sending
+    path('admin/send-notification/', views.send_admin_notification, name='send_admin_notification'),
 
     # Blog generator
     path('admin/generate-blog/', views.generate_top_10_blog, name='generate_top_10_blog'),

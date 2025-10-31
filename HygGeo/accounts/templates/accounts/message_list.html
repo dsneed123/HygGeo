@@ -6,20 +6,20 @@
 <div class="container py-5">
     <div class="row">
         <div class="col-12 mb-4">
-            <div class="d-flex justify-content-between align-items-center">
+            <div class="d-flex justify-content-between align-items-center flex-wrap gap-3">
                 <div>
                     <h1 class="h2 fw-bold" style="color: var(--hygge-green);">
                         <i class="fas fa-envelope me-2"></i>My Messages
                     </h1>
-                    <p class="text-muted">Connect with fellow sustainable travelers</p>
+                    <p class="text-muted mb-0">Connect with fellow sustainable travelers</p>
                 </div>
-                <div>
+                <div class="d-flex gap-2 flex-wrap">
                     {% if total_unread > 0 %}
-                    <span class="badge bg-danger px-3 py-2 me-3">
+                    <span class="badge bg-danger px-3 py-2">
                         {{ total_unread }} unread message{{ total_unread|pluralize }}
                     </span>
                     {% endif %}
-                    <a href="{% url 'user_list' %}" class="btn btn-outline-hygge">
+                    <a href="{% url 'user_list' %}" class="btn btn-hygge">
                         <i class="fas fa-users me-2"></i>Find Travel Buddies
                     </a>
                 </div>
@@ -181,28 +181,65 @@
 
 <style>
 .conversation-card {
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
-    border-radius: 12px;
+    transition: all 0.3s ease;
+    border-radius: 16px;
+    border: 1px solid #e0e0e0;
+    overflow: hidden;
 }
 
 .conversation-card:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+    transform: translateY(-4px);
+    box-shadow: 0 12px 28px rgba(74, 124, 89, 0.15);
+    border-color: var(--hygge-light-green);
+}
+
+.conversation-card .card-body {
+    position: relative;
+}
+
+.conversation-card::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    width: 4px;
+    background: linear-gradient(180deg, var(--hygge-green), var(--hygge-light-green));
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.conversation-card:hover::before {
+    opacity: 1;
+}
+
+.btn-hygge {
+    background: linear-gradient(135deg, var(--hygge-green), var(--hygge-light-green));
+    border: none;
+    color: white;
+    transition: all 0.3s ease;
+}
+
+.btn-hygge:hover {
+    transform: scale(1.05);
+    box-shadow: 0 4px 12px rgba(74, 124, 89, 0.3);
+    color: white;
 }
 
 .page-link {
     color: var(--hygge-green);
     border-color: #dee2e6;
+    transition: all 0.3s ease;
 }
 
 .page-item.active .page-link {
-    background-color: var(--hygge-green);
+    background: linear-gradient(135deg, var(--hygge-green), var(--hygge-light-green));
     border-color: var(--hygge-green);
 }
 
 .page-link:hover {
-    color: var(--hygge-light-green);
-    background-color: rgba(74, 124, 89, 0.1);
+    color: white;
+    background-color: var(--hygge-light-green);
     border-color: var(--hygge-light-green);
 }
 
@@ -210,13 +247,13 @@
     .col-md-4 {
         text-align: center !important;
     }
-    
+
     .d-flex.flex-column.gap-2 {
         flex-direction: row !important;
         justify-content: center;
         gap: 0.5rem !important;
     }
-    
+
     .d-flex.flex-column.gap-2 .btn {
         flex: 1;
     }
