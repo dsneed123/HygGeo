@@ -195,6 +195,37 @@ def save_user_profile(sender, instance, **kwargs):
         UserProfile.objects.create(user=instance)
 
 
+@receiver(post_save, sender=User)
+def send_welcome_notification(sender, instance, created, **kwargs):
+    """Send welcome notification to new users"""
+    if created:
+        # Create welcome notification
+        first_name = instance.first_name or instance.username
+
+        welcome_title = f"Welcome to HygGeo, {first_name}! 🌍"
+        welcome_message = (
+            f"Hi {first_name}! Welcome to HygGeo, your sustainable travel companion. "
+            "We're excited to have you join our community of eco-conscious travelers. "
+            "\n\n"
+            "Here's what you can do:\n"
+            "✈️ Explore sustainable experiences and destinations\n"
+            "🏨 Find eco-friendly accommodations\n"
+            "🗺️ Plan and share your trips\n"
+            "💬 Connect with fellow sustainable travelers\n"
+            "📝 Share your travel stories on our blog\n"
+            "\n"
+            "Start your journey by exploring our experiences or completing your travel survey!"
+        )
+
+        Notification.objects.create(
+            recipient=instance,
+            notification_type='system',
+            title=welcome_title,
+            message=welcome_message,
+            link='/experiences/'
+        )
+
+
 class Trip(models.Model):
     TRIP_STATUS_CHOICES = [
         ('planning', 'Planning'),
