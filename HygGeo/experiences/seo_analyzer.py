@@ -759,7 +759,7 @@ class SEOAnalyzer:
 
         return quick_wins[:3]  # Top 3 quick wins
 
-
+# Convenience function to use the SEOAnalyzer
 def get_seo_analysis_for_experience(experience_data: Dict) -> Dict:
     """
     Convenience function to get SEO analysis for an experience
