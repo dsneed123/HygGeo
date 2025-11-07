@@ -6,7 +6,7 @@
 {% block extra_head %}
 <!-- Preload LCP image for faster rendering - optimized quality for speed -->
 {% if experience.main_image %}
-<link rel="preload" as="image" href="{{ experience.main_image.url|cf_image:'format=webp,width=800,quality=25,fit=cover' }}" fetchpriority="high">
+<link rel="preload" as="image" href="{{ experience.main_image.url|cf_image:'format=webp,width=1200,quality=25,fit=cover' }}" fetchpriority="high">
 {% endif %}
 <!-- Preconnect to Cloudflare for faster image loading -->
 <link rel="preconnect" href="https://www.hyggeo.com" crossorigin>
@@ -28,9 +28,9 @@
 </script>
 
 {% block content %}
-<div class="container py-5">
+<div class="container py-5" style="max-width: 1200px;">
     <!-- Breadcrumb -->
-    <nav aria-label="breadcrumb" class="mb-4">
+    <nav aria-label="breadcrumb" class="mb-4" style="min-height: 40px;">
         <ol class="breadcrumb">
             <li class="breadcrumb-item"><a href="{% url 'index' %}">Home</a></li>
             <li class="breadcrumb-item"><a href="{% url 'experiences:experience_list' %}">Experiences</a></li>
@@ -45,19 +45,20 @@
             <!-- Hero Image -->
             <div class="card card-hygge mb-4">
                 {% if experience.main_image %}
-                <img src="{{ experience.main_image.url|cf_image:'format=webp,width=800,quality=25,fit=cover' }}"
+                <img src="{{ experience.main_image.url|cf_image:'format=webp,width=1200,quality=25,fit=cover' }}"
                      srcset="{{ experience.main_image.url|cf_image:'format=webp,width=800,quality=25,fit=cover' }} 800w,
-                             {{ experience.main_image.url|cf_image:'format=webp,width=1280,quality=30,fit=cover' }} 1280w"
-                     sizes="(max-width: 991px) 100vw, 66vw"
+                             {{ experience.main_image.url|cf_image:'format=webp,width=1200,quality=30,fit=cover' }} 1200w,
+                             {{ experience.main_image.url|cf_image:'format=webp,width=1600,quality=30,fit=cover' }} 1600w"
+                     sizes="(max-width: 767px) 100vw, (max-width: 991px) 100vw, 66vw"
                      class="card-img-top"
                      alt="{{ experience.title }} - {{ experience.destination.name }} sustainable travel experience"
                      title="{{ experience.title }} in {{ experience.destination.name }}"
-                     width="1280" height="400"
-                     style="height: 400px; object-fit: cover; content-visibility: auto;"
+                     width="1200" height="500"
+                     style="height: 500px; object-fit: cover; content-visibility: auto;"
                      fetchpriority="high"
                      decoding="async">
                 {% else %}
-                <div class="card-img-top bg-light d-flex align-items-center justify-content-center" style="height: 400px;">
+                <div class="card-img-top bg-light d-flex align-items-center justify-content-center" style="height: 500px;">
                     <i class="fas fa-image text-muted" style="font-size: 5rem;"></i>
                 </div>
                 {% endif %}
@@ -85,10 +86,10 @@
                     <!-- Categories & Type -->
                     <div class="mb-3">
                         <span class="badge bg-primary me-2">{{ experience.get_experience_type_display }}</span>
-                        <span class="badge bg-info me-2">{{ experience.get_group_size_display }}</span>
+                        <span class="badge bg-info text-dark me-2">{{ experience.get_group_size_display }}</span>
                         <span class="badge bg-secondary me-2">{{ experience.get_duration_display }}</span>
                         {% for category in experience.categories.all %}
-                        <span class="badge bg-outline-dark me-1">{{ category.name }}</span>
+                        <span class="badge me-1" style="background-color: var(--hygge-cream); color: #2d5a3d; border: 1px solid #2d5a3d;">{{ category.name }}</span>
                         {% endfor %}
                     </div>
                     
@@ -265,8 +266,8 @@
         <!-- Sidebar -->
         <div class="col-lg-4">
             <!-- Booking Card -->
-            <div class="card card-hygge mb-4 sticky-top" style="top: 20px; min-height: 450px;">
-                <div class="card-body p-4" style="min-height: 400px;">
+            <div class="card card-hygge mb-4 sticky-top" style="top: 20px; min-height: 450px; width: 100%; max-width: 100%;">
+                <div class="card-body p-4" style="min-height: 400px; width: 100%;">
                     <div class="text-center mb-4">
                         <h4 class="fw-bold mb-2" style="color: #2d5a3d;">{{ experience.get_price_display }}</h4>
                         <p class="mb-0" style="color: #666;">{{ experience.get_duration_display }}</p>
@@ -355,13 +356,13 @@
             
             <!-- Similar Experiences -->
             {% if similar_experiences %}
-            <div class="card card-hygge" style="min-height: 250px;">
-                <div class="card-header" style="background-color: var(--hygge-cream); border-bottom: none; min-height: 50px;">
+            <div class="card card-hygge" style="min-height: 250px; width: 100%; max-width: 100%;">
+                <div class="card-header" style="background-color: var(--hygge-cream); border-bottom: none; min-height: 50px; width: 100%;">
                     <h6 class="mb-0 fw-bold" style="color: var(--hygge-green);">
                         <i class="fas fa-compass me-2"></i>Similar Experiences
                     </h6>
                 </div>
-                <div class="card-body p-3" style="min-height: 200px;">
+                <div class="card-body p-3" style="min-height: 200px; width: 100%;">
                     {% for similar in similar_experiences %}
                     <div class="d-flex mb-3 {% if forloop.last %}mb-0{% endif %}">
                         {% if similar.main_image %}
@@ -397,35 +398,66 @@
 </div>
 
 <style>
-/* Prevent layout shifts with explicit sizing and aspect ratios */
+/* Critical: Prevent layout shifts with explicit sizing and aspect ratios */
 .card-img-top {
-    aspect-ratio: 1280 / 400;
+    aspect-ratio: 1200 / 500;
     object-fit: cover;
+    width: 100%;
+    height: 500px;
 }
 
 .card.h-100 .card-img-top {
     aspect-ratio: 400 / 150;
+    width: 100%;
+    height: 150px;
 }
 
-/* Reserve space for sidebar images */
+/* Reserve space for sidebar images - prevent shifts */
 .rounded.me-3 {
     aspect-ratio: 1 / 1;
+    width: 60px;
+    height: 60px;
+    flex-shrink: 0;
 }
 
 .rounded.me-2 {
     aspect-ratio: 1 / 1;
+    width: 40px;
+    height: 40px;
+    flex-shrink: 0;
 }
 
 /* Prevent shifts in main content area - improved containment */
 .card.card-hygge {
     contain: layout style paint;
     content-visibility: auto;
+    width: 100%;
 }
 
 .sticky-top {
     z-index: 1020;
     min-height: 400px;
-    contain: layout;
+    contain: layout style;
+    width: 100%;
+}
+
+/* Prevent column shifts */
+.col-lg-8, .col-lg-4 {
+    min-height: 1px;
+}
+
+/* Force layout stability */
+.row {
+    min-height: 1px;
+}
+
+/* Ensure cards don't shift */
+.card {
+    width: 100%;
+}
+
+.card-body {
+    width: 100%;
 }
 
 /* Improve text contrast and visibility */
