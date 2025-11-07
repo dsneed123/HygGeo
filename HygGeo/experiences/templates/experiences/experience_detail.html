@@ -291,7 +291,7 @@
                     </div>
 
                     <!-- Book Now Button - Primary CTA -->
-                    {% if experience.booking_required and experience.affiliate_link %}
+                    {% if experience.affiliate_link %}
                     <a href="{{ experience.affiliate_link }}"
                        target="_blank"
                        class="btn btn-success w-100 mb-3 book-now-btn"
@@ -300,6 +300,18 @@
                        style="font-size: 1.1rem; padding: 0.75rem;">
                         <i class="fas fa-external-link-alt me-2"></i>Book Now
                     </a>
+                    {% elif experience.provider.website %}
+                    <a href="{{ experience.provider.website }}"
+                       target="_blank"
+                       class="btn btn-success w-100 mb-3 book-now-btn"
+                       rel="noopener noreferrer"
+                       style="font-size: 1.1rem; padding: 0.75rem;">
+                        <i class="fas fa-external-link-alt me-2"></i>Check Availability
+                    </a>
+                    {% else %}
+                    <button class="btn btn-secondary w-100 mb-3" disabled style="font-size: 1.1rem; padding: 0.75rem;">
+                        <i class="fas fa-info-circle me-2"></i>Contact for Booking
+                    </button>
                     {% endif %}
 
                     <!-- Bookmark Button -->
