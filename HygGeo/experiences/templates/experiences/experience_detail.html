@@ -4,9 +4,9 @@
 {% block title %}{{ experience.title }} - {{ experience.destination.name }} | HygGeo{% endblock %}
 
 {% block extra_head %}
-<!-- Preload LCP image for faster rendering - mobile size for faster load -->
+<!-- Preload LCP image for faster rendering - optimized quality for speed -->
 {% if experience.main_image %}
-<link rel="preload" as="image" href="{{ experience.main_image.url|cf_image:'format=webp,width=800,quality=40,fit=cover' }}" imagesrcset="{{ experience.main_image.url|cf_image:'format=webp,width=800,quality=40,fit=cover' }} 800w, {{ experience.main_image.url|cf_image:'format=webp,width=1280,quality=40,fit=cover' }} 1280w" imagesizes="(max-width: 991px) 100vw, 66vw" fetchpriority="high" loading="eager">
+<link rel="preload" as="image" href="{{ experience.main_image.url|cf_image:'format=webp,width=800,quality=30,fit=cover' }}" fetchpriority="high">
 {% endif %}
 {% endblock %}
 
@@ -19,50 +19,9 @@
 {% block og_description %}{{ experience.short_description|default:experience.description|truncatewords:30 }}{% endblock %}
 {% block og_image %}{% if experience.main_image %}{{ experience.main_image.url }}{% else %}https://hyggeo.com/static/images/hyggeo-og-image.jpg{% endif %}{% endblock %}
 
-<!-- Structured Data for Search Engines -->
-<script type="application/ld+json">
-{
-  "@context": "https://schema.org",
-  "@type": "TouristAttraction",
-  "name": "{{ experience.title }}",
-  "description": "{{ experience.description|striptags|truncatewords:50 }}",
-  "url": "{{ request.build_absolute_uri }}",
-  {% if experience.main_image %}"image": "{{ request.scheme }}://{{ request.get_host }}{{ experience.main_image.url }}",{% endif %}
-  "address": {
-    "@type": "PostalAddress",
-    "addressLocality": "{{ experience.destination.name }}",
-    "addressCountry": "{{ experience.destination.country }}"
-  },
-  "geo": {
-    "@type": "GeoCoordinates"{% if experience.destination.latitude and experience.destination.longitude %},
-    "latitude": {{ experience.destination.latitude }},
-    "longitude": {{ experience.destination.longitude }}{% endif %}
-  },
-  "provider": {
-    "@type": "Organization",
-    "name": "{{ experience.provider.name }}",
-    "url": "{{ experience.provider.website }}"
-  },
-  "touristType": "{{ experience.get_experience_type_display }}",
-  "category": [{% for category in experience.categories.all %}"{{ category.name }}"{% if not forloop.last %},{% endif %}{% endfor %}],
-  "offers": {
-    "@type": "Offer",
-    "priceCurrency": "{{ experience.currency }}",
-    {% if experience.price_from %}"price": "{{ experience.price_from }}",{% endif %}
-    "availability": "https://schema.org/InStock",
-    "url": "{{ experience.affiliate_link|default:request.build_absolute_uri }}"
-  },
-  "aggregateRating": {
-    "@type": "AggregateRating",
-    "ratingValue": "{{ experience.sustainability_score }}",
-    "bestRating": "10",
-    "worstRating": "1",
-    "ratingCount": "1"
-  },
-  "keywords": "{{ experience.title }}, {{ experience.destination.name }}, {{ experience.destination.country }}, sustainable travel, hygge, eco-friendly, {{ experience.get_experience_type_display }}{% for category in experience.categories.all %}, {{ category.name }}{% endfor %}",
-  "isAccessibleForFree": {% if not experience.price_from %}true{% else %}false{% endif %},
-  "publicAccess": true
-}
+<!-- Structured Data - deferred to reduce initial parsing -->
+<script type="application/ld+json" defer>
+{"@context":"https://schema.org","@type":"TouristAttraction","name":"{{ experience.title }}","description":"{{ experience.description|striptags|truncatewords:30 }}","url":"{{ request.build_absolute_uri }}"{% if experience.main_image %},"image":"{{ request.scheme }}://{{ request.get_host }}{{ experience.main_image.url }}"{% endif %},"address":{"@type":"PostalAddress","addressLocality":"{{ experience.destination.name }}","addressCountry":"{{ experience.destination.country }}"},"offers":{"@type":"Offer","priceCurrency":"{{ experience.currency }}"{% if experience.price_from %},"price":"{{ experience.price_from }}"{% endif %},"availability":"https://schema.org/InStock"}}
 </script>
 
 {% block content %}
@@ -83,11 +42,11 @@
             <!-- Hero Image -->
             <div class="card card-hygge mb-4">
                 {% if experience.main_image %}
-                <img src="{{ experience.main_image.url|cf_image:'format=webp,width=800,quality=40,fit=cover' }}"
-                     srcset="{{ experience.main_image.url|cf_image:'format=webp,width=800,quality=40,fit=cover' }} 800w,
-                             {{ experience.main_image.url|cf_image:'format=webp,width=1280,quality=40,fit=cover' }} 1280w"
+                <img src="{{ experience.main_image.url|cf_image:'format=webp,width=800,quality=30,fit=cover' }}"
+                     srcset="{{ experience.main_image.url|cf_image:'format=webp,width=800,quality=30,fit=cover' }} 800w,
+                             {{ experience.main_image.url|cf_image:'format=webp,width=1280,quality=35,fit=cover' }} 1280w"
                      sizes="(max-width: 991px) 100vw, 66vw"
-                     class="card-img-top" alt="{{ experience.title }}" width="1280" height="400" style="height: 400px; object-fit: cover;" fetchpriority="high">
+                     class="card-img-top" alt="{{ experience.title }}" width="1280" height="400" style="height: 400px; object-fit: cover;" fetchpriority="high" decoding="async">
                 {% else %}
                 <div class="card-img-top bg-light d-flex align-items-center justify-content-center" style="height: 400px;">
                     <i class="fas fa-image text-muted" style="font-size: 5rem;"></i>
@@ -125,8 +84,8 @@
                     </div>
                     
                     <!-- Description -->
-                    
-                    <div class="mb-4">
+
+                    <div class="mb-4" style="color: #333;">
                         {{ experience.description|linebreaks }}
                     </div>
                     
@@ -138,7 +97,7 @@
                         </h5>
                         <div class="row">
                             {% for feature in experience.included_features %}
-                            <div class="col-md-6 mb-2">
+                            <div class="col-md-6 mb-2" style="color: #333;">
                                 <i class="fas fa-check text-success me-2"></i>{{ feature }}
                             </div>
                             {% endfor %}
@@ -152,7 +111,7 @@
                         <h5 class="fw-bold mb-3" style="color: var(--hygge-green);">
                             <i class="fas fa-info-circle me-2"></i>Requirements
                         </h5>
-                        <div class="p-3 rounded" style="background-color: var(--hygge-cream);">
+                        <div class="p-3 rounded" style="background-color: var(--hygge-cream); color: #333;">
                             {{ experience.requirements|linebreaks }}
                         </div>
                     </div>
@@ -164,7 +123,7 @@
                         <h5 class="fw-bold mb-3" style="color: var(--hygge-green);">
                             <i class="fas fa-backpack me-2"></i>What to Bring
                         </h5>
-                        <div class="p-3 rounded" style="background-color: var(--hygge-cream);">
+                        <div class="p-3 rounded" style="background-color: var(--hygge-cream); color: #333;">
                             {{ experience.what_to_bring|linebreaks }}
                         </div>
                     </div>
@@ -203,7 +162,7 @@
                     <div class="border-bottom pb-3 mb-3 {% if forloop.last %}border-bottom-0 mb-0 pb-0{% endif %}">
                         <div class="d-flex justify-content-between align-items-start mb-2">
                             <div>
-                                <h6 class="fw-bold mb-1">{{ review.title }}</h6>
+                                <h6 class="fw-bold mb-1" style="color: #333;">{{ review.title }}</h6>
                                 <small class="text-muted">by {{ review.user.first_name|default:review.user.username }} • {{ review.created_at|date:"M d, Y" }}</small>
                             </div>
                             <div class="text-end">
@@ -221,7 +180,7 @@
                                 {% endif %}
                             </div>
                         </div>
-                        <p class="mb-0">{{ review.content|truncatewords:50 }}</p>
+                        <p class="mb-0" style="color: #333;">{{ review.content|truncatewords:50 }}</p>
                     </div>
                     {% endfor %}
                     
@@ -249,20 +208,20 @@
                         <div class="col-md-6 mb-4">
                             <div class="card h-100">
                                 {% if blog.featured_image %}
-                                <img src="{{ blog.featured_image.url|cf_image:'format=webp,width=400,quality=25,fit=cover' }}" class="card-img-top" alt="{{ blog.title }}" width="400" height="150"
-                                     style="height: 150px; object-fit: cover;" loading="lazy">
+                                <img src="{{ blog.featured_image.url|cf_image:'format=webp,width=400,quality=20,fit=cover' }}" class="card-img-top" alt="{{ blog.title }}" width="400" height="150"
+                                     style="height: 150px; object-fit: cover;" loading="lazy" decoding="async">
                                 {% else %}
                                 <div style="height: 150px; background: var(--hygge-cream); display: flex; align-items: center; justify-content: center;">
                                     <i class="fas fa-book-open fa-2x text-muted"></i>
                                 </div>
                                 {% endif %}
                                 <div class="card-body">
-                                    <h6 class="card-title fw-bold">{{ blog.title }}</h6>
+                                    <h6 class="card-title fw-bold" style="color: #333;">{{ blog.title }}</h6>
                                     <p class="text-muted small mb-2">
                                         <i class="fas fa-user me-1"></i>{{ blog.author.username }}
                                         <span class="ms-2"><i class="fas fa-calendar me-1"></i>{{ blog.created_at|date:"M d, Y" }}</span>
                                     </p>
-                                    <p class="card-text small">{{ blog.excerpt|truncatewords:15|striptags }}</p>
+                                    <p class="card-text small" style="color: #333;">{{ blog.excerpt|truncatewords:15|striptags }}</p>
                                     <div class="text-muted small mb-2">
                                         <i class="fas fa-eye me-1"></i>{{ blog.views_count }} views
                                         <span class="ms-2"><i class="fas fa-heart me-1"></i>{{ blog.likes_count }} likes</span>
@@ -349,13 +308,13 @@
                     
                     <!-- Provider Info -->
                     <div class="border-top pt-3">
-                        <h6 class="fw-bold mb-2">Provided by</h6>
+                        <h6 class="fw-bold mb-2" style="color: #333;">Provided by</h6>
                         <div class="d-flex align-items-center">
                             {% if experience.provider.logo %}
-                            <img src="{{ experience.provider.logo.url|cf_image:'format=webp,width=80,quality=20,fit=cover' }}" alt="{{ experience.provider.name }}" class="rounded me-2" width="40" height="40" style="width: 40px; height: 40px; object-fit: cover;" loading="lazy">
+                            <img src="{{ experience.provider.logo.url|cf_image:'format=webp,width=80,quality=15,fit=cover' }}" alt="{{ experience.provider.name }}" class="rounded me-2" width="40" height="40" style="width: 40px; height: 40px; object-fit: cover;" loading="lazy" decoding="async">
                             {% endif %}
                             <div>
-                                <div class="fw-bold">{{ experience.provider.name }}</div>
+                                <div class="fw-bold" style="color: #333;">{{ experience.provider.name }}</div>
                                 {% if experience.provider.verified %}
                                 <small class="text-success">
                                     <i class="fas fa-check-circle me-1"></i>Verified Sustainable
@@ -384,7 +343,7 @@
                     {% for similar in similar_experiences %}
                     <div class="d-flex mb-3 {% if forloop.last %}mb-0{% endif %}">
                         {% if similar.main_image %}
-                        <img src="{{ similar.main_image.url|cf_image:'format=webp,width=120,quality=20,fit=cover' }}" alt="{{ similar.title }}" class="rounded me-3" width="60" height="60" style="width: 60px; height: 60px; object-fit: cover;" loading="lazy">
+                        <img src="{{ similar.main_image.url|cf_image:'format=webp,width=120,quality=15,fit=cover' }}" alt="{{ similar.title }}" class="rounded me-3" width="60" height="60" style="width: 60px; height: 60px; object-fit: cover;" loading="lazy" decoding="async">
                         {% else %}
                         <div class="bg-light rounded me-3 d-flex align-items-center justify-content-center" style="width: 60px; height: 60px;">
                             <i class="fas fa-image text-muted"></i>
@@ -396,8 +355,8 @@
                                     {{ similar.title|truncatewords:5 }}
                                 </a>
                             </h6>
-                            <p class="text-muted small mb-1">{{ similar.destination.name }}</p>
-                            <div class="fw-bold text-primary small">{{ similar.get_price_display }}</div>
+                            <p class="text-muted small mb-1" style="color: #666;">{{ similar.destination.name }}</p>
+                            <div class="fw-bold small" style="color: #2d5a3d;">{{ similar.get_price_display }}</div>
                         </div>
                     </div>
                     {% endfor %}
