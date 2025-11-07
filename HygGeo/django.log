@@ -17366,3 +17366,280 @@ INFO 2025-10-28 00:05:33,374 basehttp 428420 130266131580608 "POST /accounts/tra
 INFO 2025-10-28 00:05:33,568 basehttp 428420 130266131580608 "POST /accounts/track/click/ HTTP/1.1" 200 62
 INFO 2025-10-28 00:05:33,585 basehttp 428420 130266237499072 "GET /experiences/blogs/test-1/ HTTP/1.1" 200 60738
 INFO 2025-10-28 00:05:34,615 basehttp 428420 130266237499072 "POST /accounts/track/page-view/ HTTP/1.1" 200 68
+INFO 2025-11-06 23:54:44,861 autoreload 717924 134615961374848 Watching for file changes with StatReloader
+INFO 2025-11-06 23:56:46,805 autoreload 721575 126295181963392 Watching for file changes with StatReloader
+INFO 2025-11-07 00:07:04,033 autoreload 739779 131025104265344 Watching for file changes with StatReloader
+INFO 2025-11-07 00:07:14,082 autoreload 740130 134500016717952 Watching for file changes with StatReloader
+INFO 2025-11-07 00:07:21,183 basehttp 740130 134499937547968 "GET / HTTP/1.1" 200 126835
+INFO 2025-11-07 00:07:21,208 basehttp 740130 134499937547968 "GET /static/banner.webp HTTP/1.1" 200 198510
+INFO 2025-11-07 00:07:21,210 basehttp 740130 134499853661888 "GET /static/fonts/poppins-400-latin.woff2 HTTP/1.1" 200 7884
+INFO 2025-11-07 00:07:21,214 basehttp 740130 134499828483776 "GET /static/js/navbar.js HTTP/1.1" 200 2664
+INFO 2025-11-07 00:07:21,214 basehttp 740130 134499820091072 "GET /static/css/base.css HTTP/1.1" 200 5114
+INFO 2025-11-07 00:07:21,214 basehttp 740130 134499845269184 "GET /static/fonts/poppins-600-latin.woff2 HTTP/1.1" 200 8000
+INFO 2025-11-07 00:07:21,215 basehttp 740130 134499836876480 "GET /static/fonts/poppins-700-latin.woff2 HTTP/1.1" 200 7816
+INFO 2025-11-07 00:07:21,433 basehttp 740130 134499937547968 "GET /static/favicon.ico HTTP/1.1" 200 15406
+INFO 2025-11-07 00:07:21,434 basehttp 740130 134499811698368 "GET /static/site.webmanifest HTTP/1.1" 200 263
+INFO 2025-11-07 00:07:22,444 basehttp 740130 134499937547968 "POST /accounts/track/page-view/ HTTP/1.1" 200 68
+INFO 2025-11-07 00:07:23,050 basehttp 740130 134499937547968 "POST /accounts/track/click/ HTTP/1.1" 200 62
+INFO 2025-11-07 00:07:23,764 basehttp 740130 134499937547968 "POST /accounts/track/click/ HTTP/1.1" 200 62
+ERROR 2025-11-07 00:07:23,820 log 740130 134499820091072 Internal Server Error: /experiences/
+Traceback (most recent call last):
+  File "/home/dsneedy/.local/lib/python3.12/site-packages/django/core/handlers/exception.py", line 55, in inner
+    response = get_response(request)
+               ^^^^^^^^^^^^^^^^^^^^^
+  File "/home/dsneedy/.local/lib/python3.12/site-packages/django/core/handlers/base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/dsneedy/Desktop/HygGeo/HygGeo/experiences/views.py", line 293, in experience_list_view
+    return render(request, 'experiences/experience_list.html', context)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/dsneedy/.local/lib/python3.12/site-packages/django/shortcuts.py", line 25, in render
+    content = loader.render_to_string(template_name, context, request, using=using)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/dsneedy/.local/lib/python3.12/site-packages/django/template/loader.py", line 61, in render_to_string
+    template = get_template(template_name, using=using)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/dsneedy/.local/lib/python3.12/site-packages/django/template/loader.py", line 15, in get_template
+    return engine.get_template(template_name)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/dsneedy/.local/lib/python3.12/site-packages/django/template/backends/django.py", line 79, in get_template
+    return Template(self.engine.get_template(template_name), self)
+                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/dsneedy/.local/lib/python3.12/site-packages/django/template/engine.py", line 177, in get_template
+    template, origin = self.find_template(template_name)
+                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/dsneedy/.local/lib/python3.12/site-packages/django/template/engine.py", line 159, in find_template
+    template = loader.get_template(name, skip=skip)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/dsneedy/.local/lib/python3.12/site-packages/django/template/loaders/cached.py", line 57, in get_template
+    template = super().get_template(template_name, skip)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/dsneedy/.local/lib/python3.12/site-packages/django/template/loaders/base.py", line 28, in get_template
+    return Template(
+           ^^^^^^^^^
+  File "/home/dsneedy/.local/lib/python3.12/site-packages/django/template/base.py", line 154, in __init__
+    self.nodelist = self.compile_nodelist()
+                    ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/dsneedy/.local/lib/python3.12/site-packages/django/template/base.py", line 196, in compile_nodelist
+    nodelist = parser.parse()
+               ^^^^^^^^^^^^^^
+  File "/home/dsneedy/.local/lib/python3.12/site-packages/django/template/base.py", line 518, in parse
+    raise self.error(token, e)
+  File "/home/dsneedy/.local/lib/python3.12/site-packages/django/template/base.py", line 516, in parse
+    compiled_result = compile_func(self, token)
+                      ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/dsneedy/.local/lib/python3.12/site-packages/django/template/loader_tags.py", line 299, in do_extends
+    nodelist = parser.parse()
+               ^^^^^^^^^^^^^^
+  File "/home/dsneedy/.local/lib/python3.12/site-packages/django/template/base.py", line 518, in parse
+    raise self.error(token, e)
+  File "/home/dsneedy/.local/lib/python3.12/site-packages/django/template/base.py", line 516, in parse
+    compiled_result = compile_func(self, token)
+                      ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/dsneedy/.local/lib/python3.12/site-packages/django/template/loader_tags.py", line 234, in do_block
+    nodelist = parser.parse(("endblock",))
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/dsneedy/.local/lib/python3.12/site-packages/django/template/base.py", line 518, in parse
+    raise self.error(token, e)
+  File "/home/dsneedy/.local/lib/python3.12/site-packages/django/template/base.py", line 516, in parse
+    compiled_result = compile_func(self, token)
+                      ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/dsneedy/.local/lib/python3.12/site-packages/django/template/defaulttags.py", line 962, in do_if
+    nodelist = parser.parse(("elif", "else", "endif"))
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/dsneedy/.local/lib/python3.12/site-packages/django/template/base.py", line 489, in parse
+    raise self.error(token, e)
+  File "/home/dsneedy/.local/lib/python3.12/site-packages/django/template/base.py", line 487, in parse
+    filter_expression = self.compile_filter(token.contents)
+                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/dsneedy/.local/lib/python3.12/site-packages/django/template/base.py", line 609, in compile_filter
+    return FilterExpression(token, self)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/dsneedy/.local/lib/python3.12/site-packages/django/template/base.py", line 705, in __init__
+    filter_func = parser.find_filter(filter_name)
+                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/dsneedy/.local/lib/python3.12/site-packages/django/template/base.py", line 615, in find_filter
+    raise TemplateSyntaxError("Invalid filter: '%s'" % filter_name)
+django.template.exceptions.TemplateSyntaxError: Invalid filter: 'cf_image'
+ERROR 2025-11-07 00:07:23,823 basehttp 740130 134499820091072 "GET /experiences/ HTTP/1.1" 500 320037
+INFO 2025-11-07 00:07:23,907 basehttp 740130 134499820091072 "GET /favicon.ico HTTP/1.1" 301 0
+WARNING 2025-11-07 00:07:29,455 log 740130 134499820091072 Not Found: /.well-known/appspecific/com.chrome.devtools.json
+WARNING 2025-11-07 00:07:29,456 basehttp 740130 134499820091072 "GET /.well-known/appspecific/com.chrome.devtools.json HTTP/1.1" 404 5114
+INFO 2025-11-07 00:07:33,832 autoreload 740780 126112795943040 Watching for file changes with StatReloader
+ERROR 2025-11-07 00:07:36,181 log 740780 126112649705152 Internal Server Error: /experiences/
+Traceback (most recent call last):
+  File "/home/dsneedy/.local/lib/python3.12/site-packages/django/core/handlers/exception.py", line 55, in inner
+    response = get_response(request)
+               ^^^^^^^^^^^^^^^^^^^^^
+  File "/home/dsneedy/.local/lib/python3.12/site-packages/django/core/handlers/base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/dsneedy/Desktop/HygGeo/HygGeo/experiences/views.py", line 293, in experience_list_view
+    return render(request, 'experiences/experience_list.html', context)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/dsneedy/.local/lib/python3.12/site-packages/django/shortcuts.py", line 25, in render
+    content = loader.render_to_string(template_name, context, request, using=using)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/dsneedy/.local/lib/python3.12/site-packages/django/template/loader.py", line 61, in render_to_string
+    template = get_template(template_name, using=using)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/dsneedy/.local/lib/python3.12/site-packages/django/template/loader.py", line 15, in get_template
+    return engine.get_template(template_name)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/dsneedy/.local/lib/python3.12/site-packages/django/template/backends/django.py", line 79, in get_template
+    return Template(self.engine.get_template(template_name), self)
+                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/dsneedy/.local/lib/python3.12/site-packages/django/template/engine.py", line 177, in get_template
+    template, origin = self.find_template(template_name)
+                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/dsneedy/.local/lib/python3.12/site-packages/django/template/engine.py", line 159, in find_template
+    template = loader.get_template(name, skip=skip)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/dsneedy/.local/lib/python3.12/site-packages/django/template/loaders/cached.py", line 57, in get_template
+    template = super().get_template(template_name, skip)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/dsneedy/.local/lib/python3.12/site-packages/django/template/loaders/base.py", line 28, in get_template
+    return Template(
+           ^^^^^^^^^
+  File "/home/dsneedy/.local/lib/python3.12/site-packages/django/template/base.py", line 154, in __init__
+    self.nodelist = self.compile_nodelist()
+                    ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/dsneedy/.local/lib/python3.12/site-packages/django/template/base.py", line 196, in compile_nodelist
+    nodelist = parser.parse()
+               ^^^^^^^^^^^^^^
+  File "/home/dsneedy/.local/lib/python3.12/site-packages/django/template/base.py", line 518, in parse
+    raise self.error(token, e)
+  File "/home/dsneedy/.local/lib/python3.12/site-packages/django/template/base.py", line 516, in parse
+    compiled_result = compile_func(self, token)
+                      ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/dsneedy/.local/lib/python3.12/site-packages/django/template/loader_tags.py", line 299, in do_extends
+    nodelist = parser.parse()
+               ^^^^^^^^^^^^^^
+  File "/home/dsneedy/.local/lib/python3.12/site-packages/django/template/base.py", line 518, in parse
+    raise self.error(token, e)
+  File "/home/dsneedy/.local/lib/python3.12/site-packages/django/template/base.py", line 516, in parse
+    compiled_result = compile_func(self, token)
+                      ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/dsneedy/.local/lib/python3.12/site-packages/django/template/loader_tags.py", line 234, in do_block
+    nodelist = parser.parse(("endblock",))
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/dsneedy/.local/lib/python3.12/site-packages/django/template/base.py", line 518, in parse
+    raise self.error(token, e)
+  File "/home/dsneedy/.local/lib/python3.12/site-packages/django/template/base.py", line 516, in parse
+    compiled_result = compile_func(self, token)
+                      ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/dsneedy/.local/lib/python3.12/site-packages/django/template/defaulttags.py", line 962, in do_if
+    nodelist = parser.parse(("elif", "else", "endif"))
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/dsneedy/.local/lib/python3.12/site-packages/django/template/base.py", line 489, in parse
+    raise self.error(token, e)
+  File "/home/dsneedy/.local/lib/python3.12/site-packages/django/template/base.py", line 487, in parse
+    filter_expression = self.compile_filter(token.contents)
+                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/dsneedy/.local/lib/python3.12/site-packages/django/template/base.py", line 609, in compile_filter
+    return FilterExpression(token, self)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/dsneedy/.local/lib/python3.12/site-packages/django/template/base.py", line 705, in __init__
+    filter_func = parser.find_filter(filter_name)
+                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/dsneedy/.local/lib/python3.12/site-packages/django/template/base.py", line 615, in find_filter
+    raise TemplateSyntaxError("Invalid filter: '%s'" % filter_name)
+django.template.exceptions.TemplateSyntaxError: Invalid filter: 'cf_image'
+ERROR 2025-11-07 00:07:36,184 basehttp 740780 126112649705152 "GET /experiences/ HTTP/1.1" 500 321012
+INFO 2025-11-07 00:07:36,184 basehttp 740780 126112649705152 - Broken pipe from ('127.0.0.1', 41102)
+ERROR 2025-11-07 00:07:42,944 log 740780 126112649705152 Internal Server Error: /experiences/
+Traceback (most recent call last):
+  File "/home/dsneedy/.local/lib/python3.12/site-packages/django/core/handlers/exception.py", line 55, in inner
+    response = get_response(request)
+               ^^^^^^^^^^^^^^^^^^^^^
+  File "/home/dsneedy/.local/lib/python3.12/site-packages/django/core/handlers/base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/dsneedy/Desktop/HygGeo/HygGeo/experiences/views.py", line 293, in experience_list_view
+    return render(request, 'experiences/experience_list.html', context)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/dsneedy/.local/lib/python3.12/site-packages/django/shortcuts.py", line 25, in render
+    content = loader.render_to_string(template_name, context, request, using=using)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/dsneedy/.local/lib/python3.12/site-packages/django/template/loader.py", line 61, in render_to_string
+    template = get_template(template_name, using=using)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/dsneedy/.local/lib/python3.12/site-packages/django/template/loader.py", line 15, in get_template
+    return engine.get_template(template_name)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/dsneedy/.local/lib/python3.12/site-packages/django/template/backends/django.py", line 79, in get_template
+    return Template(self.engine.get_template(template_name), self)
+                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/dsneedy/.local/lib/python3.12/site-packages/django/template/engine.py", line 177, in get_template
+    template, origin = self.find_template(template_name)
+                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/dsneedy/.local/lib/python3.12/site-packages/django/template/engine.py", line 159, in find_template
+    template = loader.get_template(name, skip=skip)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/dsneedy/.local/lib/python3.12/site-packages/django/template/loaders/cached.py", line 57, in get_template
+    template = super().get_template(template_name, skip)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/dsneedy/.local/lib/python3.12/site-packages/django/template/loaders/base.py", line 28, in get_template
+    return Template(
+           ^^^^^^^^^
+  File "/home/dsneedy/.local/lib/python3.12/site-packages/django/template/base.py", line 154, in __init__
+    self.nodelist = self.compile_nodelist()
+                    ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/dsneedy/.local/lib/python3.12/site-packages/django/template/base.py", line 196, in compile_nodelist
+    nodelist = parser.parse()
+               ^^^^^^^^^^^^^^
+  File "/home/dsneedy/.local/lib/python3.12/site-packages/django/template/base.py", line 518, in parse
+    raise self.error(token, e)
+  File "/home/dsneedy/.local/lib/python3.12/site-packages/django/template/base.py", line 516, in parse
+    compiled_result = compile_func(self, token)
+                      ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/dsneedy/.local/lib/python3.12/site-packages/django/template/loader_tags.py", line 299, in do_extends
+    nodelist = parser.parse()
+               ^^^^^^^^^^^^^^
+  File "/home/dsneedy/.local/lib/python3.12/site-packages/django/template/base.py", line 518, in parse
+    raise self.error(token, e)
+  File "/home/dsneedy/.local/lib/python3.12/site-packages/django/template/base.py", line 516, in parse
+    compiled_result = compile_func(self, token)
+                      ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/dsneedy/.local/lib/python3.12/site-packages/django/template/loader_tags.py", line 234, in do_block
+    nodelist = parser.parse(("endblock",))
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/dsneedy/.local/lib/python3.12/site-packages/django/template/base.py", line 518, in parse
+    raise self.error(token, e)
+  File "/home/dsneedy/.local/lib/python3.12/site-packages/django/template/base.py", line 516, in parse
+    compiled_result = compile_func(self, token)
+                      ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/dsneedy/.local/lib/python3.12/site-packages/django/template/defaulttags.py", line 962, in do_if
+    nodelist = parser.parse(("elif", "else", "endif"))
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/dsneedy/.local/lib/python3.12/site-packages/django/template/base.py", line 489, in parse
+    raise self.error(token, e)
+  File "/home/dsneedy/.local/lib/python3.12/site-packages/django/template/base.py", line 487, in parse
+    filter_expression = self.compile_filter(token.contents)
+                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/dsneedy/.local/lib/python3.12/site-packages/django/template/base.py", line 609, in compile_filter
+    return FilterExpression(token, self)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/dsneedy/.local/lib/python3.12/site-packages/django/template/base.py", line 705, in __init__
+    filter_func = parser.find_filter(filter_name)
+                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/dsneedy/.local/lib/python3.12/site-packages/django/template/base.py", line 615, in find_filter
+    raise TemplateSyntaxError("Invalid filter: '%s'" % filter_name)
+django.template.exceptions.TemplateSyntaxError: Invalid filter: 'cf_image'
+ERROR 2025-11-07 00:07:42,947 basehttp 740780 126112649705152 "GET /experiences/ HTTP/1.1" 500 321012
+INFO 2025-11-07 00:07:42,948 basehttp 740780 126112649705152 - Broken pipe from ('127.0.0.1', 41110)
+INFO 2025-11-07 00:08:34,326 basehttp 740780 126112649705152 "GET /experiences/ HTTP/1.1" 200 75793
+INFO 2025-11-07 00:08:46,919 basehttp 740780 126112649705152 "GET /experiences/blogs/ HTTP/1.1" 200 64065
+INFO 2025-11-07 00:08:47,140 basehttp 740780 126112649705152 "GET /experiences/accommodations/ HTTP/1.1" 200 41230
+INFO 2025-11-07 00:08:47,315 basehttp 740780 126112649705152 "GET /experiences/destinations/ HTTP/1.1" 200 54189
+INFO 2025-11-07 00:09:34,193 basehttp 740130 134499820091072 "GET /experiences/ HTTP/1.1" 200 75793
+INFO 2025-11-07 00:09:34,216 basehttp 740130 134499820091072 "GET /static/fonts/poppins-400-latin.woff2 HTTP/1.1" 200 7884
+INFO 2025-11-07 00:09:34,217 basehttp 740130 134499937547968 "GET /static/fonts/poppins-600-latin.woff2 HTTP/1.1" 200 8000
+INFO 2025-11-07 00:09:34,217 basehttp 740130 134499836876480 "GET /static/fonts/poppins-700-latin.woff2 HTTP/1.1" 200 7816
+INFO 2025-11-07 00:09:34,218 basehttp 740130 134499845269184 "GET /static/js/navbar.js HTTP/1.1" 200 2664
+INFO 2025-11-07 00:09:34,218 basehttp 740130 134499828483776 "GET /static/css/base.css HTTP/1.1" 200 5114
+INFO 2025-11-07 00:09:34,400 basehttp 740130 134499820091072 "GET /static/favicon.ico HTTP/1.1" 200 15406
+INFO 2025-11-07 00:09:35,422 basehttp 740130 134499820091072 "POST /accounts/track/page-view/ HTTP/1.1" 200 68
+INFO 2025-11-07 00:09:36,179 basehttp 740130 134499820091072 "POST /accounts/track/click/ HTTP/1.1" 200 62
+INFO 2025-11-07 00:09:36,203 basehttp 740130 134499828483776 "GET /experiences/experience/qwvew/ HTTP/1.1" 200 49056
+INFO 2025-11-07 00:09:37,258 basehttp 740130 134499828483776 "POST /accounts/track/page-view/ HTTP/1.1" 200 68
