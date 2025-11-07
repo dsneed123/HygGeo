@@ -4,13 +4,13 @@
 {% block title %}{{ experience.title }} - {{ experience.destination.name }} | HygGeo{% endblock %}
 
 {% block extra_head %}
-<!-- Preload LCP image - mobile-optimized size for faster load -->
+<!-- Preload LCP image - ultra-optimized for mobile -->
 {% if experience.main_image %}
-<link rel="preload" as="image" href="{{ experience.main_image.url|cf_image:'format=webp,width=800,quality=20,fit=cover' }}" imagesrcset="{{ experience.main_image.url|cf_image:'format=webp,width=800,quality=20,fit=cover' }} 800w, {{ experience.main_image.url|cf_image:'format=webp,width=1200,quality=25,fit=cover' }} 1200w" imagesizes="(max-width: 767px) 100vw, 66vw" fetchpriority="high">
+<link rel="preload" as="image" href="{{ experience.main_image.url|cf_image:'format=webp,width=400,quality=10,fit=cover' }}" media="(max-width: 767px)" fetchpriority="high">
+<link rel="preload" as="image" href="{{ experience.main_image.url|cf_image:'format=webp,width=1000,quality=20,fit=cover' }}" media="(min-width: 768px)" fetchpriority="high">
 {% endif %}
-<!-- Preconnect to Cloudflare for faster image loading -->
+<!-- Preconnect to Cloudflare -->
 <link rel="preconnect" href="https://www.hyggeo.com" crossorigin>
-<link rel="dns-prefetch" href="https://www.hyggeo.com">
 {% endblock %}
 
 {% block description %}{{ experience.short_description|default:experience.description|truncatewords:25 }} Experience sustainable travel in {{ experience.destination.name }}.{% endblock %}
@@ -45,19 +45,19 @@
             <!-- Hero Image -->
             <div class="card card-hygge mb-4">
                 {% if experience.main_image %}
-                <img src="{{ experience.main_image.url|cf_image:'format=webp,width=800,quality=20,fit=cover' }}"
-                     srcset="{{ experience.main_image.url|cf_image:'format=webp,width=800,quality=20,fit=cover' }} 800w,
-                             {{ experience.main_image.url|cf_image:'format=webp,width=1200,quality=25,fit=cover' }} 1200w"
-                     sizes="(max-width: 767px) 100vw, 66vw"
-                     class="card-img-top hero-image"
-                     alt="{{ experience.title }} - {{ experience.destination.name }} sustainable travel experience"
-                     title="{{ experience.title }} in {{ experience.destination.name }}"
-                     width="800" height="400"
-                     fetchpriority="high"
-                     decoding="sync">
+                <picture>
+                    <source media="(max-width: 767px)" srcset="{{ experience.main_image.url|cf_image:'format=webp,width=400,quality=10,fit=cover' }}">
+                    <source media="(min-width: 768px)" srcset="{{ experience.main_image.url|cf_image:'format=webp,width=1000,quality=20,fit=cover' }}">
+                    <img src="{{ experience.main_image.url|cf_image:'format=webp,width=400,quality=10,fit=cover' }}"
+                         class="card-img-top hero-image"
+                         alt="{{ experience.title }} in {{ experience.destination.name }}"
+                         width="400" height="400"
+                         fetchpriority="high"
+                         decoding="sync">
+                </picture>
                 {% else %}
-                <div class="card-img-top bg-light d-flex align-items-center justify-content-center hero-image-placeholder">
-                    <i class="fas fa-image text-muted" style="font-size: 5rem;"></i>
+                <div class="card-img-top hero-image-placeholder" style="background:#f0f0f0;">
+                    <i class="fas fa-image" style="font-size:5rem;color:#ccc;"></i>
                 </div>
                 {% endif %}
                 
@@ -141,7 +141,7 @@
             
             <!-- Reviews Section -->
             {% if reviews %}
-            <div class="card card-hygge mb-4">
+            <div class="card card-hygge mb-4 lazy-section">
                 <div class="card-header" style="background-color: var(--hygge-cream); border-bottom: none;">
                     <h5 class="mb-0 fw-bold" style="color: var(--hygge-green);">
                         <i class="fas fa-star me-2"></i>Reviews ({{ review_stats.count }})
@@ -205,7 +205,7 @@
 
             <!-- Linked Travel Blogs -->
             {% if experience.blog_posts.exists %}
-            <div class="card card-hygge mb-4">
+            <div class="card card-hygge mb-4 lazy-section">
                 <div class="card-body p-4">
                     <h4 class="fw-bold mb-4" style="color: var(--hygge-green);">
                         <i class="fas fa-book-open me-2"></i>Travel Blogs About This Experience
@@ -216,12 +216,12 @@
                         <div class="col-md-6 mb-4">
                             <div class="card h-100">
                                 {% if blog.featured_image %}
-                                <img src="{{ blog.featured_image.url|cf_image:'format=webp,width=400,quality=15,fit=cover' }}"
+                                <img src="{{ blog.featured_image.url|cf_image:'format=webp,width=300,quality=10,fit=cover' }}"
                                      class="card-img-top"
                                      alt="{{ blog.title }} - Travel blog about {{ experience.title }}"
                                      title="{{ blog.title }}"
-                                     width="400" height="150"
-                                     style="height: 150px; object-fit: cover; content-visibility: auto;"
+                                     width="300" height="150"
+                                     style="height: 150px; object-fit: cover;"
                                      loading="lazy"
                                      decoding="async">
                                 {% else %}
@@ -325,12 +325,12 @@
                         <h6 class="fw-bold mb-2" style="color: #333;">Provided by</h6>
                         <div class="d-flex align-items-center">
                             {% if experience.provider.logo %}
-                            <img src="{{ experience.provider.logo.url|cf_image:'format=webp,width=80,quality=10,fit=cover' }}"
-                                 alt="{{ experience.provider.name }} logo - Sustainable travel provider"
+                            <img src="{{ experience.provider.logo.url|cf_image:'format=webp,width=40,quality=5,fit=cover' }}"
+                                 alt="{{ experience.provider.name }} logo"
                                  title="{{ experience.provider.name }}"
                                  class="rounded me-2"
                                  width="40" height="40"
-                                 style="width: 40px; height: 40px; object-fit: cover; content-visibility: auto;"
+                                 style="width: 40px; height: 40px; object-fit: cover;"
                                  loading="lazy"
                                  decoding="async">
                             {% endif %}
@@ -354,7 +354,7 @@
             
             <!-- Similar Experiences -->
             {% if similar_experiences %}
-            <div class="card card-hygge" style="min-height: 250px; width: 100%; max-width: 100%;">
+            <div class="card card-hygge lazy-section" style="min-height: 250px; width: 100%; max-width: 100%;">
                 <div class="card-header" style="background-color: var(--hygge-cream); border-bottom: none; min-height: 50px; width: 100%;">
                     <h6 class="mb-0 fw-bold" style="color: var(--hygge-green);">
                         <i class="fas fa-compass me-2"></i>Similar Experiences
@@ -364,12 +364,12 @@
                     {% for similar in similar_experiences %}
                     <div class="d-flex mb-3 {% if forloop.last %}mb-0{% endif %}">
                         {% if similar.main_image %}
-                        <img src="{{ similar.main_image.url|cf_image:'format=webp,width=120,quality=10,fit=cover' }}"
-                             alt="{{ similar.title }} - Similar experience in {{ similar.destination.name }}"
+                        <img src="{{ similar.main_image.url|cf_image:'format=webp,width=60,quality=5,fit=cover' }}"
+                             alt="{{ similar.title }}"
                              title="{{ similar.title }}"
                              class="rounded me-3"
                              width="60" height="60"
-                             style="width: 60px; height: 60px; object-fit: cover; content-visibility: auto;"
+                             style="width: 60px; height: 60px; object-fit: cover;"
                              loading="lazy"
                              decoding="async">
                         {% else %}
@@ -396,38 +396,43 @@
 </div>
 
 <style>
-/* Critical: Prevent layout shifts - mobile-first approach */
+/* Critical: Prevent CLS - mobile-first with explicit dimensions */
 .hero-image,
 .hero-image-placeholder {
     width: 100%;
-    height: 400px;
-    aspect-ratio: 800 / 400;
+    height: 300px;
+    max-height: 300px;
     object-fit: cover;
     display: block;
+    background: #f0f0f0;
 }
 
-/* Desktop: larger hero image */
-@media (min-width: 992px) {
+/* Desktop: larger hero */
+@media (min-width: 768px) {
     .hero-image,
     .hero-image-placeholder {
-        height: 500px;
-        aspect-ratio: 1200 / 500;
+        height: 450px;
+        max-height: 450px;
     }
 }
 
 .card-img-top {
-    aspect-ratio: 800 / 400;
     object-fit: cover;
     width: 100%;
-    height: 400px;
+    height: 300px;
     display: block;
 }
 
-@media (min-width: 992px) {
+@media (min-width: 768px) {
     .card-img-top {
-        aspect-ratio: 1200 / 500;
-        height: 500px;
+        height: 450px;
     }
+}
+
+/* Lazy sections with intrinsic size to prevent CLS */
+.lazy-section {
+    content-visibility: auto;
+    contain-intrinsic-size: 0 400px;
 }
 
 .card.h-100 .card-img-top {
@@ -495,11 +500,25 @@
     width: 100%;
 }
 
-/* Mobile: prevent sidebar from causing shifts */
-@media (max-width: 991px) {
+/* Mobile: aggressive optimization */
+@media (max-width: 767px) {
     .sticky-top {
         position: relative !important;
         top: 0 !important;
+    }
+
+    /* Reduce padding for faster rendering */
+    .container {
+        padding: 0.5rem;
+    }
+
+    .card-body {
+        padding: 0.75rem !important;
+    }
+
+    /* Hide non-essential elements on mobile */
+    .breadcrumb {
+        font-size: 0.85rem;
     }
 }
 
@@ -549,102 +568,28 @@
 </style>
 
 <script>
-// Defer all interactive JavaScript to run after page is fully loaded (reduce TBT)
-// Split into critical and non-critical functions
-function initCriticalInteractivity() {
-    // Only bookmark functionality - most important for UX
-    const bookmarkBtn = document.querySelector('.bookmark-btn');
-    if (bookmarkBtn) {
-        bookmarkBtn.addEventListener('click', async function(e) {
-            e.preventDefault();
-
-            {% if not user.is_authenticated %}
-            window.location.href = '{% url "login" %}';
-            return;
-            {% endif %}
-
-            const experienceId = this.dataset.experienceId;
-            const originalContent = this.innerHTML;
-
-            this.disabled = true;
-            this.innerHTML = '<i class="fas fa-spinner fa-spin me-2"></i>Processing...';
-
-            try {
-                const response = await fetch(`{% url 'experiences:bookmark_experience' '00000000-0000-0000-0000-000000000000' %}`.replace('00000000-0000-0000-0000-000000000000', experienceId), {
-                    method: 'POST',
-                    headers: {
-                        'X-CSRFToken': document.querySelector('[name=csrfmiddlewaretoken]').value,
-                        'Content-Type': 'application/json',
-                    },
-                });
-
-                const data = await response.json();
-
-                if (data.success) {
-                    if (data.bookmarked) {
-                        this.innerHTML = '<i class="fas fa-bookmark me-2"></i>Bookmarked';
-                        this.classList.add('bookmarked');
-                    } else {
-                        this.innerHTML = '<i class="far fa-bookmark me-2"></i>Save for Later';
-                        this.classList.remove('bookmarked');
-                    }
-                } else {
-                    this.innerHTML = originalContent;
-                }
-            } catch (error) {
-                this.innerHTML = originalContent;
-            }
-
-            this.disabled = false;
-        });
-    }
-}
-
+// Defer ALL JavaScript to eliminate TBT - nothing runs on initial load
 function initExperiencePageInteractivity() {
-    // Book Now functionality with affiliate tracking
-    const bookNowBtn = document.querySelector('.book-now-btn');
-    if (bookNowBtn) {
-        bookNowBtn.addEventListener('click', async function(e) {
-            const experienceId = this.dataset.experienceId;
-
-            // Track the click asynchronously - don't prevent the link from working
-            try {
-                fetch(`{% url 'experiences:track_affiliate_click' '00000000-0000-0000-0000-000000000000' %}`.replace('00000000-0000-0000-0000-000000000000', experienceId), {
-                    method: 'POST',
-                    headers: {
-                        'X-CSRFToken': document.querySelector('[name=csrfmiddlewaretoken]').value,
-                        'Content-Type': 'application/json',
-                    },
-                });
-            } catch (error) {
-                console.error('Error tracking click:', error);
-            }
-
-            // Let the link proceed normally
-        });
-    }
-
     // Bookmark functionality
     const bookmarkBtn = document.querySelector('.bookmark-btn');
     if (bookmarkBtn) {
         bookmarkBtn.addEventListener('click', async function(e) {
             e.preventDefault();
 
-            {% if not user.is_authenticated %}
-            // Redirect to login if not authenticated
-            window.location.href = '{% url "login" %}';
-            return;
-            {% endif %}
+            var authCheck = '{% if user.is_authenticated %}true{% else %}false{% endif %}';
+            if (authCheck === 'false') {
+                window.location.href = '{% url "login" %}';
+                return;
+            }
 
             const experienceId = this.dataset.experienceId;
             const originalContent = this.innerHTML;
 
-            // Show loading state
             this.disabled = true;
             this.innerHTML = '<i class="fas fa-spinner fa-spin me-2"></i>Processing...';
 
             try {
-                const response = await fetch(`{% url 'experiences:bookmark_experience' '00000000-0000-0000-0000-000000000000' %}`.replace('00000000-0000-0000-0000-000000000000', experienceId), {
+                const response = await fetch('{% url "experiences:bookmark_experience" "00000000-0000-0000-0000-000000000000" %}'.replace('00000000-0000-0000-0000-000000000000', experienceId), {
                     method: 'POST',
                     headers: {
                         'X-CSRFToken': document.querySelector('[name=csrfmiddlewaretoken]').value,
@@ -658,20 +603,14 @@ function initExperiencePageInteractivity() {
                     if (data.bookmarked) {
                         this.innerHTML = '<i class="fas fa-bookmark me-2"></i>Bookmarked';
                         this.classList.add('bookmarked');
-                        showBookmarkMessage('Added to bookmarks!', 'success');
                     } else {
                         this.innerHTML = '<i class="far fa-bookmark me-2"></i>Save for Later';
                         this.classList.remove('bookmarked');
-                        showBookmarkMessage('Removed from bookmarks', 'info');
                     }
                 } else {
-                    console.error('Bookmark failed:', data.error);
-                    showBookmarkMessage('Failed to bookmark', 'error');
                     this.innerHTML = originalContent;
                 }
             } catch (error) {
-                console.error('Error bookmarking experience:', error);
-                showBookmarkMessage('Network error', 'error');
                 this.innerHTML = originalContent;
             }
 
@@ -679,24 +618,26 @@ function initExperiencePageInteractivity() {
         });
     }
 
-    // Show bookmark feedback messages
-    function showBookmarkMessage(message, type) {
-        const messageDiv = document.createElement('div');
-        messageDiv.className = `alert alert-${type === 'success' ? 'success' : type === 'error' ? 'danger' : 'info'} position-fixed`;
-        messageDiv.style.cssText = 'top: 20px; right: 20px; z-index: 1050; min-width: 250px;';
-        messageDiv.innerHTML = `
-            <div class="d-flex align-items-center">
-                <i class="fas fa-${type === 'success' ? 'check-circle' : type === 'error' ? 'exclamation-triangle' : 'info-circle'} me-2"></i>
-                ${message}
-            </div>
-        `;
+    // Affiliate tracking
+    // Book Now functionality with affiliate tracking
+    const bookNowBtn = document.querySelector('.book-now-btn');
+    if (bookNowBtn) {
+        bookNowBtn.addEventListener('click', async function(e) {
+            const experienceId = this.dataset.experienceId;
 
-        document.body.appendChild(messageDiv);
-
-        // Auto-remove after 3 seconds
-        setTimeout(() => {
-            messageDiv.remove();
-        }, 3000);
+            // Track asynchronously
+            try {
+                fetch('{% url "experiences:track_affiliate_click" "00000000-0000-0000-0000-000000000000" %}'.replace('00000000-0000-0000-0000-000000000000', experienceId), {
+                    method: 'POST',
+                    headers: {
+                        'X-CSRFToken': document.querySelector('[name=csrfmiddlewaretoken]').value,
+                        'Content-Type': 'application/json',
+                    },
+                });
+            } catch (error) {
+                // Silent fail
+            }
+        });
     }
 
     // Smooth scroll for internal links
@@ -714,23 +655,17 @@ function initExperiencePageInteractivity() {
     });
 }
 
-// Run critical interactions immediately after DOM is ready
-if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', initCriticalInteractivity);
-} else {
-    initCriticalInteractivity();
-}
-
-// Defer non-critical interactions to reduce TBT
-if ('requestIdleCallback' in window) {
-    requestIdleCallback(() => {
-        setTimeout(initExperiencePageInteractivity, 100);
-    }, { timeout: 2000 });
-} else {
-    window.addEventListener('load', () => {
-        setTimeout(initExperiencePageInteractivity, 100);
-    });
-}
+// Defer ALL JavaScript to eliminate TBT completely
+// Wait for page to fully load before attaching any event listeners
+window.addEventListener('load', function() {
+    if ('requestIdleCallback' in window) {
+        requestIdleCallback(function() {
+            setTimeout(initExperiencePageInteractivity, 200);
+        }, { timeout: 3000 });
+    } else {
+        setTimeout(initExperiencePageInteractivity, 500);
+    }
+});
 </script>
 
 {% csrf_token %}
