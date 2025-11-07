@@ -6,6 +6,13 @@
 
 {% block keywords %}sustainable travel experiences, eco-friendly travel, responsible tourism, green travel, hygge travel, mindful travel, sustainable adventures, eco tourism{% endblock %}
 
+{% block extra_head %}
+<!-- Preload first experience card image if available -->
+{% if experiences.0.main_image %}
+<link rel="preload" as="image" href="{{ experiences.0.main_image.url|cf_image:'format=webp,width=400,quality=30,fit=cover' }}" fetchpriority="high">
+{% endif %}
+{% endblock %}
+
 <!-- Structured Data for Experience List -->
 <script type="application/ld+json">
 {
@@ -345,12 +352,14 @@
     font-size: 2.5rem;
     font-weight: 700;
     margin-bottom: 0.75rem;
+    text-shadow: 0 2px 4px rgba(0,0,0,0.3), 0 4px 12px rgba(0,0,0,0.4);
 }
 
 .hero-subtitle {
-    color: rgba(255, 255, 255, 0.9);
+    color: rgba(255, 255, 255, 0.95);
     font-size: 1.2rem;
     margin: 0;
+    text-shadow: 0 1px 3px rgba(0,0,0,0.3);
 }
 
 .search-filter-section {

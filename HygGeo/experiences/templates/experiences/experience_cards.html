@@ -3,7 +3,14 @@
 <div class="col-lg-4 col-md-6 experience-card-item">
     <div class="card card-hygge h-100">
         {% if experience.main_image %}
-        <img src="{{ experience.main_image.url|cf_image:'format=webp,width=400,quality=30,fit=cover' }}" class="card-img-top" alt="{{ experience.title }}" style="height: 200px; object-fit: cover;">
+        <img src="{{ experience.main_image.url|cf_image:'format=webp,width=400,quality=30,fit=cover' }}"
+             class="card-img-top"
+             alt="{{ experience.title }}"
+             style="height: 200px; object-fit: cover;"
+             loading="{% if forloop.first %}eager{% else %}lazy{% endif %}"
+             {% if forloop.first %}fetchpriority="high"{% endif %}
+             width="400"
+             height="200">
         {% else %}
         <div class="card-img-top bg-light d-flex align-items-center justify-content-center" style="height: 200px;">
             <i class="fas fa-image text-muted" style="font-size: 3rem;"></i>

@@ -3,6 +3,13 @@
 
 {% block title %}Sustainable Accommodations - HygGeo{% endblock %}
 
+{% block extra_head %}
+<!-- Preload first accommodation image if available -->
+{% if accommodations.0.main_image %}
+<link rel="preload" as="image" href="{{ accommodations.0.main_image.url|cf_image:'format=webp,width=400,quality=30,fit=cover' }}" fetchpriority="high">
+{% endif %}
+{% endblock %}
+
 {% block content %}
 <div class="container py-5">
     <!-- Header -->
@@ -82,8 +89,14 @@
             <div class="col-md-6 col-lg-4 mb-4">
                 <div class="card card-hygge h-100">
                     {% if accommodation.main_image %}
-                    <img src="{{ accommodation.main_image.url|cf_image:'format=webp,width=400,quality=30,fit=cover' }}" class="card-img-top" alt="{{ accommodation.name }}"
-                         style="height: 200px; object-fit: cover;">
+                    <img src="{{ accommodation.main_image.url|cf_image:'format=webp,width=400,quality=30,fit=cover' }}"
+                         class="card-img-top"
+                         alt="{{ accommodation.name }}"
+                         style="height: 200px; object-fit: cover;"
+                         loading="{% if forloop.first %}eager{% else %}lazy{% endif %}"
+                         {% if forloop.first %}fetchpriority="high"{% endif %}
+                         width="400"
+                         height="200">
                     {% else %}
                     <div style="height: 200px; background: var(--hygge-cream); display: flex; align-items: center; justify-content: center;">
                         <i class="fas fa-bed fa-3x text-muted"></i>

@@ -3,6 +3,13 @@
 
 {% block title %}{{ accommodation.name }} - HygGeo{% endblock %}
 
+{% block extra_head %}
+<!-- Preload main image for faster LCP -->
+{% if accommodation.main_image %}
+<link rel="preload" as="image" href="{{ accommodation.main_image.url|cf_image:'format=webp,width=1280,quality=40,fit=cover' }}" fetchpriority="high">
+{% endif %}
+{% endblock %}
+
 {% block content %}
 <div class="container py-5">
     <!-- Header -->
@@ -23,7 +30,7 @@
         <div class="col-lg-8">
             <!-- Accommodation Image -->
             {% if accommodation.main_image %}
-            <img src="{{ accommodation.main_image.url|cf_image:'format=webp,width=1280,quality=40,fit=cover' }}" class="img-fluid rounded mb-4" alt="{{ accommodation.name }}">
+            <img src="{{ accommodation.main_image.url|cf_image:'format=webp,width=1280,quality=40,fit=cover' }}" class="img-fluid rounded mb-4" alt="{{ accommodation.name }}" loading="eager" fetchpriority="high" width="1280" height="720">
             {% else %}
             <div class="mb-4 rounded" style="height: 400px; background: var(--hygge-cream); display: flex; align-items: center; justify-content: center;">
                 <i class="fas fa-bed fa-5x text-muted"></i>
@@ -81,7 +88,7 @@
                                 <div class="card h-100">
                                     {% if blog.featured_image %}
                                     <img src="{{ blog.featured_image.url|cf_image:'format=webp,width=400,quality=30,fit=cover' }}" class="card-img-top" alt="{{ blog.title }}"
-                                         style="height: 120px; object-fit: cover;">
+                                         style="height: 120px; object-fit: cover;" loading="lazy" width="400" height="120">
                                     {% else %}
                                     <div style="height: 120px; background: var(--hygge-cream); display: flex; align-items: center; justify-content: center;">
                                         <i class="fas fa-book-open fa-2x text-muted"></i>

@@ -7,6 +7,13 @@
 
 {% block keywords %}{{ destination.name }}, {{ destination.country }}, {{ destination.region }}, sustainable travel, hygge, eco-friendly travel, green tourism{% endblock %}
 
+{% block extra_head %}
+<!-- Preload hero image for faster LCP -->
+{% if destination.image %}
+<link rel="preload" as="image" href="{{ destination.image.url|cf_image:'format=webp,width=1280,quality=40,fit=cover' }}" fetchpriority="high">
+{% endif %}
+{% endblock %}
+
 {% block og_type %}place{% endblock %}
 {% block og_title %}Sustainable Travel in {{ destination.name }}, {{ destination.country }}{% endblock %}
 {% block og_description %}{{ destination.description|truncatewords:30 }}{% endblock %}
@@ -18,7 +25,7 @@
     <div class="hero-section">
         {% if destination.image %}
         <div class="hero-image-wrapper">
-            <img src="{{ destination.image.url|cf_image:'format=webp,width=1280,quality=40,fit=cover' }}" alt="{{ destination.name }}" class="hero-image">
+            <img src="{{ destination.image.url|cf_image:'format=webp,width=1280,quality=40,fit=cover' }}" alt="{{ destination.name }}" class="hero-image" loading="eager" fetchpriority="high" width="1280" height="720">
             <div class="hero-gradient-overlay"></div>
         </div>
         {% else %}
@@ -163,7 +170,7 @@
                             <div class="experience-card">
                                 {% if experience.main_image %}
                                 <div class="card-image">
-                                    <img src="{{ experience.main_image.url|cf_image:'format=webp,width=400,quality=30,fit=cover' }}" alt="{{ experience.title }}">
+                                    <img src="{{ experience.main_image.url|cf_image:'format=webp,width=400,quality=30,fit=cover' }}" alt="{{ experience.title }}" loading="lazy" width="400" height="200">
                                     <div class="card-badges">
                                         {% if experience.is_featured %}
                                         <span class="badge badge-featured">Featured</span>
@@ -395,7 +402,7 @@
     left: 0;
     width: 100%;
     height: 100%;
-    background: linear-gradient(135deg, rgba(0,0,0,0.6) 0%, rgba(0,0,0,0.3) 50%, rgba(0,0,0,0.4) 100%);
+    background: linear-gradient(135deg, rgba(0,0,0,0.75) 0%, rgba(0,0,0,0.5) 50%, rgba(0,0,0,0.65) 100%);
     z-index: 2;
 }
 
@@ -425,7 +432,7 @@
 
 /* Hero Breadcrumb */
 .hero-breadcrumb .breadcrumb {
-    background: rgba(255, 255, 255, 0.1);
+    background: rgba(0, 0, 0, 0.4);
     backdrop-filter: blur(10px);
     border-radius: 25px;
     padding: 8px 20px;
@@ -433,12 +440,14 @@
 }
 
 .hero-breadcrumb .breadcrumb-item a {
-    color: rgba(255, 255, 255, 0.9);
+    color: rgba(255, 255, 255, 0.95);
     text-decoration: none;
+    text-shadow: 0 1px 3px rgba(0,0,0,0.5);
 }
 
 .hero-breadcrumb .breadcrumb-item.active {
-    color: rgba(255, 255, 255, 0.7);
+    color: rgba(255, 255, 255, 0.85);
+    text-shadow: 0 1px 3px rgba(0,0,0,0.5);
 }
 
 /* Destination Title */
@@ -446,14 +455,15 @@
     font-size: 3.5rem;
     font-weight: 800;
     color: white;
-    text-shadow: 0 2px 10px rgba(0,0,0,0.3);
+    text-shadow: 0 2px 4px rgba(0,0,0,0.5), 0 4px 12px rgba(0,0,0,0.6), 0 0 20px rgba(0,0,0,0.4);
     margin-bottom: 0.5rem;
     line-height: 1.2;
 }
 
 .destination-location {
     font-size: 1.2rem;
-    color: rgba(255, 255, 255, 0.9);
+    color: rgba(255, 255, 255, 0.95);
+    text-shadow: 0 2px 8px rgba(0,0,0,0.6), 0 0 12px rgba(0,0,0,0.5);
     margin-bottom: 2rem;
 }
 
@@ -470,7 +480,7 @@
 }
 
 .rating-badge {
-    background: rgba(255, 255, 255, 0.15);
+    background: rgba(0, 0, 0, 0.4);
     backdrop-filter: blur(10px);
     border-radius: 15px;
     padding: 12px 20px;
@@ -478,6 +488,7 @@
     align-items: center;
     gap: 8px;
     color: white;
+    text-shadow: 0 1px 3px rgba(0,0,0,0.5);
 }
 
 .rating-badge i {
@@ -513,12 +524,13 @@
     display: flex;
     align-items: center;
     gap: 8px;
-    color: rgba(255, 255, 255, 0.9);
+    color: rgba(255, 255, 255, 0.95);
     font-size: 0.95rem;
+    text-shadow: 0 1px 3px rgba(0,0,0,0.5);
 }
 
 .stat-item i {
-    opacity: 0.8;
+    opacity: 0.9;
 }
 
 /* Content Sections */
