@@ -24,8 +24,6 @@
 .container{width:100%;max-width:1200px}
 .card{width:100%}
 .card-body{width:100%;color:#333}
-.row{width:100%}
-.col-lg-8,.col-lg-4{width:100%}
 @media (max-width:767px){.container{padding:0.5rem}.card-body{padding:0.75rem!important}}
 </style>
 {% endblock %}
@@ -56,11 +54,11 @@
         </ol>
     </nav>
 
-    <div class="row" style="width:100%;">
+    <div class="row">
         <!-- Main Content -->
-        <div class="col-lg-8" style="width:100%;">
+        <div class="col-lg-8">
             <!-- Hero Image -->
-            <div class="card card-hygge mb-4" style="width:100%;">
+            <div class="card card-hygge mb-4">
                 {% if experience.main_image %}
                 <picture>
                     <source media="(max-width: 767px)" srcset="{{ experience.main_image.url|cf_image:'format=webp,width=400,quality=5,fit=cover' }}">
@@ -79,8 +77,8 @@
                 </div>
                 {% endif %}
                 
-                <div class="card-body p-4" style="width:100%;">
-                    <div class="d-flex justify-content-between align-items-start mb-3" style="width:100%;">
+                <div class="card-body p-4">
+                    <div class="d-flex justify-content-between align-items-start mb-3">
                         <div>
                             <h1 class="h3 fw-bold mb-2" style="color: var(--hygge-green);">{{ experience.title }}</h1>
                             <p class="text-muted mb-0">
@@ -280,10 +278,10 @@
         </div>
 
         <!-- Sidebar -->
-        <div class="col-lg-4" style="width:100%;">
+        <div class="col-lg-4">
             <!-- Booking Card -->
-            <div class="card card-hygge mb-4 sticky-top" style="top:20px;min-height:450px;width:100%;max-width:100%;">
-                <div class="card-body p-4" style="min-height:400px;width:100%;">
+            <div class="card card-hygge mb-4 sticky-top" style="top:20px;">
+                <div class="card-body p-4">
                     <!-- Price -->
                     <div class="text-center mb-4">
                         <h4 class="fw-bold mb-2" style="color: #2d5a3d;">{{ experience.get_price_display }}</h4>
@@ -481,26 +479,17 @@
 
 /* Force layout stability - prevent all shifts */
 .container {
-    width: 100% !important;
-    max-width: 1200px !important;
-}
-
-.row {
-    width: 100% !important;
-    margin: 0 !important;
-}
-
-.col-lg-8, .col-lg-4 {
-    width: 100% !important;
+    width: 100%;
+    max-width: 1200px;
 }
 
 /* Ensure cards don't shift */
 .card {
-    width: 100% !important;
+    width: 100%;
 }
 
 .card-body {
-    width: 100% !important;
+    width: 100%;
 }
 
 /* Prevent breadcrumb from shifting */
@@ -511,12 +500,14 @@
 }
 
 /* Mobile: aggressive optimization */
-@media (max-width: 767px) {
+@media (max-width: 991px) {
     .sticky-top {
         position: relative !important;
         top: 0 !important;
     }
+}
 
+@media (max-width: 767px) {
     /* Reduce padding for faster rendering */
     .container {
         padding: 0.5rem !important;
