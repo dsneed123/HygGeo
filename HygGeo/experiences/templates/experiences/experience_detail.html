@@ -6,8 +6,11 @@
 {% block extra_head %}
 <!-- Preload LCP image for faster rendering - optimized quality for speed -->
 {% if experience.main_image %}
-<link rel="preload" as="image" href="{{ experience.main_image.url|cf_image:'format=webp,width=800,quality=30,fit=cover' }}" fetchpriority="high">
+<link rel="preload" as="image" href="{{ experience.main_image.url|cf_image:'format=webp,width=800,quality=25,fit=cover' }}" fetchpriority="high">
 {% endif %}
+<!-- Preconnect to Cloudflare for faster image loading -->
+<link rel="preconnect" href="https://www.hyggeo.com" crossorigin>
+<link rel="dns-prefetch" href="https://www.hyggeo.com">
 {% endblock %}
 
 {% block description %}{{ experience.short_description|default:experience.description|truncatewords:25 }} Experience sustainable travel in {{ experience.destination.name }}.{% endblock %}
@@ -42,11 +45,17 @@
             <!-- Hero Image -->
             <div class="card card-hygge mb-4">
                 {% if experience.main_image %}
-                <img src="{{ experience.main_image.url|cf_image:'format=webp,width=800,quality=30,fit=cover' }}"
-                     srcset="{{ experience.main_image.url|cf_image:'format=webp,width=800,quality=30,fit=cover' }} 800w,
-                             {{ experience.main_image.url|cf_image:'format=webp,width=1280,quality=35,fit=cover' }} 1280w"
+                <img src="{{ experience.main_image.url|cf_image:'format=webp,width=800,quality=25,fit=cover' }}"
+                     srcset="{{ experience.main_image.url|cf_image:'format=webp,width=800,quality=25,fit=cover' }} 800w,
+                             {{ experience.main_image.url|cf_image:'format=webp,width=1280,quality=30,fit=cover' }} 1280w"
                      sizes="(max-width: 991px) 100vw, 66vw"
-                     class="card-img-top" alt="{{ experience.title }}" width="1280" height="400" style="height: 400px; object-fit: cover;" fetchpriority="high" decoding="async">
+                     class="card-img-top"
+                     alt="{{ experience.title }} - {{ experience.destination.name }} sustainable travel experience"
+                     title="{{ experience.title }} in {{ experience.destination.name }}"
+                     width="1280" height="400"
+                     style="height: 400px; object-fit: cover; content-visibility: auto;"
+                     fetchpriority="high"
+                     decoding="async">
                 {% else %}
                 <div class="card-img-top bg-light d-flex align-items-center justify-content-center" style="height: 400px;">
                     <i class="fas fa-image text-muted" style="font-size: 5rem;"></i>
@@ -208,8 +217,14 @@
                         <div class="col-md-6 mb-4">
                             <div class="card h-100">
                                 {% if blog.featured_image %}
-                                <img src="{{ blog.featured_image.url|cf_image:'format=webp,width=400,quality=20,fit=cover' }}" class="card-img-top" alt="{{ blog.title }}" width="400" height="150"
-                                     style="height: 150px; object-fit: cover;" loading="lazy" decoding="async">
+                                <img src="{{ blog.featured_image.url|cf_image:'format=webp,width=400,quality=15,fit=cover' }}"
+                                     class="card-img-top"
+                                     alt="{{ blog.title }} - Travel blog about {{ experience.title }}"
+                                     title="{{ blog.title }}"
+                                     width="400" height="150"
+                                     style="height: 150px; object-fit: cover; content-visibility: auto;"
+                                     loading="lazy"
+                                     decoding="async">
                                 {% else %}
                                 <div style="height: 150px; background: var(--hygge-cream); display: flex; align-items: center; justify-content: center;">
                                     <i class="fas fa-book-open fa-2x text-muted"></i>
@@ -253,19 +268,19 @@
             <div class="card card-hygge mb-4 sticky-top" style="top: 20px; min-height: 450px;">
                 <div class="card-body p-4" style="min-height: 400px;">
                     <div class="text-center mb-4">
-                        <h4 class="fw-bold text-primary mb-2">{{ experience.get_price_display }}</h4>
-                        <p class="text-muted mb-0">{{ experience.get_duration_display }}</p>
+                        <h4 class="fw-bold mb-2" style="color: #2d5a3d;">{{ experience.get_price_display }}</h4>
+                        <p class="mb-0" style="color: #666;">{{ experience.get_duration_display }}</p>
                     </div>
                     
                     <!-- Sustainability & Hygge Scores -->
                     <div class="row mb-4">
                         <div class="col-6 text-center">
-                            <div class="fw-bold text-success">{{ experience.sustainability_score }}/10</div>
-                            <small class="text-muted">Sustainability</small>
+                            <div class="fw-bold" style="color: #198754;">{{ experience.sustainability_score }}/10</div>
+                            <small style="color: #666;">Sustainability</small>
                         </div>
                         <div class="col-6 text-center">
-                            <div class="fw-bold text-danger">{{ experience.hygge_factor }}/10</div>
-                            <small class="text-muted">Hygge Factor</small>
+                            <div class="fw-bold" style="color: #dc3545;">{{ experience.hygge_factor }}/10</div>
+                            <small style="color: #666;">Hygge Factor</small>
                         </div>
                     </div>
                     
@@ -274,13 +289,13 @@
                         {% if experience.carbon_neutral %}
                         <div class="d-flex align-items-center mb-2">
                             <i class="fas fa-leaf text-success me-2"></i>
-                            <span class="small">Carbon Neutral</span>
+                            <span class="small" style="color: #333;">Carbon Neutral</span>
                         </div>
                         {% endif %}
                         {% if experience.supports_local_community %}
                         <div class="d-flex align-items-center mb-2">
                             <i class="fas fa-hands-helping text-primary me-2"></i>
-                            <span class="small">Supports Local Community</span>
+                            <span class="small" style="color: #333;">Supports Local Community</span>
                         </div>
                         {% endif %}
                     </div>
@@ -311,7 +326,14 @@
                         <h6 class="fw-bold mb-2" style="color: #333;">Provided by</h6>
                         <div class="d-flex align-items-center">
                             {% if experience.provider.logo %}
-                            <img src="{{ experience.provider.logo.url|cf_image:'format=webp,width=80,quality=15,fit=cover' }}" alt="{{ experience.provider.name }}" class="rounded me-2" width="40" height="40" style="width: 40px; height: 40px; object-fit: cover;" loading="lazy" decoding="async">
+                            <img src="{{ experience.provider.logo.url|cf_image:'format=webp,width=80,quality=10,fit=cover' }}"
+                                 alt="{{ experience.provider.name }} logo - Sustainable travel provider"
+                                 title="{{ experience.provider.name }}"
+                                 class="rounded me-2"
+                                 width="40" height="40"
+                                 style="width: 40px; height: 40px; object-fit: cover; content-visibility: auto;"
+                                 loading="lazy"
+                                 decoding="async">
                             {% endif %}
                             <div>
                                 <div class="fw-bold" style="color: #333;">{{ experience.provider.name }}</div>
@@ -343,7 +365,14 @@
                     {% for similar in similar_experiences %}
                     <div class="d-flex mb-3 {% if forloop.last %}mb-0{% endif %}">
                         {% if similar.main_image %}
-                        <img src="{{ similar.main_image.url|cf_image:'format=webp,width=120,quality=15,fit=cover' }}" alt="{{ similar.title }}" class="rounded me-3" width="60" height="60" style="width: 60px; height: 60px; object-fit: cover;" loading="lazy" decoding="async">
+                        <img src="{{ similar.main_image.url|cf_image:'format=webp,width=120,quality=10,fit=cover' }}"
+                             alt="{{ similar.title }} - Similar experience in {{ similar.destination.name }}"
+                             title="{{ similar.title }}"
+                             class="rounded me-3"
+                             width="60" height="60"
+                             style="width: 60px; height: 60px; object-fit: cover; content-visibility: auto;"
+                             loading="lazy"
+                             decoding="async">
                         {% else %}
                         <div class="bg-light rounded me-3 d-flex align-items-center justify-content-center" style="width: 60px; height: 60px;">
                             <i class="fas fa-image text-muted"></i>
@@ -387,15 +416,31 @@
     aspect-ratio: 1 / 1;
 }
 
-/* Prevent shifts in main content area */
+/* Prevent shifts in main content area - improved containment */
 .card.card-hygge {
-    contain: layout;
+    contain: layout style paint;
+    content-visibility: auto;
 }
 
 .sticky-top {
     z-index: 1020;
-    /* Reserve minimum height to prevent shifts */
     min-height: 400px;
+    contain: layout;
+}
+
+/* Improve text contrast and visibility */
+.card-body {
+    color: #333;
+}
+
+.card-body p,
+.card-body div,
+.card-body span:not(.badge) {
+    color: inherit;
+}
+
+.text-muted {
+    color: #666 !important;
 }
 
 .bookmark-btn.bookmarked {
