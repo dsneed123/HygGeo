@@ -1,11 +1,11 @@
 {% extends 'base.html' %}
 {% load cloudflare_images %}
 
-{% block title %}Sustainable Travel Experiences - HygGeo{% endblock %}
+{% block title %}Unique Travel Experiences - Hidden Gems & Local Adventures | HygGeo{% endblock %}
 
-{% block description %}Discover sustainable travel experiences around the world. From eco-friendly adventures to mindful journeys, find responsible tourism options that embrace hygge principles.{% endblock %}
+{% block description %}Discover unique travel experiences and hidden gems in destinations worldwide. Find authentic local adventures, eco-friendly activities, weekend getaways, and unforgettable experiences curated for explorers.{% endblock %}
 
-{% block keywords %}sustainable travel experiences, eco-friendly travel, responsible tourism, green travel, hygge travel, mindful travel, sustainable adventures, eco tourism{% endblock %}
+{% block keywords %}travel experiences, unique experiences, hidden gems, local adventures, things to do, weekend trips, adventure travel, authentic travel, eco-friendly activities, travel ideas, bucket list experiences, offbeat destinations{% endblock %}
 
 {% block extra_head %}
 <!-- Preload first experience card image if available -->
@@ -19,8 +19,8 @@
 {
   "@context": "https://schema.org",
   "@type": "ItemList",
-  "name": "Sustainable Travel Experiences",
-  "description": "A curated list of sustainable travel experiences that embrace hygge and responsible tourism",
+  "name": "Unique Travel Experiences & Hidden Gems",
+  "description": "Curated collection of unique travel experiences, hidden gems, and authentic local adventures for explorers seeking unforgettable journeys",
   "url": "{{ request.build_absolute_uri }}",
   "numberOfItems": {{ total_count|default:0 }},
   "itemListElement": [
@@ -58,9 +58,9 @@
     <div class="container">
         <div class="hero-content">
             <h1 class="hero-title">
-                <i class="fas fa-leaf me-3"></i>Sustainable Travel Experiences
+                <i class="fas fa-compass me-3"></i>Unique Travel Experiences
             </h1>
-            <p class="hero-subtitle">Discover mindful travel experiences that embrace hygge and sustainability</p>
+            <p class="hero-subtitle">Discover authentic adventures and hidden gems around the world</p>
         </div>
     </div>
 </div>
