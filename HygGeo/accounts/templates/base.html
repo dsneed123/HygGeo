@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{% block title %}HygGeo - Unique Travel Experiences & Hidden Gems{% endblock %}</title>
+    <title>{% block title %}HygGeo - Hidden Gems & Unique Travel Experiences{% endblock %}</title>
 
     <!-- Favicon and Icon Links - Optimized, deduplicated -->
     <link rel="icon" type="image/png" sizes="192x192" href="{% static 'android-chrome-192x192.png' %}">
@@ -15,8 +15,8 @@
     <link rel="manifest" href="{% static 'site.webmanifest' %}">
 
     <!-- SEO Meta Tags -->
-    <meta name="description" content="{% block description %}Find unique travel experiences and hidden local gems worldwide. Discover authentic adventures, eco-friendly stays, and unforgettable destinations for mindful travelers.{% endblock %}">
-    <meta name="keywords" content="{% block keywords %}travel experiences, hidden gems, local travel, authentic travel, unique destinations, eco-friendly travel, adventure travel, sustainable tourism, weekend getaways, travel inspiration{% endblock %}">
+    <meta name="description" content="{% block description %}Discover hidden gems and unique travel experiences worldwide. Find authentic local adventures, secret spots, eco-friendly stays, and unforgettable destinations off the beaten path.{% endblock %}">
+    <meta name="keywords" content="{% block keywords %}hidden gems, travel experiences, local hidden gems, secret travel spots, unique destinations, authentic travel, adventure travel, offbeat travel, weekend getaways, travel inspiration, local experiences, undiscovered places{% endblock %}">
     <meta name="author" content="HygGeo">
     <meta name="robots" content="index, follow">
     <meta name="googlebot" content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1">
@@ -24,20 +24,20 @@
     <meta name="impact-site-verification" value="4776bca0-a9b7-4506-ab7c-5300ef9a72bb">
 
     <!-- Open Graph Meta Tags for Social Sharing -->
-    <meta property="og:title" content="{% block og_title %}HygGeo - Unique Travel Experiences & Hidden Gems{% endblock %}">
-    <meta property="og:description" content="{% block og_description %}Find unique travel experiences and hidden local gems worldwide. Discover authentic adventures, eco-friendly stays, and unforgettable destinations for mindful travelers.{% endblock %}">
+    <meta property="og:title" content="{% block og_title %}HygGeo - Hidden Gems & Unique Travel Experiences{% endblock %}">
+    <meta property="og:description" content="{% block og_description %}Discover hidden gems and unique travel experiences worldwide. Find authentic local adventures, secret spots, eco-friendly stays, and unforgettable destinations off the beaten path.{% endblock %}">
     <meta property="og:type" content="{% block og_type %}website{% endblock %}">
     <meta property="og:url" content="{% block og_url %}https://hyggeo.com{{ request.path }}{% endblock %}">
     <meta property="og:image" content="{% block og_image %}https://hyggeo.com{% static 'android-chrome-512x512.png' %}{% endblock %}">
     <meta property="og:image:width" content="512">
     <meta property="og:image:height" content="512">
-    <meta property="og:image:alt" content="{% block og_image_alt %}HygGeo - Unique Travel Experiences and Hidden Gems{% endblock %}">
+    <meta property="og:image:alt" content="{% block og_image_alt %}HygGeo - Hidden Gems and Unique Travel Experiences{% endblock %}">
     <meta property="og:site_name" content="HygGeo">
 
     <!-- Twitter Card Meta Tags -->
     <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:title" content="{% block twitter_title %}HygGeo - Unique Travel Experiences & Hidden Gems{% endblock %}">
-    <meta name="twitter:description" content="{% block twitter_description %}Find unique travel experiences and hidden local gems worldwide. Discover authentic adventures, eco-friendly stays, and unforgettable destinations for mindful travelers.{% endblock %}">
+    <meta name="twitter:title" content="{% block twitter_title %}HygGeo - Hidden Gems & Unique Travel Experiences{% endblock %}">
+    <meta name="twitter:description" content="{% block twitter_description %}Discover hidden gems and unique travel experiences worldwide. Find authentic local adventures, secret spots, eco-friendly stays, and unforgettable destinations off the beaten path.{% endblock %}">
     <meta name="twitter:image" content="{% block twitter_image %}https://hyggeo.com{% static 'android-chrome-512x512.png' %}{% endblock %}">
 
     <!-- Canonical URL -->
@@ -87,10 +87,10 @@
     {
       "@context": "https://schema.org",
       "@type": "WebSite",
-      "name": "HygGeo - Unique Travel Experiences & Hidden Gems",
+      "name": "HygGeo - Hidden Gems & Unique Travel Experiences",
       "alternateName": "HygGeo",
       "url": "{{ request.scheme }}://{{ request.get_host }}",
-      "description": "Find unique travel experiences and hidden local gems worldwide. Discover authentic adventures, eco-friendly stays, and unforgettable destinations.",
+      "description": "Discover hidden gems and unique travel experiences worldwide. Find authentic local adventures, secret spots, and unforgettable destinations off the beaten path.",
       "potentialAction": {
         "@type": "SearchAction",
         "target": {
@@ -103,7 +103,7 @@
         "@type": "Organization",
         "name": "HygGeo",
         "url": "{{ request.scheme }}://{{ request.get_host }}",
-        "description": "Travel platform for discovering unique experiences, hidden gems, and authentic local adventures worldwide",
+        "description": "Travel platform for discovering hidden gems, unique local experiences, and authentic adventures in destinations worldwide",
         "sameAs": [
           "{% block organization_social %}{% endblock %}"
         ]

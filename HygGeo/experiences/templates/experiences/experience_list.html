@@ -3,9 +3,9 @@
 
 {% block title %}Unique Travel Experiences - Hidden Gems & Local Adventures | HygGeo{% endblock %}
 
-{% block description %}Discover unique travel experiences and hidden gems in destinations worldwide. Find authentic local adventures, eco-friendly activities, weekend getaways, and unforgettable experiences curated for explorers.{% endblock %}
+{% block description %}Discover hidden gems and unique travel experiences in destinations worldwide. Find secret local spots, authentic adventures, offbeat activities, weekend getaways, and unforgettable experiences off the beaten path.{% endblock %}
 
-{% block keywords %}travel experiences, unique experiences, hidden gems, local adventures, things to do, weekend trips, adventure travel, authentic travel, eco-friendly activities, travel ideas, bucket list experiences, offbeat destinations{% endblock %}
+{% block keywords %}hidden gems, travel hidden gems, local hidden gems, secret spots, unique experiences, travel experiences, things to do, offbeat travel, authentic adventures, weekend trips, adventure travel, travel ideas, bucket list experiences, undiscovered destinations{% endblock %}
 
 {% block extra_head %}
 <!-- Preload first experience card image if available -->
@@ -19,8 +19,8 @@
 {
   "@context": "https://schema.org",
   "@type": "ItemList",
-  "name": "Unique Travel Experiences & Hidden Gems",
-  "description": "Curated collection of unique travel experiences, hidden gems, and authentic local adventures for explorers seeking unforgettable journeys",
+  "name": "Hidden Gems & Unique Travel Experiences",
+  "description": "Curated collection of hidden gems, secret spots, and unique local experiences for travelers seeking authentic adventures off the beaten path",
   "url": "{{ request.build_absolute_uri }}",
   "numberOfItems": {{ total_count|default:0 }},
   "itemListElement": [
@@ -58,9 +58,9 @@
     <div class="container">
         <div class="hero-content">
             <h1 class="hero-title">
-                <i class="fas fa-compass me-3"></i>Unique Travel Experiences
+                <i class="fas fa-compass me-3"></i>Hidden Gems & Unique Experiences
             </h1>
-            <p class="hero-subtitle">Discover authentic adventures and hidden gems around the world</p>
+            <p class="hero-subtitle">Discover secret spots and authentic adventures off the beaten path</p>
         </div>
     </div>
 </div>
