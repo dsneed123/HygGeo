@@ -10,7 +10,7 @@
 {% block extra_head %}
 <!-- Preload first experience card image if available -->
 {% if experiences.0.main_image %}
-<link rel="preload" as="image" href="{{ experiences.0.main_image.url|cf_image:'format=webp,width=400,quality=30,fit=cover' }}" fetchpriority="high">
+<link rel="preload" as="image" href="{{ experiences.0.main_image.url|cf_image:'format=webp,width=600,quality=80,fit=cover' }}" fetchpriority="high">
 {% endif %}
 {% endblock %}
 
