@@ -1,7 +1,11 @@
 {% extends 'base.html' %}
 {% load cloudflare_images %}
 
-{% block title %}Sustainable Destinations - HygGeo{% endblock %}
+{% block title %}Hidden Gem Destinations - Unique Travel Spots | HygGeo{% endblock %}
+
+{% block description %}Discover hidden gem destinations and unique travel spots worldwide. Find authentic locations, offbeat places, and sustainable destinations for unforgettable adventures.{% endblock %}
+
+{% block keywords %}hidden gem destinations, unique destinations, offbeat destinations, travel destinations, best places to visit, sustainable destinations, authentic travel spots, undiscovered places{% endblock %}
 
 {% block content %}
 <div class="container py-5">
@@ -15,6 +19,34 @@
             <p class="lead text-muted">
                 Discover mindful destinations that embrace sustainability and the hygge way of life
             </p>
+        </div>
+    </div>
+
+    <!-- Search Bar -->
+    <div class="row mb-4">
+        <div class="col-lg-8 mx-auto">
+            <form method="get" class="search-form">
+                <div class="input-group input-group-lg">
+                    <span class="input-group-text bg-white border-end-0">
+                        <i class="fas fa-search text-muted"></i>
+                    </span>
+                    <input
+                        type="text"
+                        name="search"
+                        class="form-control border-start-0"
+                        placeholder="Search destinations by name, country, or description..."
+                        value="{{ search_query }}"
+                        aria-label="Search destinations">
+                    <button class="btn btn-primary" type="submit">
+                        <i class="fas fa-search me-2"></i>Search
+                    </button>
+                    {% if search_query %}
+                    <a href="{% url 'experiences:destination_list' %}" class="btn btn-outline-secondary">
+                        <i class="fas fa-times me-2"></i>Clear
+                    </a>
+                    {% endif %}
+                </div>
+            </form>
         </div>
     </div>
 
@@ -34,6 +66,20 @@
             </div>
         </div>
     </div>
+
+    <!-- Search Results Info -->
+    {% if search_query %}
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="alert alert-info d-flex align-items-center">
+                <i class="fas fa-info-circle me-3"></i>
+                <div>
+                    <strong>Search Results:</strong> Found {{ destinations|length }} destination{{ destinations|length|pluralize }} matching "{{ search_query }}"
+                </div>
+            </div>
+        </div>
+    </div>
+    {% endif %}
 
     <!-- Destinations by Country -->
     {% if destinations_by_country %}

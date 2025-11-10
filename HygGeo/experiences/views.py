@@ -365,7 +365,22 @@ def experience_detail_view(request, slug):
     return render(request, 'experiences/experience_detail.html', context)
 
 def destination_list_view(request):
-    destinations = Destination.objects.all().order_by('name')
+    # Get all destinations and annotate with experience count
+    destinations = Destination.objects.all().annotate(
+        experience_count=Count('experiences', filter=Q(experiences__is_active=True))
+    )
+
+    # Search functionality
+    search_query = request.GET.get('search', '').strip()
+    if search_query:
+        destinations = destinations.filter(
+            Q(name__icontains=search_query) |
+            Q(country__icontains=search_query) |
+            Q(description__icontains=search_query)
+        )
+
+    # Order by most experiences first, then by name
+    destinations = destinations.order_by('-experience_count', 'name')
 
     # Group by country
     destinations_by_country = {}
@@ -376,8 +391,10 @@ def destination_list_view(request):
 
     context = {
         'destinations_by_country': destinations_by_country,
+        'destinations': destinations,  # Add flat list for search results
+        'search_query': search_query,
     }
-    
+
     return render(request, 'experiences/destination_list.html', context)
 
 

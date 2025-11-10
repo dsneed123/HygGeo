@@ -17763,3 +17763,13 @@ INFO 2025-11-09 22:59:39,664 basehttp 1363688 139695690348224 "GET /static/favic
 INFO 2025-11-09 22:59:40,675 basehttp 1363688 139695690348224 "POST /accounts/track/page-view/ HTTP/1.1" 200 68
 INFO 2025-11-09 22:59:45,907 basehttp 1363688 139695690348224 "POST /accounts/track/click/ HTTP/1.1" 200 62
 INFO 2025-11-09 22:59:46,988 basehttp 1363688 139695690348224 "POST /accounts/track/click/ HTTP/1.1" 200 62
+INFO 2025-11-09 23:07:46,308 autoreload 1194298 126903504109696 /home/dsneedy/Desktop/HygGeo/HygGeo/experiences/views.py changed, reloading.
+INFO 2025-11-09 23:07:46,775 autoreload 1408157 130544048537728 Watching for file changes with StatReloader
+INFO 2025-11-09 23:09:35,132 autoreload 1413385 134585131978880 Watching for file changes with StatReloader
+INFO 2025-11-09 23:09:36,070 basehttp 1413385 134585052559040 "GET /experiences/destinations/ HTTP/1.1" 200 55433
+INFO 2025-11-09 23:09:36,104 basehttp 1413385 134585034725056 "GET /static/fonts/poppins-700-latin.woff2 HTTP/1.1" 200 7816
+INFO 2025-11-09 23:09:36,105 basehttp 1413385 134585052559040 "GET /static/fonts/poppins-400-latin.woff2 HTTP/1.1" 200 7884
+INFO 2025-11-09 23:09:36,107 basehttp 1413385 134585044166336 "GET /static/fonts/poppins-600-latin.woff2 HTTP/1.1" 200 8000
+INFO 2025-11-09 23:09:36,107 basehttp 1413385 134585026332352 "GET /static/js/navbar.js HTTP/1.1" 200 2664
+INFO 2025-11-09 23:09:36,107 basehttp 1413385 134584679265984 "GET /static/css/base.css HTTP/1.1" 200 5114
+INFO 2025-11-09 23:09:37,253 basehttp 1413385 134585052559040 "POST /accounts/track/page-view/ HTTP/1.1" 200 68
