@@ -260,10 +260,10 @@
                                 <picture>
                                     <source
                                         type="image/webp"
-                                        srcset="{{ experience.main_image.url|cf_image:'format=webp,width=400,quality=80,fit=cover' }} 400w"
-                                        sizes="400px">
+                                        srcset="{{ experience.main_image.url|cf_image:'format=webp,width=600,quality=90,fit=cover' }} 1x,
+                                                {{ experience.main_image.url|cf_image:'format=webp,width=1200,quality=90,fit=cover' }} 2x">
                                     <img
-                                        src="{{ experience.main_image.url|cf_image:'format=webp,width=400,quality=80,fit=cover' }}"
+                                        src="{{ experience.main_image.url|cf_image:'format=webp,width=600,quality=90,fit=cover' }}"
                                         alt="{{ experience.title }}"
                                         loading="eager"
                                         width="240"
@@ -364,10 +364,10 @@
                                 <picture>
                                     <source
                                         type="image/webp"
-                                        srcset="{{ accommodation.main_image.url|cf_image:'format=webp,width=400,quality=80,fit=cover' }} 400w"
-                                        sizes="400px">
+                                        srcset="{{ accommodation.main_image.url|cf_image:'format=webp,width=600,quality=90,fit=cover' }} 1x,
+                                                {{ accommodation.main_image.url|cf_image:'format=webp,width=1200,quality=90,fit=cover' }} 2x">
                                     <img
-                                        src="{{ accommodation.main_image.url|cf_image:'format=webp,width=400,quality=80,fit=cover' }}"
+                                        src="{{ accommodation.main_image.url|cf_image:'format=webp,width=600,quality=90,fit=cover' }}"
                                         alt="{{ accommodation.name }}"
                                         loading="eager"
                                         width="240"

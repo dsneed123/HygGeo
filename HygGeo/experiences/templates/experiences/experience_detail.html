@@ -10,8 +10,8 @@
 
 <!-- Preload LCP image - extreme mobile optimization -->
 {% if experience.main_image %}
-<link rel="preload" as="image" href="{{ experience.main_image.url|cf_image:'format=webp,width=800,quality=75,fit=cover' }}" media="(max-width: 767px)" fetchpriority="high">
-<link rel="preload" as="image" href="{{ experience.main_image.url|cf_image:'format=webp,width=1600,quality=85,fit=cover' }}" media="(min-width: 768px)" fetchpriority="high">
+<link rel="preload" as="image" href="{{ experience.main_image.url|cf_image:'format=webp,width=1000,quality=90,fit=cover' }}" media="(max-width: 767px)" fetchpriority="high">
+<link rel="preload" as="image" href="{{ experience.main_image.url|cf_image:'format=webp,width=1920,quality=90,fit=cover' }}" media="(min-width: 768px)" fetchpriority="high">
 {% endif %}
 
 <!-- Inline critical CSS to prevent CLS -->
@@ -61,12 +61,14 @@
             <div class="card card-hygge mb-4">
                 {% if experience.main_image %}
                 <picture>
-                    <source media="(max-width: 767px)" srcset="{{ experience.main_image.url|cf_image:'format=webp,width=800,quality=75,fit=cover' }}">
-                    <source media="(min-width: 768px)" srcset="{{ experience.main_image.url|cf_image:'format=webp,width=1600,quality=85,fit=cover' }}">
-                    <img src="{{ experience.main_image.url|cf_image:'format=webp,width=800,quality=75,fit=cover' }}"
+                    <source media="(max-width: 767px)" srcset="{{ experience.main_image.url|cf_image:'format=webp,width=1000,quality=90,fit=cover' }} 1x,
+                                                                {{ experience.main_image.url|cf_image:'format=webp,width=2000,quality=90,fit=cover' }} 2x">
+                    <source media="(min-width: 768px)" srcset="{{ experience.main_image.url|cf_image:'format=webp,width=1920,quality=90,fit=cover' }} 1x,
+                                                               {{ experience.main_image.url|cf_image:'format=webp,width=3840,quality=90,fit=cover' }} 2x">
+                    <img src="{{ experience.main_image.url|cf_image:'format=webp,width=1000,quality=90,fit=cover' }}"
                          class="card-img-top hero-image"
                          alt="{{ experience.title }} in {{ experience.destination.name }}"
-                         width="800" height="300"
+                         width="1000" height="300"
                          fetchpriority="high"
                          decoding="sync"
                          style="width:100%;height:300px;display:block;">
