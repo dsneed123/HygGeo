@@ -702,3 +702,217 @@ class BlogComment(models.Model):
 
     def __str__(self):
         return f"Comment by {self.author.username} on {self.blog_post.title}"
+
+
+class Restaurant(models.Model):
+    """Local restaurants and dining experiences"""
+
+    RESTAURANT_TYPES = [
+        ('fine_dining', 'Fine Dining'),
+        ('casual_dining', 'Casual Dining'),
+        ('cafe', 'Cafe'),
+        ('bistro', 'Bistro'),
+        ('street_food', 'Street Food'),
+        ('food_truck', 'Food Truck'),
+        ('farm_to_table', 'Farm-to-Table'),
+        ('vegetarian', 'Vegetarian/Vegan'),
+        ('bakery', 'Bakery'),
+        ('bar', 'Bar/Pub'),
+    ]
+
+    CUISINE_TYPES = [
+        ('local', 'Local Cuisine'),
+        ('italian', 'Italian'),
+        ('french', 'French'),
+        ('asian', 'Asian'),
+        ('mediterranean', 'Mediterranean'),
+        ('american', 'American'),
+        ('mexican', 'Mexican'),
+        ('fusion', 'Fusion'),
+        ('international', 'International'),
+        ('seafood', 'Seafood'),
+    ]
+
+    BUDGET_RANGES = [
+        ('budget', 'Budget ($0-20/meal)'),
+        ('mid_range', 'Mid-range ($20-50/meal)'),
+        ('upscale', 'Upscale ($50-100/meal)'),
+        ('luxury', 'Luxury ($100+/meal)'),
+    ]
+
+    # Basic Info
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    name = models.CharField(max_length=200)
+    slug = models.SlugField(max_length=200, unique=True)
+    description = models.TextField()
+    short_description = models.CharField(max_length=300, help_text="Brief description for cards")
+
+    # Relationships
+    destination = models.ForeignKey(Destination, on_delete=models.CASCADE, related_name='restaurants')
+
+    # Restaurant Details
+    restaurant_type = models.CharField(max_length=20, choices=RESTAURANT_TYPES)
+    cuisine_type = models.CharField(max_length=20, choices=CUISINE_TYPES)
+    budget_range = models.CharField(max_length=20, choices=BUDGET_RANGES)
+
+    # Website & Contact
+    website = models.URLField(blank=True, help_text="Restaurant website or booking link")
+    phone = models.CharField(max_length=50, blank=True, help_text="Contact phone number")
+    email = models.EmailField(blank=True, help_text="Contact email")
+
+    # Sustainability & Hygge
+    sustainability_score = models.IntegerField(
+        validators=[MinValueValidator(1), MaxValueValidator(10)],
+        default=5,
+        help_text="Sustainability rating from 1-10"
+    )
+    hygge_factor = models.IntegerField(
+        validators=[MinValueValidator(1), MaxValueValidator(10)],
+        default=5,
+        help_text="How well this restaurant embodies hygge principles (1-10)"
+    )
+    carbon_neutral = models.BooleanField(default=False)
+    supports_local_community = models.BooleanField(default=False)
+    organic_ingredients = models.BooleanField(default=False, help_text="Uses organic ingredients")
+    locally_sourced = models.BooleanField(default=False, help_text="Locally sourced ingredients")
+
+    # Location
+    address = models.TextField(blank=True)
+    latitude = models.DecimalField(max_digits=9, decimal_places=6, null=True, blank=True)
+    longitude = models.DecimalField(max_digits=9, decimal_places=6, null=True, blank=True)
+
+    # Media
+    main_image = models.ImageField(
+        storage=s3_storage,
+        upload_to='restaurants/',
+        null=True,
+        blank=True
+    )
+    gallery_images = models.JSONField(default=list, blank=True, help_text="List of image URLs")
+
+    # Menu & Features
+    signature_dishes = models.JSONField(default=list, help_text="List of signature dishes")
+    dietary_options = models.JSONField(default=list, help_text="Dietary options (vegan, gluten-free, etc.)")
+    amenities = models.JSONField(default=list, help_text="Amenities (outdoor seating, wifi, etc.)")
+
+    # Hours
+    opening_hours = models.TextField(blank=True, help_text="Restaurant opening hours")
+
+    # SEO & Meta
+    meta_title = models.CharField(max_length=60, blank=True)
+    meta_description = models.CharField(max_length=160, blank=True)
+
+    # Ratings (calculated from user ratings)
+    average_rating = models.DecimalField(max_digits=3, decimal_places=2, default=0, help_text="Average user rating")
+    rating_count = models.IntegerField(default=0, help_text="Number of ratings")
+
+    # Status & Admin
+    is_featured = models.BooleanField(default=False)
+    is_active = models.BooleanField(default=True)
+    admin_notes = models.TextField(blank=True, help_text="Internal notes for admin")
+
+    # Timestamps
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        ordering = ['-created_at']
+
+    def __str__(self):
+        return f"{self.name} - {self.destination.name}"
+
+    def get_absolute_url(self):
+        return reverse('experiences:restaurant_detail', kwargs={'slug': self.slug})
+
+    def get_price_display(self):
+        """Return formatted price range"""
+        if self.budget_range:
+            budget_display = dict(self.BUDGET_RANGES).get(self.budget_range, self.budget_range)
+            return budget_display
+        else:
+            return "Price varies"
+
+    def update_average_rating(self):
+        """Recalculate average rating from all user ratings"""
+        from django.db.models import Avg, Count
+
+        # Use aggregation for efficiency
+        result = self.ratings.aggregate(
+            avg_rating=Avg('rating'),
+            count=Count('id')
+        )
+
+        self.average_rating = result['avg_rating'] or 0
+        self.rating_count = result['count'] or 0
+        self.save(update_fields=['average_rating', 'rating_count'])
+
+    def get_sustainability_badge(self):
+        """Return sustainability badge level"""
+        if self.sustainability_score >= 8:
+            return {'level': 'excellent', 'color': '#000000', 'text': 'Excellent'}
+        elif self.sustainability_score >= 6:
+            return {'level': 'good', 'color': '#000000', 'text': 'Good'}
+        else:
+            return {'level': 'fair', 'color': '#000000', 'text': 'Fair'}
+
+    def get_restaurant_type_display(self):
+        """Return human-readable restaurant type"""
+        return dict(self.RESTAURANT_TYPES).get(self.restaurant_type, self.restaurant_type)
+
+    def get_cuisine_type_display(self):
+        """Return human-readable cuisine type"""
+        return dict(self.CUISINE_TYPES).get(self.cuisine_type, self.cuisine_type)
+
+
+class RestaurantRating(models.Model):
+    """User ratings for restaurants"""
+
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    restaurant = models.ForeignKey(Restaurant, on_delete=models.CASCADE, related_name='ratings')
+    user = models.ForeignKey('auth.User', on_delete=models.CASCADE, related_name='restaurant_ratings')
+    rating = models.IntegerField(
+        validators=[MinValueValidator(1), MaxValueValidator(5)],
+        help_text="Rating from 1-5 stars"
+    )
+    review_text = models.TextField(blank=True, help_text="Optional review text")
+
+    # Timestamps
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        ordering = ['-created_at']
+        unique_together = ['restaurant', 'user']  # One rating per user per restaurant
+
+    def __str__(self):
+        return f"{self.user.username} - {self.restaurant.name} ({self.rating}/5)"
+
+    def save(self, *args, **kwargs):
+        super().save(*args, **kwargs)
+        # Update restaurant's average rating immediately after saving
+        self.restaurant.update_average_rating()
+
+    def delete(self, *args, **kwargs):
+        restaurant = self.restaurant
+        super().delete(*args, **kwargs)
+        # Update restaurant's average rating immediately after deletion
+        restaurant.update_average_rating()
+
+
+class RestaurantComment(models.Model):
+    """User comments on restaurants"""
+
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    restaurant = models.ForeignKey(Restaurant, on_delete=models.CASCADE, related_name='comments')
+    user = models.ForeignKey('auth.User', on_delete=models.CASCADE, related_name='restaurant_comments')
+    comment = models.TextField()
+
+    # Timestamps
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        ordering = ['-created_at']
+
+    def __str__(self):
+        return f"{self.user.username} on {self.restaurant.name}"

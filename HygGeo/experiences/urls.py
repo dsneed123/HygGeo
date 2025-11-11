@@ -58,6 +58,15 @@ urlpatterns = [
     path('blogs/<slug:slug>/delete/', views.delete_blog, name='delete_blog'),
     path('blogs/<slug:slug>/like/', views.like_blog, name='like_blog'),
 
+    # Restaurants (Local Eats)
+    path('restaurants/', views.restaurant_list_view, name='restaurant_list'),
+    path('restaurants/add/', views.add_restaurant, name='add_restaurant'),
+    path('restaurant/<slug:slug>/', views.restaurant_detail_view, name='restaurant_detail'),
+    path('restaurant/<slug:slug>/edit/', views.edit_restaurant, name='edit_restaurant'),
+    path('restaurant/<slug:slug>/delete/', views.delete_restaurant, name='delete_restaurant'),
+    path('restaurant/<slug:slug>/rate/', views.rate_restaurant, name='rate_restaurant'),
+    path('restaurant/<slug:slug>/comment/', views.comment_restaurant, name='comment_restaurant'),
+
     # AJAX endpoints
     path('api/track-click/<uuid:experience_id>/', views.track_affiliate_click, name='track_affiliate_click'),
     path('api/bookmark/<uuid:experience_id>/', views.bookmark_experience, name='bookmark_experience'),

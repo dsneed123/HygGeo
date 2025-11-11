@@ -13,13 +13,14 @@ from django.contrib.auth.decorators import user_passes_test
 from django.utils.html import escape
 import re
 from accounts.models import TravelSurvey
-from experiences.forms import ExperienceForm, DestinationForm, ExperienceTypeForm, CategoryForm, AccommodationForm, TravelBlogForm, BlogCommentForm
+from experiences.forms import ExperienceForm, DestinationForm, ExperienceTypeForm, CategoryForm, AccommodationForm, TravelBlogForm, BlogCommentForm, RestaurantForm, RestaurantRatingForm, RestaurantCommentForm
 from .forms import ProviderForm  # add this import at top
 from django.utils.text import slugify
 from collections import defaultdict
 from .models import (
     Experience, Destination, Category, Provider,
-    UserRecommendation, ExperienceReview, BookingTracking, ExperienceType, Accommodation, TravelBlog, BlogComment
+    UserRecommendation, ExperienceReview, BookingTracking, ExperienceType, Accommodation, TravelBlog, BlogComment, Restaurant,
+    RestaurantRating, RestaurantComment
 )
 from .recommendation_engine import RecommendationEngine
 import random
@@ -1684,3 +1685,278 @@ def like_blog(request, slug):
         return JsonResponse({'liked': liked, 'likes_count': blog.likes_count})
 
     return redirect('experiences:blog_detail', slug=slug)
+
+# ============= RESTAURANT VIEWS =============
+
+def restaurant_list_view(request):
+    """Browse all restaurants with filtering"""
+    restaurants = Restaurant.objects.filter(is_active=True).select_related(
+        'destination'
+    )
+
+    # Filtering
+    destination_slug = request.GET.get('destination')
+    restaurant_type = request.GET.get('type')
+    cuisine_type = request.GET.get('cuisine')
+    budget_range = request.GET.get('budget')
+    search_query = request.GET.get('search')
+
+    if destination_slug:
+        restaurants = restaurants.filter(destination__slug=destination_slug)
+    if restaurant_type:
+        restaurants = restaurants.filter(restaurant_type=restaurant_type)
+    if cuisine_type:
+        restaurants = restaurants.filter(cuisine_type=cuisine_type)
+    if budget_range:
+        restaurants = restaurants.filter(budget_range=budget_range)
+    if search_query:
+        restaurants = restaurants.filter(
+            Q(name__icontains=search_query) |
+            Q(description__icontains=search_query) |
+            Q(destination__name__icontains=search_query)
+        )
+
+    # Sorting
+    sort_by = request.GET.get('sort', 'newest')
+    if sort_by == 'price_low':
+        restaurants = restaurants.order_by('average_meal_price')
+    elif sort_by == 'price_high':
+        restaurants = restaurants.order_by('-average_meal_price')
+    elif sort_by == 'sustainability':
+        restaurants = restaurants.order_by('-sustainability_score')
+    elif sort_by == 'hygge':
+        restaurants = restaurants.order_by('-hygge_factor')
+    else:
+        restaurants = restaurants.order_by('-created_at')
+
+    # Pagination
+    paginator = Paginator(restaurants, 12)
+    page_number = request.GET.get('page')
+    page_obj = paginator.get_page(page_number)
+
+    context = {
+        'restaurants': page_obj,
+        'destinations': Destination.objects.all(),
+        'restaurant_types': Restaurant.RESTAURANT_TYPES,
+        'cuisine_types': Restaurant.CUISINE_TYPES,
+        'budget_ranges': Restaurant.BUDGET_RANGES,
+        'active_filters': {
+            'destination': destination_slug or '',
+            'type': restaurant_type or '',
+            'cuisine': cuisine_type or '',
+            'budget': budget_range or '',
+            'search': search_query or '',
+            'sort': sort_by or 'newest',
+        }
+    }
+
+    return render(request, 'experiences/restaurant_list.html', context)
+
+def restaurant_detail_view(request, slug):
+    """Detailed view of a restaurant"""
+    restaurant = get_object_or_404(
+        Restaurant.objects.select_related('destination'),
+        slug=slug,
+        is_active=True
+    )
+
+    # Get similar restaurants
+    similar_restaurants = Restaurant.objects.filter(
+        is_active=True,
+        destination=restaurant.destination
+    ).exclude(id=restaurant.id)[:4]
+
+    # Get ratings and comments
+    ratings = restaurant.ratings.select_related('user').order_by('-created_at')
+    comments = restaurant.comments.select_related('user').order_by('-created_at')
+
+    # Check if user has already rated
+    user_rating = None
+    if request.user.is_authenticated:
+        user_rating = restaurant.ratings.filter(user=request.user).first()
+
+    # Forms for rating and commenting
+    rating_form = RestaurantRatingForm(instance=user_rating) if user_rating else RestaurantRatingForm()
+    comment_form = RestaurantCommentForm()
+
+    context = {
+        'restaurant': restaurant,
+        'similar_restaurants': similar_restaurants,
+        'ratings': ratings,
+        'comments': comments,
+        'user_rating': user_rating,
+        'rating_form': rating_form,
+        'comment_form': comment_form,
+    }
+
+    return render(request, 'experiences/restaurant_detail.html', context)
+
+@user_passes_test(lambda u: u.is_staff)
+def add_restaurant(request):
+    """Add a new restaurant"""
+    if request.method == "POST":
+        form = RestaurantForm(request.POST, request.FILES)
+        if form.is_valid():
+            try:
+                restaurant = form.save(commit=False)
+
+                # Auto-generate slug if not provided
+                if not restaurant.slug:
+                    base_slug = slugify(restaurant.name)
+                    slug = base_slug
+                    counter = 1
+
+                    # Ensure slug is unique
+                    while Restaurant.objects.filter(slug=slug).exists():
+                        slug = f"{base_slug}-{counter}"
+                        counter += 1
+
+                    restaurant.slug = slug
+
+                # Handle JSON fields
+                for field_name in ['signature_dishes', 'dietary_options', 'amenities']:
+                    field_str = request.POST.get(field_name, '[]')
+                    try:
+                        setattr(restaurant, field_name, json.loads(field_str))
+                    except json.JSONDecodeError:
+                        # If not valid JSON, convert comma-separated to list
+                        setattr(restaurant, field_name, [item.strip() for item in field_str.split(',') if item.strip()])
+
+                restaurant.save()
+
+                messages.success(request, f'✅ Restaurant "{restaurant.name}" created successfully!')
+                return redirect('experiences:restaurant_list')
+
+            except Exception as e:
+                messages.error(request, f'❌ Error creating restaurant: {str(e)}')
+                print(f"Error details: {e}")
+        else:
+            messages.error(request, '⚠️ Please correct the errors below.')
+            print(f"Form errors: {form.errors}")
+    else:
+        form = RestaurantForm()
+
+    # Fetch data for dropdowns
+    destinations = Destination.objects.all()
+
+    return render(request, 'experiences/add_restaurant.html', {
+        'form': form,
+        'page_title': 'Add New Restaurant',
+        'destinations': destinations,
+    })
+
+@user_passes_test(lambda u: u.is_staff)
+def edit_restaurant(request, slug):
+    """Edit an existing restaurant"""
+    restaurant = get_object_or_404(Restaurant, slug=slug)
+
+    if request.method == "POST":
+        form = RestaurantForm(request.POST, request.FILES, instance=restaurant)
+        if form.is_valid():
+            try:
+                restaurant = form.save(commit=False)
+
+                # Handle JSON fields
+                for field_name in ['signature_dishes', 'dietary_options', 'amenities']:
+                    field_str = request.POST.get(field_name, '[]')
+                    try:
+                        setattr(restaurant, field_name, json.loads(field_str))
+                    except json.JSONDecodeError:
+                        # If not valid JSON, convert comma-separated to list
+                        setattr(restaurant, field_name, [item.strip() for item in field_str.split(',') if item.strip()])
+
+                restaurant.save()
+
+                messages.success(request, f'✅ Restaurant "{restaurant.name}" updated successfully!')
+                return redirect('experiences:restaurant_detail', slug=restaurant.slug)
+
+            except Exception as e:
+                messages.error(request, f'❌ Error updating restaurant: {str(e)}')
+                print(f"Error details: {e}")
+        else:
+            messages.error(request, '⚠️ Please correct the errors below.')
+            print(f"Form errors: {form.errors}")
+    else:
+        # Pre-populate JSON fields as JSON string for the form
+        initial_data = {}
+        for field_name in ['signature_dishes', 'dietary_options', 'amenities']:
+            value = getattr(restaurant, field_name)
+            initial_data[field_name] = json.dumps(value) if value else '[]'
+        form = RestaurantForm(instance=restaurant, initial=initial_data)
+
+    destinations = Destination.objects.all()
+
+    return render(request, 'experiences/edit_restaurant.html', {
+        'form': form,
+        'restaurant': restaurant,
+        'page_title': f'Edit {restaurant.name}',
+        'destinations': destinations,
+    })
+
+@user_passes_test(lambda u: u.is_staff)
+def delete_restaurant(request, slug):
+    """Delete a restaurant"""
+    restaurant = get_object_or_404(Restaurant, slug=slug)
+
+    if request.method == "POST":
+        restaurant_name = restaurant.name
+        restaurant.delete()
+        messages.success(request, f'✅ Restaurant "{restaurant_name}" has been deleted.')
+        return redirect('experiences:restaurant_list')
+
+    return render(request, 'experiences/delete_restaurant.html', {
+        'restaurant': restaurant
+    })
+
+
+@login_required
+def rate_restaurant(request, slug):
+    """Submit or update a rating for a restaurant"""
+    restaurant = get_object_or_404(Restaurant, slug=slug, is_active=True)
+
+    if request.method == "POST":
+        # Check if user has already rated
+        existing_rating = RestaurantRating.objects.filter(restaurant=restaurant, user=request.user).first()
+
+        if existing_rating:
+            form = RestaurantRatingForm(request.POST, instance=existing_rating)
+        else:
+            form = RestaurantRatingForm(request.POST)
+
+        if form.is_valid():
+            rating = form.save(commit=False)
+            rating.restaurant = restaurant
+            rating.user = request.user
+            rating.save()
+
+            messages.success(request, '✅ Your rating has been submitted!')
+            return redirect('experiences:restaurant_detail', slug=slug)
+        else:
+            messages.error(request, '⚠️ Please correct the errors in your rating.')
+    else:
+        messages.error(request, '⚠️ Invalid request method.')
+
+    return redirect('experiences:restaurant_detail', slug=slug)
+
+
+@login_required
+def comment_restaurant(request, slug):
+    """Submit a comment on a restaurant"""
+    restaurant = get_object_or_404(Restaurant, slug=slug, is_active=True)
+
+    if request.method == "POST":
+        form = RestaurantCommentForm(request.POST)
+        if form.is_valid():
+            comment = form.save(commit=False)
+            comment.restaurant = restaurant
+            comment.user = request.user
+            comment.save()
+
+            messages.success(request, '✅ Your comment has been posted!')
+            return redirect('experiences:restaurant_detail', slug=slug)
+        else:
+            messages.error(request, '⚠️ Please enter a valid comment.')
+    else:
+        messages.error(request, '⚠️ Invalid request method.')
+
+    return redirect('experiences:restaurant_detail', slug=slug)

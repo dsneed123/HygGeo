@@ -1,0 +1,58 @@
+{% extends 'base.html' %}
+
+{% block title %}Delete {{ restaurant.name }} - HygGeo{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-6">
+            <div class="card card-hygge border-danger">
+                <div class="card-body p-4">
+                    <h2 class="card-title fw-bold text-center mb-4 text-danger">
+                        <i class="fas fa-exclamation-triangle me-2"></i>Delete Restaurant
+                    </h2>
+
+                    <div class="alert alert-danger">
+                        <i class="fas fa-exclamation-circle me-2"></i>
+                        <strong>Warning:</strong> This action cannot be undone!
+                    </div>
+
+                    <div class="mb-4">
+                        <p class="lead">Are you sure you want to delete this restaurant?</p>
+
+                        <div class="card bg-light">
+                            <div class="card-body">
+                                <h5 class="card-title fw-bold">{{ restaurant.name }}</h5>
+                                <p class="text-muted mb-2">
+                                    <i class="fas fa-map-marker-alt me-1"></i>{{ restaurant.destination.name }}, {{ restaurant.destination.country }}
+                                </p>
+                                <p class="mb-2">
+                                    <strong>Type:</strong> {{ restaurant.get_restaurant_type_display }}
+                                </p>
+                                <p class="mb-2">
+                                    <strong>Cuisine:</strong> {{ restaurant.get_cuisine_type_display }}
+                                </p>
+                                {% if restaurant.main_image %}
+                                <img src="{{ restaurant.main_image.url }}" alt="{{ restaurant.name }}" class="img-thumbnail mt-2" style="max-width: 200px;">
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+
+                    <form method="post">
+                        {% csrf_token %}
+                        <div class="d-grid gap-2">
+                            <button type="submit" class="btn btn-danger btn-lg">
+                                <i class="fas fa-trash me-2"></i>Yes, Delete This Restaurant
+                            </button>
+                            <a href="{% url 'experiences:restaurant_detail' restaurant.slug %}" class="btn btn-outline-secondary btn-lg">
+                                <i class="fas fa-times me-2"></i>Cancel
+                            </a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

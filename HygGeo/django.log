@@ -17773,3 +17773,396 @@ INFO 2025-11-09 23:09:36,107 basehttp 1413385 134585044166336 "GET /static/fonts
 INFO 2025-11-09 23:09:36,107 basehttp 1413385 134585026332352 "GET /static/js/navbar.js HTTP/1.1" 200 2664
 INFO 2025-11-09 23:09:36,107 basehttp 1413385 134584679265984 "GET /static/css/base.css HTTP/1.1" 200 5114
 INFO 2025-11-09 23:09:37,253 basehttp 1413385 134585052559040 "POST /accounts/track/page-view/ HTTP/1.1" 200 68
+INFO 2025-11-10 16:49:35,419 autoreload 1408157 130544048537728 /home/dsneedy/Desktop/HygGeo/HygGeo/experiences/models.py changed, reloading.
+INFO 2025-11-10 16:49:35,834 autoreload 1646221 124369837756544 Watching for file changes with StatReloader
+INFO 2025-11-10 16:49:48,124 autoreload 1646221 124369837756544 /home/dsneedy/Desktop/HygGeo/HygGeo/experiences/forms.py changed, reloading.
+INFO 2025-11-10 16:49:48,543 autoreload 1646365 130378126061696 Watching for file changes with StatReloader
+INFO 2025-11-10 16:50:16,078 autoreload 1646365 130378126061696 /home/dsneedy/Desktop/HygGeo/HygGeo/experiences/forms.py changed, reloading.
+INFO 2025-11-10 16:50:16,622 autoreload 1646735 123192961269888 Watching for file changes with StatReloader
+INFO 2025-11-10 16:50:26,997 autoreload 1646735 123192961269888 /home/dsneedy/Desktop/HygGeo/HygGeo/experiences/admin.py changed, reloading.
+INFO 2025-11-10 16:50:27,537 autoreload 1646861 129409672720512 Watching for file changes with StatReloader
+INFO 2025-11-10 16:50:43,863 autoreload 1646861 129409672720512 /home/dsneedy/Desktop/HygGeo/HygGeo/experiences/admin.py changed, reloading.
+INFO 2025-11-10 16:50:44,424 autoreload 1647137 126727113678976 Watching for file changes with StatReloader
+INFO 2025-11-10 16:50:57,842 autoreload 1647137 126727113678976 /home/dsneedy/Desktop/HygGeo/HygGeo/experiences/views.py changed, reloading.
+INFO 2025-11-10 16:50:58,421 autoreload 1647248 127895403556992 Watching for file changes with StatReloader
+INFO 2025-11-10 16:51:26,062 autoreload 1647248 127895403556992 /home/dsneedy/Desktop/HygGeo/HygGeo/experiences/views.py changed, reloading.
+INFO 2025-11-10 16:51:26,621 autoreload 1649162 137395160387712 Watching for file changes with StatReloader
+INFO 2025-11-10 16:51:43,038 autoreload 1649162 137395160387712 /home/dsneedy/Desktop/HygGeo/HygGeo/experiences/urls.py changed, reloading.
+INFO 2025-11-10 16:51:43,644 autoreload 1649201 140021644959872 Watching for file changes with StatReloader
+INFO 2025-11-10 16:57:56,786 autoreload 1652403 134220975140992 Watching for file changes with StatReloader
+INFO 2025-11-10 16:58:01,460 basehttp 1652403 134220894697152 "GET / HTTP/1.1" 200 127410
+INFO 2025-11-10 16:58:01,475 basehttp 1652403 134220815005376 "GET /static/fonts/poppins-400-latin.woff2 HTTP/1.1" 304 0
+INFO 2025-11-10 16:58:01,475 basehttp 1652403 134220806612672 "GET /static/fonts/poppins-600-latin.woff2 HTTP/1.1" 304 0
+INFO 2025-11-10 16:58:01,475 basehttp 1652403 134220894697152 "GET /static/banner.webp HTTP/1.1" 200 198510
+INFO 2025-11-10 16:58:01,485 basehttp 1652403 134220806612672 "GET /static/fonts/poppins-700-latin.woff2 HTTP/1.1" 304 0
+INFO 2025-11-10 16:58:01,518 basehttp 1652403 134220815005376 "GET /static/js/navbar.js HTTP/1.1" 304 0
+INFO 2025-11-10 16:58:01,524 basehttp 1652403 134220815005376 "GET /static/css/base.css HTTP/1.1" 304 0
+INFO 2025-11-10 16:58:01,912 basehttp 1652403 134220815005376 "GET /static/favicon.ico HTTP/1.1" 304 0
+INFO 2025-11-10 16:58:01,913 basehttp 1652403 134220798219968 "GET /static/site.webmanifest HTTP/1.1" 304 0
+INFO 2025-11-10 16:58:02,597 basehttp 1652403 134220815005376 "POST /accounts/track/page-view/ HTTP/1.1" 200 68
+INFO 2025-11-10 16:58:03,287 basehttp 1652403 134220815005376 "POST /accounts/track/click/ HTTP/1.1" 200 62
+INFO 2025-11-10 16:58:03,297 basehttp 1652403 134220806612672 "GET /accounts/login/ HTTP/1.1" 200 39869
+INFO 2025-11-10 16:58:04,339 basehttp 1652403 134220806612672 "POST /accounts/track/page-view/ HTTP/1.1" 200 68
+INFO 2025-11-10 16:58:04,874 basehttp 1652403 134220806612672 "POST /accounts/login/ HTTP/1.1" 302 0
+INFO 2025-11-10 16:58:04,886 basehttp 1652403 134220806612672 "GET / HTTP/1.1" 200 135117
+INFO 2025-11-10 16:58:04,907 basehttp 1652403 134220806612672 "GET /accounts/notifications/count/ HTTP/1.1" 200 19
+INFO 2025-11-10 16:58:05,945 basehttp 1652403 134220806612672 "POST /accounts/track/page-view/ HTTP/1.1" 200 68
+INFO 2025-11-10 16:58:06,339 basehttp 1652403 134220806612672 "POST /accounts/track/click/ HTTP/1.1" 200 62
+INFO 2025-11-10 16:58:06,351 basehttp 1652403 134220815005376 "GET /experiences/restaurants/ HTTP/1.1" 200 52104
+INFO 2025-11-10 16:58:06,373 basehttp 1652403 134220815005376 "GET /accounts/notifications/count/ HTTP/1.1" 200 19
+INFO 2025-11-10 16:58:07,405 basehttp 1652403 134220815005376 "POST /accounts/track/page-view/ HTTP/1.1" 200 68
+INFO 2025-11-10 16:58:08,705 basehttp 1652403 134220815005376 "POST /accounts/track/click/ HTTP/1.1" 200 62
+INFO 2025-11-10 16:58:08,730 basehttp 1652403 134220806612672 "GET /experiences/restaurants/add/ HTTP/1.1" 200 62163
+INFO 2025-11-10 16:58:08,753 basehttp 1652403 134220806612672 "GET /accounts/notifications/count/ HTTP/1.1" 200 19
+INFO 2025-11-10 16:58:09,792 basehttp 1652403 134220806612672 "POST /accounts/track/page-view/ HTTP/1.1" 200 68
+INFO 2025-11-10 16:58:38,753 basehttp 1652403 134220806612672 "GET /accounts/notifications/count/ HTTP/1.1" 200 19
+INFO 2025-11-10 16:59:08,757 basehttp 1652403 134220806612672 "GET /accounts/notifications/count/ HTTP/1.1" 200 19
+INFO 2025-11-10 16:59:38,754 basehttp 1652403 134220806612672 "GET /accounts/notifications/count/ HTTP/1.1" 200 19
+INFO 2025-11-10 16:59:45,733 autoreload 1652403 134220975140992 /home/dsneedy/Desktop/HygGeo/HygGeo/experiences/models.py changed, reloading.
+INFO 2025-11-10 16:59:45,809 autoreload 1649201 140021644959872 /home/dsneedy/Desktop/HygGeo/HygGeo/experiences/models.py changed, reloading.
+INFO 2025-11-10 16:59:46,379 autoreload 1653418 133654091628672 Watching for file changes with StatReloader
+INFO 2025-11-10 16:59:46,424 autoreload 1653419 139741864407168 Watching for file changes with StatReloader
+INFO 2025-11-10 16:59:59,649 autoreload 1653418 133654091628672 /home/dsneedy/Desktop/HygGeo/HygGeo/experiences/models.py changed, reloading.
+INFO 2025-11-10 16:59:59,731 autoreload 1653419 139741864407168 /home/dsneedy/Desktop/HygGeo/HygGeo/experiences/models.py changed, reloading.
+INFO 2025-11-10 17:00:00,174 autoreload 1653514 133484670668928 Watching for file changes with StatReloader
+INFO 2025-11-10 17:00:00,281 autoreload 1653515 123901236473984 Watching for file changes with StatReloader
+INFO 2025-11-10 17:00:10,384 autoreload 1653514 133484670668928 /home/dsneedy/Desktop/HygGeo/HygGeo/experiences/models.py changed, reloading.
+INFO 2025-11-10 17:00:10,537 autoreload 1653515 123901236473984 /home/dsneedy/Desktop/HygGeo/HygGeo/experiences/models.py changed, reloading.
+INFO 2025-11-10 17:00:10,926 autoreload 1653583 135974929137792 Watching for file changes with StatReloader
+INFO 2025-11-10 17:00:11,078 autoreload 1653584 134455121285248 Watching for file changes with StatReloader
+INFO 2025-11-10 17:00:39,335 autoreload 1653583 135974929137792 /home/dsneedy/Desktop/HygGeo/HygGeo/experiences/admin.py changed, reloading.
+INFO 2025-11-10 17:00:39,571 autoreload 1653584 134455121285248 /home/dsneedy/Desktop/HygGeo/HygGeo/experiences/admin.py changed, reloading.
+INFO 2025-11-10 17:00:39,862 autoreload 1653873 131816428769408 Watching for file changes with StatReloader
+INFO 2025-11-10 17:00:40,112 autoreload 1653874 129603005845632 Watching for file changes with StatReloader
+INFO 2025-11-10 17:01:06,543 autoreload 1653874 129603005845632 /home/dsneedy/Desktop/HygGeo/HygGeo/experiences/admin.py changed, reloading.
+INFO 2025-11-10 17:01:07,124 autoreload 1654081 135829312843904 Watching for file changes with StatReloader
+INFO 2025-11-10 17:01:07,263 autoreload 1653873 131816428769408 /home/dsneedy/Desktop/HygGeo/HygGeo/experiences/admin.py changed, reloading.
+INFO 2025-11-10 17:01:07,712 autoreload 1654100 135197655384192 Watching for file changes with StatReloader
+INFO 2025-11-10 17:07:14,440 autoreload 1656879 128411263803520 Watching for file changes with StatReloader
+INFO 2025-11-10 17:07:15,044 basehttp 1656879 128411184920256 "GET /experiences/restaurants/add/ HTTP/1.1" 200 61217
+INFO 2025-11-10 17:07:15,090 basehttp 1656879 128411184920256 "GET /accounts/notifications/count/ HTTP/1.1" 200 19
+INFO 2025-11-10 17:07:15,135 basehttp 1656879 128411184920256 "GET /static/favicon.ico HTTP/1.1" 200 15406
+INFO 2025-11-10 17:07:15,823 basehttp 1656879 128411184920256 "GET /experiences/restaurants/add/ HTTP/1.1" 200 61217
+INFO 2025-11-10 17:07:15,841 basehttp 1656879 128411184920256 "GET /static/fonts/poppins-400-latin.woff2 HTTP/1.1" 200 7884
+INFO 2025-11-10 17:07:15,844 basehttp 1656879 128411176527552 "GET /static/fonts/poppins-600-latin.woff2 HTTP/1.1" 200 8000
+INFO 2025-11-10 17:07:15,845 basehttp 1656879 128411164989120 "GET /static/fonts/poppins-700-latin.woff2 HTTP/1.1" 200 7816
+INFO 2025-11-10 17:07:15,845 basehttp 1656879 128411156596416 "GET /static/js/navbar.js HTTP/1.1" 200 2664
+INFO 2025-11-10 17:07:15,845 basehttp 1656879 128411148203712 "GET /static/css/base.css HTTP/1.1" 200 5114
+INFO 2025-11-10 17:07:15,884 basehttp 1656879 128411148203712 "GET /accounts/notifications/count/ HTTP/1.1" 200 19
+INFO 2025-11-10 17:07:16,077 basehttp 1656879 128411148203712 "GET /static/favicon.ico HTTP/1.1" 200 15406
+INFO 2025-11-10 17:07:17,084 basehttp 1656879 128411148203712 "POST /accounts/track/page-view/ HTTP/1.1" 200 68
+INFO 2025-11-10 17:07:45,846 basehttp 1656879 128411148203712 "GET /accounts/notifications/count/ HTTP/1.1" 200 19
+INFO 2025-11-10 17:08:15,845 basehttp 1656879 128411148203712 "GET /accounts/notifications/count/ HTTP/1.1" 200 19
+INFO 2025-11-10 17:08:34,168 basehttp 1656879 128411148203712 "POST /experiences/restaurants/add/ HTTP/1.1" 200 61748
+INFO 2025-11-10 17:08:34,209 basehttp 1656879 128411148203712 "GET /accounts/notifications/count/ HTTP/1.1" 200 19
+INFO 2025-11-10 17:08:35,249 basehttp 1656879 128411148203712 "POST /accounts/track/page-view/ HTTP/1.1" 200 68
+INFO 2025-11-10 17:09:04,206 basehttp 1656879 128411148203712 "GET /accounts/notifications/count/ HTTP/1.1" 200 19
+INFO 2025-11-10 17:09:17,334 basehttp 1656879 128411148203712 "POST /experiences/restaurants/add/ HTTP/1.1" 302 0
+ERROR 2025-11-10 17:09:17,387 log 1656879 128411148203712 Internal Server Error: /experiences/restaurants/
+Traceback (most recent call last):
+  File "/home/dsneedy/.local/lib/python3.12/site-packages/django/template/base.py", line 891, in _resolve_lookup
+    current = current[bit]
+              ~~~~~~~^^^^^
+  File "/home/dsneedy/.local/lib/python3.12/site-packages/django/core/paginator.py", line 195, in __getitem__
+    raise TypeError(
+TypeError: Page indices must be integers or slices, not str.
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/home/dsneedy/.local/lib/python3.12/site-packages/django/template/base.py", line 901, in _resolve_lookup
+    current = getattr(current, bit)
+              ^^^^^^^^^^^^^^^^^^^^^
+AttributeError: 'Page' object has no attribute '0'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/home/dsneedy/.local/lib/python3.12/site-packages/django/core/handlers/exception.py", line 55, in inner
+    response = get_response(request)
+               ^^^^^^^^^^^^^^^^^^^^^
+  File "/home/dsneedy/.local/lib/python3.12/site-packages/django/core/handlers/base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/dsneedy/Desktop/HygGeo/HygGeo/experiences/views.py", line 1753, in restaurant_list_view
+    return render(request, 'experiences/restaurant_list.html', context)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/dsneedy/.local/lib/python3.12/site-packages/django/shortcuts.py", line 25, in render
+    content = loader.render_to_string(template_name, context, request, using=using)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/dsneedy/.local/lib/python3.12/site-packages/django/template/loader.py", line 62, in render_to_string
+    return template.render(context, request)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/dsneedy/.local/lib/python3.12/site-packages/django/template/backends/django.py", line 107, in render
+    return self.template.render(context)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/dsneedy/.local/lib/python3.12/site-packages/django/template/base.py", line 171, in render
+    return self._render(context)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "/home/dsneedy/.local/lib/python3.12/site-packages/django/template/base.py", line 163, in _render
+    return self.nodelist.render(context)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/dsneedy/.local/lib/python3.12/site-packages/django/template/base.py", line 1016, in render
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+                               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/dsneedy/.local/lib/python3.12/site-packages/django/template/base.py", line 977, in render_annotated
+    return self.render(context)
+           ^^^^^^^^^^^^^^^^^^^^
+  File "/home/dsneedy/.local/lib/python3.12/site-packages/django/template/loader_tags.py", line 159, in render
+    return compiled_parent._render(context)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/dsneedy/.local/lib/python3.12/site-packages/django/template/base.py", line 163, in _render
+    return self.nodelist.render(context)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/dsneedy/.local/lib/python3.12/site-packages/django/template/base.py", line 1016, in render
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+                               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/dsneedy/.local/lib/python3.12/site-packages/django/template/base.py", line 977, in render_annotated
+    return self.render(context)
+           ^^^^^^^^^^^^^^^^^^^^
+  File "/home/dsneedy/.local/lib/python3.12/site-packages/django/template/loader_tags.py", line 65, in render
+    result = block.nodelist.render(context)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/dsneedy/.local/lib/python3.12/site-packages/django/template/base.py", line 1016, in render
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+                               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/dsneedy/.local/lib/python3.12/site-packages/django/template/base.py", line 977, in render_annotated
+    return self.render(context)
+           ^^^^^^^^^^^^^^^^^^^^
+  File "/home/dsneedy/.local/lib/python3.12/site-packages/django/template/defaulttags.py", line 320, in render
+    match = condition.eval(context)
+            ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/dsneedy/.local/lib/python3.12/site-packages/django/template/defaulttags.py", line 886, in eval
+    return self.value.resolve(context, ignore_failures=True)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/dsneedy/.local/lib/python3.12/site-packages/django/template/base.py", line 722, in resolve
+    obj = self.var.resolve(context)
+          ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/dsneedy/.local/lib/python3.12/site-packages/django/template/base.py", line 854, in resolve
+    value = self._resolve_lookup(context)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/dsneedy/.local/lib/python3.12/site-packages/django/template/base.py", line 907, in _resolve_lookup
+    current = current[int(bit)]
+              ~~~~~~~^^^^^^^^^^
+  File "/home/dsneedy/.local/lib/python3.12/site-packages/django/core/paginator.py", line 202, in __getitem__
+    self.object_list = list(self.object_list)
+                       ^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/dsneedy/.local/lib/python3.12/site-packages/django/db/models/query.py", line 384, in __iter__
+    self._fetch_all()
+  File "/home/dsneedy/.local/lib/python3.12/site-packages/django/db/models/query.py", line 1949, in _fetch_all
+    self._result_cache = list(self._iterable_class(self))
+                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/dsneedy/.local/lib/python3.12/site-packages/django/db/models/query.py", line 91, in __iter__
+    results = compiler.execute_sql(
+              ^^^^^^^^^^^^^^^^^^^^^
+  File "/home/dsneedy/.local/lib/python3.12/site-packages/django/db/models/sql/compiler.py", line 1610, in execute_sql
+    sql, params = self.as_sql()
+                  ^^^^^^^^^^^^^
+  File "/home/dsneedy/.local/lib/python3.12/site-packages/django/db/models/sql/compiler.py", line 766, in as_sql
+    extra_select, order_by, group_by = self.pre_sql_setup(
+                                       ^^^^^^^^^^^^^^^^^^^
+  File "/home/dsneedy/.local/lib/python3.12/site-packages/django/db/models/sql/compiler.py", line 85, in pre_sql_setup
+    self.setup_query(with_col_aliases=with_col_aliases)
+  File "/home/dsneedy/.local/lib/python3.12/site-packages/django/db/models/sql/compiler.py", line 74, in setup_query
+    self.select, self.klass_info, self.annotation_col_map = self.get_select(
+                                                            ^^^^^^^^^^^^^^^^
+  File "/home/dsneedy/.local/lib/python3.12/site-packages/django/db/models/sql/compiler.py", line 299, in get_select
+    related_klass_infos = self.get_related_selections(select, select_mask)
+                          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/dsneedy/.local/lib/python3.12/site-packages/django/db/models/sql/compiler.py", line 1396, in get_related_selections
+    raise FieldError(
+django.core.exceptions.FieldError: Invalid field name(s) given in select_related: 'provider'. Choices are: destination
+ERROR 2025-11-10 17:09:17,391 basehttp 1656879 128411148203712 "GET /experiences/restaurants/ HTTP/1.1" 500 294190
+WARNING 2025-11-10 17:09:22,476 log 1656879 128411148203712 Not Found: /.well-known/appspecific/com.chrome.devtools.json
+WARNING 2025-11-10 17:09:22,477 basehttp 1656879 128411148203712 "GET /.well-known/appspecific/com.chrome.devtools.json HTTP/1.1" 404 5114
+INFO 2025-11-10 17:10:47,680 basehttp 1656879 128411148203712 "GET /experiences/restaurants/add/ HTTP/1.1" 200 61593
+INFO 2025-11-10 17:10:47,713 basehttp 1656879 128411148203712 "GET /accounts/notifications/count/ HTTP/1.1" 200 19
+INFO 2025-11-10 17:10:48,742 basehttp 1656879 128411148203712 "POST /accounts/track/page-view/ HTTP/1.1" 200 68
+INFO 2025-11-10 17:10:50,033 basehttp 1656879 128411148203712 "POST /experiences/restaurants/add/ HTTP/1.1" 200 61748
+INFO 2025-11-10 17:10:50,047 basehttp 1656879 128411148203712 "GET /accounts/notifications/count/ HTTP/1.1" 200 19
+INFO 2025-11-10 17:10:51,071 basehttp 1656879 128411148203712 "POST /accounts/track/page-view/ HTTP/1.1" 200 68
+INFO 2025-11-10 17:10:51,096 autoreload 1656879 128411263803520 /home/dsneedy/Desktop/HygGeo/HygGeo/experiences/views.py changed, reloading.
+INFO 2025-11-10 17:10:51,543 autoreload 1658754 140677776195712 Watching for file changes with StatReloader
+INFO 2025-11-10 17:10:52,227 basehttp 1658754 140677627246272 "POST /accounts/track/click/ HTTP/1.1" 200 62
+INFO 2025-11-10 17:10:52,287 basehttp 1658754 140677618853568 "GET / HTTP/1.1" 200 135114
+INFO 2025-11-10 17:10:52,321 basehttp 1658754 140677618853568 "GET /static/banner-tablet.webp HTTP/1.1" 200 119628
+INFO 2025-11-10 17:10:52,324 basehttp 1658754 140677627246272 "GET /accounts/notifications/count/ HTTP/1.1" 200 19
+INFO 2025-11-10 17:10:53,391 basehttp 1658754 140677618853568 "POST /accounts/track/page-view/ HTTP/1.1" 200 68
+INFO 2025-11-10 17:11:22,315 basehttp 1658754 140677618853568 "GET /accounts/notifications/count/ HTTP/1.1" 200 19
+INFO 2025-11-10 17:11:52,315 basehttp 1658754 140677618853568 "GET /accounts/notifications/count/ HTTP/1.1" 200 19
+INFO 2025-11-10 17:12:22,316 basehttp 1658754 140677618853568 "GET /accounts/notifications/count/ HTTP/1.1" 200 19
+INFO 2025-11-10 17:12:52,315 basehttp 1658754 140677618853568 "GET /accounts/notifications/count/ HTTP/1.1" 200 19
+INFO 2025-11-10 17:13:19,657 basehttp 1658754 140677618853568 "GET / HTTP/1.1" 200 135144
+INFO 2025-11-10 17:13:19,699 basehttp 1658754 140677618853568 "GET /static/banner.webp HTTP/1.1" 200 198510
+INFO 2025-11-10 17:13:19,707 basehttp 1658754 140677627246272 "GET /static/fonts/poppins-400-latin.woff2 HTTP/1.1" 200 7884
+INFO 2025-11-10 17:13:19,707 basehttp 1658754 140677610460864 "GET /static/fonts/poppins-600-latin.woff2 HTTP/1.1" 200 8000
+INFO 2025-11-10 17:13:19,707 basehttp 1658754 140677602068160 "GET /static/fonts/poppins-700-latin.woff2 HTTP/1.1" 200 7816
+INFO 2025-11-10 17:13:19,707 basehttp 1658754 140677593675456 "GET /static/js/navbar.js HTTP/1.1" 200 2664
+INFO 2025-11-10 17:13:19,708 basehttp 1658754 140677585282752 "GET /static/css/base.css HTTP/1.1" 200 5114
+INFO 2025-11-10 17:13:19,807 basehttp 1658754 140677585282752 "GET /accounts/notifications/count/ HTTP/1.1" 200 19
+INFO 2025-11-10 17:13:19,873 basehttp 1658754 140677585282752 "GET /static/favicon.ico HTTP/1.1" 200 15406
+INFO 2025-11-10 17:13:20,603 basehttp 1658754 140677585282752 "POST /accounts/track/click/ HTTP/1.1" 200 62
+INFO 2025-11-10 17:13:20,615 basehttp 1658754 140677610460864 "GET /experiences/restaurants/ HTTP/1.1" 200 54260
+INFO 2025-11-10 17:13:20,640 basehttp 1658754 140677610460864 "GET /accounts/notifications/count/ HTTP/1.1" 200 19
+INFO 2025-11-10 17:13:21,673 basehttp 1658754 140677610460864 "POST /accounts/track/page-view/ HTTP/1.1" 200 68
+INFO 2025-11-10 17:13:22,226 basehttp 1658754 140677610460864 "POST /accounts/track/click/ HTTP/1.1" 200 62
+INFO 2025-11-10 17:13:22,242 basehttp 1658754 140677585282752 "GET /experiences/restaurant/pizza-pizza/ HTTP/1.1" 200 52061
+INFO 2025-11-10 17:13:22,268 basehttp 1658754 140677585282752 "GET /accounts/notifications/count/ HTTP/1.1" 200 19
+INFO 2025-11-10 17:13:23,293 basehttp 1658754 140677585282752 "POST /accounts/track/page-view/ HTTP/1.1" 200 68
+INFO 2025-11-10 17:13:33,517 basehttp 1658754 140677585282752 "POST /experiences/restaurant/pizza-pizza/rate/ HTTP/1.1" 302 0
+INFO 2025-11-10 17:13:33,527 basehttp 1658754 140677585282752 "GET /experiences/restaurant/pizza-pizza/ HTTP/1.1" 200 55284
+INFO 2025-11-10 17:13:33,589 basehttp 1658754 140677585282752 "GET /accounts/notifications/count/ HTTP/1.1" 200 19
+INFO 2025-11-10 17:13:34,607 basehttp 1658754 140677585282752 "POST /accounts/track/page-view/ HTTP/1.1" 200 68
+INFO 2025-11-10 17:13:46,760 basehttp 1658754 140677585282752 "POST /experiences/restaurant/pizza-pizza/comment/ HTTP/1.1" 302 0
+INFO 2025-11-10 17:13:46,774 basehttp 1658754 140677585282752 "GET /experiences/restaurant/pizza-pizza/ HTTP/1.1" 200 55733
+INFO 2025-11-10 17:13:46,863 basehttp 1658754 140677585282752 "GET /accounts/notifications/count/ HTTP/1.1" 200 19
+INFO 2025-11-10 17:13:47,861 basehttp 1658754 140677585282752 "POST /accounts/track/page-view/ HTTP/1.1" 200 68
+INFO 2025-11-10 17:13:55,026 basehttp 1658754 140677585282752 "GET /experiences/restaurant/pizza-pizza/ HTTP/1.1" 200 55384
+INFO 2025-11-10 17:13:55,061 basehttp 1658754 140677610460864 "GET /static/fonts/poppins-600-latin.woff2 HTTP/1.1" 200 8000
+INFO 2025-11-10 17:13:55,063 basehttp 1658754 140677585282752 "GET /static/fonts/poppins-400-latin.woff2 HTTP/1.1" 200 7884
+INFO 2025-11-10 17:13:55,063 basehttp 1658754 140677593675456 "GET /static/js/navbar.js HTTP/1.1" 200 2664
+INFO 2025-11-10 17:13:55,063 basehttp 1658754 140677602068160 "GET /static/css/base.css HTTP/1.1" 200 5114
+INFO 2025-11-10 17:13:55,063 basehttp 1658754 140677627246272 "GET /static/fonts/poppins-700-latin.woff2 HTTP/1.1" 200 7816
+INFO 2025-11-10 17:13:55,253 basehttp 1658754 140677602068160 "GET /static/favicon.ico HTTP/1.1" 200 15406
+INFO 2025-11-10 17:13:55,254 basehttp 1658754 140677585282752 "GET /accounts/notifications/count/ HTTP/1.1" 200 19
+INFO 2025-11-10 17:13:56,261 basehttp 1658754 140677602068160 "POST /accounts/track/page-view/ HTTP/1.1" 200 68
+INFO 2025-11-10 17:14:25,063 basehttp 1658754 140677602068160 "GET /accounts/notifications/count/ HTTP/1.1" 200 19
+INFO 2025-11-10 17:14:55,062 basehttp 1658754 140677602068160 "GET /accounts/notifications/count/ HTTP/1.1" 200 19
+INFO 2025-11-10 17:15:25,063 basehttp 1658754 140677602068160 "GET /accounts/notifications/count/ HTTP/1.1" 200 19
+INFO 2025-11-10 17:15:55,063 basehttp 1658754 140677602068160 "GET /accounts/notifications/count/ HTTP/1.1" 200 19
+INFO 2025-11-10 17:16:25,064 basehttp 1658754 140677602068160 "GET /accounts/notifications/count/ HTTP/1.1" 200 19
+INFO 2025-11-10 17:16:50,847 basehttp 1658754 140677602068160 "GET /experiences/restaurant/pizza-pizza/ HTTP/1.1" 200 55384
+INFO 2025-11-10 17:16:50,880 basehttp 1658754 140677602068160 "GET /static/fonts/poppins-400-latin.woff2 HTTP/1.1" 200 7884
+INFO 2025-11-10 17:16:50,891 basehttp 1658754 140677627246272 "GET /static/js/navbar.js HTTP/1.1" 200 2664
+INFO 2025-11-10 17:16:50,891 basehttp 1658754 140677593675456 "GET /static/css/base.css HTTP/1.1" 200 5114
+INFO 2025-11-10 17:16:50,891 basehttp 1658754 140677585282752 "GET /static/fonts/poppins-600-latin.woff2 HTTP/1.1" 200 8000
+INFO 2025-11-10 17:16:50,891 basehttp 1658754 140677610460864 "GET /static/fonts/poppins-700-latin.woff2 HTTP/1.1" 200 7816
+INFO 2025-11-10 17:16:51,000 basehttp 1658754 140677602068160 "GET /accounts/notifications/count/ HTTP/1.1" 200 19
+INFO 2025-11-10 17:16:51,045 basehttp 1658754 140677602068160 "GET /static/favicon.ico HTTP/1.1" 200 15406
+INFO 2025-11-10 17:16:52,057 basehttp 1658754 140677602068160 "POST /accounts/track/page-view/ HTTP/1.1" 200 68
+INFO 2025-11-10 17:17:20,631 autoreload 1654081 135829312843904 /home/dsneedy/Desktop/HygGeo/HygGeo/experiences/models.py changed, reloading.
+INFO 2025-11-10 17:17:20,883 basehttp 1658754 140677602068160 "GET /accounts/notifications/count/ HTTP/1.1" 200 19
+INFO 2025-11-10 17:17:21,211 autoreload 1661705 139464210112640 Watching for file changes with StatReloader
+INFO 2025-11-10 17:17:21,387 autoreload 1658754 140677776195712 /home/dsneedy/Desktop/HygGeo/HygGeo/experiences/models.py changed, reloading.
+INFO 2025-11-10 17:17:21,786 autoreload 1661725 127459185389696 Watching for file changes with StatReloader
+INFO 2025-11-10 17:17:30,046 autoreload 1661725 127459185389696 /home/dsneedy/Desktop/HygGeo/HygGeo/experiences/models.py changed, reloading.
+INFO 2025-11-10 17:17:30,489 autoreload 1661705 139464210112640 /home/dsneedy/Desktop/HygGeo/HygGeo/experiences/models.py changed, reloading.
+INFO 2025-11-10 17:17:30,592 autoreload 1661784 132297612374144 Watching for file changes with StatReloader
+INFO 2025-11-10 17:17:30,976 autoreload 1661789 139563574616192 Watching for file changes with StatReloader
+INFO 2025-11-10 17:17:50,926 basehttp 1661784 132297465525952 "GET /accounts/notifications/count/ HTTP/1.1" 200 19
+INFO 2025-11-10 17:18:20,887 basehttp 1661784 132297465525952 "GET /accounts/notifications/count/ HTTP/1.1" 200 19
+INFO 2025-11-10 17:18:50,885 basehttp 1661784 132297465525952 "GET /accounts/notifications/count/ HTTP/1.1" 200 19
+INFO 2025-11-10 17:19:20,888 basehttp 1661784 132297465525952 "GET /accounts/notifications/count/ HTTP/1.1" 200 19
+INFO 2025-11-10 17:19:50,884 basehttp 1661784 132297465525952 "GET /accounts/notifications/count/ HTTP/1.1" 200 19
+INFO 2025-11-10 17:20:17,803 basehttp 1661784 132297465525952 "GET /experiences/restaurant/pizza-pizza/ HTTP/1.1" 200 66060
+INFO 2025-11-10 17:20:17,851 basehttp 1661784 132297465525952 "GET /static/fonts/poppins-400-latin.woff2 HTTP/1.1" 200 7884
+INFO 2025-11-10 17:20:17,852 basehttp 1661784 132297457133248 "GET /static/fonts/poppins-600-latin.woff2 HTTP/1.1" 200 8000
+INFO 2025-11-10 17:20:17,853 basehttp 1661784 132297447691968 "GET /static/fonts/poppins-700-latin.woff2 HTTP/1.1" 200 7816
+INFO 2025-11-10 17:20:17,853 basehttp 1661784 132297438250688 "GET /static/js/navbar.js HTTP/1.1" 200 2664
+INFO 2025-11-10 17:20:17,853 basehttp 1661784 132297429857984 "GET /static/css/base.css HTTP/1.1" 200 5114
+INFO 2025-11-10 17:20:17,942 basehttp 1661784 132297429857984 "GET /accounts/notifications/count/ HTTP/1.1" 200 19
+INFO 2025-11-10 17:20:18,034 basehttp 1661784 132297429857984 "GET /static/favicon.ico HTTP/1.1" 200 15406
+INFO 2025-11-10 17:20:19,045 basehttp 1661784 132297429857984 "POST /accounts/track/page-view/ HTTP/1.1" 200 68
+INFO 2025-11-10 17:20:19,566 basehttp 1661784 132297429857984 "GET /experiences/restaurant/pizza-pizza/ HTTP/1.1" 200 66060
+INFO 2025-11-10 17:20:19,579 basehttp 1661784 132297429857984 "GET /static/fonts/poppins-400-latin.woff2 HTTP/1.1" 200 7884
+INFO 2025-11-10 17:20:19,585 basehttp 1661784 132297457133248 "GET /static/fonts/poppins-700-latin.woff2 HTTP/1.1" 200 7816
+INFO 2025-11-10 17:20:19,585 basehttp 1661784 132297447691968 "GET /static/fonts/poppins-600-latin.woff2 HTTP/1.1" 200 8000
+INFO 2025-11-10 17:20:19,586 basehttp 1661784 132297465525952 "GET /static/js/navbar.js HTTP/1.1" 200 2664
+INFO 2025-11-10 17:20:19,588 basehttp 1661784 132297438250688 "GET /static/css/base.css HTTP/1.1" 200 5114
+INFO 2025-11-10 17:20:19,622 basehttp 1661784 132297438250688 "GET /accounts/notifications/count/ HTTP/1.1" 200 19
+INFO 2025-11-10 17:20:19,703 basehttp 1661784 132297438250688 "GET /static/favicon.ico HTTP/1.1" 200 15406
+INFO 2025-11-10 17:20:20,722 basehttp 1661784 132297438250688 "POST /accounts/track/page-view/ HTTP/1.1" 200 68
+INFO 2025-11-10 17:20:49,586 basehttp 1661784 132297438250688 "GET /accounts/notifications/count/ HTTP/1.1" 200 19
+INFO 2025-11-10 17:21:19,587 basehttp 1661784 132297438250688 "GET /accounts/notifications/count/ HTTP/1.1" 200 19
+INFO 2025-11-10 17:21:50,566 basehttp 1661784 132297438250688 "GET /accounts/notifications/count/ HTTP/1.1" 200 19
+INFO 2025-11-10 17:22:20,567 basehttp 1661784 132297438250688 "GET /accounts/notifications/count/ HTTP/1.1" 200 19
+INFO 2025-11-10 17:22:46,772 basehttp 1661784 132297438250688 "GET /experiences/restaurant/pizza-pizza/ HTTP/1.1" 200 66060
+INFO 2025-11-10 17:22:46,810 basehttp 1661784 132297438250688 "GET /static/fonts/poppins-400-latin.woff2 HTTP/1.1" 200 7884
+INFO 2025-11-10 17:22:46,815 basehttp 1661784 132297465525952 "GET /static/js/navbar.js HTTP/1.1" 200 2664
+INFO 2025-11-10 17:22:46,815 basehttp 1661784 132297429857984 "GET /static/fonts/poppins-600-latin.woff2 HTTP/1.1" 200 8000
+INFO 2025-11-10 17:22:46,815 basehttp 1661784 132297447691968 "GET /static/fonts/poppins-700-latin.woff2 HTTP/1.1" 200 7816
+INFO 2025-11-10 17:22:46,815 basehttp 1661784 132297457133248 "GET /static/css/base.css HTTP/1.1" 200 5114
+INFO 2025-11-10 17:22:46,950 basehttp 1661784 132297438250688 "GET /accounts/notifications/count/ HTTP/1.1" 200 19
+INFO 2025-11-10 17:22:47,042 basehttp 1661784 132297438250688 "GET /static/favicon.ico HTTP/1.1" 200 15406
+INFO 2025-11-10 17:22:47,764 basehttp 1661784 132297438250688 "GET /experiences/restaurant/pizza-pizza/ HTTP/1.1" 200 66060
+INFO 2025-11-10 17:22:47,782 basehttp 1661784 132297438250688 "GET /static/fonts/poppins-400-latin.woff2 HTTP/1.1" 200 7884
+INFO 2025-11-10 17:22:47,789 basehttp 1661784 132297465525952 "GET /static/js/navbar.js HTTP/1.1" 200 2664
+INFO 2025-11-10 17:22:47,790 basehttp 1661784 132297447691968 "GET /static/css/base.css HTTP/1.1" 200 5114
+INFO 2025-11-10 17:22:47,790 basehttp 1661784 132297429857984 "GET /static/fonts/poppins-700-latin.woff2 HTTP/1.1" 200 7816
+INFO 2025-11-10 17:22:47,790 basehttp 1661784 132297457133248 "GET /static/fonts/poppins-600-latin.woff2 HTTP/1.1" 200 8000
+INFO 2025-11-10 17:22:47,843 basehttp 1661784 132297438250688 "GET /accounts/notifications/count/ HTTP/1.1" 200 19
+INFO 2025-11-10 17:22:47,923 basehttp 1661784 132297438250688 "GET /static/favicon.ico HTTP/1.1" 200 15406
+INFO 2025-11-10 17:22:48,335 basehttp 1661784 132297438250688 "GET /experiences/restaurant/pizza-pizza/ HTTP/1.1" 200 66060
+INFO 2025-11-10 17:22:48,355 basehttp 1661784 132297429857984 "GET /static/js/navbar.js HTTP/1.1" 200 2664
+INFO 2025-11-10 17:22:48,355 basehttp 1661784 132297438250688 "GET /static/fonts/poppins-400-latin.woff2 HTTP/1.1" 200 7884
+INFO 2025-11-10 17:22:48,355 basehttp 1661784 132297465525952 "GET /static/css/base.css HTTP/1.1" 200 5114
+INFO 2025-11-10 17:22:48,355 basehttp 1661784 132297457133248 "GET /static/fonts/poppins-700-latin.woff2 HTTP/1.1" 200 7816
+INFO 2025-11-10 17:22:48,356 basehttp 1661784 132297447691968 "GET /static/fonts/poppins-600-latin.woff2 HTTP/1.1" 200 8000
+INFO 2025-11-10 17:22:48,689 basehttp 1661784 132297438250688 "GET /accounts/notifications/count/ HTTP/1.1" 200 19
+INFO 2025-11-10 17:22:48,736 basehttp 1661784 132297438250688 "GET /static/favicon.ico HTTP/1.1" 200 15406
+INFO 2025-11-10 17:22:49,478 basehttp 1661784 132297438250688 "GET /experiences/restaurant/pizza-pizza/ HTTP/1.1" 200 66060
+INFO 2025-11-10 17:22:49,495 basehttp 1661784 132297438250688 "GET /static/fonts/poppins-400-latin.woff2 HTTP/1.1" 200 7884
+INFO 2025-11-10 17:22:49,497 basehttp 1661784 132297447691968 "GET /static/fonts/poppins-700-latin.woff2 HTTP/1.1" 200 7816
+INFO 2025-11-10 17:22:49,497 basehttp 1661784 132297465525952 "GET /static/fonts/poppins-600-latin.woff2 HTTP/1.1" 200 8000
+INFO 2025-11-10 17:22:49,497 basehttp 1661784 132297457133248 "GET /static/css/base.css HTTP/1.1" 200 5114
+INFO 2025-11-10 17:22:49,497 basehttp 1661784 132297429857984 "GET /static/js/navbar.js HTTP/1.1" 200 2664
+INFO 2025-11-10 17:22:49,629 basehttp 1661784 132297438250688 "GET /accounts/notifications/count/ HTTP/1.1" 200 19
+INFO 2025-11-10 17:22:49,631 basehttp 1661784 132297438250688 "GET /static/favicon.ico HTTP/1.1" 200 15406
+INFO 2025-11-10 17:22:50,073 basehttp 1661784 132297438250688 "GET /experiences/restaurant/pizza-pizza/ HTTP/1.1" 200 66060
+INFO 2025-11-10 17:22:50,092 basehttp 1661784 132297438250688 "GET /static/fonts/poppins-400-latin.woff2 HTTP/1.1" 200 7884
+INFO 2025-11-10 17:22:50,093 basehttp 1661784 132297465525952 "GET /static/fonts/poppins-700-latin.woff2 HTTP/1.1" 200 7816
+INFO 2025-11-10 17:22:50,093 basehttp 1661784 132297447691968 "GET /static/css/base.css HTTP/1.1" 200 5114
+INFO 2025-11-10 17:22:50,093 basehttp 1661784 132297429857984 "GET /static/js/navbar.js HTTP/1.1" 200 2664
+INFO 2025-11-10 17:22:50,093 basehttp 1661784 132297457133248 "GET /static/fonts/poppins-600-latin.woff2 HTTP/1.1" 200 8000
+INFO 2025-11-10 17:22:50,175 basehttp 1661784 132297438250688 "GET /accounts/notifications/count/ HTTP/1.1" 200 19
+INFO 2025-11-10 17:22:50,304 basehttp 1661784 132297438250688 "GET /static/favicon.ico HTTP/1.1" 200 15406
+INFO 2025-11-10 17:22:50,372 basehttp 1661784 132297438250688 "GET /experiences/restaurant/pizza-pizza/ HTTP/1.1" 200 66060
+INFO 2025-11-10 17:22:50,390 basehttp 1661784 132297447691968 "GET /static/fonts/poppins-600-latin.woff2 HTTP/1.1" 200 8000
+INFO 2025-11-10 17:22:50,390 basehttp 1661784 132297438250688 "GET /static/fonts/poppins-400-latin.woff2 HTTP/1.1" 200 7884
+INFO 2025-11-10 17:22:50,391 basehttp 1661784 132297429857984 "GET /static/js/navbar.js HTTP/1.1" 200 2664
+INFO 2025-11-10 17:22:50,391 basehttp 1661784 132297457133248 "GET /static/fonts/poppins-700-latin.woff2 HTTP/1.1" 200 7816
+INFO 2025-11-10 17:22:50,391 basehttp 1661784 132297465525952 "GET /static/css/base.css HTTP/1.1" 200 5114
+INFO 2025-11-10 17:22:50,434 basehttp 1661784 132297465525952 "GET /accounts/notifications/count/ HTTP/1.1" 200 19
+INFO 2025-11-10 17:22:50,475 basehttp 1661784 132297438250688 "GET /static/favicon.ico HTTP/1.1" 200 15406
+INFO 2025-11-10 17:22:50,722 basehttp 1661784 132297438250688 "GET /experiences/restaurant/pizza-pizza/ HTTP/1.1" 200 66060
+INFO 2025-11-10 17:22:50,741 basehttp 1661784 132297438250688 "GET /static/fonts/poppins-400-latin.woff2 HTTP/1.1" 200 7884
+INFO 2025-11-10 17:22:50,741 basehttp 1661784 132297429857984 "GET /static/js/navbar.js HTTP/1.1" 200 2664
+INFO 2025-11-10 17:22:50,741 basehttp 1661784 132297447691968 "GET /static/css/base.css HTTP/1.1" 200 5114
+INFO 2025-11-10 17:22:50,741 basehttp 1661784 132297457133248 "GET /static/fonts/poppins-700-latin.woff2 HTTP/1.1" 200 7816
+INFO 2025-11-10 17:22:50,741 basehttp 1661784 132297465525952 "GET /static/fonts/poppins-600-latin.woff2 HTTP/1.1" 200 8000
+INFO 2025-11-10 17:22:50,776 basehttp 1661784 132297457133248 "GET /accounts/notifications/count/ HTTP/1.1" 200 19
+INFO 2025-11-10 17:22:50,817 basehttp 1661784 132297438250688 "GET /static/favicon.ico HTTP/1.1" 200 15406
+INFO 2025-11-10 17:22:51,122 basehttp 1661784 132297438250688 "GET /experiences/restaurant/pizza-pizza/ HTTP/1.1" 200 66060
+INFO 2025-11-10 17:22:51,141 basehttp 1661784 132297429857984 "GET /static/js/navbar.js HTTP/1.1" 200 2664
+INFO 2025-11-10 17:22:51,142 basehttp 1661784 132297465525952 "GET /static/fonts/poppins-700-latin.woff2 HTTP/1.1" 200 7816
+INFO 2025-11-10 17:22:51,142 basehttp 1661784 132297438250688 "GET /static/fonts/poppins-400-latin.woff2 HTTP/1.1" 200 7884
+INFO 2025-11-10 17:22:51,142 basehttp 1661784 132297447691968 "GET /static/css/base.css HTTP/1.1" 200 5114
+INFO 2025-11-10 17:22:51,143 basehttp 1661784 132297457133248 "GET /static/fonts/poppins-600-latin.woff2 HTTP/1.1" 200 8000
+INFO 2025-11-10 17:22:51,175 basehttp 1661784 132297447691968 "GET /accounts/notifications/count/ HTTP/1.1" 200 19
+INFO 2025-11-10 17:22:51,208 basehttp 1661784 132297438250688 "GET /static/favicon.ico HTTP/1.1" 200 15406
+INFO 2025-11-10 17:22:51,395 basehttp 1661784 132297438250688 "GET /experiences/restaurant/pizza-pizza/ HTTP/1.1" 200 66060
+INFO 2025-11-10 17:22:51,414 basehttp 1661784 132297438250688 "GET /static/fonts/poppins-400-latin.woff2 HTTP/1.1" 200 7884
+INFO 2025-11-10 17:22:51,422 basehttp 1661784 132297429857984 "GET /static/css/base.css HTTP/1.1" 200 5114
+INFO 2025-11-10 17:22:51,422 basehttp 1661784 132297465525952 "GET /static/fonts/poppins-700-latin.woff2 HTTP/1.1" 200 7816
+INFO 2025-11-10 17:22:51,423 basehttp 1661784 132297447691968 "GET /static/fonts/poppins-600-latin.woff2 HTTP/1.1" 200 8000
+INFO 2025-11-10 17:22:51,423 basehttp 1661784 132297457133248 "GET /static/js/navbar.js HTTP/1.1" 200 2664
+INFO 2025-11-10 17:22:51,458 basehttp 1661784 132297465525952 "GET /accounts/notifications/count/ HTTP/1.1" 200 19
+INFO 2025-11-10 17:22:51,551 basehttp 1661784 132297465525952 "GET /static/favicon.ico HTTP/1.1" 200 15406
+INFO 2025-11-10 17:22:51,586 basehttp 1661784 132297465525952 "GET /experiences/restaurant/pizza-pizza/ HTTP/1.1" 200 66060
+INFO 2025-11-10 17:22:51,605 basehttp 1661784 132297465525952 "GET /static/fonts/poppins-400-latin.woff2 HTTP/1.1" 200 7884
+INFO 2025-11-10 17:22:51,605 basehttp 1661784 132297438250688 "GET /static/fonts/poppins-600-latin.woff2 HTTP/1.1" 200 8000
+INFO 2025-11-10 17:22:51,605 basehttp 1661784 132297429857984 "GET /static/css/base.css HTTP/1.1" 200 5114
+INFO 2025-11-10 17:22:51,605 basehttp 1661784 132297457133248 "GET /static/js/navbar.js HTTP/1.1" 200 2664
+INFO 2025-11-10 17:22:51,605 basehttp 1661784 132297447691968 "GET /static/fonts/poppins-700-latin.woff2 HTTP/1.1" 200 7816
+INFO 2025-11-10 17:22:51,656 basehttp 1661784 132297465525952 "GET /accounts/notifications/count/ HTTP/1.1" 200 19
+INFO 2025-11-10 17:22:51,701 basehttp 1661784 132297465525952 "GET /static/favicon.ico HTTP/1.1" 200 15406
+INFO 2025-11-10 17:22:52,720 basehttp 1661784 132297465525952 "POST /accounts/track/page-view/ HTTP/1.1" 200 68
+INFO 2025-11-10 17:22:53,603 basehttp 1661784 132297465525952 "GET /experiences/restaurant/pizza-pizza/ HTTP/1.1" 200 66060
+INFO 2025-11-10 17:22:53,620 basehttp 1661784 132297465525952 "GET /static/fonts/poppins-400-latin.woff2 HTTP/1.1" 200 7884
+INFO 2025-11-10 17:22:53,621 basehttp 1661784 132297438250688 "GET /static/fonts/poppins-700-latin.woff2 HTTP/1.1" 200 7816
+INFO 2025-11-10 17:22:53,621 basehttp 1661784 132297457133248 "GET /static/js/navbar.js HTTP/1.1" 200 2664
+INFO 2025-11-10 17:22:53,621 basehttp 1661784 132297429857984 "GET /static/css/base.css HTTP/1.1" 200 5114
+INFO 2025-11-10 17:22:53,621 basehttp 1661784 132297447691968 "GET /static/fonts/poppins-600-latin.woff2 HTTP/1.1" 200 8000
+INFO 2025-11-10 17:22:53,660 basehttp 1661784 132297429857984 "GET /accounts/notifications/count/ HTTP/1.1" 200 19
+INFO 2025-11-10 17:22:53,704 basehttp 1661784 132297429857984 "GET /static/favicon.ico HTTP/1.1" 200 15406
+INFO 2025-11-10 17:22:54,708 basehttp 1661784 132297429857984 "POST /accounts/track/page-view/ HTTP/1.1" 200 68

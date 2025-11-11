@@ -1,6 +1,6 @@
 # experiences/forms.py
 from django import forms
-from .models import Experience, Provider, Destination, Category, ExperienceType, Accommodation, TravelBlog, BlogComment
+from .models import Experience, Provider, Destination, Category, ExperienceType, Accommodation, TravelBlog, BlogComment, Restaurant, RestaurantRating, RestaurantComment
 class ExperienceForm(forms.ModelForm):
     class Meta:
         model = Experience
@@ -679,4 +679,196 @@ class BlogCommentForm(forms.ModelForm):
                 'required': True
             }),
         }
+
+
+class RestaurantForm(forms.ModelForm):
+    class Meta:
+        model = Restaurant
+        fields = [
+            'name', 'short_description', 'description', 'main_image',
+            'destination', 'restaurant_type', 'cuisine_type', 'budget_range',
+            'website', 'phone', 'email',
+            'sustainability_score', 'hygge_factor', 'carbon_neutral', 'supports_local_community',
+            'organic_ingredients', 'locally_sourced', 'address', 'opening_hours',
+            'meta_title', 'meta_description', 'is_featured', 'is_active'
+        ]
+        widgets = {
+            'name': forms.TextInput(attrs={
+                'class': 'form-control',
+                'placeholder': 'Enter restaurant name',
+                'required': True
+            }),
+            'short_description': forms.TextInput(attrs={
+                'class': 'form-control',
+                'placeholder': 'Brief description for cards (max 300 characters)',
+                'maxlength': 300
+            }),
+            'description': forms.Textarea(attrs={
+                'class': 'form-control',
+                'rows': 6,
+                'placeholder': 'Detailed description of the restaurant...'
+            }),
+            'main_image': forms.ClearableFileInput(attrs={
+                'class': 'form-control',
+                'accept': 'image/*'
+            }),
+            'destination': forms.Select(attrs={
+                'class': 'form-select',
+                'required': True
+            }),
+            'restaurant_type': forms.Select(attrs={
+                'class': 'form-select',
+                'required': True
+            }),
+            'cuisine_type': forms.Select(attrs={
+                'class': 'form-select',
+                'required': True
+            }),
+            'budget_range': forms.Select(attrs={
+                'class': 'form-select',
+                'required': True
+            }),
+            'website': forms.URLInput(attrs={
+                'class': 'form-control',
+                'placeholder': 'https://example.com'
+            }),
+            'phone': forms.TextInput(attrs={
+                'class': 'form-control',
+                'placeholder': '+1 (555) 123-4567'
+            }),
+            'email': forms.EmailInput(attrs={
+                'class': 'form-control',
+                'placeholder': 'contact@restaurant.com'
+            }),
+            'sustainability_score': forms.Select(attrs={
+                'class': 'form-select',
+                'required': True
+            }, choices=[
+                (i, f"{i} - {'Very Poor' if i == 1 else 'Poor' if i == 2 else 'Below Average' if i == 3 else 'Fair' if i == 4 else 'Average' if i == 5 else 'Good' if i == 6 else 'Very Good' if i == 7 else 'Excellent' if i == 8 else 'Outstanding' if i == 9 else 'Perfect'}")
+                for i in range(1, 11)
+            ]),
+            'hygge_factor': forms.Select(attrs={
+                'class': 'form-select',
+                'required': True
+            }, choices=[
+                (i, f"{i} - {'Very Low' if i == 1 else 'Low' if i == 2 else 'Below Average' if i == 3 else 'Fair' if i == 4 else 'Average' if i == 5 else 'Good' if i == 6 else 'Very Good' if i == 7 else 'Excellent' if i == 8 else 'Outstanding' if i == 9 else 'Perfect'}")
+                for i in range(1, 11)
+            ]),
+            'carbon_neutral': forms.CheckboxInput(attrs={
+                'class': 'form-check-input'
+            }),
+            'supports_local_community': forms.CheckboxInput(attrs={
+                'class': 'form-check-input'
+            }),
+            'organic_ingredients': forms.CheckboxInput(attrs={
+                'class': 'form-check-input'
+            }),
+            'locally_sourced': forms.CheckboxInput(attrs={
+                'class': 'form-check-input'
+            }),
+            'address': forms.Textarea(attrs={
+                'class': 'form-control',
+                'rows': 2,
+                'placeholder': 'Street address'
+            }),
+            'opening_hours': forms.Textarea(attrs={
+                'class': 'form-control',
+                'rows': 3,
+                'placeholder': 'e.g., Mon-Fri: 11:00 AM - 10:00 PM, Sat-Sun: 9:00 AM - 11:00 PM'
+            }),
+            'meta_title': forms.TextInput(attrs={
+                'class': 'form-control',
+                'placeholder': 'SEO title (leave blank to use main title)',
+                'maxlength': 60
+            }),
+            'meta_description': forms.Textarea(attrs={
+                'class': 'form-control',
+                'rows': 3,
+                'placeholder': 'Brief SEO description for search results (120-160 characters)',
+                'maxlength': 160
+            }),
+            'is_featured': forms.CheckboxInput(attrs={
+                'class': 'form-check-input'
+            }),
+            'is_active': forms.CheckboxInput(attrs={
+                'class': 'form-check-input'
+            }),
+        }
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+
+        # Set initial values only for new instances
+        if not self.instance.pk:
+            self.fields['is_active'].initial = True
+            self.fields['is_featured'].initial = False
+            self.fields['sustainability_score'].initial = 5
+            self.fields['hygge_factor'].initial = 5
+
+        # Add comprehensive help text
+        self.fields['name'].help_text = 'The name of the restaurant'
+        self.fields['short_description'].help_text = 'A brief summary shown on cards (max 300 characters)'
+        self.fields['description'].help_text = 'Detailed description including ambiance, specialties, and unique features'
+        self.fields['restaurant_type'].help_text = 'Select the type of restaurant'
+        self.fields['cuisine_type'].help_text = 'Select the cuisine type'
+        self.fields['budget_range'].help_text = 'Price category per meal'
+        self.fields['website'].help_text = 'Restaurant website or online reservation link'
+        self.fields['phone'].help_text = 'Contact phone number'
+        self.fields['email'].help_text = 'Contact email address'
+        self.fields['sustainability_score'].help_text = 'Environmental sustainability rating (1-10)'
+        self.fields['hygge_factor'].help_text = 'Comfort and coziness rating (1-10)'
+        self.fields['carbon_neutral'].help_text = 'Check if carbon neutral'
+        self.fields['supports_local_community'].help_text = 'Check if supports local community'
+        self.fields['organic_ingredients'].help_text = 'Check if uses organic ingredients'
+        self.fields['locally_sourced'].help_text = 'Check if ingredients are locally sourced'
+        self.fields['opening_hours'].help_text = 'Restaurant operating hours'
+        self.fields['is_featured'].help_text = 'Mark as featured to highlight on homepage'
+        self.fields['is_active'].help_text = 'Uncheck to temporarily hide this restaurant'
+
+
+class RestaurantRatingForm(forms.ModelForm):
+    class Meta:
+        model = RestaurantRating
+        fields = ['rating', 'review_text']
+        widgets = {
+            'rating': forms.Select(attrs={
+                'class': 'form-select',
+                'required': True
+            }, choices=[
+                (5, '5 - Excellent'),
+                (4, '4 - Very Good'),
+                (3, '3 - Good'),
+                (2, '2 - Fair'),
+                (1, '1 - Poor')
+            ]),
+            'review_text': forms.Textarea(attrs={
+                'class': 'form-control',
+                'rows': 4,
+                'placeholder': 'Share your experience at this restaurant (optional)...'
+            }),
+        }
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields['rating'].help_text = 'Rate this restaurant from 1-5 stars'
+        self.fields['review_text'].help_text = 'Tell others about your dining experience (optional)'
+        self.fields['review_text'].required = False
+
+
+class RestaurantCommentForm(forms.ModelForm):
+    class Meta:
+        model = RestaurantComment
+        fields = ['comment']
+        widgets = {
+            'comment': forms.Textarea(attrs={
+                'class': 'form-control',
+                'rows': 3,
+                'placeholder': 'Share your thoughts about this restaurant...',
+                'required': True
+            }),
+        }
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields['comment'].help_text = 'Add a comment about this restaurant'
 

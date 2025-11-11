@@ -1,0 +1,280 @@
+{% extends 'base.html' %}
+
+{% block title %}Add New Restaurant - HygGeo{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+            <div class="card card-hygge">
+                <div class="card-body p-4">
+                    <h2 class="card-title fw-bold text-center mb-4" style="color: var(--hygge-green);">
+                        <i class="fas fa-utensils me-2"></i>Add New Restaurant
+                    </h2>
+
+                    <form method="post" enctype="multipart/form-data">
+                        {% csrf_token %}
+
+                        <!-- Basic Details -->
+                        <div class="row mb-4">
+                            <div class="col-12">
+                                <h4 class="fw-bold mb-3" style="color: var(--hygge-green);">
+                                    <i class="fas fa-edit me-2"></i>Basic Details
+                                </h4>
+                            </div>
+                            <div class="col-12 mb-3">
+                                <label class="form-label fw-bold">Restaurant Name:</label>
+                                {{ form.name }}
+                                {% if form.name.errors %}
+                                    <div class="text-danger">{{ form.name.errors }}</div>
+                                {% endif %}
+                            </div>
+                            <div class="col-12 mb-3">
+                                <label class="form-label fw-bold">Short Description:</label>
+                                {{ form.short_description }}
+                                {% if form.short_description.errors %}
+                                    <div class="text-danger">{{ form.short_description.errors }}</div>
+                                {% endif %}
+                            </div>
+                            <div class="col-12 mb-3">
+                                <label class="form-label fw-bold">Full Description:</label>
+                                {{ form.description }}
+                                {% if form.description.errors %}
+                                    <div class="text-danger">{{ form.description.errors }}</div>
+                                {% endif %}
+                            </div>
+                            <div class="col-12 mb-3">
+                                <label class="form-label fw-bold">Main Image:</label>
+                                {{ form.main_image }}
+                                {% if form.main_image.errors %}
+                                    <div class="text-danger">{{ form.main_image.errors }}</div>
+                                {% endif %}
+                            </div>
+                        </div>
+
+                        <!-- Location & Classification -->
+                        <div class="row mb-4">
+                            <div class="col-12">
+                                <h4 class="fw-bold mb-3" style="color: var(--hygge-green);">
+                                    <i class="fas fa-map-marker-alt me-2"></i>Location & Classification
+                                </h4>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label fw-bold">Destination:</label>
+                                {{ form.destination }}
+                                {% if form.destination.errors %}
+                                    <div class="text-danger">{{ form.destination.errors }}</div>
+                                {% endif %}
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label fw-bold">Restaurant Type:</label>
+                                {{ form.restaurant_type }}
+                                {% if form.restaurant_type.errors %}
+                                    <div class="text-danger">{{ form.restaurant_type.errors }}</div>
+                                {% endif %}
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label fw-bold">Cuisine Type:</label>
+                                {{ form.cuisine_type }}
+                                {% if form.cuisine_type.errors %}
+                                    <div class="text-danger">{{ form.cuisine_type.errors }}</div>
+                                {% endif %}
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label fw-bold">Budget Range:</label>
+                                {{ form.budget_range }}
+                                {% if form.budget_range.errors %}
+                                    <div class="text-danger">{{ form.budget_range.errors }}</div>
+                                {% endif %}
+                            </div>
+                            <div class="col-12 mb-3">
+                                <label class="form-label fw-bold">Address:</label>
+                                {{ form.address }}
+                                {% if form.address.errors %}
+                                    <div class="text-danger">{{ form.address.errors }}</div>
+                                {% endif %}
+                            </div>
+                        </div>
+
+                        <!-- Contact & Website -->
+                        <div class="row mb-4">
+                            <div class="col-12">
+                                <h4 class="fw-bold mb-3" style="color: var(--hygge-green);">
+                                    <i class="fas fa-globe me-2"></i>Contact & Website
+                                </h4>
+                            </div>
+                            <div class="col-12 mb-3">
+                                <label class="form-label fw-bold">Website:</label>
+                                {{ form.website }}
+                                {% if form.website.errors %}
+                                    <div class="text-danger">{{ form.website.errors }}</div>
+                                {% endif %}
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label fw-bold">Phone:</label>
+                                {{ form.phone }}
+                                {% if form.phone.errors %}
+                                    <div class="text-danger">{{ form.phone.errors }}</div>
+                                {% endif %}
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label fw-bold">Email:</label>
+                                {{ form.email }}
+                                {% if form.email.errors %}
+                                    <div class="text-danger">{{ form.email.errors }}</div>
+                                {% endif %}
+                            </div>
+                            <div class="col-12 mb-3">
+                                <label class="form-label fw-bold">Opening Hours:</label>
+                                {{ form.opening_hours }}
+                                {% if form.opening_hours.errors %}
+                                    <div class="text-danger">{{ form.opening_hours.errors }}</div>
+                                {% endif %}
+                            </div>
+                        </div>
+
+                        <!-- Sustainability & Hygge -->
+                        <div class="row mb-4">
+                            <div class="col-12">
+                                <h4 class="fw-bold mb-3" style="color: var(--hygge-green);">
+                                    <i class="fas fa-leaf me-2"></i>Sustainability & Hygge
+                                </h4>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label fw-bold">Sustainability Score (1-10):</label>
+                                {{ form.sustainability_score }}
+                                {% if form.sustainability_score.errors %}
+                                    <div class="text-danger">{{ form.sustainability_score.errors }}</div>
+                                {% endif %}
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label fw-bold">Hygge Factor (1-10):</label>
+                                {{ form.hygge_factor }}
+                                {% if form.hygge_factor.errors %}
+                                    <div class="text-danger">{{ form.hygge_factor.errors }}</div>
+                                {% endif %}
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <div class="form-check">
+                                    {{ form.carbon_neutral }}
+                                    <label class="form-check-label" for="{{ form.carbon_neutral.id_for_label }}">
+                                        Carbon Neutral
+                                    </label>
+                                </div>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <div class="form-check">
+                                    {{ form.supports_local_community }}
+                                    <label class="form-check-label" for="{{ form.supports_local_community.id_for_label }}">
+                                        Supports Local Community
+                                    </label>
+                                </div>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <div class="form-check">
+                                    {{ form.organic_ingredients }}
+                                    <label class="form-check-label" for="{{ form.organic_ingredients.id_for_label }}">
+                                        Uses Organic Ingredients
+                                    </label>
+                                </div>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <div class="form-check">
+                                    {{ form.locally_sourced }}
+                                    <label class="form-check-label" for="{{ form.locally_sourced.id_for_label }}">
+                                        Locally Sourced Ingredients
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Menu & Features (Optional) -->
+                        <div class="row mb-4">
+                            <div class="col-12">
+                                <h4 class="fw-bold mb-3" style="color: var(--hygge-green);">
+                                    <i class="fas fa-list me-2"></i>Menu & Features (Optional)
+                                </h4>
+                            </div>
+                            <div class="col-12 mb-3">
+                                <label class="form-label fw-bold">Signature Dishes (comma-separated):</label>
+                                <input type="text" class="form-control" name="signature_dishes" placeholder="e.g., Wood-fired Pizza, Homemade Pasta, Organic Salad">
+                                <small class="text-muted">Enter signature dishes separated by commas</small>
+                            </div>
+                            <div class="col-12 mb-3">
+                                <label class="form-label fw-bold">Dietary Options (comma-separated):</label>
+                                <input type="text" class="form-control" name="dietary_options" placeholder="e.g., Vegan, Gluten-Free, Vegetarian, Keto">
+                                <small class="text-muted">Enter dietary options separated by commas</small>
+                            </div>
+                            <div class="col-12 mb-3">
+                                <label class="form-label fw-bold">Amenities (comma-separated):</label>
+                                <input type="text" class="form-control" name="amenities" placeholder="e.g., Outdoor Seating, WiFi, Pet Friendly, Wheelchair Accessible">
+                                <small class="text-muted">Enter amenities separated by commas</small>
+                            </div>
+                        </div>
+
+                        <!-- SEO -->
+                        <div class="row mb-4">
+                            <div class="col-12">
+                                <h4 class="fw-bold mb-3" style="color: var(--hygge-green);">
+                                    <i class="fas fa-search me-2"></i>SEO
+                                </h4>
+                            </div>
+                            <div class="col-12 mb-3">
+                                <label class="form-label fw-bold">Meta Title:</label>
+                                {{ form.meta_title }}
+                                {% if form.meta_title.errors %}
+                                    <div class="text-danger">{{ form.meta_title.errors }}</div>
+                                {% endif %}
+                            </div>
+                            <div class="col-12 mb-3">
+                                <label class="form-label fw-bold">Meta Description:</label>
+                                {{ form.meta_description }}
+                                {% if form.meta_description.errors %}
+                                    <div class="text-danger">{{ form.meta_description.errors }}</div>
+                                {% endif %}
+                            </div>
+                        </div>
+
+                        <!-- Status -->
+                        <div class="row mb-4">
+                            <div class="col-12">
+                                <h4 class="fw-bold mb-3" style="color: var(--hygge-green);">
+                                    <i class="fas fa-toggle-on me-2"></i>Status
+                                </h4>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <div class="form-check">
+                                    {{ form.is_featured }}
+                                    <label class="form-check-label" for="{{ form.is_featured.id_for_label }}">
+                                        Featured Restaurant
+                                    </label>
+                                </div>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <div class="form-check">
+                                    {{ form.is_active }}
+                                    <label class="form-check-label" for="{{ form.is_active.id_for_label }}">
+                                        Active (Visible to users)
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Submit Buttons -->
+                        <div class="row">
+                            <div class="col-12">
+                                <button type="submit" class="btn btn-hygge btn-lg me-2">
+                                    <i class="fas fa-save me-2"></i>Save Restaurant
+                                </button>
+                                <a href="{% url 'experiences:restaurant_list' %}" class="btn btn-outline-secondary btn-lg">
+                                    <i class="fas fa-times me-2"></i>Cancel
+                                </a>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

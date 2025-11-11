@@ -5,7 +5,8 @@ from django.urls import reverse
 from django.utils.safestring import mark_safe
 from .models import (
     Category, Destination, Provider, Experience,
-    UserRecommendation, ExperienceReview, BookingTracking, Accommodation, TravelBlog, BlogComment
+    UserRecommendation, ExperienceReview, BookingTracking, Accommodation, TravelBlog, BlogComment, Restaurant,
+    RestaurantRating, RestaurantComment
 )
 
 @admin.register(Category)
@@ -466,6 +467,125 @@ class BlogCommentAdmin(admin.ModelAdmin):
     def content_preview(self, obj):
         return obj.content[:50] + '...' if len(obj.content) > 50 else obj.content
     content_preview.short_description = 'Comment'
+
+@admin.register(Restaurant)
+class RestaurantAdmin(admin.ModelAdmin):
+    """Admin for restaurants"""
+    list_display = (
+        'name', 'destination', 'restaurant_type', 'cuisine_type',
+        'average_rating', 'rating_count', 'sustainability_badge', 'hygge_factor', 'price_display',
+        'is_featured', 'is_active', 'created_at'
+    )
+    list_filter = (
+        'restaurant_type', 'cuisine_type', 'budget_range', 'sustainability_score',
+        'hygge_factor', 'is_featured', 'is_active', 'carbon_neutral',
+        'supports_local_community', 'organic_ingredients', 'locally_sourced',
+        'created_at', 'destination__country'
+    )
+    search_fields = ('name', 'description', 'destination__name', 'address', 'cuisine_type')
+    prepopulated_fields = {'slug': ('name',)}
+    readonly_fields = ('id', 'average_rating', 'rating_count', 'created_at', 'updated_at')
+
+    fieldsets = (
+        ('Basic Information', {
+            'fields': ('name', 'slug', 'short_description', 'description')
+        }),
+        ('Location', {
+            'fields': ('destination',)
+        }),
+        ('Restaurant Details', {
+            'fields': ('restaurant_type', 'cuisine_type', 'budget_range')
+        }),
+        ('Contact & Website', {
+            'fields': ('website', 'phone', 'email')
+        }),
+        ('Ratings', {
+            'fields': ('average_rating', 'rating_count')
+        }),
+        ('Sustainability & Hygge', {
+            'fields': ('sustainability_score', 'hygge_factor', 'carbon_neutral', 'supports_local_community', 'organic_ingredients', 'locally_sourced')
+        }),
+        ('Location Details', {
+            'fields': ('address', 'latitude', 'longitude')
+        }),
+        ('Media', {
+            'fields': ('main_image', 'gallery_images')
+        }),
+        ('Menu & Features', {
+            'fields': ('signature_dishes', 'dietary_options', 'amenities'),
+            'classes': ('collapse',)
+        }),
+        ('Hours', {
+            'fields': ('opening_hours',)
+        }),
+        ('SEO & Meta', {
+            'fields': ('meta_title', 'meta_description'),
+            'classes': ('collapse',)
+        }),
+        ('Status & Admin', {
+            'fields': ('is_featured', 'is_active', 'admin_notes')
+        }),
+        ('Metadata', {
+            'fields': ('id', 'created_at', 'updated_at'),
+            'classes': ('collapse',)
+        }),
+    )
+
+    def sustainability_badge(self, obj):
+        badge = obj.get_sustainability_badge()
+        return format_html(
+            '<span style="background-color: {}; color: white; padding: 2px 8px; border-radius: 4px; font-size: 0.8em;">{}</span>',
+            badge['color'],
+            badge['text']
+        )
+    sustainability_badge.short_description = 'Sustainability'
+
+    def price_display(self, obj):
+        return obj.get_price_display()
+    price_display.short_description = 'Price'
+
+
+@admin.register(RestaurantRating)
+class RestaurantRatingAdmin(admin.ModelAdmin):
+    """Admin for restaurant ratings"""
+    list_display = ('user', 'restaurant', 'rating', 'created_at')
+    list_filter = ('rating', 'created_at')
+    search_fields = ('user__username', 'restaurant__name', 'review_text')
+    readonly_fields = ('id', 'created_at', 'updated_at')
+
+    fieldsets = (
+        ('Rating Information', {
+            'fields': ('restaurant', 'user', 'rating', 'review_text')
+        }),
+        ('Metadata', {
+            'fields': ('id', 'created_at', 'updated_at'),
+            'classes': ('collapse',)
+        }),
+    )
+
+
+@admin.register(RestaurantComment)
+class RestaurantCommentAdmin(admin.ModelAdmin):
+    """Admin for restaurant comments"""
+    list_display = ('user', 'restaurant', 'comment_preview', 'created_at')
+    list_filter = ('created_at',)
+    search_fields = ('user__username', 'restaurant__name', 'comment')
+    readonly_fields = ('id', 'created_at', 'updated_at')
+
+    fieldsets = (
+        ('Comment Information', {
+            'fields': ('restaurant', 'user', 'comment')
+        }),
+        ('Metadata', {
+            'fields': ('id', 'created_at', 'updated_at'),
+            'classes': ('collapse',)
+        }),
+    )
+
+    def comment_preview(self, obj):
+        return obj.comment[:50] + '...' if len(obj.comment) > 50 else obj.comment
+    comment_preview.short_description = 'Comment'
+
 
 # Customize admin site
 admin.site.site_header = "HygGeo Experiences Administration"
