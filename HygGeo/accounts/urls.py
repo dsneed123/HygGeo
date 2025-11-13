@@ -105,6 +105,7 @@ urlpatterns = [
 
     # Blog generator
     path('admin/generate-blog/', views.generate_top_10_blog, name='generate_top_10_blog'),
+    path('admin/generate-mass-blogs/', views.generate_mass_blogs, name='generate_mass_blogs'),
     path('admin/get-items-for-destination/', views.get_items_for_destination, name='get_items_for_destination'),
 
     # Analytics tracking endpoints

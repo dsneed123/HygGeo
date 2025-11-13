@@ -3112,6 +3112,318 @@ def generate_top_10_blog(request):
         messages.error(request, f'Error generating blog: {str(e)}')
         return redirect('admin_dashboard')
 
+
+@user_passes_test(lambda u: u.is_staff, login_url='/accounts/login/')
+def generate_mass_blogs(request):
+    """Generate multiple blog posts for selected cities with the same template"""
+    from experiences.models import TravelBlog
+    from django.utils.text import slugify
+    from datetime import datetime
+    import random
+
+    if request.method != 'POST':
+        return JsonResponse({'success': False, 'error': 'Invalid request method'})
+
+    try:
+        # Get form data
+        blog_type = request.POST.get('blog_type')
+        city_selection_method = request.POST.get('city_selection_method', 'all')
+        filter_by = request.POST.get('filter_by', 'random')
+        item_count = int(request.POST.get('item_count', 10))
+        title_template = request.POST.get('title_template', '')
+        include_intro = request.POST.get('include_intro', 'auto')
+        publish = request.POST.get('publish') == 'true'
+        skip_insufficient = request.POST.get('skip_insufficient') == 'true'
+
+        # Get list of cities/destinations
+        if city_selection_method == 'all':
+            destinations = Destination.objects.all()
+        else:
+            selected_city_ids = request.POST.getlist('selected_cities')
+            if not selected_city_ids:
+                return JsonResponse({'success': False, 'error': 'No cities selected'})
+            destinations = Destination.objects.filter(id__in=selected_city_ids)
+
+        created_blogs = []
+        skipped_cities = []
+
+        # Loop through each destination and create a blog
+        for destination in destinations:
+            try:
+                # Build query based on blog type
+                items = []
+
+                if blog_type == 'experiences':
+                    queryset = Experience.objects.filter(
+                        destination=destination,
+                        is_active=True
+                    ).select_related('destination', 'provider', 'experience_type')
+
+                    # Apply filters
+                    if filter_by == 'sustainability':
+                        queryset = queryset.order_by('-sustainability_score', '-hygge_factor')
+                    elif filter_by == 'hygge':
+                        queryset = queryset.order_by('-hygge_factor', '-sustainability_score')
+                    elif filter_by == 'featured':
+                        queryset = queryset.filter(is_featured=True).order_by('-created_at')
+                    elif filter_by == 'recent':
+                        queryset = queryset.order_by('-created_at')
+                    elif filter_by == 'random':
+                        queryset = queryset.order_by('?')
+
+                    items = list(queryset[:item_count])
+                    content_type_label = "Experiences"
+
+                elif blog_type == 'accommodations':
+                    queryset = Accommodation.objects.filter(
+                        destination=destination,
+                        is_active=True
+                    ).select_related('destination', 'provider')
+
+                    # Apply filters
+                    if filter_by == 'sustainability':
+                        queryset = queryset.order_by('-sustainability_score', '-hygge_factor')
+                    elif filter_by == 'hygge':
+                        queryset = queryset.order_by('-hygge_factor', '-sustainability_score')
+                    elif filter_by == 'featured':
+                        queryset = queryset.filter(is_featured=True).order_by('-created_at')
+                    elif filter_by == 'recent':
+                        queryset = queryset.order_by('-created_at')
+                    elif filter_by == 'random':
+                        queryset = queryset.order_by('?')
+
+                    items = list(queryset[:item_count])
+                    content_type_label = "Accommodations"
+
+                elif blog_type == 'mixed':
+                    # Get half experiences and half accommodations
+                    exp_count = item_count // 2
+                    acc_count = item_count - exp_count
+
+                    exp_queryset = Experience.objects.filter(
+                        destination=destination,
+                        is_active=True
+                    ).select_related('destination', 'provider', 'experience_type')
+
+                    acc_queryset = Accommodation.objects.filter(
+                        destination=destination,
+                        is_active=True
+                    ).select_related('destination', 'provider')
+
+                    # Apply filters to both
+                    if filter_by == 'sustainability':
+                        exp_queryset = exp_queryset.order_by('-sustainability_score')
+                        acc_queryset = acc_queryset.order_by('-sustainability_score')
+                    elif filter_by == 'hygge':
+                        exp_queryset = exp_queryset.order_by('-hygge_factor')
+                        acc_queryset = acc_queryset.order_by('-hygge_factor')
+                    elif filter_by == 'featured':
+                        exp_queryset = exp_queryset.filter(is_featured=True).order_by('-created_at')
+                        acc_queryset = acc_queryset.filter(is_featured=True).order_by('-created_at')
+                    elif filter_by == 'recent':
+                        exp_queryset = exp_queryset.order_by('-created_at')
+                        acc_queryset = acc_queryset.order_by('-created_at')
+                    elif filter_by == 'random':
+                        exp_queryset = exp_queryset.order_by('?')
+                        acc_queryset = acc_queryset.order_by('?')
+
+                    experiences = list(exp_queryset[:exp_count])
+                    accommodations = list(acc_queryset[:acc_count])
+
+                    # Combine and mark type
+                    items = []
+                    for exp in experiences:
+                        exp.item_type = 'experience'
+                        items.append(exp)
+                    for acc in accommodations:
+                        acc.item_type = 'accommodation'
+                        items.append(acc)
+
+                    # Shuffle if random
+                    if filter_by == 'random':
+                        random.shuffle(items)
+
+                    content_type_label = "Things to Do"
+
+                # Check if we have enough items
+                if not items:
+                    if skip_insufficient:
+                        skipped_cities.append(f"{destination.name}, {destination.country}")
+                        continue
+                    # If not skipping, proceed with what we have
+
+                if skip_insufficient and len(items) < item_count:
+                    skipped_cities.append(f"{destination.name}, {destination.country} (only {len(items)} items)")
+                    continue
+
+                # Generate title from template
+                if title_template:
+                    current_year = datetime.now().year
+                    type_map = {
+                        'experiences': 'Experiences',
+                        'accommodations': 'Accommodations',
+                        'mixed': 'Things to Do'
+                    }
+                    type_label = type_map[blog_type]
+
+                    title = title_template
+                    title = title.replace('{count}', str(len(items)))
+                    title = title.replace('{type}', type_label)
+                    title = title.replace('{destination}', destination.name)
+                    title = title.replace('{year}', str(current_year))
+                else:
+                    filter_labels = {
+                        'sustainability': 'Most Sustainable',
+                        'hygge': 'Most Hygge',
+                        'featured': 'Best',
+                        'recent': 'Newest',
+                        'random': 'Top'
+                    }
+                    filter_label = filter_labels.get(filter_by, 'Top')
+                    title = f"{filter_label} {len(items)} {content_type_label} in {destination.name}"
+
+                # Generate slug
+                slug = slugify(title)
+                original_slug = slug
+                counter = 1
+                while TravelBlog.objects.filter(slug=slug).exists():
+                    slug = f"{original_slug}-{counter}"
+                    counter += 1
+
+                # Generate intro
+                if include_intro == 'auto':
+                    filter_labels = {
+                        'sustainability': 'most sustainable',
+                        'hygge': 'most hygge',
+                        'featured': 'featured',
+                        'recent': 'newest',
+                        'random': 'top'
+                    }
+                    intro = f"Discover the {filter_labels.get(filter_by, 'top')} {content_type_label.lower()} in {destination.name}, {destination.country}. From sustainable eco-tourism to hygge-inspired experiences, these carefully selected options embody everything we love about mindful, authentic travel."
+                else:
+                    intro = ""
+
+                # Generate excerpt
+                excerpt = f"Explore our curated list of the best {content_type_label.lower()} in {destination.name}. Perfect for eco-conscious travelers seeking authentic experiences."
+
+                # Generate HTML content
+                content_html = f"<p>{intro}</p>\n\n" if intro else ""
+
+                for index, item in enumerate(items, 1):
+                    # Determine item details based on type
+                    if blog_type == 'mixed':
+                        if item.item_type == 'experience':
+                            item_title = item.title
+                            item_description = item.description
+                            item_url = request.build_absolute_uri(item.get_absolute_url())
+                            booking_link = item.affiliate_link if item.booking_required else item_url
+                            sustainability = item.sustainability_score
+                            hygge = item.hygge_factor
+                            provider = item.provider.name if item.provider else 'Local Provider'
+                        else:  # accommodation
+                            item_title = item.name
+                            item_description = item.description
+                            item_url = request.build_absolute_uri(item.get_absolute_url())
+                            booking_link = item.booking_link if item.booking_link else item_url
+                            sustainability = item.sustainability_score
+                            hygge = item.hygge_factor
+                            provider = item.provider.name if item.provider else 'Local Provider'
+                    elif blog_type == 'experiences':
+                        item_title = item.title
+                        item_description = item.description
+                        item_url = request.build_absolute_uri(item.get_absolute_url())
+                        booking_link = item.affiliate_link if item.booking_required else item_url
+                        sustainability = item.sustainability_score
+                        hygge = item.hygge_factor
+                        provider = item.provider.name if item.provider else 'Local Provider'
+                    else:  # accommodations
+                        item_title = item.name
+                        item_description = item.description
+                        item_url = request.build_absolute_uri(item.get_absolute_url())
+                        booking_link = item.booking_link if item.booking_link else item_url
+                        sustainability = item.sustainability_score
+                        hygge = item.hygge_factor
+                        provider = item.provider.name if item.provider else 'Local Provider'
+
+                    # Add item to content
+                    content_html += f"<h2>{index}. {item_title}</h2>\n"
+                    content_html += f"<p>{item_description}</p>\n"
+                    content_html += f"<p><strong>Provider:</strong> {provider}</p>\n"
+                    content_html += f"<p><strong>Sustainability Score:</strong> {sustainability}/10 | <strong>Hygge Factor:</strong> {hygge}/10</p>\n"
+                    content_html += f"<p><a href=\"{booking_link}\" target=\"_blank\" rel=\"noopener noreferrer\"><strong>Book Now →</strong></a> | "
+                    content_html += f"<a href=\"{item_url}\">View Details</a></p>\n\n"
+
+                # Add conclusion
+                content_html += f"<h2>Plan Your Trip to {destination.name}</h2>\n"
+                content_html += f"<p>Ready to explore {destination.name}? These {content_type_label.lower()} represent the best of sustainable, hygge-inspired travel. Each option has been carefully selected for its commitment to environmental responsibility and authentic local experiences.</p>\n"
+                content_html += f"<p>Remember to travel mindfully, support local businesses, and leave only footprints behind. Safe travels!</p>\n"
+
+                # Determine featured image
+                featured_image = None
+                if destination.image:
+                    featured_image = destination.image
+                elif items:
+                    items_with_images = [item for item in items if hasattr(item, 'main_image') and item.main_image]
+                    if items_with_images:
+                        random_item = random.choice(items_with_images)
+                        featured_image = random_item.main_image
+
+                # Generate SEO-optimized meta title
+                meta_title = title
+                if len(meta_title) > 60:
+                    meta_title = f"Top {len(items)} {content_type_label} in {destination.name}"
+                    if len(meta_title) > 60:
+                        meta_title = f"{len(items)} Best {content_type_label} in {destination.name}"[:60]
+
+                # Generate SEO-optimized meta description
+                current_year = datetime.now().year
+                meta_description = f"Discover the best {content_type_label.lower()} in {destination.name} for {current_year}. Sustainable, hygge-inspired travel options for eco-conscious travelers."
+                if len(meta_description) > 160:
+                    meta_description = f"Explore {len(items)} {content_type_label.lower()} in {destination.name}. Sustainable travel options for eco-conscious travelers."[:160]
+
+                # Create blog post
+                blog = TravelBlog.objects.create(
+                    title=title,
+                    slug=slug,
+                    content=content_html,
+                    excerpt=excerpt,
+                    author=request.user,
+                    destination=destination,
+                    featured_image=featured_image,
+                    is_published=publish,
+                    meta_title=meta_title,
+                    meta_description=meta_description,
+                    tags=['top 10', destination.name.lower(), content_type_label.lower(), 'sustainable travel', 'hygge']
+                )
+
+                if publish:
+                    blog.published_at = timezone.now()
+                    blog.save()
+
+                created_blogs.append({
+                    'title': title,
+                    'slug': slug,
+                    'destination': f"{destination.name}, {destination.country}"
+                })
+
+            except Exception as e:
+                # Log error but continue with other cities
+                skipped_cities.append(f"{destination.name}, {destination.country} (error: {str(e)})")
+                continue
+
+        # Return JSON response
+        return JsonResponse({
+            'success': True,
+            'created_count': len(created_blogs),
+            'skipped_count': len(skipped_cities),
+            'created_blogs': created_blogs,
+            'skipped_cities': skipped_cities
+        })
+
+    except Exception as e:
+        return JsonResponse({'success': False, 'error': str(e)})
+
+
 # Analytics Tracking Views
 from django.views.decorators.csrf import csrf_exempt
 from django.http import JsonResponse

@@ -735,8 +735,25 @@
     <div class="row mb-5">
         <div class="col-12">
             <div class="card card-hygge">
+                <div class="card-header">
+                    <ul class="nav nav-tabs card-header-tabs" role="tablist">
+                        <li class="nav-item">
+                            <a class="nav-link active" id="single-blog-tab" data-bs-toggle="tab" href="#singleBlog" role="tab">
+                                <i class="fas fa-file-alt me-2"></i>Single Blog
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" id="mass-production-tab" data-bs-toggle="tab" href="#massProduction" role="tab">
+                                <i class="fas fa-rocket me-2"></i>Mass Production
+                            </a>
+                        </li>
+                    </ul>
+                </div>
                 <div class="card-body p-4">
-                    <form id="blogGeneratorForm" method="POST" action="{% url 'generate_top_10_blog' %}">
+                    <div class="tab-content">
+                        <!-- Single Blog Tab -->
+                        <div class="tab-pane fade show active" id="singleBlog" role="tabpanel">
+                            <form id="blogGeneratorForm" method="POST" action="{% url 'generate_top_10_blog' %}">
                         {% csrf_token %}
                         <div class="row g-3">
                             <!-- Step 1: Basic Settings -->
@@ -983,12 +1000,214 @@
                                 </button>
                             </div>
                         </div>
-                    </form>
+                            </form>
 
-                    <!-- Preview Section (hidden by default) -->
-                    <div id="previewSection" class="mt-4 pt-4 border-top" style="display: none;">
-                        <h5 class="fw-bold mb-3">Preview</h5>
-                        <div id="previewContent" class="border rounded p-4" style="background: var(--hygge-warm-white);"></div>
+                            <!-- Preview Section (hidden by default) -->
+                            <div id="previewSection" class="mt-4 pt-4 border-top" style="display: none;">
+                                <h5 class="fw-bold mb-3">Preview</h5>
+                                <div id="previewContent" class="border rounded p-4" style="background: var(--hygge-warm-white);"></div>
+                            </div>
+                        </div>
+
+                        <!-- Mass Production Tab -->
+                        <div class="tab-pane fade" id="massProduction" role="tabpanel">
+                            <form id="massProductionForm" method="POST" action="{% url 'generate_mass_blogs' %}">
+                                {% csrf_token %}
+                                <div class="row g-3">
+                                    <!-- Step 1: Template Settings -->
+                                    <div class="col-12">
+                                        <h5 class="fw-bold mb-3" style="color: var(--hygge-green);">
+                                            <i class="fas fa-cog me-2"></i>Step 1: Template Settings
+                                        </h5>
+                                        <div class="alert alert-info">
+                                            <i class="fas fa-info-circle me-2"></i>This template will be applied to all selected cities with random experiences from each city
+                                        </div>
+                                    </div>
+
+                                    <div class="col-md-6">
+                                        <label class="form-label fw-bold">Blog Type</label>
+                                        <select name="blog_type" id="massBlogType" class="form-select" required>
+                                            <option value="experiences">Top Experiences</option>
+                                            <option value="accommodations">Top Accommodations</option>
+                                            <option value="mixed">Mixed (Experiences + Accommodations)</option>
+                                        </select>
+                                    </div>
+
+                                    <div class="col-md-6">
+                                        <label class="form-label fw-bold">Number of Items Per Blog</label>
+                                        <select name="item_count" class="form-select" required>
+                                            <option value="5">Top 5</option>
+                                            <option value="10" selected>Top 10</option>
+                                            <option value="15">Top 15</option>
+                                            <option value="20">Top 20</option>
+                                        </select>
+                                    </div>
+
+                                    <!-- Step 2: Title Template -->
+                                    <div class="col-12 mt-4">
+                                        <h5 class="fw-bold mb-3" style="color: var(--hygge-green);">
+                                            <i class="fas fa-search me-2"></i>Step 2: SEO Title Template
+                                        </h5>
+                                    </div>
+
+                                    <div class="col-12">
+                                        <label class="form-label fw-bold">Title Template (SEO Optimized)</label>
+                                        <select id="massTitleTemplate" name="title_template" class="form-select" required>
+                                            <option value="">-- Select a Template --</option>
+                                            <optgroup label="Top X Format">
+                                                <option value="Top {count} {type} in {destination} for {year}">Top {count} {type} in {destination} for {year}</option>
+                                                <option value="{count} Best {type} in {destination} ({year} Guide)">{count} Best {type} in {destination} ({year} Guide)</option>
+                                                <option value="The Ultimate Guide to {destination}: Top {count} {type}">The Ultimate Guide to {destination}: Top {count} {type}</option>
+                                            </optgroup>
+                                            <optgroup label="Sustainable Focus">
+                                                <option value="{count} Most Sustainable {type} in {destination}">{count} Most Sustainable {type} in {destination}</option>
+                                                <option value="Eco-Friendly Travel: {count} Green {type} in {destination}">Eco-Friendly Travel: {count} Green {type} in {destination}</option>
+                                            </optgroup>
+                                            <optgroup label="Travel Guides">
+                                                <option value="Complete {destination} Travel Guide: {count} {type}">Complete {destination} Travel Guide: {count} {type}</option>
+                                                <option value="{destination} Travel Guide {year}: {count} Best {type}">{destination} Travel Guide {year}: {count} Best {type}</option>
+                                            </optgroup>
+                                            <optgroup label="Hidden Gems & Local">
+                                                <option value="Hidden Gems in {destination}: {count} {type}">Hidden Gems in {destination}: {count} {type}</option>
+                                                <option value="{count} Off the Beaten Path {type} in {destination}">{count} Off the Beaten Path {type} in {destination}</option>
+                                            </optgroup>
+                                        </select>
+                                        <div class="form-text">Variables: {count}, {type}, {destination}, {year}</div>
+                                    </div>
+
+                                    <!-- Step 3: Selection Method -->
+                                    <div class="col-12 mt-4">
+                                        <h5 class="fw-bold mb-3" style="color: var(--hygge-green);">
+                                            <i class="fas fa-map-marked-alt me-2"></i>Step 3: Item Selection Strategy
+                                        </h5>
+                                    </div>
+
+                                    <div class="col-md-6">
+                                        <label class="form-label fw-bold">Filter By</label>
+                                        <select name="filter_by" class="form-select">
+                                            <option value="random" selected>Random Selection</option>
+                                            <option value="sustainability">Most Sustainable</option>
+                                            <option value="hygge">Most Hygge</option>
+                                            <option value="featured">Featured Only</option>
+                                            <option value="recent">Most Recent</option>
+                                        </select>
+                                        <div class="form-text">This filter will be applied to each city independently</div>
+                                    </div>
+
+                                    <div class="col-md-6">
+                                        <label class="form-label fw-bold">Include Introduction</label>
+                                        <select name="include_intro" class="form-select">
+                                            <option value="auto" selected>Auto-Generate</option>
+                                            <option value="none">No Introduction</option>
+                                        </select>
+                                    </div>
+
+                                    <!-- Step 4: City Selection -->
+                                    <div class="col-12 mt-4">
+                                        <h5 class="fw-bold mb-3" style="color: var(--hygge-green);">
+                                            <i class="fas fa-city me-2"></i>Step 4: Select Cities
+                                        </h5>
+                                    </div>
+
+                                    <div class="col-12">
+                                        <div class="btn-group w-100 mb-3" role="group">
+                                            <input type="radio" class="btn-check" name="city_selection_method" id="selectAllCities" value="all" checked>
+                                            <label class="btn btn-outline-primary" for="selectAllCities">
+                                                <i class="fas fa-globe me-2"></i>All Cities
+                                            </label>
+
+                                            <input type="radio" class="btn-check" name="city_selection_method" id="selectSpecificCities" value="specific">
+                                            <label class="btn btn-outline-success" for="selectSpecificCities">
+                                                <i class="fas fa-hand-pointer me-2"></i>Select Specific Cities
+                                            </label>
+                                        </div>
+                                    </div>
+
+                                    <div id="specificCitiesSection" class="col-12" style="display: none;">
+                                        <div class="border rounded p-3" style="max-height: 400px; overflow-y: auto; background: #f8f9fa;">
+                                            <div class="row g-2">
+                                                {% for dest in all_destinations %}
+                                                <div class="col-md-4 col-sm-6">
+                                                    <div class="form-check">
+                                                        <input class="form-check-input city-checkbox" type="checkbox" name="selected_cities" value="{{ dest.id }}" id="city_{{ dest.id }}">
+                                                        <label class="form-check-label" for="city_{{ dest.id }}">
+                                                            {{ dest.name }}, {{ dest.country }}
+                                                        </label>
+                                                    </div>
+                                                </div>
+                                                {% endfor %}
+                                            </div>
+                                            <div class="mt-3">
+                                                <button type="button" class="btn btn-sm btn-outline-primary" onclick="selectAllCities()">
+                                                    <i class="fas fa-check-double me-1"></i>Select All
+                                                </button>
+                                                <button type="button" class="btn btn-sm btn-outline-secondary" onclick="deselectAllCities()">
+                                                    <i class="fas fa-times me-1"></i>Deselect All
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <!-- Step 5: Additional Options -->
+                                    <div class="col-12 mt-4">
+                                        <h5 class="fw-bold mb-3" style="color: var(--hygge-green);">
+                                            <i class="fas fa-sliders me-2"></i>Step 5: Additional Options
+                                        </h5>
+                                    </div>
+
+                                    <div class="col-md-6">
+                                        <label class="form-label fw-bold">Publish Immediately</label>
+                                        <select name="publish" class="form-select">
+                                            <option value="false" selected>Save as Drafts</option>
+                                            <option value="true">Publish All Now</option>
+                                        </select>
+                                    </div>
+
+                                    <div class="col-md-6">
+                                        <label class="form-label fw-bold">Skip Cities Without Enough Content</label>
+                                        <select name="skip_insufficient" class="form-select">
+                                            <option value="true" selected>Yes, Skip Them</option>
+                                            <option value="false">No, Use What's Available</option>
+                                        </select>
+                                        <div class="form-text">Skip cities that don't have enough items to meet the count requirement</div>
+                                    </div>
+
+                                    <!-- Progress Section -->
+                                    <div id="massProductionProgress" class="col-12 mt-4" style="display: none;">
+                                        <div class="alert alert-info">
+                                            <div class="d-flex align-items-center">
+                                                <div class="spinner-border spinner-border-sm me-3" role="status">
+                                                    <span class="visually-hidden">Loading...</span>
+                                                </div>
+                                                <div class="flex-grow-1">
+                                                    <strong>Generating blogs...</strong>
+                                                    <div class="mt-2">
+                                                        <div class="progress">
+                                                            <div id="massProductionProgressBar" class="progress-bar progress-bar-striped progress-bar-animated" role="progressbar" style="width: 0%"></div>
+                                                        </div>
+                                                        <small id="massProductionProgressText" class="text-muted">Processing...</small>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <!-- Results Section -->
+                                    <div id="massProductionResults" class="col-12 mt-4" style="display: none;">
+                                        <div class="alert alert-success">
+                                            <h6 class="fw-bold mb-3"><i class="fas fa-check-circle me-2"></i>Mass Production Complete!</h6>
+                                            <div id="massProductionResultsContent"></div>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-12">
+                                        <button type="submit" class="btn btn-hygge btn-lg" id="massProductionBtn">
+                                            <i class="fas fa-rocket me-2"></i>Generate Blogs for Selected Cities
+                                        </button>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -2911,6 +3130,109 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // Update title preview when count changes
     document.querySelector('select[name="item_count"]').addEventListener('change', updateTitlePreview);
+
+    // Mass Production Functions
+    window.selectAllCities = function() {
+        document.querySelectorAll('.city-checkbox').forEach(checkbox => {
+            checkbox.checked = true;
+        });
+    };
+
+    window.deselectAllCities = function() {
+        document.querySelectorAll('.city-checkbox').forEach(checkbox => {
+            checkbox.checked = false;
+        });
+    };
+
+    // Toggle city selection section
+    document.querySelectorAll('input[name="city_selection_method"]').forEach(radio => {
+        radio.addEventListener('change', function() {
+            const specificSection = document.getElementById('specificCitiesSection');
+            if (document.getElementById('selectSpecificCities').checked) {
+                specificSection.style.display = 'block';
+            } else {
+                specificSection.style.display = 'none';
+            }
+        });
+    });
+
+    // Handle mass production form submission
+    document.getElementById('massProductionForm').addEventListener('submit', function(e) {
+        e.preventDefault();
+
+        const formData = new FormData(this);
+        const citySelectionMethod = formData.get('city_selection_method');
+
+        // If specific cities selected, check at least one is selected
+        if (citySelectionMethod === 'specific') {
+            const selectedCities = formData.getAll('selected_cities');
+            if (selectedCities.length === 0) {
+                alert('Please select at least one city!');
+                return;
+            }
+        }
+
+        // Show progress section
+        document.getElementById('massProductionProgress').style.display = 'block';
+        document.getElementById('massProductionResults').style.display = 'none';
+        document.getElementById('massProductionBtn').disabled = true;
+
+        // Submit form via AJAX
+        fetch(this.action, {
+            method: 'POST',
+            body: formData,
+            headers: {
+                'X-Requested-With': 'XMLHttpRequest',
+            }
+        })
+        .then(response => response.json())
+        .then(data => {
+            document.getElementById('massProductionProgress').style.display = 'none';
+            document.getElementById('massProductionBtn').disabled = false;
+
+            if (data.success) {
+                // Show results
+                const resultsContent = document.getElementById('massProductionResultsContent');
+                let html = `
+                    <p><strong>Successfully generated ${data.created_count} blog post(s)!</strong></p>
+                `;
+
+                if (data.skipped_count > 0) {
+                    html += `<p class="text-warning">Skipped ${data.skipped_count} city/cities due to insufficient content.</p>`;
+                }
+
+                if (data.created_blogs && data.created_blogs.length > 0) {
+                    html += '<hr><h6 class="fw-bold mb-2">Created Blogs:</h6><ul class="mb-0">';
+                    data.created_blogs.forEach(blog => {
+                        html += `<li><a href="/blog/${blog.slug}/" target="_blank">${blog.title}</a> (${blog.destination})</li>`;
+                    });
+                    html += '</ul>';
+                }
+
+                if (data.skipped_cities && data.skipped_cities.length > 0) {
+                    html += '<hr><h6 class="fw-bold mb-2 text-warning">Skipped Cities:</h6><ul class="mb-0">';
+                    data.skipped_cities.forEach(city => {
+                        html += `<li>${city}</li>`;
+                    });
+                    html += '</ul>';
+                }
+
+                resultsContent.innerHTML = html;
+                document.getElementById('massProductionResults').style.display = 'block';
+
+                // Optionally reset form
+                // this.reset();
+            } else {
+                alert('Error: ' + (data.error || 'Unknown error occurred'));
+            }
+        })
+        .catch(error => {
+            document.getElementById('massProductionProgress').style.display = 'none';
+            document.getElementById('massProductionBtn').disabled = false;
+            alert('An error occurred while generating blogs. Please try again.');
+            console.error('Error:', error);
+        });
+    });
 });
 
 // Generate Business Report with GSC Data
