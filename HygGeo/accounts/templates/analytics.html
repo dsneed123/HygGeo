@@ -170,6 +170,71 @@
         </div>
     </div>
 
+    <!-- Blog Analytics Section -->
+    <div class="row mb-5">
+        <div class="col-12 mb-3">
+            <h4 class="fw-bold" style="color: var(--hygge-green);">
+                <i class="fas fa-blog me-2"></i>Blog Analytics
+            </h4>
+        </div>
+
+        <!-- Total Blogs -->
+        <div class="col-lg-3 col-md-6 mb-4">
+            <div class="card card-hygge h-100">
+                <div class="card-body text-center p-4">
+                    <i class="fas fa-file-alt mb-3" style="font-size: 2.5rem; color: var(--hygge-green);"></i>
+                    <h3 class="fw-bold mb-1">{{ analytics.total_blogs }}</h3>
+                    <p class="text-muted mb-2">Total Blog Posts</p>
+                    <small class="text-success">
+                        <i class="fas fa-check-circle me-1"></i>{{ analytics.published_blogs }} published
+                    </small>
+                </div>
+            </div>
+        </div>
+
+        <!-- Blog Production (7 days) -->
+        <div class="col-lg-3 col-md-6 mb-4">
+            <div class="card card-hygge h-100">
+                <div class="card-body text-center p-4">
+                    <i class="fas fa-plus-circle mb-3" style="font-size: 2.5rem; color: var(--hygge-soft-blue);"></i>
+                    <h3 class="fw-bold mb-1">{{ analytics.blogs_created_7_days }}</h3>
+                    <p class="text-muted mb-2">Blogs Created (7d)</p>
+                    <small class="text-info">
+                        <i class="fas fa-arrow-up me-1"></i>{{ analytics.blogs_created_30_days }} in 30d
+                    </small>
+                </div>
+            </div>
+        </div>
+
+        <!-- Blog Views -->
+        <div class="col-lg-3 col-md-6 mb-4">
+            <div class="card card-hygge h-100">
+                <div class="card-body text-center p-4">
+                    <i class="fas fa-eye mb-3" style="font-size: 2.5rem; color: var(--hygge-gold);"></i>
+                    <h3 class="fw-bold mb-1">{{ analytics.blog_views_30_days }}</h3>
+                    <p class="text-muted mb-2">Blog Views (30d)</p>
+                    <small class="text-warning">
+                        <i class="fas fa-calendar-week me-1"></i>{{ analytics.blog_views_7_days }} in 7d
+                    </small>
+                </div>
+            </div>
+        </div>
+
+        <!-- Blog Clicks -->
+        <div class="col-lg-3 col-md-6 mb-4">
+            <div class="card card-hygge h-100">
+                <div class="card-body text-center p-4">
+                    <i class="fas fa-mouse-pointer mb-3" style="font-size: 2.5rem; color: #6f42c1;"></i>
+                    <h3 class="fw-bold mb-1">{{ analytics.blog_clicks_30_days }}</h3>
+                    <p class="text-muted mb-2">Blog Clicks (30d)</p>
+                    <small class="text-purple">
+                        <i class="fas fa-hand-pointer me-1"></i>{{ analytics.total_blog_clicks }} total
+                    </small>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <!-- Charts Section -->
     <div class="row mb-5">
         <!-- User Registrations Chart -->
@@ -260,6 +325,18 @@
                         <div class="col-md-2 col-4 mb-3">
                             <div class="fw-bold text-info">{{ analytics.accommodations_created_90_days }}</div>
                             <small class="text-muted">Acc. (90d)</small>
+                        </div>
+                        <div class="col-md-2 col-4 mb-3">
+                            <div class="fw-bold text-warning">{{ analytics.blogs_created_7_days }}</div>
+                            <small class="text-muted">Blogs (7d)</small>
+                        </div>
+                        <div class="col-md-2 col-4 mb-3">
+                            <div class="fw-bold text-warning">{{ analytics.blogs_created_30_days }}</div>
+                            <small class="text-muted">Blogs (30d)</small>
+                        </div>
+                        <div class="col-md-2 col-4 mb-3">
+                            <div class="fw-bold text-warning">{{ analytics.blogs_created_90_days }}</div>
+                            <small class="text-muted">Blogs (90d)</small>
                         </div>
                     </div>
                 </div>
@@ -1159,7 +1236,7 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     });
 
-    // Content Creation Chart (Experiences & Accommodations)
+    // Content Creation Chart (Experiences, Accommodations & Blogs)
     new Chart(document.getElementById('contentCreationChart'), {
         type: 'line',
         data: {
@@ -1187,6 +1264,19 @@ document.addEventListener('DOMContentLoaded', function() {
                     fill: true,
                     tension: 0.4,
                     pointBackgroundColor: 'var(--hygge-soft-blue)',
+                    pointBorderColor: '#fff',
+                    pointBorderWidth: 2,
+                    pointRadius: 4
+                },
+                {
+                    label: 'Blogs',
+                    data: contentCreation.map(item => item.blogs),
+                    borderColor: 'var(--hygge-gold)',
+                    backgroundColor: 'rgba(255, 193, 7, 0.1)',
+                    borderWidth: 3,
+                    fill: true,
+                    tension: 0.4,
+                    pointBackgroundColor: 'var(--hygge-gold)',
                     pointBorderColor: '#fff',
                     pointBorderWidth: 2,
                     pointRadius: 4

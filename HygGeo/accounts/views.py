@@ -961,6 +961,44 @@ def analytics_dashboard(request):
     active_experiences = Experience.objects.filter(is_active=True).count()
     featured_experiences = Experience.objects.filter(is_featured=True).count()
 
+    # Blog Analytics
+    from experiences.models import TravelBlog
+    total_blogs = TravelBlog.objects.count()
+    published_blogs = TravelBlog.objects.filter(is_published=True).count()
+    draft_blogs = TravelBlog.objects.filter(is_published=False).count()
+    blogs_created_7_days = TravelBlog.objects.filter(created_at__gte=last_7_days).count()
+    blogs_created_30_days = TravelBlog.objects.filter(created_at__gte=last_30_days).count()
+    blogs_created_90_days = TravelBlog.objects.filter(created_at__gte=last_90_days).count()
+
+    # Blog clicks from ClickEvent model (tracking blog detail page clicks)
+    blog_clicks_7_days = ClickEvent.objects.filter(
+        clicked_at__gte=last_7_days,
+        target_url__contains='/blog/'
+    ).count()
+    blog_clicks_30_days = ClickEvent.objects.filter(
+        clicked_at__gte=last_30_days,
+        target_url__contains='/blog/'
+    ).count()
+    blog_clicks_90_days = ClickEvent.objects.filter(
+        clicked_at__gte=last_90_days,
+        target_url__contains='/blog/'
+    ).count()
+    total_blog_clicks = ClickEvent.objects.filter(target_url__contains='/blog/').count()
+
+    # Blog views from PageView model
+    blog_views_7_days = PageView.objects.filter(
+        viewed_at__gte=last_7_days,
+        page_path__contains='/blog/'
+    ).count()
+    blog_views_30_days = PageView.objects.filter(
+        viewed_at__gte=last_30_days,
+        page_path__contains='/blog/'
+    ).count()
+    blog_views_90_days = PageView.objects.filter(
+        viewed_at__gte=last_90_days,
+        page_path__contains='/blog/'
+    ).count()
+
     # Recommendations and user engagement
     total_recommendations = UserRecommendation.objects.count()
     viewed_recommendations = UserRecommendation.objects.filter(viewed=True).count()
@@ -1035,11 +1073,16 @@ def analytics_dashboard(request):
             created_at__lte=end_of_period
         ).count()
 
+        blog_total = TravelBlog.objects.filter(
+            created_at__lte=end_of_period
+        ).count()
+
         content_creation_data.append({
             'date': date.strftime(date_format),
             'experiences': exp_total,
             'accommodations': acc_total,
-            'total': exp_total + acc_total
+            'blogs': blog_total,
+            'total': exp_total + acc_total + blog_total
         })
 
     # Content statistics for different time periods
@@ -1191,6 +1234,21 @@ def analytics_dashboard(request):
             'accommodations_created_30_days': accommodations_created_30_days,
             'accommodations_created_90_days': accommodations_created_90_days,
             'destinations_created_7_days': destinations_created_7_days,
+
+            # Blog metrics
+            'total_blogs': total_blogs,
+            'published_blogs': published_blogs,
+            'draft_blogs': draft_blogs,
+            'blogs_created_7_days': blogs_created_7_days,
+            'blogs_created_30_days': blogs_created_30_days,
+            'blogs_created_90_days': blogs_created_90_days,
+            'blog_clicks_7_days': blog_clicks_7_days,
+            'blog_clicks_30_days': blog_clicks_30_days,
+            'blog_clicks_90_days': blog_clicks_90_days,
+            'total_blog_clicks': total_blog_clicks,
+            'blog_views_7_days': blog_views_7_days,
+            'blog_views_30_days': blog_views_30_days,
+            'blog_views_90_days': blog_views_90_days,
 
             # Booking metrics
             'total_bookings': total_bookings,
