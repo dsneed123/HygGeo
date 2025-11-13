@@ -1,0 +1,138 @@
+{% extends 'base.html' %}
+
+{% block title %}Connect Google Account - HygGeo{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-md-6 col-lg-5">
+            <div class="card card-hygge p-4">
+                <div class="text-center mb-4">
+                    <i class="fab fa-google" style="font-size: 3rem; color: #4285F4;"></i>
+                    <h2 class="h3 fw-bold mt-3" style="color: var(--hygge-green);">Connect Your Google Account</h2>
+                    <p class="text-muted">Complete your HygGeo profile</p>
+                </div>
+
+                {% if form.errors %}
+                <div class="alert alert-danger">
+                    <i class="fas fa-exclamation-triangle me-2"></i>
+                    {% for field, errors in form.errors.items %}
+                        {% for error in errors %}
+                            {{ error }}<br>
+                        {% endfor %}
+                    {% endfor %}
+                </div>
+                {% endif %}
+
+                <div class="mb-4 p-3 rounded" style="background-color: var(--hygge-cream);">
+                    <h6 class="fw-bold mb-2" style="color: var(--hygge-green);">
+                        <i class="fas fa-info-circle me-2"></i>What's Happening?
+                    </h6>
+                    <p class="small mb-0">
+                        You're signing in with Google as <strong>{{ account.extra_data.email }}</strong>.
+                        We'll create your HygGeo account automatically - no password needed!
+                    </p>
+                </div>
+
+                <form method="post">
+                    {% csrf_token %}
+
+                    <!-- Hidden email field - Google already provided it -->
+                    {% if form.email %}
+                    <input type="hidden" name="email" value="{{ account.extra_data.email }}">
+                    {% endif %}
+
+                    <!-- Only show username field if needed -->
+                    {% if form.username %}
+                    <div class="mb-3">
+                        <label for="{{ form.username.id_for_label }}" class="form-label fw-bold">
+                            <i class="fas fa-user me-2"></i>Choose a Username
+                        </label>
+                        <input type="text"
+                               name="username"
+                               class="form-control {% if form.username.errors %}is-invalid{% endif %}"
+                               id="{{ form.username.id_for_label }}"
+                               placeholder="Pick a unique username"
+                               value="{{ form.username.value|default:'' }}"
+                               required>
+                        {% if form.username.errors %}
+                            <div class="invalid-feedback">{{ form.username.errors.0 }}</div>
+                        {% else %}
+                            <div class="form-text">
+                                <small>This is how other travelers will see you on HygGeo</small>
+                            </div>
+                        {% endif %}
+                    </div>
+                    {% endif %}
+
+                    <!-- Email Consent -->
+                    <div class="mb-4">
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" name="email_consent" id="email_consent" checked>
+                            <label class="form-check-label small" for="email_consent">
+                                I'd like to receive travel recommendations and updates from HygGeo
+                            </label>
+                        </div>
+                    </div>
+
+                    <button type="submit" class="btn btn-hygge w-100 py-3 fw-bold">
+                        <i class="fab fa-google me-2"></i>Complete Google Sign-In
+                    </button>
+                </form>
+
+                <div class="text-center mt-4">
+                    <p class="text-muted small">
+                        By continuing, you agree to our
+                        <a href="{% url 'privacy_policy' %}" target="_blank" class="text-decoration-none">Privacy Policy</a>
+                    </p>
+                </div>
+
+                <!-- Welcome Preview -->
+                <div class="mt-4 pt-4 border-top">
+                    <div class="p-3 rounded text-center" style="background-color: var(--hygge-warm-white);">
+                        <h6 class="fw-bold mb-2" style="color: var(--hygge-green);">
+                            <i class="fas fa-gift me-2"></i>Welcome to HygGeo!
+                        </h6>
+                        <p class="small text-muted mb-0">
+                            Get personalized travel recommendations, connect with eco-conscious travelers,
+                            and discover sustainable experiences around the world.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+.form-control:focus {
+    border-color: var(--hygge-light-green);
+    box-shadow: 0 0 0 0.2rem rgba(74, 124, 89, 0.25);
+}
+
+.form-check-input:checked {
+    background-color: var(--hygge-green);
+    border-color: var(--hygge-green);
+}
+
+.form-check-input:focus {
+    border-color: var(--hygge-light-green);
+    box-shadow: 0 0 0 0.2rem rgba(74, 124, 89, 0.25);
+}
+</style>
+
+<script>
+// Add subtle animations
+document.addEventListener('DOMContentLoaded', function() {
+    const card = document.querySelector('.card-hygge');
+    card.style.opacity = '0';
+    card.style.transform = 'translateY(30px)';
+
+    setTimeout(() => {
+        card.style.transition = 'all 0.6s ease';
+        card.style.opacity = '1';
+        card.style.transform = 'translateY(0)';
+    }, 100);
+});
+</script>
+{% endblock %}

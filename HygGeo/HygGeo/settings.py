@@ -449,6 +449,12 @@ ACCOUNT_LOGOUT_ON_GET = True
 SOCIALACCOUNT_EMAIL_VERIFICATION = 'none'
 SOCIALACCOUNT_AUTO_SIGNUP = True
 SOCIALACCOUNT_LOGIN_ON_GET = True
+SOCIALACCOUNT_EMAIL_REQUIRED = True  # Google provides email
+SOCIALACCOUNT_QUERY_EMAIL = False  # Don't ask for email again - Google already gave it
+
+# Auto-connect accounts with matching email (if user signs in with Google and account exists)
+SOCIALACCOUNT_STORE_TOKENS = True
+SOCIALACCOUNT_ADAPTER = 'accounts.adapters.SocialAccountAdapter'  # Custom adapter for auto-connect
 
 # Google OAuth provider settings
 SOCIALACCOUNT_PROVIDERS = {
@@ -462,11 +468,8 @@ SOCIALACCOUNT_PROVIDERS = {
         },
         'OAUTH_PKCE_ENABLED': True,
         'FETCH_USERINFO': True,
-        'APP': {
-            'client_id': config('GOOGLE_CLIENT_ID', default=''),
-            'secret': config('GOOGLE_CLIENT_SECRET', default=''),
-            'key': ''
-        }
+        # APP credentials are configured in Django Admin > Social Applications
+        # Don't configure 'APP' here to avoid duplicates
     }
 }
 

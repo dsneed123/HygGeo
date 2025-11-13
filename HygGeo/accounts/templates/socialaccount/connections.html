@@ -1,0 +1,92 @@
+{% extends 'base.html' %}
+
+{% block title %}Account Already Exists - HygGeo{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-md-6 col-lg-5">
+            <div class="card card-hygge p-4">
+                <div class="text-center mb-4">
+                    <i class="fas fa-link" style="font-size: 3rem; color: var(--hygge-gold);"></i>
+                    <h2 class="h3 fw-bold mt-3" style="color: var(--hygge-green);">Account Already Exists</h2>
+                </div>
+
+                <div class="alert alert-info">
+                    <i class="fas fa-info-circle me-2"></i>
+                    <strong>Good news!</strong> You already have a HygGeo account with this email address.
+                </div>
+
+                <div class="mb-4 p-3 rounded" style="background-color: var(--hygge-cream);">
+                    <p class="mb-2"><strong>Email:</strong> {{ account.extra_data.email }}</p>
+                    <p class="mb-0 small text-muted">
+                        To connect your Google account, please sign in to your existing HygGeo account first,
+                        then you can link Google for faster login in the future.
+                    </p>
+                </div>
+
+                <div class="d-grid gap-3">
+                    <a href="{% url 'login' %}" class="btn btn-hygge btn-lg">
+                        <i class="fas fa-sign-in-alt me-2"></i>Sign In to Existing Account
+                    </a>
+
+                    <a href="{% url 'password_reset' %}" class="btn btn-outline-secondary">
+                        <i class="fas fa-key me-2"></i>Forgot Password?
+                    </a>
+                </div>
+
+                <!-- Instructions -->
+                <div class="mt-4 pt-4 border-top">
+                    <h6 class="fw-bold mb-3" style="color: var(--hygge-green);">
+                        <i class="fas fa-question-circle me-2"></i>How to Connect Google
+                    </h6>
+                    <ol class="small text-muted mb-0">
+                        <li class="mb-2">Sign in to your HygGeo account using your username and password</li>
+                        <li class="mb-2">Go to your Profile Settings</li>
+                        <li class="mb-2">Click "Connect Google Account"</li>
+                        <li>Next time, you can sign in with just one click!</li>
+                    </ol>
+                </div>
+
+                <div class="text-center mt-4">
+                    <p class="text-muted small">
+                        Need help?
+                        <a href="mailto:support@hyggeo.com" class="text-decoration-none" style="color: var(--hygge-green);">
+                            Contact Support
+                        </a>
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+.btn-hygge {
+    background-color: var(--hygge-green);
+    border-color: var(--hygge-green);
+    color: white;
+}
+
+.btn-hygge:hover {
+    background-color: var(--hygge-light-green);
+    border-color: var(--hygge-light-green);
+    color: white;
+}
+</style>
+
+<script>
+// Add subtle animations
+document.addEventListener('DOMContentLoaded', function() {
+    const card = document.querySelector('.card-hygge');
+    card.style.opacity = '0';
+    card.style.transform = 'translateY(30px)';
+
+    setTimeout(() => {
+        card.style.transition = 'all 0.6s ease';
+        card.style.opacity = '1';
+        card.style.transform = 'translateY(0)';
+    }, 100);
+});
+</script>
+{% endblock %}
