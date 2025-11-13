@@ -20,7 +20,7 @@ from .forms import (
     MessageForm, 
     ReplyForm
 )
-from .models import UserProfile, TravelSurvey, Trip, Message, EmailTemplate, EmailCampaign
+from .models import UserProfile, TravelSurvey, Trip, Message, EmailTemplate, EmailCampaign, PageView, ClickEvent
 from experiences.models import Experience, Destination, Provider, Category, ExperienceType, Accommodation
 from .email_utils import get_merge_fields
 import random
@@ -1096,7 +1096,7 @@ def analytics_dashboard(request):
     experiences_created_90_days = Experience.objects.filter(created_at__gte=last_90_days).count()
 
     # Traffic Tracking Analytics
-    from .models import PageView, ClickEvent
+    # PageView and ClickEvent are imported at the top of the file
 
     # Page view statistics
     total_page_views = PageView.objects.count()

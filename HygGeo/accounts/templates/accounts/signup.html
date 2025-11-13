@@ -164,7 +164,8 @@
                     </button>
                 </form>
 
-                <!-- Social Signup Options -->
+                <!-- Social Signup Options - Temporarily disabled until OAuth is configured in production -->
+                {% comment %}
                 {% load socialaccount %}
                 <div class="my-4">
                     <div class="position-relative">
@@ -185,6 +186,7 @@
                     </svg>
                     <span class="fw-semibold">Sign up with Google</span>
                 </a>
+                {% endcomment %}
 
                 <!-- Privacy Notice -->
                 <div class="mt-3 p-3 rounded" style="background-color: var(--hygge-cream);">
